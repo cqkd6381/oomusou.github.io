@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-20T01:33:57.856Z</updated>
+  <updated>2018-02-21T05:45:46.232Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,219 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 Angular 實現 Chain Of Responsibility Pattern ?]]></title>
+    <link href="http://oomusou.io/design-pattern/cor/"/>
+    <id>http://oomusou.io/design-pattern/cor/</id>
+    <published>2018-02-21T12:23:43.000Z</published>
+    <updated>2018-02-21T05:45:46.232Z</updated>
+    <content type="html"><![CDATA[<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Node.js 8.9.4<br>Angular CLI 1.7.0<br>Angular 5.2.5<br>Wallaby.js 3.9.4</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p><img src="/images/design-pattern/cor/cor000.png" alt="cor000"></p>
+<ul>
+<li>檢查 <code>產品編號</code></li>
+<li>必須為 <code>整數</code>，<code>2</code> 的倍數與 <code>3</code> 的倍數才能傳回 <code>true</code>，否則均傳回 <code>false</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>先使用一般的寫法完成，最後再重構成 Chain of Responsbility。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Chain of Responsibility Pattern</p>
+<p>將 <code>nested if</code> 改用 <code>物件串接</code> 表示</p>
+</blockquote>
+<p><img src="/images/design-pattern/cor/cor006.svg" alt="cor006"></p>
+<p><strong>適用時機</strong></p>
+<ul>
+<li>深層 <code>nested if</code></li>
+<li>須在 run-time 決定 <code>if</code> 組合</li>
+<li><code>if</code> 層數不確定</li>
+</ul>
+<p><strong>優點</strong></p>
+<ul>
+<li>每個 <code>if 判斷</code> 使用一個 class，符合 <code>單一職責原則</code></li>
+<li>將來若有新的 <code>if判斷</code>，不用修改 service，而是新增 <code>ConcreteHandler</code>，符合 <code>開放封閉原則</code></li>
+<li>Service 與 <code>if 判斷</code> 解耦合，兩者都僅相依於 interface，符合 <code>依賴反轉原則</code></li>
+<li><code>if</code> 邏輯物件化後，可在 run-time 自由組合 <code>if</code> 物件 (組合 <code>ConcreteHandler</code>)</li>
+</ul>
+<p><strong>缺點</strong></p>
+<ul>
+<li>Chain 太長時會有效能問題</li>
+</ul>
+<h2 id="Architecture">Architecture</h2><hr>
+<p><img src="/images/design-pattern/cor/cor001.svg" alt="cor001"></p>
+<ul>
+<li><code>AppComponent</code> 相當於 <code>Client</code></li>
+<li><code>ProductNoChecker</code> 相當於 service，<code>AppComponent</code> 負責注入 <code>ProductNoChecker</code>，無論怎麼重構，<code>ProductNoChecker</code> 都是穩定的，不會導致 <code>AppComponent</code> 修改</li>
+<li><code>CheckerInterface</code> 相當於 <code>HandlerInterface</code>，訂出所有 checker 的標準</li>
+<li><code>AbstractChecker</code> 相當於 <code>AbstractHandler</code>，<code>nextChecker()</code> 相當於 <code>next()</code>，負責處理下一個 checker 部分</li>
+<li><code>IntegerChecker</code> 相當於 <code>ConcreteHandler</code>，為實際 <code>if 判斷</code> 邏輯。</li>
+</ul>
+<h2 id="Implemetation">Implemetation</h2><hr>
+<p><strong>app.component.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">input</span> <span class="attribute">type</span>=<span class="value">"text"</span> #<span class="attribute">productNo</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">button</span> (<span class="attribute">click</span>)=<span class="value">"onCheckProductNoClick()"</span>&gt;</span>Check ProductNo<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">&#123;&#123; result &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>若要在 JavaScript 存取 HTML，傳統會使用 <code>id</code> 或 CSS selector，在 Angular 提出新的方法，我們可以為 HTML 加上 <code>#</code> 開頭的 Template Reference Variable。</p>
+<p><strong>app.component.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Component, ElementRef, ViewChild &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ProductNoChecker &#125; from <span class="string">'./checkers/product-no.checker'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'app-root'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./app.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="string">'./app.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppComponent &#123;</span><br><span class="line">  result: <span class="built_in">boolean</span>;</span><br><span class="line"></span><br><span class="line">  @ViewChild(<span class="string">'productNo'</span>)</span><br><span class="line">  <span class="keyword">private</span> productNoElement: ElementRef;</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private productNoChecker: ProductNoChecker) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onCheckProductNoClick() &#123;</span><br><span class="line">    <span class="keyword">const</span> productNo = <span class="built_in">parseInt</span>(<span class="keyword">this</span>.productNoElement.nativeElement.value, <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">this</span>.result = <span class="keyword">this</span>.productNoChecker.check(productNo);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@ViewChild(<span class="string">'productNo'</span>)</span><br><span class="line"><span class="keyword">private</span> productNoElement: ElementRef;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>@ViewChild()</code> 取得 DOM element 的物件實體，參數以字串傳入 Template Reference Variable 的字串名稱。</p>
+<p>注意其型別為 <code>ElementRef</code>。</p>
+<p>15 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>(private productNoChecker: ProductNoChecker) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>ProductNoChecker</code> 透過 DI 注入進 <code>AppComponent</code>。</p>
+<p>18 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">onCheckProductNoClick() &#123;</span><br><span class="line">    <span class="keyword">const</span> productNo = <span class="built_in">parseInt</span>(<span class="keyword">this</span>.productNoElement.nativeElement.value, <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">this</span>.result = <span class="keyword">this</span>.productNoChecker.check(productNo);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>當按下 <code>&lt;button&gt;</code> 時，執行 <code>onCheckProductNoClick()</code>。</p>
+<p>藉由 <code>@ViewChild()</code> 所宣告的變數，取得 DOM element 的值，因為為 string，再由 <code>parseInt()</code> 轉成 <code>integer</code>。</p>
+<p>最後呼叫 <code>ProductNoChecker.check()</code>，判斷所輸入的 <code>ProductNo</code> 是否符合商業邏輯。</p>
+<p><strong>app.module.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123;BrowserModule&#125; from <span class="string">'@angular/platform-browser'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;NgModule&#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;AppComponent&#125; from <span class="string">'./app.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123;ProductNoChecker&#125; from <span class="string">'./checkers/product-no.checker'</span>;</span><br><span class="line"></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [</span><br><span class="line">    ProductNoChecker</span><br><span class="line">  ],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
+<p>13 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">providers: [</span><br><span class="line">  ProductNoChecker</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+<p>在 <code>providers</code> 設定 <code>ProductNoChecker</code>，讓 DI 得以注入。</p>
+<h3 id="If_Else">If Else</h3><p><strong>product-no.checker.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ProductNoChecker &#123;</span><br><span class="line">  check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> result: <span class="built_in">boolean</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Number</span>.isInteger(productNo)) &#123;</span><br><span class="line">      <span class="keyword">if</span> ((productNo % <span class="number">2</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((productNo % <span class="number">3</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">          result = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          result = <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        result = <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      result = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於必須通過三層檢查，初學者很容易寫出三層的 <code>nested if</code>，這種寫法可讀性差也不好維護。</p>
+<p>我們將繼續重構。</p>
+<h3 id="Unit_Test">Unit Test</h3><p>在重構之前，必須要有測試保護，才能確保沒把原本的商業邏輯重構壞，因此我們先準備好 <code>ProductNoChecker</code> 的 Unit Test，確保每個 <code>if else</code> 的 path 都有測到。</p>
+<p><strong>product-no.checker.spec.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; TestBed &#125; from <span class="string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ProductNoChecker &#125; from <span class="string">'./product-no.checker'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'ProductNoService'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> productNoChecker: ProductNoChecker;</span><br><span class="line"></span><br><span class="line">  beforeEach(() =&gt; &#123;</span><br><span class="line">    TestBed.configureTestingModule(&#123;</span><br><span class="line">      providers: [ProductNoChecker]</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    productNoChecker = TestBed.get(ProductNoChecker);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'should be created'</span>, () =&gt; &#123;</span><br><span class="line">    expect(productNoChecker).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'當ProductNo為整數，且為2與3的倍數，應回傳 true'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> productNo = <span class="number">6</span>;</span><br><span class="line">    expect(productNoChecker.check(productNo)).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'當ProductNo為整數，為2的倍數但不是3的倍數，應回傳 false'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> productNo = <span class="number">2</span>;</span><br><span class="line">    expect(productNoChecker.check(productNo)).toBeFalsy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'當ProductNo為整數，但不是2的倍數，應回傳 false'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> productNo = <span class="number">1</span>;</span><br><span class="line">    expect(productNoChecker.check(productNo)).toBeFalsy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'當ProductNo不是整數，應回傳 false'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> productNo = <span class="built_in">parseInt</span>(<span class="string">'t1'</span>, <span class="number">10</span>);</span><br><span class="line">    expect(productNoChecker.check(productNo)).toBeFalsy();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>由於本文重點不是在講 Unit Test，因此就不浪費篇幅解釋以上程式碼。</p>
+<h3 id="Default_Value">Default Value</h3><p><strong>product-no.checker.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ProductNoChecker &#123;</span><br><span class="line">  check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> result = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Number</span>.isInteger(productNo)) &#123;</span><br><span class="line">      <span class="keyword">if</span> ((productNo % <span class="number">2</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> ((productNo % <span class="number">3</span>) === <span class="number">0</span>) &#123;</span><br><span class="line">          result = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於整個 <code>nested if</code> 只有 三個 <code>if</code> 都成立時才是 <code>true</code>，其他都是 <code>false</code>，因此可以將 <code>result</code> 的預設值設定為 <code>false</code>，則所有的 else 都可拿掉。</p>
+<p>但仍有三層 <code>nested if</code>，還是不夠好，我們將繼續重構。</p>
+<h3 id="Guard_Clause">Guard Clause</h3><p><strong>product-no.checker.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ProductNoChecker &#123;</span><br><span class="line">  check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">Number</span>.isInteger(productNo)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productNo % <span class="number">2</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (productNo % <span class="number">3</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Guard Clause</p>
+<p>將 return false 的邏輯先處理，最後再來處理 return true，所有的 nested if 將攤平成只有一層</p>
+</blockquote>
+<p>先處理掉 <code>return false</code> 之後，剩下的事實上就是 <code>else</code>，因此就不需要 nested if 了。</p>
+<blockquote>
+<p>實務上推薦使用 Guard Clause，變免使用 nested if 與 else</p>
+</blockquote>
+<p><code>Nested if</code> 經過 Guard Clause 重構後，已經相當清爽了，但仍然還沒進入 OOP 層次，我們將繼續重構。</p>
+<h3 id="以_OOP_實踐">以 OOP 實踐</h3><p><strong>CheckerInterface</strong><br><img src="/images/design-pattern/cor/cor002.svg" alt="cor002"></p>
+<p><strong>checker.interface.ts</strong><br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> CheckerInterface </span>&#123;</span><br><span class="line">  setNextChecker(checker: CheckerInterface): CheckerInterface;</span><br><span class="line">  check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我們即將為每個 <code>if</code> 建立一個 class，先定義其 interface。</p>
+<ul>
+<li><code>setNextChecker()</code> : 由於每個 class 都是一個 <code>if</code> ，因此我們必須設定下一個 <code>if</code> 是哪一個 class 該檢查</li>
+<li><code>check()</code> : 每個 class 寫 <code>if</code> 的地方</li>
+</ul>
+<p><strong>ProductNoChecker</strong><br><img src="/images/design-pattern/cor/cor003.svg" alt="cor003"></p>
+<p><strong>product-no.checker.ts</strong><br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; IntegerChecker &#125; from <span class="string">'./integer.checker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CheckerInterface &#125; from <span class="string">'./checker.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DoubleChecker &#125; from <span class="string">'./double.checker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; TripleChecker &#125; from <span class="string">'./triple.checker'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ProductNoChecker &#123;</span><br><span class="line">  check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> checker: CheckerInterface = <span class="keyword">new</span> IntegerChecker();</span><br><span class="line"></span><br><span class="line">    checker</span><br><span class="line">      .setNextChecker(<span class="keyword">new</span> DoubleChecker())</span><br><span class="line">      .setNextChecker(<span class="keyword">new</span> TripleChecker());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> checker.check(productNo);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由於我們是重構，且 <code>AppComponent</code> 所相依的是 <code>ProductNoChecker.check()</code>，因此 <code>check()</code> 的 signature 不應該修改。</p>
+<p>第 9 行<br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> checker: CheckerInterface = <span class="keyword">new</span> IntegerChecker();</span><br><span class="line"></span><br><span class="line">  checker</span><br><span class="line">    .setNextChecker(<span class="keyword">new</span> DoubleChecker())</span><br><span class="line">    .setNextChecker(<span class="keyword">new</span> TripleChecker());</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> checker.check(productNo);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由於 Chain of Responsibility 是一個 object 一個 object 依序檢查，因此只要先 new 第一個 <code>IntegerChecker</code> 即可，注意其型別為 <code>CheckerInterface</code>，這才符合 <code>依賴反轉原則</code>。</p>
+<p>接下來必須使用 <code>setNextChecker()</code> 依序設定下一個 checker，這也是我們可以在 runtime 自由組合 <code>if 判斷</code> 的地方。</p>
+<p>最後執行 <code>IntegerChecker.check()</code> 開始檢查 <code>ProductNo</code>。</p>
+<blockquote>
+<p>若是直接使用 <code>if</code>，則 <code>if</code> 將在 compile-time 就被決定無法更改，但使用 Chain of Responsibility 可以讓我們在 run-time 自行 <code>new</code> 決定是否使用這個 <code>if</code></p>
+</blockquote>
+<p><strong>AbstractChecker</strong><br><img src="/images/design-pattern/cor/cor004.svg" alt="cor004"></p>
+<p><strong>abstract.checker.ts</strong><br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; CheckerInterface &#125; from <span class="string">'./checker.interface'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> abstract <span class="keyword">class</span> AbstractChecker <span class="keyword">implements</span> CheckerInterface &#123;</span><br><span class="line">  <span class="keyword">protected</span> nextChecker: CheckerInterface;</span><br><span class="line"></span><br><span class="line">  setNextChecker(checker: CheckerInterface): CheckerInterface &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.nextChecker = checker;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  abstract check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>雖然 <code>CheckerInterface</code> 為每個 checker 都須具備的 interface，但其中的 <code>setNextChecker()</code> 顯然並不需要每個 checker 自己實踐，可將共用的部分交由 <code>AbstractChecker</code> 處理。</p>
+<p>第 4 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> nextChecker: CheckerInterface;</span><br></pre></td></tr></table></figure>
+<p>每個 checker 都必須紀錄下一個 checker 為何，因此特別宣告 <code>nextChecker</code> field。</p>
+<p>由於將來繼承 <code>AbstractChecker</code> 的 class 都要使用，因此為 <code>protected</code> 。</p>
+<p>注意其型別為 <code>CheckerInterface</code>。</p>
+<p>第 6 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setNextChecker(checker: CheckerInterface): CheckerInterface &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.nextChecker = checker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>原本寫法為</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">setNextChecker(checker: CheckerInterface): CheckerInterface &#123;</span><br><span class="line">  <span class="keyword">this</span>.nextChecker = checker;</span><br><span class="line">  <span class="keyword">return</span> checker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但可以將兩行併成一行完成。</p>
+<p>10 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">abstract check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span>;</span><br></pre></td></tr></table></figure>
+<p><code>check()</code> 需要由各 class 的自行完成，因此 <code>AbstractChecker</code> 不實作，只設定成 <code>abstract</code> 交由所繼承的 class 完成。</p>
+<p><strong>IntegerChecker</strong><br><img src="/images/design-pattern/cor/cor005.svg" alt="cor005"></p>
+<p><strong>integer.checker.ts</strong><br><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; AbstractChecker &#125; from <span class="string">'./abstract.checker'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> IntegerChecker extends AbstractChecker &#123;</span><br><span class="line">  check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">Number</span>.isInteger(source)) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>.nextChecker) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.nextChecker.check(source);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>一樣使用 Guard Clause 的方式做判斷。</p>
+<p>第 3 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> IntegerChecker extends AbstractChecker</span><br></pre></td></tr></table></figure>
+<p><code>IntegerChecker</code> 也必須遵守 <code>CheckInterface</code>，因為 <code>AbstractChecker</code> 已經實現 <code>CheckerInterface</code>，所以 <code>IntegerChecker</code> 只要繼承 <code>AbstractChecker</code> 即可。</p>
+<p>第 5 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!<span class="built_in">Number</span>.isInteger(source)) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若不是 <code>integer</code>，則 return <code>false</code>。</p>
+<p>第 9 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!<span class="keyword">this</span>.nextChecker) &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若沒有 <code>nextChecker</code> ，則表示為最後一個 checker，return <code>true</code>。</p>
+<p>13 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> <span class="keyword">this</span>.nextChecker.check(source);</span><br></pre></td></tr></table></figure>
+<p>若有 <code>nextChecker</code>，則執行下一個 cheker 繼續檢查。</p>
+<p><code>DoubleChecker</code> 與 <code>TripleChecker</code> 的寫法類似，就不再贅述。</p>
+<blockquote>
+<p>目前為止，我們已經在 Angular 實現了經典的 Chain of Resposibility Pattern，但還可以對此 pattern 做小幅重構。</p>
+</blockquote>
+<h3 id="重構_CoR">重構 CoR</h3><p><strong>IntegerChecker</strong><br><img src="/images/design-pattern/cor/cor005.svg" alt="cor005"></p>
+<p><strong>integer.checker.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; AbstractChecker &#125; from <span class="string">'./abstract.checker'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> IntegerChecker extends AbstractChecker &#123;</span><br><span class="line">  check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> !<span class="built_in">Number</span>.isInteger(source) ? <span class="literal">false</span> :</span><br><span class="line">           !<span class="keyword">this</span>.nextChecker ? <span class="literal">true</span> :</span><br><span class="line">           <span class="keyword">this</span>.nextChecker.check(source);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 Guard Clause 寫法雖然已經非常精簡，但若使用 <code>?:</code>，則可寫出更精簡，且可讀性更高的寫法。</p>
+<p><code>DoubleChecker</code> 與 <code>TripleChecker</code> 的寫法類似，就不再贅述。</p>
+<h3 id="以_FP_實踐">以 FP 實踐</h3><p>Chain of Responsibility 雖然是 OOP 的 Design Pattern，但亦可使用 FP 實踐。</p>
+<p><strong>checker.interface.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> CheckerInterface </span>&#123;</span><br><span class="line">  (source: <span class="built_in">number</span>): <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之前 <code>CheckerInterface</code> 雖然定義了 <code>setNextChecker()</code> 與 <code>check()</code> 兩個 method，但平心而論，只有 <code>check()</code> 才是真的 <code>if</code> 所要用的 method，<code>setNextChecker()</code> 算是 pattern 本身所使用的 method。</p>
+<p>也就是說若我們能將 class interface 退化成 function interface，只描述 <code>check()</code> 的 signature，則 Chain of Responsibility 不一定得用 class 才能實踐，只要 function 即可。</p>
+<p> TypeScript 的 interface 可以只描述 function 規格 :</p>
+<ul>
+<li>Input 以 <code>()</code> 表示</li>
+<li>沒有 function name</li>
+<li>Return 寫在 <code>:</code> 之後</li>
+</ul>
+<blockquote>
+<p>TypeScript 的 interface 不再只是描述 class 的規格，也可以描述 function 的規格</p>
+</blockquote>
+<p><strong>integer.checker.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">integerCheck</span>(<span class="params">source: <span class="built_in">number</span></span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Number</span>.isInteger(source);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>integer.checker.ts</code> 不用再使用 class，使用 function 即可，當然要符合 <code>checker.interface.ts</code> 的規格。</p>
+<p><strong>product-no.checker.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CheckerInterface &#125; from <span class="string">'./checker.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; integerCheck &#125; from <span class="string">'./integer.checker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; doubleCheck &#125; from <span class="string">'./double.checker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; tripleCheck &#125; from <span class="string">'./triple.checker'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ProductNoChecker &#123;</span><br><span class="line">  checkers: CheckerInterface[];</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>() </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.checkers = [</span><br><span class="line">      integerCheck,</span><br><span class="line">      doubleCheck,</span><br><span class="line">      tripleCheck</span><br><span class="line">    ];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.checkers.every(checker =&gt; checker(productNo));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">checkers: CheckerInterface[];</span><br></pre></td></tr></table></figure>
+<p>存放所有 checker function 的陣列，別忘了之前已經定義了 <code>CheckerInterface</code> 的 function interface，在此更可描述 <code>checkers</code> 陣列所放的全部都是 <code>CheckerInterface</code> 的 function，除此之外，TypeScript 編譯器也會加以檢查，若function 不符合 <code>CheckerInterface</code> 規格，將編譯錯誤。</p>
+<blockquote>
+<p>儘管使用了 FP，一樣要使用 interface，才能受到編譯器的保護</p>
+</blockquote>
+<p>11 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>() </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.checkers = [</span><br><span class="line">    integerCheck,</span><br><span class="line">    doubleCheck,</span><br><span class="line">    tripleCheck</span><br><span class="line">  ];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>checkers</code> 陣列該含有哪些 checker function，類似 OOP 版的 <code>setNextChecker()</code>。</p>
+<blockquote>
+<p>若這些 checker function 需經常變動，還可以將 <code>checkers</code> 放在 config 檔，且 checker function 還受到 TypeScript 編譯器保護，符合 <code>開放封閉原則</code></p>
+</blockquote>
+<p>19 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.checkers.every(checker =&gt; checker(productNo));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>every()</code> 為 JavaScript 提供的 array method，將會執行 array 內所有的 function，若其中任何一個 function 回傳 <code>false</code>，則回傳 <code>false</code>，必須全部 function 回傳 <code>true</code> 時，才會回傳 <code>true</code>，與 OOP 版的 Chain of Responsibility 有異曲同工之妙。</p>
+<h2 id="Summary">Summary</h2><hr>
+<ul>
+<li>OOP 版並不會每個 checker 都執行；但 FP 版會每個 checker 都執行，若以效能而言，OOP 版的效能較佳</li>
+<li>FP 版的 <code>checkers</code> 陣列甚至可以改寫在 config 檔案，彈性比 OOP 更大</li>
+<li>FP 也要使用 interface，這樣編譯器才能幫你做檢查</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>並不是所有的 <code>if</code> 判斷都該使用 Chain of Responsibility，當特別深的 <code>nested if</code>，與需要 runtime 自由組合 <code>if 判斷</code> 時，就適合使用</li>
+<li>FP 的出現，讓 Design Pattern 的實踐方式，不再只有 OOP 一途，可視實際需求決定該使用 OOP 或 FP</li>
+<li>無論是 OOP 或 FP，最終都是符合 SOLID 的 <code>開放封閉原則</code> 與 <code>依賴反轉原則</code>，通常 FP 的實踐都會比 OOP 更精簡</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52CoR" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[標題描述]]>
+    
+    </summary>
+    
+      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
+    
+      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 TypeScript 之 Interface]]></title>
@@ -1415,47 +1628,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何以 Command 方式執行 VS Code 並開啟專案 ?]]></title>
-    <link href="http://oomusou.io/vscode/run-by-command/"/>
-    <id>http://oomusou.io/vscode/run-by-command/</id>
-    <published>2018-02-04T12:23:43.000Z</published>
-    <updated>2018-02-03T12:22:28.000Z</updated>
-    <content type="html"><![CDATA[<p>Windows 版的 VS Code 在安裝時就會自動建立 <code>code</code>  指令，讓我們可以在 terminal 以 command 方式執行 VS Code 並開啟專案，不過在 macOS 版本預設並沒有建立 symbolic link，必須自行另外透過 Command Pallette 建立。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>VS Code 1.19.3</p>
-<h2 id="建立_Symbolic_Link">建立 Symbolic Link</h2><hr>
-<p><img src="/images/vscode/run-by-command/code000.png" alt="code000"></p>
-<p>熱鍵執行 Command Pallette </p>
-<ol>
-<li>輸入 <code>shell</code></li>
-<li>選擇 <code>Shell Command : Install &#39;code&#39; command in PATH</code></li>
-</ol>
-<blockquote>
-<p>Command Pallete 熱鍵 </p>
-<p>Windows : Ctrl + Shift + P</p>
-<p>macOS : ⌘ + ⇧ + P</p>
-</blockquote>
-<p><img src="/images/vscode/run-by-command/code001.png" alt="code001"></p>
-<p>VS Code 會自動在 <code>usr/local/bin</code> 下建立 <code>code</code> ，自動指向實際的 VS Code。</p>
-<h2 id="在_Terminal_執行_VS_Code">在 Terminal 執行 VS Code</h2><hr>
-<p><img src="/images/vscode/run-by-command/code002.png" alt="code002"></p>
-<p>在 terminal 下進入專案目錄，輸入 <code>code .</code> ，VS Code 會自動執行，並且開啟 <code>NG52MergeMap</code> 專案。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>除了在 VS Code 內開啟專案外，也可以使用 command 方式直接開啟</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[macOS 版的 VS Code 需手動另外建立 Symbolic Link]]>
-    
-    </summary>
-    
-      <category term="VS Code" scheme="http://oomusou.io/tags/VS-Code/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[如何在 Angular 實現 Pub/Sub Pattern ?]]></title>
     <link href="http://oomusou.io/design-pattern/pubsub/"/>
     <id>http://oomusou.io/design-pattern/pubsub/</id>
@@ -1662,37 +1834,43 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何以 Command 方式執行 WebStorm 並開啟專案 ?]]></title>
-    <link href="http://oomusou.io/webstorm/run-by-command/"/>
-    <id>http://oomusou.io/webstorm/run-by-command/</id>
-    <published>2018-02-03T12:23:43.000Z</published>
-    <updated>2018-02-03T12:19:01.000Z</updated>
-    <content type="html"><![CDATA[<p>我們看到 Visual Studio Code 可以在 terminal 下 command 開啟目前目錄的專案，WebStorm 是否也能以這種方式啟動呢 ?</p>
+    <title><![CDATA[如何以 Command 方式執行 VS Code 並開啟專案 ?]]></title>
+    <link href="http://oomusou.io/vscode/run-by-command/"/>
+    <id>http://oomusou.io/vscode/run-by-command/</id>
+    <published>2018-02-04T12:23:43.000Z</published>
+    <updated>2018-02-03T12:22:28.000Z</updated>
+    <content type="html"><![CDATA[<p>Windows 版的 VS Code 在安裝時就會自動建立 <code>code</code>  指令，讓我們可以在 terminal 以 command 方式執行 VS Code 並開啟專案，不過在 macOS 版本預設並沒有建立 symbolic link，必須自行另外透過 Command Pallette 建立。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>WebStorm 2017.3.4</p>
-<h2 id="建立啟動_Script">建立啟動 Script</h2><hr>
-<p><img src="/images/webstorm/run-by-command/cmd000.png" alt="cmd000"></p>
-<p><strong><em>Tools -&gt; Create Command-line Launcher…</em></strong></p>
-<p><img src="/images/webstorm/run-by-command/cmd002.png" alt="cmd002"></p>
-<p>WebStorm 預設會將 script 建立在 <code>/usr/local/bin/</code>，將來將以 <code>webstorm</code> command 啟動。</p>
+<p>macOS High Sierra 10.13.3<br>VS Code 1.19.3</p>
+<h2 id="建立_Symbolic_Link">建立 Symbolic Link</h2><hr>
+<p><img src="/images/vscode/run-by-command/code000.png" alt="code000"></p>
+<p>熱鍵執行 Command Pallette </p>
+<ol>
+<li>輸入 <code>shell</code></li>
+<li>選擇 <code>Shell Command : Install &#39;code&#39; command in PATH</code></li>
+</ol>
 <blockquote>
-<p>為了少打點字，你也可以自行命名，如 <code>/usr/local/bin/ws</code></p>
+<p>Command Pallete 熱鍵 </p>
+<p>Windows : Ctrl + Shift + P</p>
+<p>macOS : ⌘ + ⇧ + P</p>
 </blockquote>
-<h2 id="在_Terminal_執行_WebStorm">在 Terminal 執行 WebStorm</h2><hr>
-<p><img src="/images/webstorm/run-by-command/cmd001.png" alt="cmd001"></p>
-<p>在 terminal 下進入專案目錄，輸入 <code>webstorm .</code> ，WebStorm 會自動執行，並且開啟 <code>NG52MergeMap</code> 專案。</p>
+<p><img src="/images/vscode/run-by-command/code001.png" alt="code001"></p>
+<p>VS Code 會自動在 <code>usr/local/bin</code> 下建立 <code>code</code> ，自動指向實際的 VS Code。</p>
+<h2 id="在_Terminal_執行_VS_Code">在 Terminal 執行 VS Code</h2><hr>
+<p><img src="/images/vscode/run-by-command/code002.png" alt="code002"></p>
+<p>在 terminal 下進入專案目錄，輸入 <code>code .</code> ，VS Code 會自動執行，並且開啟 <code>NG52MergeMap</code> 專案。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>WebStorm 除了使用 <code>JetBrains ToolBox</code> 開啟專案外，也可以使用 command 方式在直接開啟</li>
+<li>除了在 VS Code 內開啟專案外，也可以使用 command 方式直接開啟</li>
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[更快速的啟動方式]]>
+    <![CDATA[macOS 版的 VS Code 需手動另外建立 Symbolic Link]]>
     
     </summary>
     
-      <category term="WebStorm" scheme="http://oomusou.io/tags/WebStorm/"/>
+      <category term="VS Code" scheme="http://oomusou.io/tags/VS-Code/"/>
     
   </entry>
   
@@ -1742,6 +1920,41 @@
     </summary>
     
       <category term="JavaScript" scheme="http://oomusou.io/tags/JavaScript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何以 Command 方式執行 WebStorm 並開啟專案 ?]]></title>
+    <link href="http://oomusou.io/webstorm/run-by-command/"/>
+    <id>http://oomusou.io/webstorm/run-by-command/</id>
+    <published>2018-02-03T12:23:43.000Z</published>
+    <updated>2018-02-03T12:19:01.000Z</updated>
+    <content type="html"><![CDATA[<p>我們看到 Visual Studio Code 可以在 terminal 下 command 開啟目前目錄的專案，WebStorm 是否也能以這種方式啟動呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>WebStorm 2017.3.4</p>
+<h2 id="建立啟動_Script">建立啟動 Script</h2><hr>
+<p><img src="/images/webstorm/run-by-command/cmd000.png" alt="cmd000"></p>
+<p><strong><em>Tools -&gt; Create Command-line Launcher…</em></strong></p>
+<p><img src="/images/webstorm/run-by-command/cmd002.png" alt="cmd002"></p>
+<p>WebStorm 預設會將 script 建立在 <code>/usr/local/bin/</code>，將來將以 <code>webstorm</code> command 啟動。</p>
+<blockquote>
+<p>為了少打點字，你也可以自行命名，如 <code>/usr/local/bin/ws</code></p>
+</blockquote>
+<h2 id="在_Terminal_執行_WebStorm">在 Terminal 執行 WebStorm</h2><hr>
+<p><img src="/images/webstorm/run-by-command/cmd001.png" alt="cmd001"></p>
+<p>在 terminal 下進入專案目錄，輸入 <code>webstorm .</code> ，WebStorm 會自動執行，並且開啟 <code>NG52MergeMap</code> 專案。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>WebStorm 除了使用 <code>JetBrains ToolBox</code> 開啟專案外，也可以使用 command 方式在直接開啟</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[更快速的啟動方式]]>
+    
+    </summary>
+    
+      <category term="WebStorm" scheme="http://oomusou.io/tags/WebStorm/"/>
     
   </entry>
   
@@ -1870,193 +2083,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[在 Angular 內使用 JavaScript Package]]>
-    
-    </summary>
-    
-      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Angular 對 Service 單元測試 ?]]></title>
-    <link href="http://oomusou.io/angular/service-unit-test/"/>
-    <id>http://oomusou.io/angular/service-unit-test/</id>
-    <published>2018-01-28T12:23:43.000Z</published>
-    <updated>2018-02-18T09:58:50.530Z</updated>
-    <content type="html"><![CDATA[<p>凡與顯示相關邏輯，我們會寫在 component；凡與資料相關邏輯，我們會寫在 service。而 service 最常見的應用，就是透過 <code>HttpClient</code> 存取 API。</p>
-<p>對於 service 單元測試而言，我們必須對 <code>HttpClient</code> 加以隔離；而對 component 單元測試而言，我們必須對 <code>service</code> 加以隔離，我們該如何對 service 與 component 進行單元測試呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>Angular CLI 1.6.2<br>Node.js 8.9.4<br>Angular 5.2.2</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p><img src="/images/angular/service-unit-test/service000.png" alt="service000"></p>
-<ul>
-<li>Header 會顯示 <code>Welcome to app!</code></li>
-<li>程式一開始會顯示 <code>所有 post</code></li>
-<li>按 <code>Add Post</code> 會呼叫 <code>POST</code> API <code>新增 post</code></li>
-<li>按 <code>List Posts</code> 會呼叫 <code>GET</code> API 回傳 <code>所有 post</code>    </li>
-</ul>
-<h2 id="Task">Task</h2><hr>
-<ul>
-<li>目前有 <code>PostService</code> 使用 <code>HttpClient</code> 存取 API，為了對 <code>PostService</code> 做 <code>單元測試</code>，必須對 <code>HttpClient</code> 加以隔離</li>
-<li>目前有 <code>AppComponent</code> 使用 <code>PostService</code>， 為了對 <code>AppComponent</code> 做 <code>單元測試</code>，必須對 <code>PostService</code> 加以隔離</li>
-</ul>
-<h2 id="Architecture">Architecture</h2><hr>
-<p><img src="/images/angular/service-unit-test/service001.svg" alt="service001"></p>
-<ul>
-<li><code>AppComponent</code> 負責 <code>新增 post</code> 與 <code>顯示 post</code> 的介面顯示；而 <code>PostService</code> 負責 API 的串接</li>
-<li>根據 <code>依賴反轉原則</code>，<code>AppComponent</code> 不應該直接相依於 <code>PostService</code>，而是兩者相依於 interface</li>
-<li>根據 <code>介面隔離原則</code>，<code>AppComponent</code> 只相依於它所需要的 interface，因此以 <code>AppComponent</code> 的角度訂出 <code>PostInterface</code>，且 <code>PostService</code> 必須實作此 interface</li>
-<li>因為 <code>AppComponent</code> 與 <code>PostService</code> 都相依於 <code>PostInterface</code>，兩者都只知道 <code>PostInterface</code> 而已，而不知道彼此，因此 <code>AppComponent</code> 與  <code>PostService</code> 徹底解耦合</li>
-<li>透過 DI 將實作 <code>PostInterface</code> 的 <code>PostService</code> 注入到 <code>AppComponent</code> ，且將 <code>HttpClient</code> 注入到 <code>PostService</code></li>
-</ul>
-<h2 id="Implementation">Implementation</h2><hr>
-<p><code>AppComponent</code> 與 <code>PostService</code> 的實作並非本文的重點，本文的重點在於實作 <code>AppComponent</code> 與 <code>PostService</code> 的 <code>單元測試</code> 部分。</p>
-<h3 id="PostService">PostService</h3><p><img src="/images/angular/service-unit-test/service002.svg" alt="service002"></p>
-<p><strong>post.service.spec.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; TestBed &#125; from <span class="string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostService &#125; from <span class="string">'./post.service'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; HttpClientTestingModule, HttpTestingController &#125; from <span class="string">'@angular/common/http/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostInterfaceToken &#125; from <span class="string">'../interface/injection.token'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Post &#125; from <span class="string">'../../model/post.model'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; environment &#125; from <span class="string">'../../environments/environment'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostInterface &#125; from <span class="string">'../interface/post.interface'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'PostService'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> postService: PostInterface;</span><br><span class="line">  <span class="keyword">let</span> mockHttpClient: HttpTestingController;</span><br><span class="line"></span><br><span class="line">  beforeEach(() =&gt; &#123;</span><br><span class="line">    TestBed.configureTestingModule(&#123;</span><br><span class="line">      imports: [</span><br><span class="line">        HttpClientTestingModule</span><br><span class="line">      ],</span><br><span class="line">      providers: [</span><br><span class="line">        &#123;provide: PostInterfaceToken, useClass: PostService&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    postService = TestBed.get(PostInterfaceToken, PostService);</span><br><span class="line">    mockHttpClient = TestBed.get(HttpTestingController);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'should be created'</span>, () =&gt; &#123;</span><br><span class="line">    expect(PostService).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(`should list all posts`, () =&gt; &#123;</span><br><span class="line">    <span class="comment">/** act */</span></span><br><span class="line">    <span class="keyword">const</span> expected: Post[] = [</span><br><span class="line">      &#123;</span><br><span class="line">        id: <span class="number">1</span>,</span><br><span class="line">        title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">        author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    postService.listPosts$().subscribe(posts =&gt; &#123;</span><br><span class="line">      <span class="comment">/** assert */</span></span><br><span class="line">      expect(posts).toEqual(expected);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** arrange */</span></span><br><span class="line">    <span class="keyword">const</span> mockResponse: Post[] = [</span><br><span class="line">      &#123;</span><br><span class="line">        id: <span class="number">1</span>,</span><br><span class="line">        title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">        author: <span class="string">'Eric Gamma'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ];</span><br><span class="line"></span><br><span class="line">    mockHttpClient.expectOne(&#123;</span><br><span class="line">      url: `$&#123;environment.apiServer&#125;/posts`,</span><br><span class="line">      method: <span class="string">'GET'</span></span><br><span class="line">    &#125;).flush(mockResponse);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(`should add post`, () =&gt; &#123;</span><br><span class="line">    <span class="comment">/** act */</span></span><br><span class="line">    <span class="keyword">const</span> expected: Post = &#123;</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'OOP'</span>,</span><br><span class="line">      author: <span class="string">'Sam'</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    postService.addPost(expected).subscribe(post =&gt; &#123;</span><br><span class="line">      <span class="comment">/** assert */</span></span><br><span class="line">      expect(post).toBe(expected);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** arrange */</span></span><br><span class="line">    mockHttpClient.expectOne(&#123;</span><br><span class="line">      url: `$&#123;environment.apiServer&#125;/posts`,</span><br><span class="line">      method: <span class="string">'POST'</span></span><br><span class="line">    &#125;).flush(expected);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterEach(() =&gt; &#123;</span><br><span class="line">    mockHttpClient.verify();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>14 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">TestBed.configureTestingModule(&#123;</span><br><span class="line">  imports: [</span><br><span class="line">    HttpClientTestingModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [</span><br><span class="line">    &#123;provide: PostInterfaceToken, useClass: PostService&#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>Angular 有 module 觀念，若使用到了其他 module，必須在 <code>imports</code> 設定；若使用到 DI，則必須在 <code>providers</code> 設定。</p>
-<p>若只有一個 module，則在 <code>AppModule</code> 設定。</p>
-<p>但是單元測試時，並沒有使用 <code>AppModule</code> 的設定，因為我們可能在測試時使用其他替代 module，也可能自己實作 fake 另外 DI。</p>
-<p>Angular 提供了 <code>TestBed.configureTestingModule()</code>，讓我們另外設定跑測試時的 <code>imports</code> 與 <code>providers</code> 部分。</p>
-<p>15 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">imports: [</span><br><span class="line">  HttpClientTestingModule</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-<p>原本 <code>HttpClient</code> 使用的是 <code>HttpClientModule</code>，這會使得 <code>HttpClient</code> 真的透過網路去打 API，這就不符合單元測試 <code>隔離</code> 的要求，因此 Angular 另外提供 <code>HttpClientTestingModule</code> 取代 <code>HttpClientModule</code>。</p>
-<p>18 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">providers: [</span><br><span class="line">  &#123;provide: PostInterfaceToken, useClass: PostService&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>由於我們要測試的就是 <code>PostService</code>，因此 <code>PostService</code> 也必須由 DI 幫我們建立。</p>
-<p>但因爲 <code>PostService</code> 是基於 <code>PostInterface</code> 建立，因此必須透過 <code>PostInterfaceToken</code> mapping 到 <code>PostService</code>。</p>
-<p>23 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">postService = TestBed.get(PostInterfaceToken, PostService);</span><br><span class="line">mockHttpClient = TestBed.get(HttpTestingController);</span><br></pre></td></tr></table></figure>
-<p>由 <code>providers</code> 設定好 interface 與 class 的 mapping 關係後，我們必須透過 DI 建立 <code>postService</code> 與 <code>mockHttpClient</code>。</p>
-<p>其中 <code>HttpTestingController</code> 相當於 mock 版的 <code>HttpClient</code>，因此取名為 <code>mockHttpClient</code>。</p>
-<blockquote>
-<p>TestBed.get() 其實相當於 <code>new</code>，只是這是藉由 DI 幫我們 <code>new</code> 而已</p>
-</blockquote>
-<p>31 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">it(`should list all posts`, () =&gt; &#123;</span><br><span class="line">  <span class="comment">/** act */</span></span><br><span class="line">  <span class="keyword">const</span> expected: Post[] = [</span><br><span class="line">    &#123;</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">      author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">    &#125;</span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  postService.listPosts$().subscribe(posts =&gt; &#123;</span><br><span class="line">    <span class="comment">/** assert */</span></span><br><span class="line">    expect(posts).toEqual(expected);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** arrange */</span></span><br><span class="line">  <span class="keyword">const</span> mockResponse: Post[] = [</span><br><span class="line">    &#123;</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">      author: <span class="string">'Eric Gamma'</span></span><br><span class="line">    &#125;</span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  mockHttpClient.expectOne(&#123;</span><br><span class="line">    url: `$&#123;environment.apiServer&#125;/posts`,</span><br><span class="line">    method: <span class="string">'GET'</span></span><br><span class="line">  &#125;).flush(mockResponse);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>先談談如何測試 <code>GET</code>。</p>
-<p>3A 原則的 <code>arrange</code> 習慣都會寫在最前面，但在 service 的單元測試時，<code>arrange</code> 必須寫在最後面，否則會執行錯誤，稍後會解釋原因。</p>
-<p>32 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** act */</span></span><br><span class="line"><span class="keyword">const</span> expected: Post[] = [</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="number">1</span>,</span><br><span class="line">    title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">    author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">postService.listPosts$().subscribe(posts =&gt; &#123;</span><br><span class="line">  <span class="comment">/** assert */</span></span><br><span class="line">  expect(posts).toEqual(expected);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>直接對 <code>PostService.listPost$()</code> 測試，由於 <code>listPost$()</code> 回傳 <code>Observable</code>，因此 <code>expect()</code> 必須寫在 <code>subscribe()</code> 內。</p>
-<p>將預期的測試結果寫在 <code>expected</code> 內。</p>
-<blockquote>
-<p>一般 <code>Observable</code> 會在 <code>subscribe()</code> 後執行，不過在 <code>HttpTestingController</code> 的設計裡，<code>subscribe()</code> 會在 <code>flush()</code> 才執行，稍後會看到 <code>flush()</code>，所以此時並還沒有執行 <code>expect()</code> 測試</p>
-</blockquote>
-<p>46 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** arrange */</span></span><br><span class="line"><span class="keyword">const</span> mockResponse: Post[] = [</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="number">1</span>,</span><br><span class="line">    title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">    author: <span class="string">'Eric Gamma'</span></span><br><span class="line">  &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">mockHttpClient.expectOne(&#123;</span><br><span class="line">  url: `$&#123;environment.apiServer&#125;/posts`,</span><br><span class="line">  method: <span class="string">'GET'</span></span><br><span class="line">&#125;).flush(mockResponse);</span><br></pre></td></tr></table></figure>
-<p>之前已經使用 <code>HttpClientTestingModule</code> 取代 <code>HttpClient</code>，<code>HttpTestingController</code> 取代 <code>HttpClient</code>，這只能確保呼叫 API 時不用透過網路。</p>
-<p>還要透過 <code>expectOne()</code> 設定要 mock 的 URI 與 action，之所以取名為 <code>expectOne()</code>，就是期望有人真的呼叫這個 URI <code>一次</code>，且必須為 <code>GET</code>，若沒有呼叫這個 URI 或者不是 <code>GET</code>，將造成單元測試 <code>紅燈</code>。</p>
-<p>這也是為什麼 <code>HttpTestingController</code> 的設計是 <code>act</code> 與 <code>assert</code> 要先寫，最後再寫 <code>arrange</code>，因為 <code>HttpTestingController</code> 本身也有 <code>assert</code> 功能，必須有 <code>act</code>，才能知道 <code>assert</code> URI 與 GET 有沒有錯誤。</p>
-<p>最後使用 <code>flush()</code> 設定 mock 的回傳值，<code>flush</code> 英文就是 <code>沖水</code>，當 <code>HttpTestingController</code> 將 <code>mockResponse</code> 沖出去後，才會執行 <code>subscribe()</code> 內的 <code>expect()</code> 測試。</p>
-<blockquote>
-<p>也就是說若你忘了寫 <code>flush()</code>，其實單元測試也會 <code>綠燈</code>，但此時的綠燈並不是真的測試通過，而是根本沒有執行到 <code>subscribe()</code> 內的 <code>expect()</code>。</p>
-</blockquote>
-<p>81 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">afterEach(() =&gt; &#123;</span><br><span class="line">  mockHttpClient.verify();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>實務上可能真的忘了寫 <code>expectOne()</code> 與  <code>flush()</code>，導致 <code>subscribe()</code> 內的 <code>expect()</code> 根本沒跑到而造成單元測試 <code>綠燈</code>，因此必須在每個單元測試跑完補上 <code>mockHttpClient.verify()</code>，若有任何 API request 卻沒有經過 <code>expectOne()</code> 與 <code>flush()</code> 測試，則 <code>verify()</code> 會造成單元測試 <code>紅燈</code>，藉以彌補忘了寫 <code>expectOne()</code> 與 <code>flush()</code> 的人為錯誤。</p>
-<blockquote>
-<p>Q : 我們在 <code>listPosts$()</code> 的單元測試到底測試了什麼 ?</p>
-</blockquote>
-<ul>
-<li>若 service 的 API 與 mock 不同，會出現單元測試 <code>紅燈</code>，可能是 service 的 API 錯誤</li>
-<li>若 service 的 action 與 mock 不同，會出現單元測試 <code>紅燈</code>，可能是 service 的 action 錯誤</li>
-<li>若 service 的 response 與 expected 不同，可能是 service 的邏輯錯誤</li>
-</ul>
-<p>61 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">it(`should add post`, () =&gt; &#123;</span><br><span class="line">    <span class="comment">/** act */</span></span><br><span class="line">    <span class="keyword">const</span> expected: Post = &#123;</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'OOP'</span>,</span><br><span class="line">      author: <span class="string">'Sam'</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    postService.addPost(expected).subscribe(post =&gt; &#123;</span><br><span class="line">      <span class="comment">/** assert */</span></span><br><span class="line">      expect(post).toBe(expected);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** arrange */</span></span><br><span class="line">    mockHttpClient.expectOne(&#123;</span><br><span class="line">      url: `$&#123;environment.apiServer&#125;/posts`,</span><br><span class="line">      method: <span class="string">'POST'</span></span><br><span class="line">    &#125;).flush(expected);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
-<p>再來談談如何測試 <code>POST</code>。</p>
-<p>62 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** act */</span></span><br><span class="line"><span class="keyword">const</span> expected: Post = &#123;</span><br><span class="line">  id: <span class="number">1</span>,</span><br><span class="line">  title: <span class="string">'OOP'</span>,</span><br><span class="line">  author: <span class="string">'Sam'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">postService.addPost(expected).subscribe(post =&gt; &#123;</span><br><span class="line">  <span class="comment">/** assert */</span></span><br><span class="line">  expect(post).toBe(expected);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>直接對 <code>PostService.addPost()</code> 測試，由於 <code>addPost()</code> 回傳 <code>Observable</code>，因此 <code>expect()</code> 必須寫在 <code>subscribe()</code> 內。</p>
-<p>將預期的測試結果寫在 <code>expected</code> 內。</p>
-<p>74 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** arrange */</span></span><br><span class="line">mockHttpClient.expectOne(&#123;</span><br><span class="line">  url: `$&#123;environment.apiServer&#125;/posts`,</span><br><span class="line">  method: <span class="string">'POST'</span></span><br><span class="line">&#125;).flush(expected);</span><br></pre></td></tr></table></figure>
-<p>因為要 mock <code>POST</code>，因此 <code>method</code> 部分改為 <code>POST</code>，其他部分與 <code>GET</code> 部分完全相同。</p>
-<blockquote>
-<p>Q : 我們在 <code>addPost()</code> 到底測試了什麼 ?</p>
-</blockquote>
-<ul>
-<li>若 service 的 API 與 mock 不同，會出現單元測試 <code>紅燈</code>，可能是 service 的 API 錯誤</li>
-<li>若 service 的 action 與 mock 不同，會出現單元測試 <code>紅燈</code>，可能是 service 的 action 錯誤</li>
-<li>若 service 的 response 與 expected 不同，可能是 service 的邏輯錯誤</li>
-</ul>
-<p><img src="/images/angular/service-unit-test/service004.png" alt="service004"></p>
-<p>使用 Wallaby.js 通過所有 service 單元測試。</p>
-<h3 id="AppComponent">AppComponent</h3><p><img src="/images/angular/service-unit-test/service003.svg" alt="service003"></p>
-<p><strong>app.component.spec.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; async, ComponentFixture, TestBed &#125; from <span class="string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; FormsModule &#125; from <span class="string">'@angular/forms'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; HttpClientTestingModule &#125; from <span class="string">'@angular/common/http/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostService &#125; from <span class="string">'./service/post.service'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostInterfaceToken &#125; from <span class="string">'./interface/injection.token'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DebugElement &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Observable &#125; from <span class="string">'rxjs/Observable'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'rxjs/add/observable/of'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostInterface &#125; from <span class="string">'./interface/post.interface'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'AppComponent'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> fixture: ComponentFixture&lt;AppComponent&gt;;</span><br><span class="line">  <span class="keyword">let</span> appComponent: AppComponent;</span><br><span class="line">  <span class="keyword">let</span> debugElement: DebugElement;</span><br><span class="line">  <span class="keyword">let</span> htmlElement: HTMLElement;</span><br><span class="line">  <span class="keyword">let</span> postService: PostInterface;</span><br><span class="line"></span><br><span class="line">  beforeEach(async(() =&gt; &#123;</span><br><span class="line">    TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [</span><br><span class="line">        AppComponent</span><br><span class="line">      ],</span><br><span class="line">      imports: [</span><br><span class="line">        FormsModule,</span><br><span class="line">        HttpClientTestingModule</span><br><span class="line">      ],</span><br><span class="line">      providers: [</span><br><span class="line">        &#123;provide: PostInterfaceToken, useClass: PostService&#125;</span><br><span class="line">      ]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line"></span><br><span class="line">    fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    appComponent = fixture.componentInstance;</span><br><span class="line">    debugElement = fixture.debugElement;</span><br><span class="line">    htmlElement = debugElement.nativeElement;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line"></span><br><span class="line">    postService = TestBed.get(PostInterfaceToken, PostService);</span><br><span class="line">  &#125;));</span><br><span class="line">  </span><br><span class="line">  it(<span class="string">'should create the app'</span>, async(() =&gt; &#123;</span><br><span class="line">    expect(appComponent).toBeTruthy();</span><br><span class="line">  &#125;));</span><br><span class="line"></span><br><span class="line">  it(`should have as title <span class="string">'app'</span>`, async(() =&gt; &#123;</span><br><span class="line">    expect(appComponent.title).toEqual(<span class="string">'app'</span>);</span><br><span class="line">  &#125;));</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'should render title in a h1 tag'</span>, async(() =&gt; &#123;</span><br><span class="line">    expect(htmlElement.querySelector(<span class="string">'h1'</span>).textContent).toContain(<span class="string">'Welcome to app!'</span>);</span><br><span class="line">  &#125;));</span><br><span class="line"></span><br><span class="line">  it(`should list posts`, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> expected$ = Observable.of([</span><br><span class="line">      &#123;</span><br><span class="line">        id: <span class="number">1</span>,</span><br><span class="line">        title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">        author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** arrange */</span></span><br><span class="line">    spyOn(postService, <span class="string">'listPosts$'</span>).and.returnValue(expected$);</span><br><span class="line">    <span class="comment">/** act */</span></span><br><span class="line">    appComponent.onListPostsClick();</span><br><span class="line">    <span class="comment">/** assert */</span></span><br><span class="line">    expect(appComponent.posts$).toEqual(expected$);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(`should add post`, () =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> expected$ = Observable.of(</span><br><span class="line">      &#123;</span><br><span class="line">        id: <span class="number">1</span>,</span><br><span class="line">        title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">        author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">      &#125;</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** arrange */</span></span><br><span class="line">    <span class="keyword">const</span> spy = spyOn(postService, <span class="string">'addPost'</span>).and.returnValue(expected$);</span><br><span class="line">    <span class="comment">/** act */</span></span><br><span class="line">    appComponent.onAddPostClick();</span><br><span class="line">    <span class="comment">/** assert */</span></span><br><span class="line">    expect(spy).toHaveBeenCalled();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>20 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">TestBed.configureTestingModule(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    FormsModule,</span><br><span class="line">    HttpClientTestingModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [</span><br><span class="line">    &#123;provide: PostInterfaceToken, useClass: PostService&#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;).compileComponents();</span><br></pre></td></tr></table></figure>
-<p>跑 component 單元測試時，一樣沒有使用 <code>AppModule</code> 的設定，因為我們可能在測試時使用其他替代 module，也可能自己實作 fake 另外 DI。</p>
-<p>因此一樣使用 <code>TestBed.configureTestingModule()</code>，讓我們另外設定跑測試時的 <code>imports</code> 與 <code>providers</code> 部分。</p>
-<p>24 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">imports: [</span><br><span class="line">  FormsModule,</span><br><span class="line">  HttpClientTestingModule</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-<p>因為在 component 使用了 two-way binding，因此要加上 <code>FormsModule</code>。</p>
-<blockquote>
-<p>Q : 為什麼要 import <code>HttpClientTestingModule</code> 呢 ?</p>
-</blockquote>
-<p><code>AppComponent</code> 依賴的是 <code>PostService</code>，看起來與 <code>HttpClient</code> 無關，應該不需要注入 <code>HttpClientTestingModule</code>。</p>
-<p>但其實 DI 並不是這樣運作，雖然 <code>AppComponent</code> 只用到了 <code>PostService</code>，但 DI 會將 <code>PostService</code> 下所有的 dependency 都一起注入，所以也要 import <code>HttpClientTestingModule</code>。</p>
-<p>28 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">providers: [</span><br><span class="line">  &#123;provide: PostInterfaceToken, useClass: PostService&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>由於我們要測試的就是 <code>PostService</code>，因此 <code>PostService</code> 也必須由 DI 幫我們建立。</p>
-<p>但因爲 <code>PostService</code> 是基於 <code>PostInterface</code> 建立，因此必須透過 <code>PostInterfaceToken</code> mapping 到 <code>PostService</code>。</p>
-<p>39 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postService = TestBed.get(PostInterfaceToken, PostService);</span><br></pre></td></tr></table></figure>
-<p>由 <code>providers</code> 設定好 interface 與 class 的 mapping 關係後，我們必須透過 DI 建立 <code>postService</code> 與。</p>
-<p>53 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">it(`should list posts`, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> expected$ = Observable.of([</span><br><span class="line">    &#123;</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">      author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]);</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** arrange */</span></span><br><span class="line">  spyOn(postService, <span class="string">'listPosts$'</span>).and.returnValue(expected$);</span><br><span class="line">  <span class="comment">/** act */</span></span><br><span class="line">  appComponent.onListPostsClick();</span><br><span class="line">  <span class="comment">/** assert */</span></span><br><span class="line">  expect(appComponent.posts$).toEqual(expected$);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>55 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> expected$ = Observable.of([</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="number">1</span>,</span><br><span class="line">    title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">    author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">  &#125;</span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
-<p>透過 <code>Observable.of()</code> 將 <code>Post[]</code> 轉成 <code>Observable&lt;Post[]&gt;</code>。</p>
-<p>63 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** arrange */</span></span><br><span class="line">spyOn(postService, <span class="string">'listPosts$'</span>).and.returnValue(expected$);</span><br></pre></td></tr></table></figure>
-<p>由於我們要隔離 <code>PostService</code>，因此使用 <code>spyOn()</code> 對 <code>PostService</code> 的 <code>listPost$()</code> 加以 mock，並設定其假的回傳值。</p>
-<p>65 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** act */</span></span><br><span class="line">appComponent.onListPostsClick();</span><br></pre></td></tr></table></figure>
-<p>實際測試 <code>onListPostClick()</code>。</p>
-<p>67 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** assert */</span></span><br><span class="line">expect(appComponent.posts$).toEqual(expected$);</span><br></pre></td></tr></table></figure>
-<p>測試 <code>AppComponent.post$</code> 是否如預期。</p>
-<blockquote>
-<p>Q : 我們在 <code>onListPostsClick()</code> 到底測試了什麼 ?</p>
-</blockquote>
-<ul>
-<li>若 component 的 return 與 expected 不同，可能是 component 的邏輯錯誤</li>
-</ul>
-<p>70 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">it(`should add post`, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> expected$ = Observable.of(</span><br><span class="line">    &#123;</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">      author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">    &#125;</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** arrange */</span></span><br><span class="line">  <span class="keyword">const</span> spy = spyOn(postService, <span class="string">'addPost'</span>).and.returnValue(expected$);</span><br><span class="line">  <span class="comment">/** act */</span></span><br><span class="line">  appComponent.onAddPostClick();</span><br><span class="line">  <span class="comment">/** assert */</span></span><br><span class="line">  expect(spy).toHaveBeenCalled();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>72 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> expected$ = Observable.of(</span><br><span class="line">  &#123;</span><br><span class="line">    id: <span class="number">1</span>,</span><br><span class="line">    title: <span class="string">'Design Pattern'</span>,</span><br><span class="line">    author: <span class="string">'Dr. Eric Gamma'</span></span><br><span class="line">  &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<p>透過 <code>Observable.of()</code> 將 <code>Post</code> 轉成 <code>Observable&lt;Post&gt;</code>。</p>
-<p>80 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** arrange */</span></span><br><span class="line"><span class="keyword">const</span> spy = spyOn(postService, <span class="string">'addPost'</span>).and.returnValue(expected$);</span><br></pre></td></tr></table></figure>
-<p>由於我們要隔離 <code>PostService</code>，因此使用 <code>spyOn()</code> 對 <code>PostService</code> 的 <code>addPost</code> 加以 mock，並設定其假的回傳值。</p>
-<p>82 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** act */</span></span><br><span class="line">appComponent.onAddPostClick();</span><br></pre></td></tr></table></figure>
-<p>實際測試 <code>onAddPostClick()</code>。</p>
-<p>84 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** assert */</span></span><br><span class="line">expect(spy).toHaveBeenCalled();</span><br></pre></td></tr></table></figure>
-<p>由於 <code>onAddPostClick()</code> 回傳值為 <code>void</code>，且 <code>PostService.addPost()</code> 已經有單元測試保護，因此只要測試 <code>PostService.addPost()</code> 曾經被呼叫過即可。</p>
-<p><img src="/images/angular/service-unit-test/service005.png" alt="service005"></p>
-<p>使用 Wallaby.js 通過所有 component 單元測試。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>當 component 使用了 service，若要單元測試就牽涉到 DI 與 <code>spyOn()</code></li>
-<li>Service 單元測試可透過 <code>HttpTestingController</code> 加以隔離 <code>HttpClient</code></li>
-<li>Component 單元測試可透過 <code>spyOn()</code> 加以隔離 service</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52ServiceUnitTest" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://angular.io" target="_blank" rel="external">Angular</a>, <a href="https://angular.io/guide/testing" target="_blank" rel="external">Testing</a><br><a href="https://angular.io" target="_blank" rel="external">Angular</a>, <a href="https://angular.io/guide/http" target="_blank" rel="external">HttpClient</a><br><a href="https://offering.solutions/blog/author/" target="_blank" rel="external">Fabian Gosebrink</a>, <a href="https://offering.solutions/blog/articles/2017/10/02/testing-angular-2-http-service/" target="_blank" rel="external">Testing Angular Http Service</a><br><a href="https://medium.com/@paynoattn?source=post_header_lockup" target="_blank" rel="external">Chris Pawlukiewicz</a>, <a href="https://medium.com/@paynoattn/simple-observable-unit-testing-in-angular2-43c4f4a0bfe2" target="_blank" rel="external">Simple Observable Unit Testing in Angular 2</a><br>Jesse Palmer, <a href="https://www.manning.com/books/testing-angular-applications" target="_blank" rel="external">Testing Angular Applications</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 HttpTestingController 將大幅簡化單元測試]]>
     
     </summary>
     
