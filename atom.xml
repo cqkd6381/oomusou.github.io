@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-21T05:53:42.580Z</updated>
+  <updated>2018-02-21T07:10:47.356Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/cor/"/>
     <id>http://oomusou.io/design-pattern/cor/</id>
     <published>2018-02-21T12:23:43.000Z</published>
-    <updated>2018-02-21T05:53:42.580Z</updated>
+    <updated>2018-02-21T07:10:47.356Z</updated>
     <content type="html"><![CDATA[<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -184,6 +184,9 @@
 <p><strong>integer.checker.ts</strong></p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">integerCheck</span>(<span class="params">source: <span class="built_in">number</span></span>): <span class="title">boolean</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">Number</span>.isInteger(source);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>integer.checker.ts</code> 不用再使用 class，使用 function 即可，當然要符合 <code>checker.interface.ts</code> 的規格。</p>
+<blockquote>
+<p>我們可發現 FP 版本的 <code>integerCheck()</code> 甚至不用判斷 <code>nextChecker()</code>，專心的判斷 <code>isInteger()</code> 即可，比 OOP 版更加符合 <code>單一職責原則</code></p>
+</blockquote>
 <p><strong>product-no.checker.ts</strong></p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CheckerInterface &#125; from <span class="string">'./checker.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; integerCheck &#125; from <span class="string">'./integer.checker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; doubleCheck &#125; from <span class="string">'./double.checker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; tripleCheck &#125; from <span class="string">'./triple.checker'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ProductNoChecker &#123;</span><br><span class="line">  checkers: CheckerInterface[];</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>() </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.checkers = [</span><br><span class="line">      integerCheck,</span><br><span class="line">      doubleCheck,</span><br><span class="line">      tripleCheck</span><br><span class="line">    ];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.checkers.every(checker =&gt; checker(productNo));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>第 9 行</p>
