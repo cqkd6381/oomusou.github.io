@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-21T05:50:18.565Z</updated>
+  <updated>2018-02-21T05:52:07.193Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/cor/"/>
     <id>http://oomusou.io/design-pattern/cor/</id>
     <published>2018-02-21T12:23:43.000Z</published>
-    <updated>2018-02-21T05:50:18.565Z</updated>
+    <updated>2018-02-21T05:52:07.193Z</updated>
     <content type="html"><![CDATA[<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -217,7 +217,7 @@
 <p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52CoR" target="_blank" rel="external">GitHub</a> 上找到</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[標題描述]]>
+    <![CDATA[專門應付特殊場的 if]]>
     
     </summary>
     
