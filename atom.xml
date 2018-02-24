@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-24T13:02:13.270Z</updated>
+  <updated>2018-02-24T13:13:25.529Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/docker/netcore101/"/>
     <id>http://oomusou.io/docker/netcore101/</id>
     <published>2018-02-25T12:23:43.000Z</published>
-    <updated>2018-02-24T13:02:13.270Z</updated>
+    <updated>2018-02-24T13:13:25.529Z</updated>
     <content type="html"><![CDATA[<p>除了在 Windows、Mac、Linux 安裝原生的 .NET Core 外，也可以使用 Docker 的方式安裝 .NET Core。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -106,6 +106,7 @@
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>本文為 Docker 最基本操作，都是使用 Docker 一定要會的基本指令</li>
+<li>若有 .NET Core app 包成 Docker image，也是使用類似的方式安裝執行之</li>
 </ul>
 ]]></content>
     <summary type="html">
