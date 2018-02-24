@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-24T02:32:16.820Z</updated>
+  <updated>2018-02-24T02:35:28.958Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/setup/"/>
     <id>http://oomusou.io/fsharp/setup/</id>
     <published>2018-02-24T12:23:43.000Z</published>
-    <updated>2018-02-24T02:32:16.820Z</updated>
+    <updated>2018-02-24T02:35:28.958Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 可以跑在 macOS，只要安裝 .NET Core SDK，搭配使用 VS Code 或 Rider，就可以練習 F# 了。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -70,7 +70,7 @@
 <li>輸入 <code>dotnet</code>，並將 <code>MyConsole.dll</code> 的完整路徑複製貼上</li>
 </ol>
 <h2 id="Rider">Rider</h2><hr>
-<p>使用 Rider 開發 F# 更簡單，只要安裝好 .NET Code SDK 與 Rider 後就沒事了。</p>
+<p>使用 Rider 開發 F# 更簡單，只要安裝好 .NET Core SDK 與 Rider 後就沒事了。</p>
 <h3 id="建立_FSharp_專案-1">建立 FSharp 專案</h3><p><img src="/images/fsharp/setup/setup006.png" alt="setup006"></p>
 <ol>
 <li>選擇 <code>Console Application</code></li>
