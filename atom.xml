@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-24T03:21:21.977Z</updated>
+  <updated>2018-02-24T13:02:13.270Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,116 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何使用 Docker 安裝 .NET Core ?]]></title>
+    <link href="http://oomusou.io/docker/netcore101/"/>
+    <id>http://oomusou.io/docker/netcore101/</id>
+    <published>2018-02-25T12:23:43.000Z</published>
+    <updated>2018-02-24T13:02:13.270Z</updated>
+    <content type="html"><![CDATA[<p>除了在 Windows、Mac、Linux 安裝原生的 .NET Core 外，也可以使用 Docker 的方式安裝 .NET Core。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>.NET Core 2.1.4</p>
+<h2 id="下載_-NET_Core_Image">下載 .NET Core Image</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker pull microsoft/dotnet</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker pull</code> 下載最新版 .NET Core image 到本機。</p>
+<p><img src="/images/docker/netcore101/netcore000.png" alt="netcore000"></p>
+<ol>
+<li>輸入 <code>docker pull microsoft/dotnet</code> 下載 .NET Core image，其中 <code>microsoft/dotnet</code> 是 Microsoft 所維護的 image，適合 console app 使用</li>
+<li>下載最新版 image 成功</li>
+</ol>
+<h2 id="建立_Container">建立 Container</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyNetCore -dt microsoft/dotnet</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 .NET Core image 建立 container 並執行之。</p>
+<ul>
+<li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyNetCore</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
+<li><strong>-d</strong> : <code>d</code> etach，建立 container 後，就脫離目前 process</li>
+<li><strong>-t</strong> : <code>t</code> terminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
+<li><strong>microsoft/dotnet</strong> : 為 .NET Core 官方 image</li>
+</ul>
+<p><img src="/images/docker/netcore101/netcore001.png" alt="netcore001"></p>
+<ol>
+<li>輸入 <code>docker run</code> 建立 container 外，還會順便直執行 container</li>
+</ol>
+<h2 id="啟動_Container">啟動 Container</h2><hr>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">start</span> MyNetCore</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker start</code> 啟動 .NET Core container</p>
+<blockquote>
+<p>既然 container 已經建立在硬碟，將來要在執行 container 就不必透過 <code>docker run</code>，直接執行 <code>docker start</code> 啟動 .NET Core container 即可</p>
+</blockquote>
+<p><img src="/images/docker/netcore101/netcore002.png" alt="netcore002"></p>
+<ol>
+<li>輸入 <code>docker stop MyNetCore</code> 啟動 <code>MyNetCore</code> container</li>
+</ol>
+<h2 id="進入_-NET_Core_的_Terminal">進入 .NET Core 的 Terminal</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyNetCore bash</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker exec -it</code> 對 .NET Core 下指令。</p>
+<blockquote>
+<p>要對 container 內部的 Linux 下指令，必須先將 Bash 包起來</p>
+</blockquote>
+<ul>
+<li><strong>exec</strong> : 執行 Container 內的的 Linux 指令</li>
+<li><strong>-i</strong> : <code>i</code> teractive，可對 terminal 輸入資料</li>
+<li><strong>-t</strong> : <code>t</code> terminal，可對 terminal 顯示資料</li>
+<li><strong>MyJenkins</strong> : container 名稱</li>
+<li><code>bash</code> : 對 container 下的指令</li>
+</ul>
+<p><img src="/images/docker/netcore101/netcore003.png" alt="netcore003"></p>
+<ol>
+<li>輸入 <code>docker exec -it MyNetCore bash</code> 執行 <code>MyNetCore</code> container 的 Bash</li>
+<li>輸入 <code>dotnet —version</code>，顯示 container 內已經安裝 .NET Core SDK </li>
+<li>輸入 <code>exit</code> 離開 container 的 terminal</li>
+</ol>
+<h2 id="停止_Container">停止 Container</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker stop <span class="constant">MyNetCore</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker stop</code> 停止 .NET Core container。</p>
+<p><img src="/images/docker/netcore101/netcore004.png" alt="netcore004"></p>
+<ol>
+<li>輸入 <code>docker stop MyNetCore</code> 停止 <code>MyNetCore</code> container</li>
+</ol>
+<h2 id="刪除_Container">刪除 Container</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rm <span class="constant">MyNetCore</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker rm</code> 刪除未執行的 .NET Core container。</p>
+<blockquote>
+<p>Container 儘管不執行，但仍存在於硬碟中，若想徹底移除 .NET Core，必須先刪除 .NET Core container，然後再刪除 .NET Core image</p>
+</blockquote>
+<p><img src="/images/docker/netcore101/netcore005.png" alt="netcore005"></p>
+<ol>
+<li>輸入 <code>docker rm MyNetCore</code> 刪除 <code>MyNetCore</code> container</li>
+</ol>
+<h2 id="刪除_Image">刪除 Image</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rmi microsoft/dotnet</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker rmi</code> 刪除 .NET Core image。</p>
+<blockquote>
+<p>只要刪除 container 與 image，就可以徹底移除 app，這也是 Docker 受歡迎的原因，不再因為安裝任何 app 而污染 host 環境</p>
+</blockquote>
+<p><img src="/images/docker/netcore101/netcore006.png" alt="netcore006"></p>
+<ol>
+<li>輸入 <code>docker rmi microsoft/dotnet</code> 刪除 .NET Core image</li>
+</ol>
+<h2 id="Summary">Summary</h2><hr>
+<p><img src="/images/docker/netcore101/netcore007.svg" alt="netcore007"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>本文為 Docker 最基本操作，都是使用 Docker 一定要會的基本指令</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[不用污染 host 環境，直接使用 Docker]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何設定 F# 開發環境 ?]]></title>
     <link href="http://oomusou.io/fsharp/setup/"/>
     <id>http://oomusou.io/fsharp/setup/</id>
     <published>2018-02-24T12:23:43.000Z</published>
-    <updated>2018-02-24T03:21:21.977Z</updated>
+    <updated>2018-02-24T12:25:41.331Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 可以跑在 macOS，只要安裝 .NET Core SDK，搭配使用 VS Code 或 Rider，就可以練習 F# 了。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -98,6 +203,8 @@
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
     
   </entry>
   
@@ -803,7 +910,7 @@
     <link href="http://oomusou.io/docker/ubuntu101/"/>
     <id>http://oomusou.io/docker/ubuntu101/</id>
     <published>2018-02-16T12:23:43.000Z</published>
-    <updated>2018-02-14T09:27:39.000Z</updated>
+    <updated>2018-02-24T12:53:58.420Z</updated>
     <content type="html"><![CDATA[<p>以前在 macOS 安裝 Ubuntu 都要先安裝 Parallel Desktop，然後再將 Ubuntu 安裝在 Parallel Desktop 上，安裝了 Docker for Mac 後，只要下載 Ubuntu 的 Docker image，Ubuntu 就能以 container 形式跑在 Docker 上。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -929,7 +1036,7 @@
 <p><img src="/images/docker/ubuntu/ubuntu014.svg" alt="ubuntu014"></p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>本文為 Docker 最基本的操作，是使用 Docker 一定要會的基本指令。</li>
+<li>本文為 Docker 最基本的操作，是使用 Docker 一定要會的基本指令</li>
 </ul>
 ]]></content>
     <summary type="html">
@@ -2069,85 +2176,6 @@
     </summary>
     
       <category term="WebStorm" scheme="http://oomusou.io/tags/WebStorm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Angular 對 Route 單元測試 ?]]></title>
-    <link href="http://oomusou.io/angular/route-unit-test/"/>
-    <id>http://oomusou.io/angular/route-unit-test/</id>
-    <published>2018-02-02T12:23:43.000Z</published>
-    <updated>2018-02-18T09:58:25.803Z</updated>
-    <content type="html"><![CDATA[<p>前後端分離後，Angular 有自己的 route，在 component 也必須處理 route。由於 component 是 DI 注入 <code>Router</code>，因此若要對 route 單元測試，首先必須要解決的就是 <code>Router</code> 注入問題 。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>Node.js 8.9.4<br>Angular CLI 1.6.7<br>Angular 5.2.3</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p><img src="/images/angular/route-unit-test/router000.png" alt="router000"></p>
-<p>首頁使用的是 <code>PostComponent</code>，按下 <code>Redirect to comment</code> 將會導到 <code>/comment</code>。</p>
-<p><img src="/images/angular/route-unit-test/router001.png" alt="router001"></p>
-<p>導到 <code>/comment</code> 之後，將顯示 <code>CommentComponent</code> 。</p>
-<h2 id="Task">Task</h2><hr>
-<p>對 <code>PostComponent</code> 單元測試，確定有正確導到 <code>/comment</code>。</p>
-<h2 id="Implementation">Implementation</h2><hr>
-<p><strong>app-routing.module.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; RouterModule, Routes &#125; from <span class="string">'@angular/router'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostComponent &#125; from <span class="string">'./post/post.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CommentComponent &#125; from <span class="string">'./comment/comment.component'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123; path: <span class="string">''</span>, component: PostComponent &#125;,</span><br><span class="line">  &#123; path: <span class="string">'comment'</span>, component: CommentComponent &#125;</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  imports: [RouterModule.forRoot(routes)],</span><br><span class="line">  exports: [RouterModule]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppRoutingModule &#123; &#125;</span><br></pre></td></tr></table></figure>
-<p>第 6 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> routes: Routes = [</span><br><span class="line">  &#123; path: <span class="string">''</span>, component: PostComponent &#125;,</span><br><span class="line">  &#123; path: <span class="string">'comment'</span>, component: CommentComponent &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
-<p>實際的 route 設定，為了單元測試也能使用，所以特別使用 <code>export</code> 。</p>
-<p><strong>post.component.html</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span>post works!<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">button</span> (<span class="attribute">click</span>)=<span class="value">"onRedirectClick()"</span>&gt;</span>Redirect to comment<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>當按下 <code>Redirect to comment</code> 時，會執行  <code>onRedirectClick()</code>。</p>
-<p><strong>post.component.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Component &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Router &#125; from <span class="string">'@angular/router'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'app-post'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./post.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="string">'./post.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> PostComponent &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private router: Router) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onRedirectClick() &#123;</span><br><span class="line">    <span class="keyword">this</span>.router.navigateByUrl(<span class="string">'comment'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>10 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>(private router: Router) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>要使用 <code>Router</code> 去切換 route，因此 DI 注入 <code>Router</code>。</p>
-<p>13 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">onRedirectClick() &#123;</span><br><span class="line">  <span class="keyword">this</span>.router.navigateByUrl(<span class="string">'comment'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Router.navigateByUrl()</code> 切換到 <code>comment</code>。</p>
-<p><strong>post.component.spec.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ComponentFixture, fakeAsync, TestBed, tick &#125; from <span class="string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PostComponent &#125; from <span class="string">'./post.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; RouterTestingModule &#125; from <span class="string">'@angular/router/testing'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; routes &#125; from <span class="string">'../app-routing.module'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; CommentComponent &#125; from <span class="string">'../comment/comment.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Router &#125; from <span class="string">'@angular/router'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="string">'PostComponent'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> fixture: ComponentFixture&lt;PostComponent&gt;;</span><br><span class="line">  <span class="keyword">let</span> postComponent: PostComponent;</span><br><span class="line">  <span class="keyword">let</span> router: Router;</span><br><span class="line"></span><br><span class="line">  beforeEach(() =&gt; &#123;</span><br><span class="line">    TestBed.configureTestingModule(&#123;</span><br><span class="line">      imports: [</span><br><span class="line">        RouterTestingModule.withRoutes(routes)</span><br><span class="line">      ],</span><br><span class="line">      declarations: [</span><br><span class="line">        PostComponent,</span><br><span class="line">        CommentComponent</span><br><span class="line">      ]</span><br><span class="line">    &#125;);</span><br><span class="line">    fixture = TestBed.createComponent(PostComponent);</span><br><span class="line">    postComponent = fixture.componentInstance;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line"></span><br><span class="line">    router = TestBed.get(Router);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="string">'should create'</span>, () =&gt; &#123;</span><br><span class="line">    expect(postComponent).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(`should navigate to comment`, fakeAsync(() =&gt; &#123;</span><br><span class="line">    <span class="comment">/** act */</span></span><br><span class="line">    postComponent.onRedirectClick();</span><br><span class="line">    tick();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** assert */</span></span><br><span class="line">    expect(router.url).toEqual(<span class="string">'/comment'</span>);</span><br><span class="line">  &#125;));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-<p>15 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">imports: [</span><br><span class="line">  RouterTestingModule.withRoutes(routes)</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-<p>Angular 對於 route 單元測試，另外提供了 <code>RouterTestingModule</code>，使用 <code>withRoutes()</code> 將原本的 route 帶入。</p>
-<p>18 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">declarations: [</span><br><span class="line">  PostComponent,</span><br><span class="line">  CommentComponent</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-<p>由於我們由 <code>RouterTestingModule.withRoutes()</code> 所載入的 route 包含 <code>PostComponent</code> 與 <code>CommentComponent</code>，因此需要特別在 <code>declarations</code> 宣告。</p>
-<p>11 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> router: Router;</span><br></pre></td></tr></table></figure>
-<p>宣告要測試的 <code>router</code>。</p>
-<blockquote>
-<p>由於其型別仍然是 <code>Router</code>，而不是如 <code>HttpClient</code> 的 <code>HttpTestingController</code>，所以不算 mock，<code>RouterTestingModule</code> 只是幫我們解決了 DI 的問題</p>
-</blockquote>
-<p>27 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">router = TestBed.get(Router);</span><br></pre></td></tr></table></figure>
-<p>由 DI 幫我們建立 <code>router</code> 物件。</p>
-<p>34 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">it(`should navigate to comment`, fakeAsync(() =&gt; &#123;</span><br><span class="line">  <span class="comment">/** act */</span></span><br><span class="line">  postComponent.onRedirectClick();</span><br><span class="line">  tick();</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** assert */</span></span><br><span class="line">  expect(router.url).toEqual(<span class="string">'/comment'</span>);</span><br><span class="line">&#125;));</span><br></pre></td></tr></table></figure>
-<p>這裡使用了 <code>fackAsync()</code> 與 <code>tick()</code>，這是 Angular 提供的非同步測試機制。</p>
-<p>主要的原因是 <code>Router.navigateByUrl()</code> 回傳的是 <code>Promise&lt;boolean&gt;</code>，也就是非同步，因此必須使用 <code>fackAsync()</code> 與  <code>tick()</code>。</p>
-<p>簡單的說，由於在 <code>onRedirectClick()</code> 的 <code>Router.navigateByUrl()</code> 為非同步，我們必須使用 <code>tick()</code> 等待非同步執行完畢後，才能繼續執行 <code>expect()</code>，<code>tick()</code> 讓我們不用寫 callback，以更同步的寫法來測試非同步行為。</p>
-<p>最後直接 <code>expect()</code> <code>router.url</code>，測試目前 url 有沒有如預期。</p>
-<p><img src="/images/angular/route-unit-test/router002.png" alt="router002"></p>
-<p>使用 Wallaby.js 通過所有 route 單元測試。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Route 單元測試的可貴在於不用執行 <code>ng serve</code>，就可以測試 route 是否正確</li>
-<li>Route 單元測試的難點在於該如何解決 <code>Router</code> DI 注入，所幸搭配 <code>RouterTestingModule</code>，就可以幫我們解決</li>
-<li><code>RouterTestingModule</code> 所提供的方式不算 mock <code>Router</code>，只是幫我們解決了 <code>Router</code> DI 注入問題，不管如何，能夠在不執行 <code>ng serve</code> 就可執行測試，就非常難得</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52RouteUnitTest" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://angular.io" target="_blank" rel="external">Angular</a>, <a href="https://angular.io/guide/testing" target="_blank" rel="external">Testing</a><br><a href="https://twitter.com/intent/follow?original_referer=https%3A%2F%2Fcodecraft.tv%2Fcourses%2Fangular%2Funit-testing%2Frouting%2F&amp;ref_src=twsrc%5Etfw&amp;screen_name=jawache&amp;tw_p=followbutton" target="_blank" rel="external">Asim</a>, <a href="https://codecraft.tv/courses/angular/unit-testing/routing/" target="_blank" rel="external">Testing Routing</a><br><a href="https://medium.com/@buraktasci" target="_blank" rel="external">Burak Tasci</a>, <a href="https://medium.com/burak-tasci/using-jasmine-framework-to-test-angular-router-b568a232efed" target="_blank" rel="external">Using Jasmine framework to test Angular Router</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[不執行 ng serve 下就可以測試 route]]>
-    
-    </summary>
-    
-      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
     
   </entry>
   
