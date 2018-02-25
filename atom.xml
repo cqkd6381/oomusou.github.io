@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-24T13:13:25.529Z</updated>
+  <updated>2018-02-25T15:24:16.288Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,115 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何將 .NET Core App 打包成 Docker Image ?]]></title>
+    <link href="http://oomusou.io/netcore/build-docker/"/>
+    <id>http://oomusou.io/netcore/build-docker/</id>
+    <published>2018-02-26T12:23:43.000Z</published>
+    <updated>2018-02-25T15:24:16.288Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core 除了可以在 Windows、macOS 與 Linux 執行外，更可以直接打包成 Docker image 發布。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>.NET Core 2.1.4</p>
+<h2 id="建立_Console_App">建立 Console App</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 .NET Core SDK 建立 console app。</p>
+<ul>
+<li><strong>new</strong> : 建立 project</li>
+<li><strong>console</strong> : 建立 console 類型 project</li>
+<li><strong>-o</strong> : 以 <code>MyConsole</code> 為專案名稱並建立目錄</li>
+</ul>
+<p><img src="/images/netcore/build-docker/docker000.png" alt="docker000"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 建立 <code>MyConsole</code> 專案，其專案類型為 <code>console app</code></li>
+</ol>
+<h2 id="建立_Dockerfile">建立 Dockerfile</h2><hr>
+<p>由於我們想要建立自己的 Docker image，因此要建立自己的 <code>Dockerfile</code>，Docker 才能依照此 <code>Dockerfile</code> 建立自己的 image。</p>
+<p><strong>Dockerfile</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># copy csproj and restore as distinct layers</span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">*.csproj ./</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">dotnet restore</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># copy and build everything else</span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">. ./</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">dotnet publish -c Release -o out</span><br><span class="line"></span><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"dotnet"</span>, <span class="string">"out/MyConsole.dll"</span>]</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br></pre></td></tr></table></figure>
+<p><code>FROM</code> 為 Dockerfile 指令，表示以哪一個 image 為基礎建立自己的 image。</p>
+<p>其中 <code>microsoft/dotnet</code> 是專為 console app 所設計的 image。</p>
+<p>以上表示將以 <code>microsoft/dotnet</code> image 為基礎建立自己的 console app image。</p>
+<p>第 2 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span></span><br></pre></td></tr></table></figure>
+<p><code>WORKDIR</code> 為 Dockerfile 指令，表示其他 Dockerfile 指令 (如 <code>RUN</code>、<code>CMD</code>、<code>ENTRYPOINT</code>、<code>COPY</code> 與 <code>ADD</code> …等) 的工作目錄。</p>
+<p>以上表示 <code>WORKDIR</code> 為 <code>/app</code>，若 <code>/app</code>  目錄不存在會自動建立。</p>
+<p>第 5 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">COPY</span> <span class="bash">*.csproj ./</span></span><br></pre></td></tr></table></figure>
+<p><code>COPY</code> 為 Dockerfile 指令，表示將 host 的檔案或目錄，複製到 container 的目錄。</p>
+<p>第 1 個參數為 host 檔案或目錄，第 2 個參數為 container 目錄。</p>
+<p>以上表示將目前目錄下的 project 檔複製到 container 目錄下。</p>
+<p>第 6 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">dotnet restore</span></span><br></pre></td></tr></table></figure>
+<p><code>RUN</code> 為 Dockerfile 指令，表示將在 container 內執行指令。</p>
+<p>以上表示將根據 <code>*.csproj</code> 將所有 NuGet package 加以 restore，並寫入新的 image。</p>
+<p>第 9 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">COPY</span> <span class="bash">. ./</span></span><br></pre></td></tr></table></figure>
+<p><code>COPY</code> 為 Dockerfile 指令，表示將 host 的檔案或目錄，複製到 container 的目錄。</p>
+<p>以上表示將目前目錄下所有檔案複製到 container 目錄下。</p>
+<p>第 10 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">dotnet publish -c Release -o out</span></span><br></pre></td></tr></table></figure>
+<p><code>RUN</code> 為 Dockerfile 指令，表示將在 container 內執行指令。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，若省略將使用 <code>Debug</code> 模式編譯，若要在 production 使用，要使用 <code>Release</code> 模式編譯</li>
+<li><strong>-o</strong> : 將 publish 結果寫在專案的 <code>out</code> 目錄</li>
+</ul>
+<p>以上表示將執行  <code>dotnet publish</code> 指令，使用 <code>Release</code> 模式編譯，並將 publish 結果寫在專案的 <code>out</code> 目錄下。</p>
+<p>11 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"dotnet"</span>, <span class="string">"out/MyConsole.dll"</span>]</span></span><br></pre></td></tr></table></figure>
+<p><code>ENTRYPOINT</code> 為 Dockerfile 指令，表示 container 一啟動時，該執行什麼指令。</p>
+<p>以上表示當 container 一啟動時，將執行 <code>dotnet out/MyConsole.dll</code>。</p>
+<p><img src="/images/netcore/build-docker/docker002.png" alt="docker002"></p>
+<ol>
+<li>在專案根目錄下建立 <code>Dockerfile</code></li>
+</ol>
+<h2 id="建立_Image">建立 Image</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ docker build -t <span class="keyword">my</span>/image .</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker build</code> 由 <code>Dockerfile</code> 建立 image。</p>
+<ul>
+<li><strong>-t</strong> : <code>t</code>ag，image 的名稱</li>
+</ul>
+<p>以上表示將目前目錄的 <code>Dockerfile</code> 建立成 image。</p>
+<p><img src="/images/netcore/build-docker/docker001.png" alt="docker001"></p>
+<ol>
+<li>輸入 <code>docker build -t my/image .</code> 將整個專案建立成 <code>my-image</code>。</li>
+</ol>
+<h2 id="執行_Container">執行 Container</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ docker <span class="command">run</span> <span class="comment">--rm my/image</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 建立 container 並執行之。</p>
+<ul>
+<li><strong>–rm</strong> : 執行完後立即刪除 container</li>
+</ul>
+<p>以上表示將 <code>my/image</code> 建立成 container 後，立即執行，執行完立即刪除 container，但 image 仍然保留。</p>
+<p><img src="/images/netcore/build-docker/docker003.png" alt="docker003"></p>
+<ol>
+<li>輸入 <code>docker run --rm my/image</code> 執行 container，將顯示 <code>Hello World</code></li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>將 .NET Core console app 打包成 Docker image 後，就可以跨平台執行此 image</li>
+<li>此範例雖然是 console app，事實上將 ASP.NET Core 打包成 Docker image 也是類似以上流程</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/MyConsole" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/core/" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/docker/docker-basics-dotnet-core" target="_blank" rel="external">Learn Docker Basics with .NET Core</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[直接以指令將 .NET Core 打包成 Docker]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何使用 Docker 安裝 .NET Core ?]]></title>
     <link href="http://oomusou.io/docker/netcore101/"/>
     <id>http://oomusou.io/docker/netcore101/</id>
     <published>2018-02-25T12:23:43.000Z</published>
-    <updated>2018-02-24T13:13:25.529Z</updated>
+    <updated>2018-02-25T13:15:01.497Z</updated>
     <content type="html"><![CDATA[<p>除了在 Windows、Mac、Linux 安裝原生的 .NET Core 外，也可以使用 Docker 的方式安裝 .NET Core。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -65,7 +169,7 @@
 <li><strong>exec</strong> : 執行 Container 內的的 Linux 指令</li>
 <li><strong>-i</strong> : <code>i</code> teractive，可對 terminal 輸入資料</li>
 <li><strong>-t</strong> : <code>t</code> terminal，可對 terminal 顯示資料</li>
-<li><strong>MyJenkins</strong> : container 名稱</li>
+<li><strong>MyNetCore</strong> : container 名稱</li>
 <li><code>bash</code> : 對 container 下的指令</li>
 </ul>
 <p><img src="/images/docker/netcore101/netcore003.png" alt="netcore003"></p>
@@ -2142,41 +2246,6 @@
     </summary>
     
       <category term="JavaScript" scheme="http://oomusou.io/tags/JavaScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何以 Command 方式執行 WebStorm 並開啟專案 ?]]></title>
-    <link href="http://oomusou.io/webstorm/run-by-command/"/>
-    <id>http://oomusou.io/webstorm/run-by-command/</id>
-    <published>2018-02-03T12:23:43.000Z</published>
-    <updated>2018-02-03T12:19:01.000Z</updated>
-    <content type="html"><![CDATA[<p>我們看到 Visual Studio Code 可以在 terminal 下 command 開啟目前目錄的專案，WebStorm 是否也能以這種方式啟動呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>WebStorm 2017.3.4</p>
-<h2 id="建立啟動_Script">建立啟動 Script</h2><hr>
-<p><img src="/images/webstorm/run-by-command/cmd000.png" alt="cmd000"></p>
-<p><strong><em>Tools -&gt; Create Command-line Launcher…</em></strong></p>
-<p><img src="/images/webstorm/run-by-command/cmd002.png" alt="cmd002"></p>
-<p>WebStorm 預設會將 script 建立在 <code>/usr/local/bin/</code>，將來將以 <code>webstorm</code> command 啟動。</p>
-<blockquote>
-<p>為了少打點字，你也可以自行命名，如 <code>/usr/local/bin/ws</code></p>
-</blockquote>
-<h2 id="在_Terminal_執行_WebStorm">在 Terminal 執行 WebStorm</h2><hr>
-<p><img src="/images/webstorm/run-by-command/cmd001.png" alt="cmd001"></p>
-<p>在 terminal 下進入專案目錄，輸入 <code>webstorm .</code> ，WebStorm 會自動執行，並且開啟 <code>NG52MergeMap</code> 專案。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>WebStorm 除了使用 <code>JetBrains ToolBox</code> 開啟專案外，也可以使用 command 方式在直接開啟</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[更快速的啟動方式]]>
-    
-    </summary>
-    
-      <category term="WebStorm" scheme="http://oomusou.io/tags/WebStorm/"/>
     
   </entry>
   
