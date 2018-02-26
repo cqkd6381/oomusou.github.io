@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-26T06:55:49.345Z</updated>
+  <updated>2018-02-26T10:25:35.310Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,113 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 Docker 安裝 Jenkins ?]]></title>
+    <link href="http://oomusou.io/docker/jenkins/"/>
+    <id>http://oomusou.io/docker/jenkins/</id>
+    <published>2018-02-28T12:23:43.000Z</published>
+    <updated>2018-02-26T10:25:35.310Z</updated>
+    <content type="html"><![CDATA[<p>若要在 macOS 執行 Jenkins，由於 Jenkins 是由 Java 開發，當然可以直接在 macOS 安裝原生的 Jenkins，若是測試與學習的角度，更好的選擇就是安裝 Docker 版的 Jenkins，若要移除 Jenkins，直接刪除 Docker 的 container 與 image 即可，不會污染到 macOS 環境。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>Jenkins 2.89.4</p>
+<h2 id="下載_Jenkins_Image">下載 Jenkins Image</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker pull jenkins/<span class="symbol">jenkins:</span>lts</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker pull</code> 下載 image 到本機。</p>
+<blockquote>
+<p>lts : 表示 Long time support 版本，通常較為穩定</p>
+</blockquote>
+<p><img src="/images/docker/jenkins/docker000.png" alt="docker000"></p>
+<h2 id="建立_Container">建立 Container</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkins -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
+<ul>
+<li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyJenkins</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
+<li><strong>-p</strong> : Docker 外部與 Jenkins 內部所對應的 port，其中左邊為外部 Docker 的 port，右邊為 Jenkins 內部的 port</li>
+<li><strong>-v</strong> : 建立 <code>JENKINS_HOME</code> 環境變數，其目錄在 <code>/var/jenkins_home</code>，為 Jenkins 的工作目錄</li>
+</ul>
+<p><img src="/images/docker/jenkins/docker001.png" alt="docker001"></p>
+<ol>
+<li><code>docker run</code> 除了建立 container 外，還會順便執行 container。</li>
+</ol>
+<h2 id="Unlock_Jenkins">Unlock Jenkins</h2><hr>
+<p><img src="/images/docker/jenkins/docker002.png" alt="docker002"></p>
+<p>Jenkins 一旦啟動後，就必須在 browser 設定 Jenkins，安裝 plugin。</p>
+<p>一開始會要求輸入 Administrator password，並提示預設密碼已經寫在 <code>/var/jenkins_home/secrets/initialAdminPassword</code>。</p>
+<p>由於我們現在是使用 Docker，因此該目錄是在 container 內，而不是在 host，因此要進入 container 內讀出 <code>initialAdminPassword</code> 。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>exec -it <span class="constant">MyJenkins </span>bash</span><br><span class="line">jenkins<span class="variable">@54ceef740712</span><span class="symbol">:/</span><span class="variable">$ </span>cat /var/jenkins_home/secrets/initialAdminPassword</span><br></pre></td></tr></table></figure>
+<p>先進入 Jenkins 的 terminal，再將密碼 <code>cat</code> 出來。</p>
+<p><img src="/images/docker/jenkins/docker009.png" alt="docker009"></p>
+<ol>
+<li>輸入 <code>exec it MyJenkins bash</code> 進入 Jenkins terminal</li>
+<li>輸入 <code>cat /var/jenkins_home/secrets/initialAdminPassword</code> 顯示密碼</li>
+</ol>
+<h2 id="Customize_Jenkins">Customize Jenkins</h2><hr>
+<p><img src="/images/docker/jenkins/docker010.png" alt="docker010"></p>
+<p>選擇 <code>Install suggested plugins</code> 安裝預設 plugin。</p>
+<h2 id="Getting_Started">Getting Started</h2><hr>
+<p><img src="/images/docker/jenkins/docker011.png" alt="docker011"></p>
+<p>需要一些時間安裝 plugin。</p>
+<h2 id="Create_Admin_User">Create Admin User</h2><hr>
+<p><img src="/images/docker/jenkins/docker012.png" alt="docker012"></p>
+<p>建立管理者密碼，按 <code>Save and Finish</code> 繼續。</p>
+<h2 id="Start_Using_Jenkins">Start Using Jenkins</h2><hr>
+<p><img src="/images/docker/jenkins/docker013.png" alt="docker013"></p>
+<p>按 <code>Start using Jenkins</code> 結束 <code>Jenkins</code> 設定。</p>
+<h2 id="Welcome_to_Jenkins">Welcome to Jenkins</h2><hr>
+<p><img src="/images/docker/jenkins/docker014.png" alt="docker014"></p>
+<p>熟悉的 Jenkins 設定介面已經呈現，Jenkins 到此算安裝完成。</p>
+<h2 id="將_Container_儲存成_Image">將 Container 儲存成 Image</h2><hr>
+<p>目前為止 Jenkins 已經設定好，也安裝了預設 plugin，所以在 container 內的 <code>/var/jenkins_home</code> 已經有不少資料，我們將以目前 container 儲存成 image，將來若 Jenkins container 被我們玩壞了，可以直接再以此 image 建立全新 container，或者將新的 image 匯出成 <code>tar</code>，可將此 <code>tar</code> 加以備份，或者將 <code>tar</code> 檔交給其他人匯入成 image。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker commit <span class="constant">MyJenkins </span>oomusou/jenkins</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker commit</code> 將 container 儲存成自己的 image。</p>
+<p><img src="/images/docker/jenkins/docker015.png" alt="docker015"></p>
+<ol>
+<li>輸入 <code>docker commit MyJenkins oomusou/jenkins</code> 將 <code>MyJenkins</code> container 儲存成 <code>oomusou/jenkins</code> image</li>
+<li>輸入 <code>docker images</code> 可以看到 <code>oomusou/jenkins</code> 已經新增</li>
+</ol>
+<h2 id="將_Image_匯出成_Tar">將 Image 匯出成 Tar</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker save -o MyJenkins<span class="class">.tar</span> oomusou/jenkins</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker save</code> 將 image 匯出成 <code>tar</code> 檔。</p>
+<ul>
+<li><strong>-o</strong> : 指定匯出 <code>tar</code>檔的檔名</li>
+</ul>
+<p><img src="/images/docker/jenkins/docker016.png" alt="docker016"></p>
+<ol>
+<li>輸入 <code>docker save -o MyJenkins.tar oomusou/jenkins</code> 將 <code>oomusou/jenkins</code> image 匯出成 <code>MyJenkins.tar</code></li>
+<li>硬碟已經產生 <code>MyJenkins.tar</code></li>
+</ol>
+<h2 id="從_Tar_匯入成_Image">從 Tar 匯入成 Image</h2><hr>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="operator"><span class="keyword">load</span> -<span class="keyword">i</span> MyJenkins.tar</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker load</code> 將 <code>tar</code> 檔匯入成 image。</p>
+<ul>
+<li><strong>-i</strong> : 指定匯入 <code>tar</code>檔的檔名</li>
+</ul>
+<p><img src="/images/docker/jenkins/docker017.png" alt="docker017"></p>
+<ol>
+<li>輸入 <code>docker load -i MyJenkins.tar</code> 將 <code>MyJenkins.tar</code> 匯入成 <code>oomusou/jenkins</code> image</li>
+</ol>
+<h2 id="建立新的_Container">建立新的 Container</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkins -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home oomusou/jenkins</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
+<p><img src="/images/docker/jenkins/docker018.png" alt="docker018"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>若使用 Jenkins Docker，則整個過程分成 Docker 操作與 Jenkins 設定部分</li>
+<li>可將最後設定好的 Jenkins 儲存成 image 與 <code>tar</code>，可將 <code>tar</code> 加以備份或傳給其他人</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[直接以 Docker 使用 Jenkins]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何設定 .NET Core 專案的 .gitignore ?]]></title>
@@ -158,8 +265,8 @@
   
   <entry>
     <title><![CDATA[如何使用 Docker 安裝 .NET Core ?]]></title>
-    <link href="http://oomusou.io/docker/netcore101/"/>
-    <id>http://oomusou.io/docker/netcore101/</id>
+    <link href="http://oomusou.io/docker/netcore/"/>
+    <id>http://oomusou.io/docker/netcore/</id>
     <published>2018-02-25T12:23:43.000Z</published>
     <updated>2018-02-25T13:15:01.497Z</updated>
     <content type="html"><![CDATA[<p>除了在 Windows、Mac、Linux 安裝原生的 .NET Core 外，也可以使用 Docker 的方式安裝 .NET Core。</p>
@@ -1052,8 +1159,8 @@
   
   <entry>
     <title><![CDATA[如何使用 Docker 安裝 Ubuntu ?]]></title>
-    <link href="http://oomusou.io/docker/ubuntu101/"/>
-    <id>http://oomusou.io/docker/ubuntu101/</id>
+    <link href="http://oomusou.io/docker/ubuntu/"/>
+    <id>http://oomusou.io/docker/ubuntu/</id>
     <published>2018-02-16T12:23:43.000Z</published>
     <updated>2018-02-24T12:53:58.420Z</updated>
     <content type="html"><![CDATA[<p>以前在 macOS 安裝 Ubuntu 都要先安裝 Parallel Desktop，然後再將 Ubuntu 安裝在 Parallel Desktop 上，安裝了 Docker for Mac 後，只要下載 Ubuntu 的 Docker image，Ubuntu 就能以 container 形式跑在 Docker 上。</p>
@@ -2031,212 +2138,6 @@
     </summary>
     
       <category term="VS Code" scheme="http://oomusou.io/tags/VS-Code/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Angular 實現 Pub/Sub Pattern ?]]></title>
-    <link href="http://oomusou.io/design-pattern/pubsub/"/>
-    <id>http://oomusou.io/design-pattern/pubsub/</id>
-    <published>2018-02-04T12:23:43.000Z</published>
-    <updated>2018-02-18T10:15:18.689Z</updated>
-    <content type="html"><![CDATA[<p>Pub/Sub Pattern 是 OOP 中著名的 Design Pattern，尤其應付 <code>多對多</code> 的場景特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
-<p>Pub/Sub Pattern 與 Observer Pattern 非常接近，將特別探討與 Observer Pattern 之間的差異。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>Node.js 8.9.4<br>Angular CLI 1.6.2<br>Angular 5.2.2</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p><img src="/images/angular/pubsub/pub000.png" alt="pub000"></p>
-<p>畫面上有兩個 <code>數字鐘</code>，上面的是 <code>每秒鐘</code> 更新一次，下面的是 <code>每 3 秒</code> 更新一次。</p>
-<h2 id="Task">Task</h2><hr>
-<p>程式碼希望分成兩部分，一個部分送出 <code>目前時間</code>，另一個部分負責 <code>顯示時間</code>。</p>
-<p>但因為目前分成 <code>每秒鐘</code> 與 <code>每 3 秒</code>，因此會有 2 個 class <code>分別</code> 負責產生時間。</p>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p>Pub/Sub Pattern</p>
-<p>當物件之間有 <code>多對多</code> 的依賴關係，且當 <code>多</code> 的 <code>發行者</code> (publisher) 改變時，<code>多</code> 的 <code>訂閱者</code> (subscriber) 也必須跟著改變，就特別適合使用 <code>Pub/Sub Pattern</code></p>
-</blockquote>
-<p><img src="/images/angular/pubsub/pub008.svg" alt="pub008"></p>
-<p>此為 Pub/Sub Pattern 最原始的 UML class diagram，實務上會有多個 <code>publisher</code> 與多個 <code>subscriber</code>，且 <code>publisher</code> 與 <code>subscriber</code> 彼此互相依賴，<code>broker</code> 的介入讓 <code>publisher</code> 與 <code>subscriber</code> 的關係簡單化。</p>
-<p><code>subscriber</code> 不用知道有哪些 <code>publisher</code>，只要知道 <code>broker</code> 即可；<code>publisher</code> 也不用知道有哪些 <code>subscriber</code>，只要知道 <code>broker</code> 即可，如此 <code>subscriber</code> 與 <code>publisher</code> 就徹底解耦合，且將來無論新增多少 <code>subscriber</code> 與 <code>publisher</code>，唯一需要修改的只有 <code>broker</code>，符合 <code>開放封閉原則</code> 的要求。</p>
-<h2 id="Architecture">Architecture</h2><hr>
-<p><img src="/images/angular/pubsub/pub001.svg" alt="pub001"></p>
-<ul>
-<li><code>Clock1sPublisher</code> 負責 <code>每秒鐘</code> 送出目前時間；<code>Clock3sPublisher</code> 負責 <code>每 3 秒</code> 送出目前時間</li>
-<li><code>Digital1sComponent</code> 負責 <code>每秒鐘</code> 顯示目前時間； <code>Digital3sComponent</code> 負責 <code>每 3 秒</code> 顯示目前時間</li>
-<li><code>DigitalComponent</code> 必須能向 <code>ClockBroker</code> <code>subscribe</code> 資料；<code>ClockPublisher</code> 必須能向 <code>ClockBroker</code> <code>publish</code> 資料，根據 <code>DigitalComponent</code> 與 <code>ClockPublisher</code> 需求，訂出 <code>BrokerInterface</code>，期望 <code>ClockBroker</code> 能遵守</li>
-<li><code>ClockBroker</code> 必須能向 <code>DigitalComponent</code> 送出目前時間，根據 <code>ClockBroker</code> 需求，訂出 <code>SubscriberInterface</code>，期望 <code>DigitalComponent</code> 能遵守</li>
-<li><code>ClockBroker</code> 必須能向 <code>ClockPublisher</code> 設定 broker，根據 <code>ClockBroker</code> 需求，訂出 <code>PublisherInterface</code>，期望 <code>ClockPublisher</code> 能遵守</li>
-</ul>
-<h2 id="Implementation">Implementation</h2><hr>
-<h3 id="DigitalClock1sComponent">DigitalClock1sComponent</h3><p><img src="/images/angular/pubsub/pub002.svg" alt="pub002"></p>
-<p><strong>digital-clock1s.component.html</strong></p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; now | date:'HH:mm:ss'&#125;&#125;</span><br></pre></td></tr></table></figure>
-<p>HTML 負責顯示 <code>目前時間</code>，至於 <code>時:分:秒</code> 部分就不用自己寫程式處理了，靠 pipe 即可。</p>
-<p><strong>digital-clock1s.component.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Component, Inject, OnDestroy, OnInit &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ClockBroker &#125; from <span class="string">'../../broker/clock.broker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubscriberInterface &#125; from <span class="string">'../../interface/subscriber.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubjectEnum &#125; from <span class="string">'../../enum/subject.enum'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterface &#125; from <span class="string">'../../interface/broker.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterfaceToken &#125; from <span class="string">'../../interface/injection.token'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'app-digital-clock1s'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./digital-clock1s.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="string">'./digital-clock1s.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DigitalClock1sComponent <span class="keyword">implements</span> SubscriberInterface, OnInit, OnDestroy &#123;</span><br><span class="line">  now: <span class="built_in">Date</span> = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(</span><br><span class="line">    @Inject(BrokerInterfaceToken)</span><br><span class="line">    private clockBroker: BrokerInterface) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker.subscribe(SubjectEnum.Clock1s, <span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngOnDestroy(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker.unsubscribe(SubjectEnum.Clock3s, <span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  update(date: <span class="built_in">Date</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.now = date;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>12 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DigitalClock1sComponent <span class="keyword">implements</span> SubscriberInterface</span><br></pre></td></tr></table></figure>
-<p>先不考慮 <code>DigitalClock1sComponent</code> 所使用的 <code>SubscriberInterface</code> ，稍後會討論。</p>
-<p>也因為是實現 <code>SubscriberInterface</code>，因此 <code>DigitalClock1sComponent</code> 本質上就是一個 <code>Subscriber</code>，只是藉由 component 實作。</p>
-<blockquote>
-<p><code>subscriber</code>  在觀念上很類似 Observer Pattern 的 <code>observer</code></p>
-</blockquote>
-<p>20 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.clockBroker.subscribe(SubjectEnum.Clock1s, <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>回想 <code>subscriber</code> 的初衷，除了顯示 <code>目前時間</code> 外，另外一個目的就是能對 <code>broker</code> 加以 <code>訂閱</code> 與 <code>取消訂閱</code>。</p>
-<p>既然要訂閱，該在什麼時候執行呢 ?</p>
-<p>最好是在 <code>subscriber</code> 開始 <code>初始化</code> 時就對 <code>broker</code> 加以訂閱，因此選擇使用 <code>ngOnInit()</code> lifecycle hook。</p>
-<p>並且希望 <code>broker</code> 有 <code>subscribe()</code>，提供 <code>訂閱</code>功能。</p>
-<p><code>subscribe()</code> 第 1 個參數為 <code>SubjectEnum</code>，設定要 subscribe 什麼 subject；第 2 個參數則是將 <code>this</code> 傳進去，準備將來 callback 使用。</p>
-<blockquote>
-<p>Sub/Pub Pattern 與 Observer Pattern 一個主要的差異是 observer 會直接對 subject 加以訂閱，但 Sub/Pub Pattern 則會透過 broker 加以訂閱</p>
-</blockquote>
-<p>24 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ngOnDestroy(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.clockBroker.unsubscribe(SubjectEnum.Clock1s, <span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然有 <code>訂閱</code>，就應該有 <code>取消訂閱</code>，該在什麼時候取消呢 ?</p>
-<p>最好是在 <code>subscriber</code> 最後 <code>被消滅</code> 時對 <code>broker</code> 加以 <code>取消註冊</code>，因此選擇 <code>ngOnDestroy()</code> lifecycle hook。</p>
-<p>並且希望 <code>broker</code> 有 <code>unsubscribe()</code> ，提供 <code>取消訂閱</code> 功能。</p>
-<blockquote>
-<p>綜合 <code>ngOnInit()</code> 與 <code>ngOnDestroy()</code>，根據 <code>介面隔離原則</code>，已經大概可猜到 broker 的 interface 該提供 <code>subscribe()</code> 與 <code>unsubscribe()</code> </p>
-</blockquote>
-<p>15 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>(</span><br><span class="line">  @Inject(BrokerInterfaceToken)</span><br><span class="line">  private clockBroker: BrokerInterface) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>subscriber</code> 需要 <code>ClockBroker</code>，因此必須在 constructor 將 <code>ClockBroker</code> DI 注入進來。</p>
-<p>根據 <code>依賴反轉原則</code> : <code>subscriber</code> 不應該依賴底層的 <code>broker</code>，兩者應該依賴於 interface。</p>
-<p>根據 <code>介面隔離原則</code> : <code>subscriber</code> 應該只相依於他所需要的 interface，目前看來只需要 <code>subscribe()</code> 與 <code>unsubscribe()</code>，因此由 <code>subscriber</code> 需求角度訂出的 broker 的 interface。</p>
-<p>因此 DI 注入的 <code>ClockBroker</code> ，其型別為 <code>BrokerInterface</code>，這樣就符合 <code>依賴反轉原則</code> 與 <code>介面隔離原則</code>。</p>
-<blockquote>
-<p><code>subscribe()</code> 在觀念上類似於 Observer Pattern 的 <code>addObserver()</code> ；而 <code>unsubscribe()</code> 類似於 <code>removeObserver()</code></p>
-</blockquote>
-<h3 id="Clock1sPublisher">Clock1sPublisher</h3><p><img src="/images/angular/pubsub/pub003.svg" alt="pub003"></p>
-<p><strong>clock1s.publisher.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PublisherInterface &#125; from <span class="string">'../../interface/publisher.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterface &#125; from <span class="string">'../../interface/broker.interface'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> Clock1sPublisher <span class="keyword">implements</span> PublisherInterface &#123;</span><br><span class="line">  <span class="keyword">private</span> interval = <span class="number">1000</span>;</span><br><span class="line">  <span class="keyword">private</span> clockBroker: BrokerInterface;</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>() </span>&#123;</span><br><span class="line">    setInterval(() =&gt; <span class="keyword">this</span>.tick(), <span class="keyword">this</span>.interval);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setBroker(broker: BrokerInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker = broker;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> tick(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker.publish(<span class="keyword">new</span> <span class="built_in">Date</span>());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 6 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> Clock1sPublisher <span class="keyword">implements</span> PublisherInterface</span><br></pre></td></tr></table></figure>
-<p>先不考慮 <code>Clock1sPublisher</code> 所使用的 <code>PublisherInterface</code> ，稍後會討論。</p>
-<p>10 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>() </span>&#123;</span><br><span class="line">  setInterval(() =&gt; <span class="keyword">this</span>.tick(), <span class="keyword">this</span>.interval);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根據需求，<code>publisher</code> 要能夠每秒送出 <code>目前時間</code>，所以使用 JavaScript 原生的 <code>setInterval()</code>，每 1 秒鐘呼叫 <code>tick()</code> 一次。</p>
-<p>18 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> tick(): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.clockBroker.publish(<span class="keyword">new</span> <span class="built_in">Date</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>每一秒執行 <code>tick()</code> 時，會將 <code>目前時間</code> 透過 <code>publish()</code> 發佈至 broker。</p>
-<blockquote>
-<p>根據 <code>介面隔離原則</code>，已經大概可猜到 <code>broker</code> 的 interface 該提供 <code>publish()</code> </p>
-</blockquote>
-<h3 id="BrokerInterface">BrokerInterface</h3><p><img src="/images/angular/pubsub/pub004.svg" alt="pub004"></p>
-<p><strong>broker.interface.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; SubjectEnum &#125; from <span class="string">'../enum/subject.enum'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubscriberInterface &#125; from <span class="string">'./subscriber.interface'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> BrokerInterface </span>&#123;</span><br><span class="line">  publish(date: <span class="built_in">Date</span>): <span class="built_in">void</span>;</span><br><span class="line">  subscribe(subject: SubjectEnum, subscriber: SubscriberInterface): <span class="built_in">void</span>;</span><br><span class="line">  unsubscribe(subject: SubjectEnum, subscriber: SubscriberInterface): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根據 <code>介面隔離原則</code>，<code>subscriber</code> 與 <code>publisher</code> 應該只相依於他所需要的 interface，目前看來共需要  <code>publish()</code>、<code>subscribe()</code> 與 <code>unsubscribe()</code>，因此訂出 <code>BrokerInterface</code>，而 <code>broker</code> 必須實作此 interface。</p>
-<h3 id="ClockBroker">ClockBroker</h3><p><img src="/images/angular/pubsub/pub005.svg" alt="pub005"></p>
-<p><strong>clock.broker.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Clock1sPublisher &#125; from <span class="string">'../publisher/clock1s/clock1s.publisher'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterface &#125; from <span class="string">'../interface/broker.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubscriberInterface &#125; from <span class="string">'../interface/subscriber.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Clock3sPublisher &#125; from <span class="string">'../publisher/clock3s/clock3s.publisher'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubjectEnum &#125; from <span class="string">'../enum/subject.enum'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubjectSubscriber &#125; from <span class="string">'../model/subject-subscriber.model'</span>;</span><br><span class="line"><span class="keyword">import</span> * as _ from <span class="string">'lodash'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ClockBroker <span class="keyword">implements</span> BrokerInterface &#123;</span><br><span class="line">  <span class="keyword">private</span> subscribers: SubjectSubscriber[] = [];</span><br><span class="line">  <span class="keyword">private</span> counter = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">private</span> maxCounter = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private clock1sPublisher: Clock1sPublisher,</span><br><span class="line">              private clock3sPublisher: Clock3sPublisher) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.clock1sPublisher.setBroker(<span class="keyword">this</span>);</span><br><span class="line">    <span class="keyword">this</span>.clock3sPublisher.setBroker(<span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  publish(date: <span class="built_in">Date</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.counter === <span class="keyword">this</span>.maxCounter) &#123;</span><br><span class="line">      <span class="keyword">this</span>.publishToClock3sSubscriber(date);</span><br><span class="line">      <span class="keyword">this</span>.counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.publishToClock1sSubscriber(date);</span><br><span class="line">    <span class="keyword">this</span>.counter++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  subscribe(subject: SubjectEnum, subscriber: SubscriberInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> subjectSubscriber: SubjectSubscriber = &#123;</span><br><span class="line">      subject: subject,</span><br><span class="line">      subscriber: subscriber</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">this</span>.subscribers.push(subjectSubscriber);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  unsubscribe(subject: SubjectEnum, subscriber: SubscriberInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> subjectSubscriber: SubjectSubscriber = &#123;</span><br><span class="line">      subject: subject,</span><br><span class="line">      subscriber: subscriber</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    _.remove(<span class="keyword">this</span>.subscribers, subjectSubscriber);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> publishToClock3sSubscriber(date: <span class="built_in">Date</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.subscribers</span><br><span class="line">      .filter(item =&gt; item.subject === SubjectEnum.Clock3s)</span><br><span class="line">      .forEach(item =&gt; item.subscriber.update(date));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> publishToClock1sSubscriber(date: <span class="built_in">Date</span>) &#123;</span><br><span class="line">    <span class="keyword">this</span>.subscribers</span><br><span class="line">      .filter(item =&gt; item.subject === SubjectEnum.Clock1s)</span><br><span class="line">      .forEach(item =&gt; item.subscriber.update(date));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>11 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ClockBroker <span class="keyword">implements</span> BrokerInterface</span><br></pre></td></tr></table></figure>
-<p>根據 <code>依賴反轉原則</code>，<code>broker</code> 應該相依於 <code>subscriber</code> 與 <code>publisher</code> 所訂出的 interface，因此必須實現 <code>BrokerInterface</code>。</p>
-<p>16 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>(private clock1sPublisher: Clock1sPublisher,</span><br><span class="line">            private clock3sPublisher: Clock3sPublisher) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.clock1sPublisher.setBroker(<span class="keyword">this</span>);</span><br><span class="line">  <span class="keyword">this</span>.clock3sPublisher.setBroker(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>ClockBroker</code> 的角色就是做 <code>publisher</code> 與 <code>subscriber</code> 的中介角色，除了 <code>被</code> <code>subscriber</code> 注入外，還必須自己注入多個 <code>publisher</code>。</p>
-<p>因為 <code>publisher</code> 將來會對 <code>broker</code> 加以 callback，因此使用 <code>setBroker()</code> 將 <code>broker</code> 的 reference 傳進去，讓 <code>publisher</code> 可對 <code>broker</code> 做 callback。</p>
-<blockquote>
-<p>根據 <code>介面隔離原則</code>，已經大概可猜到 <code>publisher</code> 的 interface 該提供 <code>setBroker()</code> </p>
-</blockquote>
-<p>12 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> subscribers: SubjectSubscriber[] = [];</span><br></pre></td></tr></table></figure>
-<p><code>subscribers</code> 陣列儲存所有訂閱的 <code>subscriber</code>，每個物件型別為 <code>SubjectSubscriber</code>。</p>
-<p>至於什麼是 <code>SubjectSubscriber</code>，稍後會討論。</p>
-<p>34 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">subscribe(subject: SubjectEnum, subscriber: SubscriberInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> subjectSubscriber: SubjectSubscriber = &#123;</span><br><span class="line">    subject: subject,</span><br><span class="line">    subscriber: subscriber</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">this</span>.subscribers.push(subjectSubscriber);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>BlockerInterface</code> 已經定義了 <code>subscribe()</code>，<code>broker</code> 就必須加以實作。</p>
-<p><code>SubjectSubscriber</code> 物件提供了 <code>subject</code> 與 <code>subscriber</code> 兩個 field，<code>subject</code> 儲存所訂閱的主題，其型別為 <code>SubjectEnum</code>，<code>subscriber</code> 儲存有訂閱的 <code>subscriber</code>，其型別為 <code>SubscriberInterface</code>。</p>
-<p><code>subscribers</code> 為陣列，使用 <code>push()</code> 新增資料進陣列。</p>
-<p>22 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">publish(date: <span class="built_in">Date</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">this</span>.counter === <span class="keyword">this</span>.maxCounter) &#123;</span><br><span class="line">    <span class="keyword">this</span>.publishToClock3sSubscriber(date);</span><br><span class="line">    <span class="keyword">this</span>.counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">this</span>.publishToClock1sSubscriber(date);</span><br><span class="line">  <span class="keyword">this</span>.counter++;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>BlockerInterface</code> 已經定義了 <code>publish()</code>，<code>broker</code> 就必須加以實作。</p>
-<p>目前 <code>broker</code> 主要應付兩種 <code>publisher</code>，一種是 <code>每秒</code>，另一種是 <code>每三秒</code>。</p>
-<p>每一秒 <code>counter</code> 會 <code>+1</code>，當 <code>counter</code> 為 <code>3</code> 會 reset 為 <code>0</code>。</p>
-<p>每 <code>3</code> 秒會執行 <code>publishToClock3sSubscriber()</code>，而每 <code>1</code> 秒會執行 <code>publishToClock1sSubscriber()</code>，並將 <code>目前時間</code> 送出。</p>
-<p>42 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> publishToClock3sSubscriber(date: <span class="built_in">Date</span>) &#123;</span><br><span class="line">  <span class="keyword">this</span>.subscribers</span><br><span class="line">    .filter(item =&gt; item.subject === SubjectEnum.Clock3s)</span><br><span class="line">    .forEach(item =&gt; item.subscriber.update(date));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>每 <code>3</code> 秒執行 <code>publishToClock3sSubscriber()</code> 一次，先 filter 只訂閱 <code>3 秒更新</code> 的 <code>subscriber</code>，然後 foreach 執行每個 <code>subscriber</code> 的 <code>update()</code>，並送出 <code>目前時間</code>。</p>
-<p>51 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> publishToClock1sSubscriber(date: <span class="built_in">Date</span>) &#123;</span><br><span class="line">  <span class="keyword">this</span>.subscribers</span><br><span class="line">    .filter(item =&gt; item.subject === SubjectEnum.Clock1s)</span><br><span class="line">    .forEach(item =&gt; item.subscriber.update(date));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>每 <code>1</code> 秒執行 <code>publishToClock1sSubscriber()</code> 一次，先 filter 只訂閱 <code>1 秒更新</code> 的 <code>subscriber</code>，然後 foreach 執行每個 <code>subscriber</code> 的 <code>update()</code>，並送出 <code>目前時間</code>。</p>
-<blockquote>
-<p>根據 <code>介面隔離原則</code>，已經大概可猜到 <code>subscriber</code> 的 interface 該提供 <code>update()</code> </p>
-</blockquote>
-<p>40 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">unsubscribe(subject: SubjectEnum, subscriber: SubscriberInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> subjectSubscriber: SubjectSubscriber = &#123;</span><br><span class="line">      subject: subject,</span><br><span class="line">      subscriber: subscriber</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    _.remove(<span class="keyword">this</span>.subscribers, subjectSubscriber);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>BlockerInterface</code> 已經定義了 <code>subscribe()</code>，<code>broker</code> 就必須加以實作。</p>
-<blockquote>
-<p>使用 Lodash 的 <code>remove()</code> 對陣列刪除物件</p>
-</blockquote>
-<h3 id="PublisherInterface">PublisherInterface</h3><p><img src="/images/angular/pubsub/pub006.svg" alt="pub006"></p>
-<p><strong>publisher.interface.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; BrokerInterface &#125; from <span class="string">'./broker.interface'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> PublisherInterface </span>&#123;</span><br><span class="line">  setBroker(broker: BrokerInterface): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根據 <code>介面隔離原則</code>，<code>publisher</code> 應該只相依於他所需要的 interface，目前看來需要  <code>setBroker()</code>，因此訂出 <code>PublisherInterface</code>，而 <code>publisher</code> 必須實作此 interface。</p>
-<h3 id="Clock1sPublisher-1">Clock1sPublisher</h3><p><img src="images/pub003.svg" alt="pub003"></p>
-<p><strong>clock1s.publisher.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; PublisherInterface &#125; from <span class="string">'../../interface/publisher.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterface &#125; from <span class="string">'../../interface/broker.interface'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> Clock1sPublisher <span class="keyword">implements</span> PublisherInterface &#123;</span><br><span class="line">  <span class="keyword">private</span> interval = <span class="number">1000</span>;</span><br><span class="line">  <span class="keyword">private</span> clockBroker: BrokerInterface;</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>() </span>&#123;</span><br><span class="line">    setInterval(() =&gt; <span class="keyword">this</span>.tick(), <span class="keyword">this</span>.interval);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setBroker(broker: BrokerInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker = broker;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> tick(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker.publish(<span class="keyword">new</span> <span class="built_in">Date</span>());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 6 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> Clock1sPublisher <span class="keyword">implements</span> PublisherInterface</span><br></pre></td></tr></table></figure>
-<p>根據 <code>依賴反轉原則</code>，<code>publisher</code> 應該相依於 <code>broker</code> 所訂出的 interface，因此必須實現 <code>PublisherInterface</code>。</p>
-<p>14 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">setBroker(broker: BrokerInterface): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.clockBroker = broker;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>PublisherInterface</code> 已經定義了 <code>setBroker()</code>，<code>publisher</code> 就必須加以實作。</p>
-<h3 id="SubscriberInterface">SubscriberInterface</h3><p><img src="/images/angular/pubsub/pub007.svg" alt="pub007"></p>
-<p><strong>subscriber.interface.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> SubscriberInterface </span>&#123;</span><br><span class="line">  update(date: <span class="built_in">Date</span>): <span class="built_in">void</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根據 <code>介面隔離原則</code>，<code>broker</code> 應該只相依於他所需要的 interface，目前看來需要  <code>update()</code>，因此訂出 <code>SubscriberInterface</code>，而 <code>subscriber</code> 必須實作此 interface。</p>
-<h3 id="DigitalClock1sComponent-1">DigitalClock1sComponent</h3><p><img src="images/pub002.svg" alt="pub002"></p>
-<p><strong>digital-clock1s.component.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Component, Inject, OnDestroy, OnInit &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ClockBroker &#125; from <span class="string">'../../broker/clock.broker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubscriberInterface &#125; from <span class="string">'../../interface/subscriber.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; SubjectEnum &#125; from <span class="string">'../../enum/subject.enum'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterface &#125; from <span class="string">'../../interface/broker.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterfaceToken &#125; from <span class="string">'../../interface/injection.token'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'app-digital-clock1s'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./digital-clock1s.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="string">'./digital-clock1s.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DigitalClock1sComponent <span class="keyword">implements</span> SubscriberInterface, OnInit, OnDestroy &#123;</span><br><span class="line">  now: <span class="built_in">Date</span> = <span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(</span><br><span class="line">    @Inject(BrokerInterfaceToken)</span><br><span class="line">    private clockBroker: BrokerInterface) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker.subscribe(SubjectEnum.Clock1s, <span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngOnDestroy(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.clockBroker.unsubscribe(SubjectEnum.Clock3s, <span class="keyword">this</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  update(date: <span class="built_in">Date</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.now = date;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>13 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> DigitalClock1sComponent <span class="keyword">implements</span> SubscriberInterface, OnInit, OnDestroy</span><br></pre></td></tr></table></figure>
-<p>根據 <code>依賴反轉原則</code>，<code>subscriber</code> 應該相依於 <code>broker</code> 所訂出的 interface，因此必須實現 <code>SubscriberInterface</code>。</p>
-<p>25 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">update(date: <span class="built_in">Date</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">  <span class="keyword">this</span>.now = date;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>SubscriberInterface</code> 已經定義了 <code>update()</code>，<code>subscriber</code> 就必須加以實作。</p>
-<h3 id="AppModule">AppModule</h3><p><strong>app.module.ts</strong></p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; BrowserModule &#125; from <span class="string">'@angular/platform-browser'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ClockBroker &#125; from <span class="string">'./broker/clock.broker'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Clock1sPublisher &#125; from <span class="string">'./publisher/clock1s/clock1s.publisher'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DigitalClock1sComponent &#125; from <span class="string">'./component/digital-clock1s/digital-clock1s.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; DigitalClock3sComponent &#125; from <span class="string">'./component/digital-clock3s/digital-clock3s.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Clock3sPublisher &#125; from <span class="string">'./publisher/clock3s/clock3s.publisher'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; BrokerInterfaceToken &#125; from <span class="string">'./interface/injection.token'</span>;</span><br><span class="line"></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent,</span><br><span class="line">    DigitalClock1sComponent,</span><br><span class="line">    DigitalClock3sComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [</span><br><span class="line">    &#123;provide: BrokerInterfaceToken, useClass: ClockBroker&#125;,</span><br><span class="line">    Clock1sPublisher,</span><br><span class="line">    Clock3sPublisher</span><br><span class="line">  ],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
-<p>20 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">providers: [</span><br><span class="line">  &#123; provide: BrokerInterfaceToken, useClass: ClockBroker &#125;,</span><br><span class="line">  Clock1sPublisher,</span><br><span class="line">  Clock3sPublisher</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
-<p><code>broker</code> 採用 interface 方式注入，要特別使用 token。</p>
-<p>兩個 <code>publisher</code> 直接對 class 注入即可。</p>
-<h2 id="Summary">Summary</h2><blockquote>
-<p>Pub/Sub Pattern vs. Observer Pattern</p>
-</blockquote>
-<p>Observer Pattern 是原始 GoF 23 個 Design Pattern 之一，Pub/Sub Pattern 與 Observer Pattern 理念上非常接近，廣義上來說，Pub/Sub Pattern 算是 Observer Pattern 的變形，有些書甚至也認為 Pub/Sub Pattern 就是 Observer Pattern，但嚴格來說，兩者還是有些微差異：</p>
-<p><strong>相同點</strong></p>
-<ul>
-<li>Observer Pattern 的 <code>observer</code> 相當於 Pub/Sub Pattern 的 <code>subscriber</code></li>
-<li>Observer Pattern 的 <code>subject</code> 相當於 Pub/Sub Pattern 的 <code>publisher</code></li>
-<li>Observer Pattern 的 <code>SubjectInterface</code> 有 <code>addObserver()</code> 與 <code>removeObserver()</code> ； Pub/Sub Pattern 的 <code>BrokerInterface</code> 也有 <code>subscribe()</code> 與  <code>unsubscribe()</code></li>
-<li>Observer Pattern 的 <code>ObserverInterface</code> 有 <code>update()</code>；Pub/Sub Pattern 的 <code>SubscriberInterface</code> 也有 <code>update()</code></li>
-</ul>
-<p><strong>相異點</strong></p>
-<ul>
-<li>Pub/Sub Pattern 多了 <code>broker</code> 介入</li>
-<li>對於 <code>publisher</code> 而言，<code>broker</code> 是 <code>publisher</code> 的 <code>subscriber</code>；對於 <code>subscriber</code> 而言，<code>broker</code> 是 <code>subscriber</code> 的 <code>publisher</code>，所以 <code>broker</code> 兼具 <code>subscriber</code> 與 <code>publisher</code> 的角色</li>
-<li>Observer Pattern 只有一個 <code>subject</code>，但 Pub/Sub Pattern 有多個 <code>publisher</code></li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Observer Pattern 適合 <code>一對多</code> 場景；而 Pub/Sub Pattern 適合 <code>多對多</code> 場景</li>
-<li><code>一對一</code> 當然也可以使用 Pub/Sub Pattern 實現，只是 Design Pattern 強調的是 intention，應該依照使用場景選擇適合的 pattern</li>
-<li>Pub/Sub Pattern 與 Observer Pattern 的最大差異在於 <code>broker</code> 的介入，讓 <code>publisher</code> 與 <code>subscriber</code> 都只相依於 <code>broker</code> 即可，將來有任何修改，都集中在 <code>broker</code>，符合 <code>開放封閉原則</code></li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52PubSubPattern" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[與 Observer Pattern 很接近的 Pub/Sub Pattern]]>
-    
-    </summary>
-    
-      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
-    
-      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
     
   </entry>
   
