@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-26T03:10:22.056Z</updated>
+  <updated>2018-02-26T06:55:49.345Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,42 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何設定 .NET Core 專案的 .gitignore ?]]></title>
+    <link href="http://oomusou.io/netcore/gitignore/"/>
+    <id>http://oomusou.io/netcore/gitignore/</id>
+    <published>2018-02-27T12:23:43.000Z</published>
+    <updated>2018-02-26T06:55:49.345Z</updated>
+    <content type="html"><![CDATA[<p>使用 .NET Core SDK 建立專案後，若要使用 Git 版控，就會發現 .NET Core SDK 不像 Angular CLI 一樣，預設已將提供 <code>.gitignore</code> ，必須自己在 commit 之前先提供。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4</p>
+<h2 id="-gitignore">.gitignore</h2><hr>
+<p><strong>.gitignore</strong></p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">*</span>.swp</span><br><span class="line"><span class="keyword">*</span>.<span class="keyword">*</span>~</span><br><span class="line">project.lock.json</span><br><span class="line">.DS_Store</span><br><span class="line"><span class="keyword">*</span>.pyc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Visual Studio Code</span></span><br><span class="line">.vscode</span><br><span class="line"></span><br><span class="line"><span class="comment"># User-specific files</span></span><br><span class="line"><span class="keyword">*</span>.suo</span><br><span class="line"><span class="keyword">*</span>.user</span><br><span class="line"><span class="keyword">*</span>.userosscache</span><br><span class="line"><span class="keyword">*</span>.sln.docstates</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build results</span></span><br><span class="line">[Dd]ebug/</span><br><span class="line">[Dd]ebugPublic/</span><br><span class="line">[Rr]elease/</span><br><span class="line">[Rr]eleases/</span><br><span class="line">x64/</span><br><span class="line">x86/</span><br><span class="line">build/</span><br><span class="line">bld/</span><br><span class="line">[Bb]in/</span><br><span class="line">[Oo]bj/</span><br><span class="line">msbuild.log</span><br><span class="line">msbuild.err</span><br><span class="line">msbuild.wrn</span><br><span class="line"></span><br><span class="line"><span class="comment"># Visual Studio 2015</span></span><br><span class="line">.vs/</span><br></pre></td></tr></table></figure>
+<p>所幸 .NET Core team 的 GitHub 已經提供了 <a href="https://github.com/dotnet/core/blob/master/.gitignore" target="_blank" rel="external">.gitignore</a>，我們可直接拿來用。</p>
+<h2 id="新增_-gitignore">新增 .gitignore</h2><hr>
+<p><img src="/images/netcore/gitignore/ignore000.png" alt="ignore000"></p>
+<ol>
+<li>在專案根目錄下新增 <code>.gitignore</code>，將 .NET Core team 所提供的 <code>.gitignore</code> 貼上</li>
+</ol>
+<p>這樣就可以安心地繼續建立 Git repository 了。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>本文採用手動方式建立 <code>.gitignore</code>，或許可以寫個 script 自動從 GitHub 下載到專案根目錄下</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[自己手動加入 .gitignore]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Git" scheme="http://oomusou.io/tags/Git/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何將 .NET Core 打包成 Docker Image ?]]></title>
@@ -117,42 +153,6 @@
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何設定 .NET Core 專案的 .gitignore ?]]></title>
-    <link href="http://oomusou.io/netcore/gitignore/"/>
-    <id>http://oomusou.io/netcore/gitignore/</id>
-    <published>2018-02-26T12:23:43.000Z</published>
-    <updated>2018-02-26T06:52:33.936Z</updated>
-    <content type="html"><![CDATA[<p>使用 .NET Core SDK 建立專案後，若要使用 Git 版控，就會發現 .NET Core SDK 不像 Angular CLI 一樣，預設已將提供 <code>.gitignore</code> ，必須自己在 commit 之前先提供。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4</p>
-<h2 id="-gitignore">.gitignore</h2><hr>
-<p><strong>.gitignore</strong></p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">*</span>.swp</span><br><span class="line"><span class="keyword">*</span>.<span class="keyword">*</span>~</span><br><span class="line">project.lock.json</span><br><span class="line">.DS_Store</span><br><span class="line"><span class="keyword">*</span>.pyc</span><br><span class="line"></span><br><span class="line"><span class="comment"># Visual Studio Code</span></span><br><span class="line">.vscode</span><br><span class="line"></span><br><span class="line"><span class="comment"># User-specific files</span></span><br><span class="line"><span class="keyword">*</span>.suo</span><br><span class="line"><span class="keyword">*</span>.user</span><br><span class="line"><span class="keyword">*</span>.userosscache</span><br><span class="line"><span class="keyword">*</span>.sln.docstates</span><br><span class="line"></span><br><span class="line"><span class="comment"># Build results</span></span><br><span class="line">[Dd]ebug/</span><br><span class="line">[Dd]ebugPublic/</span><br><span class="line">[Rr]elease/</span><br><span class="line">[Rr]eleases/</span><br><span class="line">x64/</span><br><span class="line">x86/</span><br><span class="line">build/</span><br><span class="line">bld/</span><br><span class="line">[Bb]in/</span><br><span class="line">[Oo]bj/</span><br><span class="line">msbuild.log</span><br><span class="line">msbuild.err</span><br><span class="line">msbuild.wrn</span><br><span class="line"></span><br><span class="line"><span class="comment"># Visual Studio 2015</span></span><br><span class="line">.vs/</span><br></pre></td></tr></table></figure>
-<p>所幸 .NET Core team 的 GitHub 已經提供了 <a href="https://github.com/dotnet/core/blob/master/.gitignore" target="_blank" rel="external">.gitignore</a>，我們可直接拿來用。</p>
-<h2 id="新增_-gitignore">新增 <code>.gitignore</code></h2><hr>
-<p><img src="/images/netcore/gitignore/ignore000.png" alt="ignore000"></p>
-<ol>
-<li>在專案根目錄下新增 <code>.gitignore</code>，將 .NET Core team 所提供的 <code>.gitignore</code> 貼上</li>
-</ol>
-<p>這樣就可以安心地繼續建立 Git repository 了。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>本文採用手動方式建立 <code>.gitignore</code>，或許可以寫個 script 自動從 GitHub 下載到專案根目錄下</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[自己手動加入 .gitignore]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Git" scheme="http://oomusou.io/tags/Git/"/>
     
   </entry>
   
