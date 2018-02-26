@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/fsharp/setup/</loc>
+    <lastmod>2018-02-26T06:51:52.785Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/gitignore/</loc>
     <lastmod>2018-02-26T06:49:27.703Z</lastmod>
   </url>
@@ -19,11 +24,6 @@
   <url>
     <loc>http://oomusou.io/docker/ubuntu101/</loc>
     <lastmod>2018-02-24T12:53:58.420Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/setup/</loc>
-    <lastmod>2018-02-24T12:25:41.331Z</lastmod>
   </url>
   
   <url>
