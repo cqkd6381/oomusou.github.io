@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-25T15:30:30.397Z</updated>
+  <updated>2018-02-26T03:10:22.056Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/build-docker/"/>
     <id>http://oomusou.io/netcore/build-docker/</id>
     <published>2018-02-26T12:23:43.000Z</published>
-    <updated>2018-02-25T15:30:30.397Z</updated>
+    <updated>2018-02-26T03:10:22.056Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 除了可以在 Windows、macOS 與 Linux 執行外，更可以直接打包成 Docker image 發布。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -115,6 +115,8 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
     
   </entry>
   
