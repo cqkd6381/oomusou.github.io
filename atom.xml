@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-27T05:19:54.399Z</updated>
+  <updated>2018-02-27T05:57:36.822Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,13 +19,13 @@
     <link href="http://oomusou.io/fsharp/intro/"/>
     <id>http://oomusou.io/fsharp/intro/</id>
     <published>2018-03-01T12:23:43.000Z</published>
-    <updated>2018-02-27T05:19:54.399Z</updated>
+    <updated>2018-02-27T05:57:36.822Z</updated>
     <content type="html"><![CDATA[<p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4<br>F# 4.1</p>
 <h2 id="FSharp_的歷史">FSharp 的歷史</h2><hr>
-<p>F# 並不像 C-style 語言，反而比較像 Python，事實上 F# 是從 ML、OCaml、Python、Hasekell、Scala、Erlang … 等語言獲得靈感，除了 Python  大家較為熟悉外，剩下的都是 Functional Programming Language，由此可見 F# 的 F 就是 <code>F</code>untional，所以 F# 號稱是 function first language，也就是 F# 雖然也支援 OOP，但 FP 是其主要特色。</p>
+<p>F# 並不像 C-style 語言，反而比較像 Python，事實上 F# 是從 ML、OCaml、Python、Haskell、Scala、Erlang … 等語言獲得靈感，除了 Python  大家較為熟悉外，剩下的都是 Functional Programming Language，由此可見 F# 的 F 就是 <code>F</code>untional，所以 F# 號稱是 function first language，也就是 F# 雖然也支援 OOP，但 FP 是其主要特色。</p>
 <p>個人大概在 2010 年曾經接觸過 F#，當初的感覺 F# 是個 <code>外星語言</code>，很難體會 F# 的優點在哪裡，學沒多久就放棄了，但經過這幾年 Laravel Collection、JavaScript 、Linq 、Rx.js 與 AWS Lambda 的轟炸，越來越覺的 FP 的可愛，OOP 也能藉由 FP 手法，產生出現更優雅的實作方式。</p>
 <p>這幾年一直想尋找一個 FP 語言來練習，期間摸過 Elixir 、Scala、Clojure，但成效一直有限，一直到最近複習 F#，才發現 F# 是一個很簡單的 FP 語言，以前看不懂的地方，瞬間都看懂了，只是當年還無法欣賞 F#。</p>
 <h2 id="Functional_Programming_定義">Functional Programming 定義</h2><hr>
