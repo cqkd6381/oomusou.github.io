@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-27T04:52:21.560Z</updated>
+  <updated>2018-02-27T05:19:54.399Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/intro/"/>
     <id>http://oomusou.io/fsharp/intro/</id>
     <published>2018-03-01T12:23:43.000Z</published>
-    <updated>2018-02-27T04:52:21.560Z</updated>
+    <updated>2018-02-27T05:19:54.399Z</updated>
     <content type="html"><![CDATA[<p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -134,7 +134,7 @@
 <p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tour" target="_blank" rel="external">Tour of F#</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[學習不同的 Paradigm]]>
+    <![CDATA[千年傳統，全新感受]]>
     
     </summary>
     
