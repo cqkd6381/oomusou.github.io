@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-27T06:03:00.914Z</updated>
+  <updated>2018-02-27T08:50:45.476Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,106 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何為 Slack 設定 Bitbucket 通知 ?]]></title>
+    <link href="http://oomusou.io/slack/bibucket/"/>
+    <id>http://oomusou.io/slack/bibucket/</id>
+    <published>2018-03-02T12:23:43.000Z</published>
+    <updated>2018-02-27T08:50:45.476Z</updated>
+    <content type="html"><![CDATA[<p>當對 Bitbucket 有任何動作時，我們希望在 Slack 的 channel 能收到通知，如此可避免所有訊息都透過 Email，只有真正與人相關的訊息才使用 Email，讓 Slack 成為 CI 的訊息中心。</p>
+<a id="more"></a>
+<h2 id="Slack">Slack</h2><hr>
+<h3 id="新增_Channel">新增 Channel</h3><p><img src="/images/slack/bitbucket/bitbucket000.png" alt="bitbucket000"></p>
+<ol>
+<li>按下 <code>Channels</code> 右側的 <code>+</code> 新增 channel</li>
+</ol>
+<p><img src="/images/slack/bitbucket/bitbucket001.png" alt="bitbucket001"></p>
+<ol>
+<li><strong>Privacy</strong> : 設定為 <code>Public</code> 或 <code>Private</code> channel</li>
+<li><strong>Name</strong> : 設定 channel 名稱</li>
+<li><strong>Purpose</strong> : channel 的功能描述，可以不輸入</li>
+<li><strong>Send invites to</strong> : 設定 channel 成員，可以稍後再設定</li>
+<li>按 <code>Create Channel</code> 開始建立 channel</li>
+</ol>
+<h3 id="設定_Notification">設定 Notification</h3><p><img src="/images/slack/bitbucket/bitbucket002.png" alt="bitbucket002"></p>
+<ol>
+<li>選擇欲設定的 channel</li>
+<li>選擇右上方的 <code>option</code></li>
+<li>選擇 <code>Add an app</code></li>
+</ol>
+<h3 id="加入_Bitbucket_App">加入 Bitbucket App</h3><p><img src="/images/slack/bitbucket/bitbucket003.png" alt="bitbucket003"></p>
+<p>Slack 將開啟瀏覽器</p>
+<ol>
+<li>稍微往下捲輸入 <code>Bitbucket</code></li>
+<li>選擇 <code>Bitbucket</code></li>
+</ol>
+<h3 id="新增_Configuration">新增 Configuration</h3><p><img src="/images/slack/bitbucket/bitbucket004.png" alt="bitbucket004"></p>
+<ol>
+<li>按 <code>Add Configuration</code> 加入 Bitbucket</li>
+</ol>
+<h3 id="新增_Integration">新增 Integration</h3><p><img src="/images/slack/bitbucket/bitbucket005.png" alt="bitbucket005"></p>
+<ol>
+<li>按 <code>Add Bitbucket Integration</code> 正式加入整合 Bitbucket</li>
+</ol>
+<h3 id="Slack_設定完成">Slack 設定完成</h3><p><img src="/images/slack/bitbucket/bitbucket006.png" alt="bitbucket006"></p>
+<ol>
+<li>介紹 Bitbucket 設定流程</li>
+</ol>
+<blockquote>
+<p>Slack 部分已經設定完成，接下來是 Bitbucket 的設定</p>
+<p>Slack 網頁先不要關閉，稍後會用到</p>
+</blockquote>
+<h2 id="Bitbucket">Bitbucket</h2><hr>
+<h3 id="新增_Webhooks">新增 Webhooks</h3><p><img src="/images/slack/bitbucket/bitbucket007.png" alt="bitbucket007"></p>
+<ol>
+<li>到 Bitbucket 選擇你要設定的 repository</li>
+<li>選擇 <code>Settings</code></li>
+<li>選擇 <code>Webhooks</code></li>
+<li>按下 <code>Add webhook</code></li>
+</ol>
+<p><img src="/images/slack/bitbucket/bitbucket008.png" alt="bitbucket008"></p>
+<ol>
+<li><strong>Title</strong> : 依需求設定</li>
+<li><strong>URL</strong> : 貼一段 Slack 所提供的 URL，至於要貼什麼呢 ? 稍後會介紹</li>
+<li><strong>Triggers</strong> : 設定什麼 Bitbucket 動作要通知 Slack，預設是 <code>Push</code>，但也可以設定的更細</li>
+<li>按 <code>Save</code> 儲存設定</li>
+</ol>
+<p><img src="/images/slack/bitbucket/bitbucket009.png" alt="bitbucket009"></p>
+<blockquote>
+<p>Q : <strong>URL</strong> 要設定什麼呢 ?</p>
+</blockquote>
+<ol>
+<li>回到 Slack 最後的網頁往下捲到 <code>Step 2</code></li>
+<li>將 <code>http:/hooks.slack.com……</code> 的 URL 複製下來，貼到 Bitbucket 的 <code>URL</code> 欄位</li>
+</ol>
+<p><img src="/images/slack/bitbucket/bitbucket010.png" alt="bitbucket010"></p>
+<ol>
+<li>儲存後會看到剛剛新增的 webhook 已經出現</li>
+</ol>
+<h2 id="Slack-1">Slack</h2><hr>
+<p><img src="/images/slack/bitbucket/bitbucket011.png" alt="bitbucket011"></p>
+<p>回到 Slack，當任何 <code>push</code> 到 GitBucket 時，channel 都會收到通知。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Slack 提供了一個不錯的 CI 訊息平台，讓訊息從 Email 解放</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[讓 Slack 成為 CI 的訊息中心]]>
+    
+    </summary>
+    
+      <category term="Bitbucket" scheme="http://oomusou.io/tags/Bitbucket/"/>
+    
+      <category term="Slack" scheme="http://oomusou.io/tags/Slack/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[F# 的特色與歷史簡介]]></title>
     <link href="http://oomusou.io/fsharp/intro/"/>
     <id>http://oomusou.io/fsharp/intro/</id>
     <published>2018-03-01T12:23:43.000Z</published>
-    <updated>2018-02-27T06:03:00.914Z</updated>
+    <updated>2018-02-27T08:38:00.341Z</updated>
     <content type="html"><![CDATA[<p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -47,9 +142,9 @@
 <p>根據 JavaScript、Linq 、Rx.js 的經驗，我們不再使用迴圈，而會使用 Higher Order Function 來解決問題。</p>
 <h2 id="Higher_Order_Function">Higher Order Function</h2><hr>
 <p><strong>Program.fs</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    &#10;    let func values =&#10;        let odds = List.filter isOdd values&#10;        let squares = List.map square odds&#10;        let result = List.map addOne squares&#10;        result&#10;        &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        <span class="keyword">let</span> odds = List.filter isOdd values</span><br><span class="line">        <span class="keyword">let</span> squares = List.map square odds</span><br><span class="line">        <span class="keyword">let</span> result = List.map addOne squares</span><br><span class="line">        result</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let odds = List.filter isOdd values</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> odds = List.<span class="built_in">filter</span> isOdd <span class="built_in">values</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>List.filter</code> 先找出所有 <code>奇數</code> 。</p>
 <ul>
 <li><code>isOdd</code> : 傳入 <code>判斷奇數</code> 的 function</li>
@@ -57,13 +152,13 @@
 <li><code>odds</code> : 回傳所有 <code>奇數</code> </li>
 </ul>
 <p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let isOdd x = x % 2 &#60;&#62; 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>定義 <code>isOdd</code>，當 <code>% 2</code> 餘數不為 <code>0</code> 時為 <code>奇數</code> 。</p>
 <blockquote>
 <p>在 F#，因為已經將 function 視為一般變數，所以無論是 value 或 function，都統一使用 <code>let</code></p>
 </blockquote>
 <p>13 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let squares = List.map square odds</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares = <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square odds</span><br></pre></td></tr></table></figure>
 <p>既然已經找出所有 <code>奇數</code>，接下來就是使用 <code>List.map</code> 計算 <code>平方</code>。</p>
 <ul>
 <li><code>square</code> : 傳入 <code>計算平方</code> 的 function</li>
@@ -71,10 +166,10 @@
 <li><code>squares</code> : 回傳所有 <code>平方</code></li>
 </ul>
 <p>第 8 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let square x = x * x</span><br></pre></td></tr></table></figure>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> <span class="built_in">square</span> x = x <span class="built_in">*</span> x</span><br></pre></td></tr></table></figure>
 <p>定義 <code>square</code>，計算平方。</p>
 <p>14 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let result = List.map addOne squares</span><br></pre></td></tr></table></figure>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="literal">result</span> = <span class="type">List</span>.map addOne squares</span><br></pre></td></tr></table></figure>
 <p>既然已經計算出所有 <code>奇數的平方</code>，接下來就是使用 <code>List.map</code> 計算 <code>+1</code>。</p>
 <ul>
 <li><code>square</code> : 傳入 <code>計算+1</code> 的 function</li>
@@ -82,10 +177,10 @@
 <li><code>squares</code> : 回傳所有 <code>平方+1</code></li>
 </ul>
 <p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let addOne x = x + 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">let</span> <span class="keyword">addOne </span>x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <p>定義 <code>addOne</code>，計算 <code>+1</code>。</p>
 <p>15 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result</span><br></pre></td></tr></table></figure>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">result</span></span><br></pre></td></tr></table></figure>
 <p>要回傳的變數， F# 不用寫 <code>return</code>。</p>
 <blockquote>
 <p>相對於 C-style 語言，我們發現 F# 有幾個特色</p>
@@ -100,9 +195,9 @@
 <h2 id="Pipeline_與_Currying">Pipeline 與 Currying</h2><hr>
 <p>由於 <code>List.filter</code>、<code>List.map</code> 與 <code>List.map</code> 是依序處理，因此我們要不斷定義中繼變數 : <code>odds</code> 與 <code>squares</code> 傳入，事實上這些也是多餘的，若能省略則更好，這就是 Pipeline。</p>
 <p><strong>Program.fs</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    &#10;    let func values =&#10;        values &#10;        |&#62; List.filter isOdd&#10;        |&#62; List.map square&#10;        |&#62; List.map addOne&#10;        &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        values </span><br><span class="line">        |&gt; List.filter isOdd</span><br><span class="line">        |&gt; List.map square</span><br><span class="line">        |&gt; List.map addOne</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">values &#10;|&#62; List.filter isOdd&#10;|&#62; List.map square&#10;|&#62; List.map addOne</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">values </span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span>filter isOdd</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> addOne</span><br></pre></td></tr></table></figure>
 <p><code>|&gt;</code> 為 F# 的 Pipeline 符號，表示將 function 的 output 作為下一個 function 的 input。</p>
 <p>因此我們可以透過 <code>|&gt;</code> 表示先執行 <code>List.flter</code>，然後再將結果傳入 <code>List.map</code>，最後再將結果傳入 <code>List.map</code>，這樣可以很清楚的表示流程，語意比 imperative 寫法更清楚。</p>
 <blockquote>
@@ -112,10 +207,9 @@
 <p>當 <code>List.filter isOdd</code> 只傳入 1 個參數時，由於參數沒有傳完整，將回傳一個新的  function，然後 <code>|&gt;</code> 再將 <code>values</code> 傳入新的 function，如此 <code>List.filter</code> 才算完整，才能回傳 <code>所有奇數</code>，最後再將 <code>所有奇數</code>透過 <code>|&gt;</code> 傳給下一個 <code>List.map</code>，剩下以此類推。</p>
 <h2 id="Compose">Compose</h2><hr>
 <p>Pipeline 雖然已經夠清楚，但 pipeline 基本上仍然是回傳 value，若我們能將所有 function 先組合好，最後統一透過一個 function 執行，那就更好了，這就是 Compose。</p>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    let sqaureAddOne = square &#62;&#62; addOne&#10;    &#10;    let func = List.filter isOdd &#62;&#62; List.map sqaureAddOne&#10;    &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
+<p><strong>Program.fs</strong><br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">let</span> sqaureAddOne = square &gt;&gt; addOne</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func = List.filter isOdd &gt;&gt; List.map sqaureAddOne</span><br><span class="line">    </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
 <p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let func = List.filter isOdd &#62;&#62; List.map sqaureAddOne</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> func = <span class="built_in">List</span><span class="built_in">.</span>filter isOdd &gt;&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> sqaureAddOne</span><br></pre></td></tr></table></figure>
 <p><code>&gt;&gt;</code> 為 F# 的 compose 符號，專門負責組合 function。</p>
 <p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
 <p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
@@ -2144,83 +2238,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[在 macOS 移除 .NET Core 較為麻煩]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 macOS 安裝 .NET Core ?]]></title>
-    <link href="http://oomusou.io/netcore/mac-install/"/>
-    <id>http://oomusou.io/netcore/mac-install/</id>
-    <published>2018-02-05T12:23:43.000Z</published>
-    <updated>2018-02-05T05:41:59.000Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core 為 Microsoft 的跨平台解決方案，只要在 macOS 裝上 .NET Core SDK，就可在 macOS 執行與開發 .NET Core App。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.4</p>
-<h2 id="下載_-NET_Core_SDK">下載 .NET Core SDK</h2><hr>
-<p><img src="/images/netcore/mac-install/mac000.png" alt="mac000"></p>
-<ol>
-<li>到 <code>https://www.microsoft.com/net/download/macos</code> 下載 .NET Core SDK</li>
-<li>選擇 macOS</li>
-<li>按 <code>Download .NET Core 2.1.4</code> 下載 SDK</li>
-</ol>
-<h2 id="安裝_-NET_Core_SDK">安裝 .NET Core SDK</h2><hr>
-<p><img src="/images/netcore/mac-install/mac001.png" alt="mac001"></p>
-<ol>
-<li>.NET Core SDK 安裝檔會下載到 <code>Downloads</code> 目錄下</li>
-<li>執行安裝檔安裝 SDK</li>
-</ol>
-<p><img src="/images/netcore/mac-install/mac002.png" alt="mac002"></p>
-<ol>
-<li>.NET Core SDK 安裝畫面</li>
-<li>按 <code>Continue</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/mac-install/mac003.png" alt="mac003"></p>
-<ol>
-<li>按 <code>Install</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/mac-install/mac004.png" alt="mac004"></p>
-<ol>
-<li>安裝完成，按  <code>Close</code> 結束安裝</li>
-</ol>
-<p><img src="/images/netcore/mac-install/mac005.png" alt="mac005"></p>
-<ol>
-<li>按 <code>Move To Trash</code> 將 .NET Core SDK 安裝檔刪除</li>
-</ol>
-<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ $ <span class="keyword">dotnet</span> <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
-<p>若有出現 .NET Core 版本，表示 .NET Core SDK 安裝成功。</p>
-<p><img src="/images/netcore/mac-install/mac006.png" alt="mac006"></p>
-<h2 id="Q&amp;A">Q&amp;A</h2><blockquote>
-<p>Q : SDK 與 runtime 有什麼差別 ?</p>
-</blockquote>
-<p><img src="/images/netcore/mac-install/mac007.png" alt="mac007"></p>
-<p>在 .NET Core 官網，的確分別提供 SDK 與 Runtime 兩種版本 :</p>
-<ul>
-<li><code>SDK</code> : <code>S</code>oftware <code>D</code>evelopment <code>K</code>，開發 .NET Core 所需要的版本，檔案較大</li>
-<li><code>Runtime</code> : 執行 .NET Core 所需要的版本，檔案較小</li>
-</ul>
-<p>簡單的說，SDK 就類似 Angular CLI，包含我們開發 Angular 所需要的指令；runtime 就類似 Angular 本身執行所需要的檔案。</p>
-<blockquote>
-<p>Q : 為什麼 SDK 與 runtime 版本不一樣 ?</p>
-</blockquote>
-<p><img src="/images/netcore/mac-install/mac008.png" alt="mac008"></p>
-<p>眼尖的人應該會發現目前 SDK 版本為 2.1.4，但 runtime 版本為 2.0.5，兩者版本並不一樣，這是合理的，如 Angular CLI 的版本與 Angular 版本也並不一致，截至目前為止，Angular CLI 版本為 1.6.7，而 Angular 版本為 5.2.3，所以 SDK 與 runtime 版本不一樣是正常的。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>在 macOS 安裝 .NET Core 環境非常簡單，只要下載 <code>pkg</code> 格式的 SDK 安裝檔，下一步下一步就可以完成安裝</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://www.microsoft.com/zh-tw/" target="_blank" rel="external">Microsoft</a>, .<a href="https://www.microsoft.com/net/download/macos" target="_blank" rel="external">NET Core SDK Download</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[在 macOS 安裝 .NET Core 很簡單]]>
     
     </summary>
     

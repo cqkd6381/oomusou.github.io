@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/slack/bibucket/</loc>
+    <lastmod>2018-02-27T08:50:45.476Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/intro/</loc>
-    <lastmod>2018-02-27T06:03:00.914Z</lastmod>
+    <lastmod>2018-02-27T08:38:00.341Z</lastmod>
   </url>
   
   <url>

@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="千年傳統，全新感受">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-02-27T06:03:00.914Z">
+<meta property="og:updated_time" content="2018-02-27T08:38:00.341Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="F# 的特色與歷史簡介">
 <meta name="twitter:description" content="千年傳統，全新感受">
@@ -134,9 +134,9 @@
 <p>根據 JavaScript、Linq 、Rx.js 的經驗，我們不再使用迴圈，而會使用 Higher Order Function 來解決問題。</p>
 <h2 id="Higher_Order_Function">Higher Order Function</h2><hr>
 <p><strong>Program.fs</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    &#10;    let func values =&#10;        let odds = List.filter isOdd values&#10;        let squares = List.map square odds&#10;        let result = List.map addOne squares&#10;        result&#10;        &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        <span class="keyword">let</span> odds = List.filter isOdd values</span><br><span class="line">        <span class="keyword">let</span> squares = List.map square odds</span><br><span class="line">        <span class="keyword">let</span> result = List.map addOne squares</span><br><span class="line">        result</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let odds = List.filter isOdd values</span><br></pre></td></tr></table></figure>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> odds = List.<span class="built_in">filter</span> isOdd <span class="built_in">values</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>List.filter</code> 先找出所有 <code>奇數</code> 。</p>
 <ul>
 <li><code>isOdd</code> : 傳入 <code>判斷奇數</code> 的 function</li>
@@ -144,13 +144,13 @@
 <li><code>odds</code> : 回傳所有 <code>奇數</code> </li>
 </ul>
 <p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let isOdd x = x % 2 &#60;&#62; 0</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>定義 <code>isOdd</code>，當 <code>% 2</code> 餘數不為 <code>0</code> 時為 <code>奇數</code> 。</p>
 <blockquote>
 <p>在 F#，因為已經將 function 視為一般變數，所以無論是 value 或 function，都統一使用 <code>let</code></p>
 </blockquote>
 <p>13 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let squares = List.map square odds</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares = <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square odds</span><br></pre></td></tr></table></figure>
 <p>既然已經找出所有 <code>奇數</code>，接下來就是使用 <code>List.map</code> 計算 <code>平方</code>。</p>
 <ul>
 <li><code>square</code> : 傳入 <code>計算平方</code> 的 function</li>
@@ -158,10 +158,10 @@
 <li><code>squares</code> : 回傳所有 <code>平方</code></li>
 </ul>
 <p>第 8 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let square x = x * x</span><br></pre></td></tr></table></figure>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> <span class="built_in">square</span> x = x <span class="built_in">*</span> x</span><br></pre></td></tr></table></figure>
 <p>定義 <code>square</code>，計算平方。</p>
 <p>14 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let result = List.map addOne squares</span><br></pre></td></tr></table></figure>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="literal">result</span> = <span class="type">List</span>.map addOne squares</span><br></pre></td></tr></table></figure>
 <p>既然已經計算出所有 <code>奇數的平方</code>，接下來就是使用 <code>List.map</code> 計算 <code>+1</code>。</p>
 <ul>
 <li><code>square</code> : 傳入 <code>計算+1</code> 的 function</li>
@@ -169,10 +169,10 @@
 <li><code>squares</code> : 回傳所有 <code>平方+1</code></li>
 </ul>
 <p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let addOne x = x + 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">let</span> <span class="keyword">addOne </span>x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <p>定義 <code>addOne</code>，計算 <code>+1</code>。</p>
 <p>15 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result</span><br></pre></td></tr></table></figure>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">result</span></span><br></pre></td></tr></table></figure>
 <p>要回傳的變數， F# 不用寫 <code>return</code>。</p>
 <blockquote>
 <p>相對於 C-style 語言，我們發現 F# 有幾個特色</p>
@@ -187,9 +187,9 @@
 <h2 id="Pipeline_與_Currying">Pipeline 與 Currying</h2><hr>
 <p>由於 <code>List.filter</code>、<code>List.map</code> 與 <code>List.map</code> 是依序處理，因此我們要不斷定義中繼變數 : <code>odds</code> 與 <code>squares</code> 傳入，事實上這些也是多餘的，若能省略則更好，這就是 Pipeline。</p>
 <p><strong>Program.fs</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    &#10;    let func values =&#10;        values &#10;        |&#62; List.filter isOdd&#10;        |&#62; List.map square&#10;        |&#62; List.map addOne&#10;        &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        values </span><br><span class="line">        |&gt; List.filter isOdd</span><br><span class="line">        |&gt; List.map square</span><br><span class="line">        |&gt; List.map addOne</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
 <p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">values &#10;|&#62; List.filter isOdd&#10;|&#62; List.map square&#10;|&#62; List.map addOne</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">values </span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span>filter isOdd</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> addOne</span><br></pre></td></tr></table></figure>
 <p><code>|&gt;</code> 為 F# 的 Pipeline 符號，表示將 function 的 output 作為下一個 function 的 input。</p>
 <p>因此我們可以透過 <code>|&gt;</code> 表示先執行 <code>List.flter</code>，然後再將結果傳入 <code>List.map</code>，最後再將結果傳入 <code>List.map</code>，這樣可以很清楚的表示流程，語意比 imperative 寫法更清楚。</p>
 <blockquote>
@@ -199,10 +199,9 @@
 <p>當 <code>List.filter isOdd</code> 只傳入 1 個參數時，由於參數沒有傳完整，將回傳一個新的  function，然後 <code>|&gt;</code> 再將 <code>values</code> 傳入新的 function，如此 <code>List.filter</code> 才算完整，才能回傳 <code>所有奇數</code>，最後再將 <code>所有奇數</code>透過 <code>|&gt;</code> 傳給下一個 <code>List.map</code>，剩下以此類推。</p>
 <h2 id="Compose">Compose</h2><hr>
 <p>Pipeline 雖然已經夠清楚，但 pipeline 基本上仍然是回傳 value，若我們能將所有 function 先組合好，最後統一透過一個 function 執行，那就更好了，這就是 Compose。</p>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    let sqaureAddOne = square &#62;&#62; addOne&#10;    &#10;    let func = List.filter isOdd &#62;&#62; List.map sqaureAddOne&#10;    &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
+<p><strong>Program.fs</strong><br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">let</span> sqaureAddOne = square &gt;&gt; addOne</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func = List.filter isOdd &gt;&gt; List.map sqaureAddOne</span><br><span class="line">    </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
 <p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let func = List.filter isOdd &#62;&#62; List.map sqaureAddOne</span><br></pre></td></tr></table></figure>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> func = <span class="built_in">List</span><span class="built_in">.</span>filter isOdd &gt;&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> sqaureAddOne</span><br></pre></td></tr></table></figure>
 <p><code>&gt;&gt;</code> 為 F# 的 compose 符號，專門負責組合 function。</p>
 <p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
 <p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
@@ -227,9 +226,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/slack/bibucket/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
