@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-27T03:59:40.780Z</updated>
+  <updated>2018-02-27T04:52:21.560Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,14 +19,17 @@
     <link href="http://oomusou.io/fsharp/intro/"/>
     <id>http://oomusou.io/fsharp/intro/</id>
     <published>2018-03-01T12:23:43.000Z</published>
-    <updated>2018-02-27T03:59:40.780Z</updated>
+    <updated>2018-02-27T04:52:21.560Z</updated>
     <content type="html"><![CDATA[<p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
 <a id="more"></a>
-<h2 id="Version">Version</h2><p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4<br>F# 4.1</p>
-<h2 id="FSharp_的歷史">FSharp 的歷史</h2><p>F# 並不像 C-style 語言，反而比較像 Python，事實上 F# 是從 ML、OCaml、Python、Hasekell、Scala、Erlang … 等語言獲得靈感，除了 Python  大家較為熟悉外，剩下的都是 Functional Programming Language，由此可見 F# 的 F 就是 <code>F</code>untional，所以 F# 號稱是 function first language，也就是 F# 雖然也支援 OOP，但 FP 是其主要特色。</p>
-<p>個人大概在 2010 年曾經接過過 F#，當初的感覺 F# 是個 <code>外星語言</code>，很難體會 F# 的優點在哪裡，學沒多久就放棄了，但經過這幾年 Laravel Collection、JavaScript 、Linq 、Rx.js 與 AWS Lambda 的轟炸，越來越覺的 FP 的可愛，OOP 也能藉由 FP 手法，產生出現更優雅的實作方式。</p>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4<br>F# 4.1</p>
+<h2 id="FSharp_的歷史">FSharp 的歷史</h2><hr>
+<p>F# 並不像 C-style 語言，反而比較像 Python，事實上 F# 是從 ML、OCaml、Python、Hasekell、Scala、Erlang … 等語言獲得靈感，除了 Python  大家較為熟悉外，剩下的都是 Functional Programming Language，由此可見 F# 的 F 就是 <code>F</code>untional，所以 F# 號稱是 function first language，也就是 F# 雖然也支援 OOP，但 FP 是其主要特色。</p>
+<p>個人大概在 2010 年曾經接觸過 F#，當初的感覺 F# 是個 <code>外星語言</code>，很難體會 F# 的優點在哪裡，學沒多久就放棄了，但經過這幾年 Laravel Collection、JavaScript 、Linq 、Rx.js 與 AWS Lambda 的轟炸，越來越覺的 FP 的可愛，OOP 也能藉由 FP 手法，產生出現更優雅的實作方式。</p>
 <p>這幾年一直想尋找一個 FP 語言來練習，期間摸過 Elixir 、Scala、Clojure，但成效一直有限，一直到最近複習 F#，才發現 F# 是一個很簡單的 FP 語言，以前看不懂的地方，瞬間都看懂了，只是當年還無法欣賞 F#。</p>
-<h2 id="Functional_Programming_定義">Functional Programming 定義</h2><p>一個語言要能實現 FP，最少必須有 4 個條件</p>
+<h2 id="Functional_Programming_定義">Functional Programming 定義</h2><hr>
+<p>一個語言要能實現 FP，必須有 4 個條件：</p>
 <ul>
 <li>能將 function 指定為變數</li>
 <li>能將 function 存到 collection 內</li>
@@ -38,9 +41,12 @@
 <p><code>能在 function 回傳 function</code> 則導致了 Pipeline、Compose 與 Currying 的觀念出現。</p>
 <p>一般 OOP 語言都會某種程度的支援 FP，如 Higher Order Function 在 C#、JavaScript、PHP … 都可以實現。</p>
 <p>但 Pipeline、Compose 與 Currying 在一般 OOP 語言則沒有，或者要另外安裝其他 package 才能實現，但這些觀念在 F# 都是原生支援。</p>
-<h2 id="User_Story">User Story</h2><p>我們想將陣列 <code>1, 2, 3, 4, 5</code> 的資料中，將所 <code>奇數</code> 平方再加 <code>1</code>。</p>
-<h2 id="Task">Task</h2><p>根據 JavaScript、Linq 、Rx.js 的經驗，我們不再使用迴圈，而會使用 Higher Order Function 來解決問題。</p>
-<h2 id="Higher_Order_Function">Higher Order Function</h2><p><strong>Program.fs</strong></p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>我們想將陣列 <code>1, 2, 3, 4, 5</code> 的資料中，將所 <code>奇數</code> 平方再加 <code>1</code>。</p>
+<h2 id="Task">Task</h2><hr>
+<p>根據 JavaScript、Linq 、Rx.js 的經驗，我們不再使用迴圈，而會使用 Higher Order Function 來解決問題。</p>
+<h2 id="Higher_Order_Function">Higher Order Function</h2><hr>
+<p><strong>Program.fs</strong></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    &#10;    let func values =&#10;        let odds = List.filter isOdd values&#10;        let squares = List.map square odds&#10;        let result = List.map addOne squares&#10;        result&#10;        &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
 <p>12 行</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let odds = List.filter isOdd values</span><br></pre></td></tr></table></figure>
@@ -91,7 +97,8 @@
 </ol>
 <p>這些只是語法的差異，只要習慣即可，不過平心而論，C-style 語言寫久，會發現 code 都一堆 <code>()</code> <code>{}</code> 與 <code>return</code> 都是贅字，F# 這種 coding style 乾淨很多</p>
 </blockquote>
-<h2 id="Pipeline_與_Curring">Pipeline 與 Curring</h2><p>由於 <code>List.filter</code>、<code>List.map</code> 與 <code>List.map</code> 是依序處理，因此我們要不斷定義中繼變數 : <code>odds</code> 與 <code>squares</code> 傳入，事實上這些也是多餘的，若能省略則更好。</p>
+<h2 id="Pipeline_與_Currying">Pipeline 與 Currying</h2><hr>
+<p>由於 <code>List.filter</code>、<code>List.map</code> 與 <code>List.map</code> 是依序處理，因此我們要不斷定義中繼變數 : <code>odds</code> 與 <code>squares</code> 傳入，事實上這些也是多餘的，若能省略則更好，這就是 Pipeline。</p>
 <p><strong>Program.fs</strong></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    &#10;    let func values =&#10;        values &#10;        |&#62; List.filter isOdd&#10;        |&#62; List.map square&#10;        |&#62; List.map addOne&#10;        &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
 <p>12 行</p>
@@ -103,7 +110,8 @@
 </blockquote>
 <p>當 function 參數沒有傳完全時，F# 將回傳一個新的 function，新的 function 只要傳入剩下的參數即可，這稱為 Currying。</p>
 <p>當 <code>List.filter isOdd</code> 只傳入 1 個參數時，由於參數沒有傳完整，將回傳一個新的  function，然後 <code>|&gt;</code> 再將 <code>values</code> 傳入新的 function，如此 <code>List.filter</code> 才算完整，才能回傳 <code>所有奇數</code>，最後再將 <code>所有奇數</code>透過 <code>|&gt;</code> 傳給下一個 <code>List.map</code>，剩下以此類推。</p>
-<h2 id="Compose">Compose</h2><p>Pipeline 雖然已經夠清楚，但 pipeline 基本上仍然是回傳 value，若我們能將所有 function 先組合好，最後統一透過一個 function 執行，那就更好了，這就是 Compose。</p>
+<h2 id="Compose">Compose</h2><hr>
+<p>Pipeline 雖然已經夠清楚，但 pipeline 基本上仍然是回傳 value，若我們能將所有 function 先組合好，最後統一透過一個 function 執行，那就更好了，這就是 Compose。</p>
 <p><strong>Program.fs</strong></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open System&#10;&#10;[&#60;EntryPoint&#62;]&#10;let main argv =&#10;    let numbers = [1; 2; 3; 4; 5]&#10;&#10;    let isOdd x = x % 2 &#60;&#62; 0&#10;    let square x = x * x&#10;    let addOne x = x + 1&#10;    let sqaureAddOne = square &#62;&#62; addOne&#10;    &#10;    let func = List.filter isOdd &#62;&#62; List.map sqaureAddOne&#10;    &#10;    printfn &#34;%A&#34; (func numbers)&#10;    &#10;    0</span><br></pre></td></tr></table></figure>
 <p>12 行</p>
@@ -112,15 +120,18 @@
 <p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
 <p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
 <p><code>&gt;&gt;</code> 不只代表 compose，也代表執行方向，所以也有 <code>&lt;&lt;</code>。</p>
-<h2 id="Conclusion">Conclusion</h2><ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
 <li>本文簡單的展示 F# 最關鍵的 Pipeline、Currying 與 Compose，這些都是 OOP 語言很難見到的強悍功能，透過 F# 的簡單實作，讓我們在練習 FP 時更加方便</li>
 <li><p>F# 並不是要取代 C#，事實上在 .NET Core，C# 仍是必學的語言，只是透過學習 F#，能訓練自己 FP 的思維，進而用在 C# 與 TypeScript 上</p>
 </li>
 <li><p>若語言間的 paradigm 相同，只是 syntax 不同，則沒有學習新語言的必要；但若透過更好的 syntax，讓你學到不同的 paradigm，這就有意義了，這就是學習 F# 的原因</p>
 </li>
 </ul>
-<h2 id="Sample_Code">Sample Code</h2><p>完整的範例可以在我的 <a href="https://github.com/oomusou/MyFirstFSharp" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tour" target="_blank" rel="external">Tour of F#</a></p>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/MyFirstFSharp" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tour" target="_blank" rel="external">Tour of F#</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[學習不同的 Paradigm]]>
