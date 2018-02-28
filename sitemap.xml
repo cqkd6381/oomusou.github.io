@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/gitignore/</loc>
+    <lastmod>2018-02-28T03:02:01.712Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/slack/bibucket/</loc>
     <lastmod>2018-02-27T08:50:45.476Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>http://oomusou.io/docker/jenkins/</loc>
     <lastmod>2018-02-26T10:25:35.310Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/gitignore/</loc>
-    <lastmod>2018-02-26T06:55:49.345Z</lastmod>
   </url>
   
   <url>
