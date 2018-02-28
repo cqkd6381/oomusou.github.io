@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-02-27T08:50:45.476Z</updated>
+  <updated>2018-02-28T04:06:12.657Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,9 +19,11 @@
     <link href="http://oomusou.io/slack/bibucket/"/>
     <id>http://oomusou.io/slack/bibucket/</id>
     <published>2018-03-02T12:23:43.000Z</published>
-    <updated>2018-02-27T08:50:45.476Z</updated>
+    <updated>2018-02-28T04:06:12.657Z</updated>
     <content type="html"><![CDATA[<p>當對 Bitbucket 有任何動作時，我們希望在 Slack 的 channel 能收到通知，如此可避免所有訊息都透過 Email，只有真正與人相關的訊息才使用 Email，讓 Slack 成為 CI 的訊息中心。</p>
 <a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Slack 3.0.5</p>
 <h2 id="Slack">Slack</h2><hr>
 <h3 id="新增_Channel">新增 Channel</h3><p><img src="/images/slack/bitbucket/bitbucket000.png" alt="bitbucket000"></p>
 <ol>
@@ -350,7 +352,7 @@
     <link href="http://oomusou.io/netcore/gitignore/"/>
     <id>http://oomusou.io/netcore/gitignore/</id>
     <published>2018-02-27T12:23:43.000Z</published>
-    <updated>2018-02-28T03:02:01.712Z</updated>
+    <updated>2018-02-28T03:07:07.267Z</updated>
     <content type="html"><![CDATA[<p>使用 .NET Core SDK 建立專案後，若要使用 Git 版控，就會發現 .NET Core SDK 不像 Angular CLI 一樣，預設已將提供 <code>.gitignore</code> ，必須自己在 commit 之前先提供。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>

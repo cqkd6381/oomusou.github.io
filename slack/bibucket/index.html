@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="讓 Slack 成為 CI 的訊息中心">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-02-27T08:50:45.476Z">
+<meta property="og:updated_time" content="2018-02-28T04:06:12.657Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何為 Slack 設定 Bitbucket 通知 ?">
 <meta name="twitter:description" content="讓 Slack 成為 CI 的訊息中心">
@@ -102,13 +102,15 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Slack"><span class="toc-article-text">Slack</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Channel"><span class="toc-article-text">新增 Channel</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定_Notification"><span class="toc-article-text">設定 Notification</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#加入_Bitbucket_App"><span class="toc-article-text">加入 Bitbucket App</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Configuration"><span class="toc-article-text">新增 Configuration</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Integration"><span class="toc-article-text">新增 Integration</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Slack_設定完成"><span class="toc-article-text">Slack 設定完成</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Bitbucket"><span class="toc-article-text">Bitbucket</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Webhooks"><span class="toc-article-text">新增 Webhooks</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Slack-1"><span class="toc-article-text">Slack</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Slack"><span class="toc-article-text">Slack</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Channel"><span class="toc-article-text">新增 Channel</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定_Notification"><span class="toc-article-text">設定 Notification</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#加入_Bitbucket_App"><span class="toc-article-text">加入 Bitbucket App</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Configuration"><span class="toc-article-text">新增 Configuration</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Integration"><span class="toc-article-text">新增 Integration</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Slack_設定完成"><span class="toc-article-text">Slack 設定完成</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Bitbucket"><span class="toc-article-text">Bitbucket</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#新增_Webhooks"><span class="toc-article-text">新增 Webhooks</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Slack-1"><span class="toc-article-text">Slack</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
 	<div class="mypage">		
 	    <p>當對 Bitbucket 有任何動作時，我們希望在 Slack 的 channel 能收到通知，如此可避免所有訊息都透過 Email，只有真正與人相關的訊息才使用 Email，讓 Slack 成為 CI 的訊息中心。</p>
 <a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Slack 3.0.5</p>
 <h2 id="Slack">Slack</h2><hr>
 <h3 id="新增_Channel">新增 Channel</h3><p><img src="/images/slack/bitbucket/bitbucket000.png" alt="bitbucket000"></p>
 <ol>
