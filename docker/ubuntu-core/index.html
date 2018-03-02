@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="由 Dockerfile 安裝 .NET Core SDK">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-02T07:52:51.058Z">
+<meta property="og:updated_time" content="2018-03-02T09:15:40.151Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何自行建立含有 .NET Core SDK 的 Docker Image ?">
 <meta name="twitter:description" content="由 Dockerfile 安裝 .NET Core SDK">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Dockerfile"><span class="toc-article-text">Dockerfile</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Image"><span class="toc-article-text">建立 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Container"><span class="toc-article-text">執行 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#確認_-NET_Core_SDK"><span class="toc-article-text">確認 .NET Core SDK</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Dockerfile"><span class="toc-article-text">Dockerfile</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Image"><span class="toc-article-text">建立 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Container"><span class="toc-article-text">執行 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#測試_-NET_Core_SDK"><span class="toc-article-text">測試 .NET Core SDK</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -173,7 +173,7 @@
 <li><code>oomusou/ubuntu-core</code> : 剛剛自己建立的 image</li>
 </ul>
 <p><img src="/images/docker/ubuntu-core/ubuntu000.png" alt="ubuntu000"></p>
-<h2 id="確認_-NET_Core_SDK">確認 .NET Core SDK</h2><hr>
+<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker exec -it <span class="constant">MyUbuntuCore </span>bash</span><br><span class="line">root<span class="variable">@xxx</span><span class="symbol">:/</span><span class="comment"># dotnet --version</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
 <ul>
@@ -201,9 +201,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/netcore/linux-install/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -239,7 +239,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/NET-Core/">.NET Core<span>11</span></a></li> <li><a href="/tags/Docker/">Docker<span>5</span></a></li> <li><a href="/tags/Ubuntu/">Ubuntu<span>2</span></a></li>
+  <li><a href="/tags/NET-Core/">.NET Core<span>12</span></a></li> <li><a href="/tags/Docker/">Docker<span>5</span></a></li> <li><a href="/tags/Ubuntu/">Ubuntu<span>3</span></a></li>
     </ul>
 	</div>
 		

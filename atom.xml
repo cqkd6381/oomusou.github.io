@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-02T07:52:51.058Z</updated>
+  <updated>2018-03-02T14:22:16.987Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,87 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何在 Ubuntu 安裝 .NET Core ?]]></title>
+    <link href="http://oomusou.io/netcore/linux-install/"/>
+    <id>http://oomusou.io/netcore/linux-install/</id>
+    <published>2018-03-04T12:23:43.000Z</published>
+    <updated>2018-03-02T14:22:16.987Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core 為 Microsoft 的跨平台解決方案，只要裝上 .NET Core SDK，就可在 Linux 執行與開發 .NET Core App，本文以 Ubuntu 為例。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Parallel Desktop 13 for Mac 13.3.0 (43321)<br>Ubuntu 16.04<br>.NET Core SDK 2.1.4</p>
+<h2 id="安裝_Dependency">安裝 Dependency</h2><hr>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></span><br><span class="line">$ sudo apt-<span class="built_in">get</span> install curl</span><br></pre></td></tr></table></figure>
+<p>根據官網的 <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a>，若要在 Linux 安裝 .NET Core，在 Ubuntu 還必須安裝以下額外 package :</p>
+<ul>
+<li>libunwind8</li>
+<li>liblttng-ust0</li>
+<li>libcurl3</li>
+<li>libssl1.0.0</li>
+<li>libuuid1</li>
+<li>libkrb5-3</li>
+<li>zlib1g</li>
+<li>libicu52 (for 14.X)</li>
+<li>libicu55 (for 16.X)</li>
+<li>libicu57 (for 17.X)</li>
+</ul>
+<p>這些 package 在 Ubuntu 其實都已經內建，所以不用特別安裝。</p>
+<p>其中 <code>curl</code> 在並不算 .NET Core SDK 所需要的 package，但接下來要用 <code>curl</code> 安裝 <code>microsoft.qpg</code>，所以也需要特別安裝。 </p>
+<p><img src="/images/netcore/linux-install/linux000.png" alt="linux000"></p>
+<ol>
+<li>輸入 <code>sudo apt-get update</code> 更新本機套件清單</li>
+<li>輸入  <code>sudo apt-get install curl</code> 安裝 <code>curl</code></li>
+</ol>
+<h2 id="安裝_microsoft-qpg">安裝 microsoft.qpg</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl https:<span class="comment">//packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span></span><br><span class="line">$ sudo mv microsoft<span class="class">.gpg</span> /etc/apt/trusted<span class="class">.gpg</span><span class="class">.d</span>/microsoft<span class="class">.gpg</span></span><br><span class="line">$ sudo sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>curl</code> 下載 <code>microsoft.qpg</code> 並安裝之。</p>
+<p>加入 Microsoft 套件庫位置。</p>
+<p><img src="/images/netcore/linux-install/linux001.png" alt="linux001"></p>
+<ol>
+<li>輸入 <code>curl …</code> 下載 <code>microsoft.qpg</code> 到本機</li>
+<li>將 <code>microsoft.qpg</code> 移到適當目錄</li>
+<li>加入 Microsoft 套件庫位置</li>
+</ol>
+<h2 id="安裝_-NET_Core_SDK">安裝 .NET Core SDK</h2><hr>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get <span class="operator"><span class="keyword">install</span> apt-transport-https</span><br><span class="line">$ sudo apt-<span class="keyword">get</span> <span class="keyword">update</span></span><br><span class="line">$ sudo apt-<span class="keyword">get</span> <span class="keyword">install</span> -y <span class="keyword">dotnet</span>-sdk-<span class="number">2.1</span><span class="number">.4</span></span></span><br></pre></td></tr></table></figure>
+<p>安裝 <code>apt-transport-https</code> 套件。</p>
+<p>由於剛剛新加入了 Microsoft 自己的套件庫，所以需要在執行 <code>apt-get update</code> 更新一次。</p>
+<p>正式安裝 .NET Core SDK 2.1.4。</p>
+<p><img src="/images/netcore/linux-install/linux002.png" alt="linux002"></p>
+<ol>
+<li>輸入 <code>sudo apt-get install apt-transport-https</code> 安裝 <code>apt-transport-https</code> 套件</li>
+<li>輸入 <code>sudo apt-get update</code> 更新本機套件清單</li>
+<li>輸入 <code>sudo apt-get install -y dotnet-sdk-2.1.4</code> 安裝 .NET Core SDK </li>
+</ol>
+<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">dotnet</span> <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
+<p>輸入 <code>dotnet —version</code> 確認 .NET Core SDK 已經安裝成功</p>
+<p><img src="/images/netcore/linux-install/linux003.png" alt="linux003"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Linux 有分不同 distribution，在不同 distribution 安裝 .NET Core 的方法大同小異，詳細請參考 .NET Core 官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a> ，自行選擇不同的 distribution</li>
+<li>在 Linux 上也可以選擇自行下載 <code>tar.gz</code> 方式安裝，詳情請參考 <a href="https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-linux-x64-binaries" target="_blank" rel="external">.NET Core 2.1.4 SDK (Binaries for Linux x64)</a></li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-linux-x64-binaries" target="_blank" rel="external">.NET Core 2.1.4 SDK (Binaries for Linux x64)</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[自行在 Linux 安裝 .NET Core]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何自行建立含有 .NET Core SDK 的 Docker Image ?]]></title>
     <link href="http://oomusou.io/docker/ubuntu-core/"/>
     <id>http://oomusou.io/docker/ubuntu-core/</id>
     <published>2018-03-03T12:23:43.000Z</published>
-    <updated>2018-03-02T07:52:51.058Z</updated>
+    <updated>2018-03-02T09:15:40.151Z</updated>
     <content type="html"><![CDATA[<p>雖然 Microsoft 官方提供 .NET Core 的 Docker image，但實務上建置環境時，可能先使用其他 server 的 image，然後再加裝 .NET Core SDK 環境，如此就需要自行建立 <code>Dockerfile</code>，並建立自己的 image。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -86,7 +162,7 @@
 <li><code>oomusou/ubuntu-core</code> : 剛剛自己建立的 image</li>
 </ul>
 <p><img src="/images/docker/ubuntu-core/ubuntu000.png" alt="ubuntu000"></p>
-<h2 id="確認_-NET_Core_SDK">確認 .NET Core SDK</h2><hr>
+<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker exec -it <span class="constant">MyUbuntuCore </span>bash</span><br><span class="line">root<span class="variable">@xxx</span><span class="symbol">:/</span><span class="comment"># dotnet --version</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
 <ul>
@@ -2254,61 +2330,6 @@
     </summary>
     
       <category term="PowerShell" scheme="http://oomusou.io/tags/PowerShell/"/>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Homebrew 安裝 .NET Core ?]]></title>
-    <link href="http://oomusou.io/netcore/mac-homebrew/"/>
-    <id>http://oomusou.io/netcore/mac-homebrew/</id>
-    <published>2018-02-07T12:23:43.000Z</published>
-    <updated>2018-02-07T08:52:49.000Z</updated>
-    <content type="html"><![CDATA[<p>Microsoft 雖然提供了 <code>pkg</code> 安裝檔安裝 .NET Core SDK，也提供了 uninstall script 移除，但在 macOS 世界裡，我們有更好用的 Homebrew，是否能用 Homebrew 來管理 .NET Core 呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.4<br>Homebrew 1.5.3</p>
-<h2 id="安裝_-NET_Core_SDK">安裝 .NET Core SDK</h2><hr>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~ $ brew <span class="operator"><span class="keyword">update</span></span><br><span class="line">~ $ brew cask <span class="keyword">install</span> <span class="keyword">dotnet</span>-sdk</span></span><br></pre></td></tr></table></figure>
-<p>更新 Homebrew 套件清單。</p>
-<p>使用 <code>brew cask install</code> 安裝 <code>dotnet-sdk</code>。</p>
-<blockquote>
-<p>Homebrew Cask 是以 Homebrew 為基礎，另外維護的 package repository，第一次使用 <code>brew cask</code> 時會自動安裝</p>
-</blockquote>
-<p><img src="/images/netcore/mac-homebrew/mac000.png" alt="mac000"></p>
-<ol>
-<li>使用 <code>brew cask install</code> 安裝 <code>dotnet-sdk</code></li>
-<li>Homebrew 會自動從 Microsoft 官網下載 .NET Core SDK</li>
-<li>輸入 root 的 password</li>
-<li>.NET Core SDK 安裝成功</li>
-</ol>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ $ <span class="keyword">dotnet</span> <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/netcore/mac-homebrew/mac001.png" alt="mac001"></p>
-<p>若出現 .NET Core 版本，表示 .NET Core SDK 安裝成功。</p>
-<h2 id="移除_-NET_Core_SDK">移除 .NET Core SDK</h2><hr>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ $ brew cask <span class="operator"><span class="keyword">uninstall</span> <span class="keyword">dotnet</span>-sdk</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>brew cask uninstall</code> 移除 <code>dotnet-sdk</code>。 </p>
-<p><img src="/images/netcore/mac-homebrew/mac002.png" alt="mac002"></p>
-<ol>
-<li>使用 <code>brew cask uninstall</code> 移除 .NET Core SDK</li>
-<li>輸入 root 的 password</li>
-<li>.NET Core SDK 移除成功</li>
-</ol>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ $ <span class="keyword">dotnet</span> <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/netcore/mac-homebrew/mac003.png" alt="mac003"></p>
-<p>若出現 <code>command not found</code>，表示 .NET Core SDK 已經成功移除。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>透過 Homebrew，安裝與移除 .NET Core SDK 都很簡單，將然若要更新 .NET Core SDK 版本，只要下 <code>brew cask upgrade dotnet-sdk</code> 即可</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 Homebrew 管理 .NET Core 更簡單]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
     
