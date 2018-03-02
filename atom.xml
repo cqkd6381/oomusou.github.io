@@ -91,11 +91,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何自行建立含有 .NET Core SDK 的 Docker Image ?]]></title>
+    <title><![CDATA[如何建立含有 .NET Core SDK 的 Docker Image ?]]></title>
     <link href="http://oomusou.io/docker/ubuntu-core/"/>
     <id>http://oomusou.io/docker/ubuntu-core/</id>
     <published>2018-03-03T12:23:43.000Z</published>
-    <updated>2018-03-02T09:15:40.151Z</updated>
+    <updated>2018-03-02T14:29:21.904Z</updated>
     <content type="html"><![CDATA[<p>雖然 Microsoft 官方提供 .NET Core 的 Docker image，但實務上建置環境時，可能先使用其他 server 的 image，然後再加裝 .NET Core SDK 環境，如此就需要自行建立 <code>Dockerfile</code>，並建立自己的 image。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
