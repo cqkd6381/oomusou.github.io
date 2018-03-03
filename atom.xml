@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-02T14:22:16.987Z</updated>
+  <updated>2018-03-03T02:03:07.328Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,105 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?]]></title>
+    <link href="http://oomusou.io/docker/jenkins-core/"/>
+    <id>http://oomusou.io/docker/jenkins-core/</id>
+    <published>2018-03-05T12:23:43.000Z</published>
+    <updated>2018-03-03T02:03:07.328Z</updated>
+    <content type="html"><![CDATA[<p>雖然 .NET Core SDK 與 Jenkins 都各自提供官方 Docker image，但實務上使用 Jenkins 做持續整合時，我們會從 Jenkins 將 Git repository clone 下來，然後跑 <code>dotnet test</code> 執行單元測試，但 <code>dotnet test</code> 需要 .NET Core SDK 環境才能執行，因此我們必須建立自己的 Dockerfile，產生包含 .NET Core SDK 的 Docker image。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.12.0-ce-mac55 (23011)<br>Jenkins 2.89.4<br>.NET Core SDK 2.1.4</p>
+<h2 id="Dockerfile">Dockerfile</h2><hr>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> jenkins/jenkins:lts</span><br><span class="line"></span><br><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructiions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install dependency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y curl libunwind8 gettext apt-transport-https</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install the .NET Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Switch back to the jenkins user.</span></span><br><span class="line"><span class="built_in">USER</span> jenkins</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
+<p>以 <code>jenkins/jenkins:lts</code> 作為 image 的基底。</p>
+<p>第 3 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br></pre></td></tr></table></figure>
+<p>因為即將使用 <code>apt-get</code> 安裝 package，所以直接切換到 <code>root</code> 帳號執行以下動作。</p>
+<p>第 6 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span></span><br></pre></td></tr></table></figure>
+<p>顯示目前 image 的版本資訊。</p>
+<blockquote>
+<p>此段並非安裝 .NET Core SDK 所必須，但因為 Linux 的 ditribution 眾多，每個 <code>Dockerfile</code> 的寫法也會有所差異，因此這行可以幫助 <code>Dockerfile</code> 撰寫，尤其  <code>jenkins/jenkins:lts</code> 是用 Debian 9 所建立，因此 dependency 又與 Ubuntu 16.04 LTS  不太一樣</p>
+</blockquote>
+<p>第 9 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Based on instructiions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install dependency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y curl libunwind8 gettext apt-transport-https</span></span><br></pre></td></tr></table></figure>
+<p>由於 Jenkins image 是根據 Debian 9 所建立，根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Debian 9</a>，若要在 Debian 9 安裝 .NET Core，還必須安裝以下額外 package :</p>
+<ul>
+<li>curl</li>
+<li>libunwind8</li>
+<li>gettext</li>
+<li>apt-transport-https</li>
+</ul>
+<p>14 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span></span><br></pre></td></tr></table></figure>
+<p>根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Debian 9</a> 所描述，要安裝 .NET Core SDK 前，必須先將 <code>microsoft.gpg</code> 裝好。</p>
+<p>20 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install the .NET Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span></span><br></pre></td></tr></table></figure>
+<p>所有的 dependency 與  <code>microsoft.gpg</code> 都裝好後，就可以正式安裝 .NET Core SDK 了。</p>
+<p>24 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Switch back to the jenkins user.</span></span><br><span class="line"><span class="built_in">USER</span> jenkins</span><br></pre></td></tr></table></figure>
+<p>由於剛剛是以 <code>root</code> 帳號安裝 .NET Core SDK，最後切回預設的 <code>jenkins</code> 帳號。</p>
+<h2 id="建立_Image">建立 Image</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/JenkinsCore $ docker <span class="keyword">build </span>-t oomusou/jenkins-core .</span><br></pre></td></tr></table></figure>
+<p>進入 <code>Dockerfile</code> 所在的目錄，使用 <code>docker build</code> 建立自己的 image。</p>
+<ul>
+<li><strong>-t</strong> : Docker image 的名稱</li>
+<li><strong>.</strong> : 將目前目錄的 <code>Dockerfile</code> 建立成 image</li>
+</ul>
+<p><img src="/images/docker/jenkins-core/jenkins000.png" alt="jenkins000"></p>
+<ol>
+<li>輸入 <code>docker build -t oomusou/jenkins-core .</code> 將 <code>Dockerfile</code> 建立成 <code>oomusou/jenkins-core</code></li>
+<li><code>uname -a &amp;&amp; cat /etc/*release</code> 顯示出為 <code>Debian</code> ，證明 Jenkins image 是由 Debian 建立</li>
+</ol>
+<h2 id="建立並執行_Container">建立並執行 Container</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkinsCore -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home oomusou/jenkins-core</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
+<ul>
+<li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyJenkinsCore</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
+<li><strong>-p</strong> : Docker 外部與 Jenkins 內部所對應的 port，其中左邊為外部 Docker 的 port，右邊為 Jenkins 內部的 port</li>
+<li><strong>-v</strong> : 建立 <code>JENKINS_HOME</code> 環境變數，其目錄在 <code>/var/jenkins_home</code>，為 Jenkins 的工作目錄</li>
+</ul>
+<p><img src="/images/docker/jenkins-core/jenkins001.png" alt="jenkins001"></p>
+<ol>
+<li>輸入 <code>docker run …</code> 建立並執行 container</li>
+</ol>
+<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><p>–<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker exec -it <span class="constant">MyJenkinsCore </span>bash</span><br><span class="line">root<span class="variable">@xxx</span><span class="symbol">:/</span><span class="comment"># dotnet --version</span></span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
+<ul>
+<li><code>-i</code> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
+<li><code>-t</code> : <code>t</code>erminal，可對 terminal 顯示資料</li>
+<li><code>MyUbuntuCore</code> : Container 名稱</li>
+<li><code>bash</code> : 對 container 下的指令</li>
+</ul>
+<p><img src="/images/docker/jenkins-core/jenkins002.png" alt="jenkins002"></p>
+<ol>
+<li>輸入 <code>docker exec -it</code> 進入 container 的 terminal</li>
+<li>輸入 <code>dotnet —version</code> 確認 .NET Core SDK 已經安裝成功</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>由於 Jenkins 是依照 Debian 9 所建立，因此所需要的 dependency 與 Ubuntu 稍有不同</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Debian 9</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Jenkins 包含 .NET Core 才能進行單元測試]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何在 Ubuntu 安裝 .NET Core ?]]></title>
@@ -95,13 +194,13 @@
     <link href="http://oomusou.io/docker/ubuntu-core/"/>
     <id>http://oomusou.io/docker/ubuntu-core/</id>
     <published>2018-03-03T12:23:43.000Z</published>
-    <updated>2018-03-02T14:29:21.904Z</updated>
+    <updated>2018-03-03T01:50:26.665Z</updated>
     <content type="html"><![CDATA[<p>雖然 Microsoft 官方提供 .NET Core 的 Docker image，但實務上建置環境時，可能先使用其他 server 的 image，然後再加裝 .NET Core SDK 環境，如此就需要自行建立 <code>Dockerfile</code>，並建立自己的 image。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.3<br>Docker for Mac 17.12.0-ce-mac55 (23011)<br>Ubuntu 16.04.3 LTS<br>.NET Core SDK 2.1.4</p>
 <h2 id="Dockerfile">Dockerfile</h2><hr>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructiions at https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x</span></span><br><span class="line"><span class="comment"># Install depency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y libunwind8 liblttng-ust0 libcurl3 libssl1.<span class="number">0.0</span> libuuid1 libkrb5-<span class="number">3</span> zlib1g libicu55 curl</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install the .Net Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get install apt-transport-https</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructiions at https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x</span></span><br><span class="line"><span class="comment"># Install dependency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y libunwind8 liblttng-ust0 libcurl3 libssl1.<span class="number">0.0</span> libuuid1 libkrb5-<span class="number">3</span> zlib1g libicu55 curl</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install the .Net Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get install apt-transport-https</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span></span><br></pre></td></tr></table></figure>
 <p>第 1 行</p>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br></pre></td></tr></table></figure>
 <p>以 <code>ubuntu</code> 這個 image 為基底建立 image。</p>
@@ -152,7 +251,7 @@
 <li>輸入 <code>docker build -t oomusou/ubuntu-core .</code> 將 <code>Dockerfile</code> 建立成 <code>oomusou/ubuntu-core</code></li>
 <li><code>uname -a &amp;&amp; cat /etc/*release</code> 顯示出 Linux 資訊</li>
 </ol>
-<h2 id="執行_Container">執行 Container</h2><hr>
+<h2 id="建立並執行_Container">建立並執行 Container</h2><hr>
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyUbuntuCore -dt oomusou/ubuntu-core</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
 <ul>
@@ -2279,57 +2378,6 @@
     <![CDATA[野人獻曝一下自己用的 App]]>
     
     </summary>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 macOS 安裝 PowerShell ?]]></title>
-    <link href="http://oomusou.io/powershell/mac-homebrew/"/>
-    <id>http://oomusou.io/powershell/mac-homebrew/</id>
-    <published>2018-02-08T12:23:43.000Z</published>
-    <updated>2018-02-07T14:18:16.000Z</updated>
-    <content type="html"><![CDATA[<p>隨著 .NET Core 跨平台後，PowerShell 也開始跨平台，事實上 PowerShell 底層跑的就是 .NET Core，有了 PowerShell 之後，macOS 與 Linux 的自動化又有了新的選擇。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>PowerShell 6.0.1</p>
-<h2 id="安裝_PowerShell">安裝 PowerShell</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">~ $ brew update</span><br><span class="line">~ $ brew cask install powershell</span><br></pre></td></tr></table></figure>
-<p><img src="/images/powershell/mac-homebrew/mac000.png" alt="mac000"></p>
-<ol>
-<li>使用 <code>brew cask install</code> 安裝 <code>powershell</code></li>
-<li>PowerShell 安裝完成</li>
-</ol>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ <span class="variable">$ </span>pwsh</span><br></pre></td></tr></table></figure>
-<p><code>pwsh</code> 為 PowerShell 的執行檔。</p>
-<p><img src="/images/powershell/mac-homebrew/mac001.png" alt="mac001"></p>
-<ol>
-<li>執行 <code>pwsh</code> 啟動 PowerShell</li>
-<li>當出現 <code>PS</code> 開頭，表示 PowerShell 安裝成功</li>
-</ol>
-<h2 id="移除_PowerShell">移除 PowerShell</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ $ brew cask uninstall powershell</span><br></pre></td></tr></table></figure>
-<p>使用 <code>brew cask uninstall</code> 移除 <code>powershell</code>。</p>
-<p><img src="/images/powershell/mac-homebrew/mac002.png" alt="mac002"></p>
-<ol>
-<li>使用 <code>brew cask uninstall</code> 移除 <code>powershell</code></li>
-<li>PowerShell 移除成功</li>
-</ol>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~ <span class="variable">$ </span>pwsh</span><br></pre></td></tr></table></figure>
-<p><img src="/images/powershell/mac-homebrew/mac003.png" alt="mac003"></p>
-<p>若出現 <code>command not found</code>，表示 PowerShell 已經成功移除。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>透過 Homebrew，安裝與移除 PowerShell 都很簡單，將來若要更新 PowerShell 版本，只要下 <code>brew cask upgrade powershell</code> 即可</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[PowerShell 也能跑在 macOS]]>
-    
-    </summary>
-    
-      <category term="PowerShell" scheme="http://oomusou.io/tags/PowerShell/"/>
     
       <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
     
