@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-03T02:03:07.328Z</updated>
+  <updated>2018-03-03T13:01:48.545Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,246 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 Jenkins 對 .NET Core 實現個人的持續整合 ?]]></title>
+    <link href="http://oomusou.io/jenkins/netcore-slack/"/>
+    <id>http://oomusou.io/jenkins/netcore-slack/</id>
+    <published>2018-03-06T12:23:43.000Z</published>
+    <updated>2018-03-03T13:01:48.545Z</updated>
+    <content type="html"><![CDATA[<p>在使用 TDD 開發時，儘管單元測試執行速度較快，但可能僅執行一部分的單元測試而已；而整合測試與驗收測試更慢，實務上不可能真的花時間去等待測試結果，而是希望在背景不斷地執行，在本機配合 Docker 執行 Jenkins 後，只要每次有新的 commit，就會自動執行所有測試，並將測試結果傳送到 Slack。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>.NET Core 2.1.4<br>Jenkins 2.89.4<br>Slack 3.0.5<br>Rider 2017.3.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>我們希望每次 <code>git push</code> 到 Git 後，Jenkins 就會自動跑 Unit Test，若失敗則會通知 Slack。</p>
+<h2 id="Task">Task</h2><hr>
+<ul>
+<li>Git 直接使用本機的 git repository</li>
+<li>Jenkins 使用本機的 Docker</li>
+<li>Slack 可裝在本機或行動裝置</li>
+</ul>
+<h2 id="建立_-NET_Core_專案">建立 .NET Core 專案</h2><hr>
+<p><strong>NumberService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">NumberLib</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NumberService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">isEven</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">value</span> % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>isEven()</code> 若為偶數傳回 <code>true</code> ，奇數傳回 <code>false</code>。</p>
+<p><img src="/images/jenkins/netcore-slack/slack000.png" alt="slack000"></p>
+<p><strong>NuberServiceTest.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NumberLib;</span><br><span class="line"><span class="keyword">using</span> Xunit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">NumberLibTest</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NumberServiceTest</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> NumberService _numberService = <span class="keyword">new</span> NumberService();</span><br><span class="line">        </span><br><span class="line">        [Fact]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShouldReturnTrueGivenEvenValue</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = _numberService.isEven(<span class="number">2</span>);</span><br><span class="line">            Assert.True(result, <span class="string">"2 should return true"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [Fact]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShouldReturnFalseGivenOddValue</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = _numberService.isEven(<span class="number">1</span>);</span><br><span class="line">            Assert.False(result, <span class="string">"1 should return false"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>提供兩個測試案例，分別測試傳回 <code>true</code> 與 <code>false</code>。</p>
+<p><img src="/images/jenkins/netcore-slack/slack001.png" alt="slack001"></p>
+<h2 id="執行單元測試">執行單元測試</h2><hr>
+<p><img src="/images/jenkins/netcore-slack/slack002.png" alt="slack002"></p>
+<p>直接在 Rider 執行單元測試，確認結果正確。</p>
+<h2 id="建立_Git_Repository">建立 Git Repository</h2><hr>
+<p>要實現持續整合，Git 是其中的關鍵，唯有透過版控，才能在每個版本的變動觸發 Jenkins 自動執行測試。</p>
+<p><img src="/images/jenkins/netcore-slack/slack003.png" alt="slack003"></p>
+<p>直接在 Rider 建立 Git repository。</p>
+<h2 id="設定_Jenkins">設定 Jenkins</h2><hr>
+<p><strong>建立與執行 Jenkins Container</strong></p>
+<p>若要 macOS 執行 Jenkins，最簡單的方法是透過 Docker，但只使用官方的 Jenkins image 是不夠的，因為我們必須在 Jenkins 的 Linux 環境跑單元測試，也就是說 Linux 必須要有 .NET Core SDK 環境。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於建立 image 建立，詳細請參考 <a href="/docker/jenkins-core/">如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?</a></span></span></span></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkinsCore -<span class="tag">p</span> <span class="number">8080</span>:<span class="number">8080</span> -<span class="tag">p</span> <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home -v /Users/oomusou/Code:/var/<span class="tag">code</span>   oomusou/jenkins-core</span><br></pre></td></tr></table></figure>
+<p>在建立 container 時，較特別的為</p>
+<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">v /<span class="constant">Users</span>/oomusou/<span class="constant">Code</span><span class="symbol">:/var/code</span></span></span><br></pre></td></tr></table></figure>
+<p><code>-v</code> 是設定 host os 的目錄，相當於 container 內對應的目錄。</p>
+<p>如此就能使用 macOS 的開發工具，如 Rider 在 <code>/Users/oomusou/Code</code>，但 Jenkins 跑單元測試時是在 Linux 的 <code>/var/code</code> 目錄下。</p>
+<p><strong>Manage Jenkins</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack004.png" alt="slack004"></p>
+<ol>
+<li>左側選 <code>Manage Jenkins</code></li>
+<li>右側選 <code>Configure Global Security</code></li>
+</ol>
+<p><strong>Configure Global Security</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack005.png" alt="slack005"></p>
+<ol>
+<li>不勾選 <code>Enable security</code></li>
+<li>不勾選 <code>CSRF Protection</code></li>
+</ol>
+<blockquote>
+<p>因為 Jenkins 只是跑在本機，所以使用較寬鬆的 security 設定</p>
+</blockquote>
+<p><strong>建立 Jenkins Job</strong></p>
+<p>每一個自動化，在 Jenkins 稱為 Job。</p>
+<p><img src="/images/jenkins/netcore-slack/slack006.png" alt="slack006"></p>
+<ol>
+<li>若是第一次使用 Jenkins，可使用首頁的 <code>create new jobs</code> 建立新 job</li>
+<li>若已經有其他 job，可使用左上角的 <code>New Item</code> 建立新 job</li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack007.png" alt="slack007"></p>
+<ol>
+<li>輸入 Job 名稱</li>
+<li>選擇 <code>Freestyle project</code></li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack008.png" alt="slack008"></p>
+<ol>
+<li>選擇 <code>Build</code></li>
+<li>選擇 <code>Add build step</code></li>
+<li>選擇 <code>Execute shell</code></li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack009.png" alt="slack009"></p>
+<p>切換到 <code>/var/code</code> 的單元測試目錄下，使用 <code>dotnet test</code> 執行單元測試。</p>
+<blockquote>
+<p>目前是在 Linux 下跑單元測試，也可彌補之前只在 macOS 跑單元測試，但 production 是 Linux 的缺憾</p>
+</blockquote>
+<p><img src="/images/jenkins/netcore-slack/slack010.png" alt="slack010"></p>
+<ol>
+<li>選擇 <code>Build Now</code>，第一次執行 job</li>
+<li>Jenkins 執行單元測試，得到 <code>藍燈</code></li>
+</ol>
+<h2 id="設定_Git">設定 Git</h2><hr>
+<p>目前為止，Jenkins Job 已經設定好，但必須手動使用 <code>Build Now</code> 執行 Job，我們希望的是每次 Git commit，就會自動執行 Jenkins job，不用我們操心。</p>
+<p><strong>新增 post-commit</strong><br><strong>post-commit</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">curl http://localhost:<span class="number">8080</span>/job/NumberSeriveUnitTest/build</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"post commit trigger"</span></span><br></pre></td></tr></table></figure>
+<p>到專案的 <code>.git/hooks</code>目錄下，新增 <code>post-commit</code>，讓每次 Git commit 時執行 Jenkins job。</p>
+<p>Jenkins 的網址規則為 <code>/job/[Job名稱]/build</code>。</p>
+<p>最後記得使用 <code>chmod +x post-commit</code> 讓 <code>post-commit</code> 有執行權限。</p>
+<p><strong>建立新 Commit</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack011.png" alt="slack011"></p>
+<ol>
+<li>將 <code>false</code> 改成 <code>true</code></li>
+<li>新增 commit</li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack012.png" alt="slack012"></p>
+<p>Jenkins 自動執行單元測試，得到 <code>紅燈</code>。</p>
+<blockquote>
+<p>這個 <code>紅燈</code> 是我們預期的，因為由 <code>false</code> 改成 <code>true</code>，單元測試一定會失敗</p>
+</blockquote>
+<h2 id="設定_Slack">設定 Slack</h2><hr>
+<p>目前為止，每次 Git commit 都會自動執行 Jenkins 單元測試，唯每次都必須回到 Jenkins 才知道單元測試是否成功，若能將結果推送到 Slack，我們就能把 Slack 當成持續整合的訊息平台。</p>
+<p><strong>新增 Channel</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack013.png" alt="slack013"></p>
+<ol>
+<li>按下 <code>Channels</code> 右側的 <code>+</code> 新增 channel</li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack014.png" alt="slack014"></p>
+<ol>
+<li><strong>Privacy</strong> : 設定為 <code>Public</code> 或 <code>Private</code> channel</li>
+<li><strong>Name</strong> : 設定 channel 名稱</li>
+<li><strong>Purpose</strong> : channel 的功能描述，可以不輸入</li>
+<li><strong>Send invites to</strong> : 設定 channel 成員，可以稍後再設定</li>
+<li>按 <code>Create Channel</code> 開始建立 channel</li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack015.png" alt="slack015"></p>
+<ol>
+<li>按 <code>Got It!</code> 進入 channel</li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack016.png" alt="slack016"></p>
+<ol>
+<li>正式進入 channel，將來 Jenkins 訊息會傳進此 channel</li>
+</ol>
+<p><strong>新增 Notification</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack017.png" alt="slack017"></p>
+<ol>
+<li>選擇右上方的 <code>option</code></li>
+<li>選擇 <code>Add an app</code></li>
+</ol>
+<p><strong>新增 Jenkins App</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack018.png" alt="slack018"></p>
+<p>Slack 將開啟瀏覽器</p>
+<ol>
+<li>稍微往下捲輸入 <code>Jenkins</code></li>
+<li>選擇 <code>Jenkins CI</code></li>
+</ol>
+<p><strong>新增 Configuration</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack019.png" alt="slack019"></p>
+<ol>
+<li>按 <code>Add Configuration</code> 加入 Jenkins CI</li>
+</ol>
+<p><strong>新增 Integration</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack020.png" alt="slack020"></p>
+<ol>
+<li>按 <code>Add Bitbucket Integration</code> 正式加入整合 Jenkins</li>
+</ol>
+<p><strong>Slack 設定完成</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack021.png" alt="slack021"></p>
+<ol>
+<li>介紹 Jenkins 設定流程</li>
+</ol>
+<blockquote>
+<p>Slack 部分已經設定完成，接下來是 Jenkins 的設定</p>
+<p>Slack 網頁先不要關閉，稍後會用到</p>
+</blockquote>
+<h2 id="設定_Jenkins-1">設定 Jenkins</h2><hr>
+<p><strong>Manage Jenkins</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack022.png" alt="slack022"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Manage Plugins</code></li>
+</ol>
+<p><strong>安裝 Slack Plugin</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack023.png" alt="slack023"></p>
+<ol>
+<li>選擇 <code>Avaliable</code> tab</li>
+<li>選擇 <code>Slack Notification Plugin</code></li>
+<li>按 <code>Download now and Install after restart</code></li>
+</ol>
+<p><strong>新增 Webhook</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack024.png" alt="slack024"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Configure System</code></li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack025.png" alt="slack025"></p>
+<p>在 <code>Global Slack Notifier Settings</code> 下設定</p>
+<ol>
+<li><strong>Base URL</strong> : 貼一段 Slack 所提供的 URL</li>
+<li><strong>Integration Token</strong> : 貼一段 Slack 所提供的 token</li>
+</ol>
+<blockquote>
+<p>Q : 要貼什麼 Base URL 與 token 呢 ?</p>
+</blockquote>
+<p><img src="/images/jenkins/netcore-slack/slack026.png" alt="slack026"></p>
+<p>回到 Slack 最後的網頁往下捲到 <code>Step 3</code></p>
+<ol>
+<li>將 <code>Base URL</code> 與 <code>Integration Token</code> 複製貼上</li>
+</ol>
+<p>最後按 <code>Save</code> 存檔。</p>
+<p><strong>設定 Job</strong></p>
+<p><img src="/images/jenkins/netcore-slack/slack027.png" alt="slack027"></p>
+<ol>
+<li>選擇要發 Slack 通知的 job</li>
+<li>按 <code>Configure</code> 設定</li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack028.png" alt="slack028"></p>
+<p>在 Jenkins 執行完 <code>build</code> 動作後，無論成功或失敗，將結果通知 Slack</p>
+<ol>
+<li>選擇 <code>Post-build Actions</code></li>
+<li>選擇 <code>Add post-build action</code></li>
+<li>選擇 <code>Slack Notification</code></li>
+</ol>
+<p><img src="/images/jenkins/netcore-slack/slack029.png" alt="slack029"></p>
+<p>選擇希望 Jenkins 通知 Slack 的動作 :</p>
+<ol>
+<li>選擇 <code>Notify Failure</code>、 <code>Notify Success</code> 與 <code>Notify Unstable</code></li>
+</ol>
+<blockquote>
+<p>建議不用選擇太多 action，<code>success</code> 確認 Jenkins 還活著，<code>Failure</code> 與 <code>Unstable</code> 確認 CI 失敗即可</p>
+</blockquote>
+<p><img src="/images/jenkins/netcore-slack/slack030.png" alt="slack030"></p>
+<p>新增一個 Git commit，就可發現 Slack 收到 Jenkins 測試成功 <code>綠燈</code> 的訊息。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>實務上若 Git repository 放在 GitHub 或 Bitbucket，則可將 Jenkins 放到雲端主機的 VM 上，大致上的流程與設定與本文類似</li>
+<li>本文雖然只針對單元測試示範，但也適用於整合測試與驗收測試</li>
+<li>將較耗時的整合測試與驗收測試交給 Jenkins 處理，在開發時只要針對單元測試即可，若 Slack 出現紅燈，再回來關注整合測試與驗收測試失敗的部分</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[Jenkins 也可與 .NET Core 搭配實現持續整合]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+      <category term="Git" scheme="http://oomusou.io/tags/Git/"/>
+    
+      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
+    
+      <category term="Slack" scheme="http://oomusou.io/tags/Slack/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?]]></title>
@@ -2216,166 +2456,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[一些 app 安裝與反安裝的心得分享]]>
-    
-    </summary>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[我所使用的 macOS App 分享]]></title>
-    <link href="http://oomusou.io/macos/myapp/"/>
-    <id>http://oomusou.io/macos/myapp/</id>
-    <published>2018-02-10T12:23:43.000Z</published>
-    <updated>2018-02-13T03:09:22.000Z</updated>
-    <content type="html"><![CDATA[<p>Macbook Pro 15 一直是我很推薦的 <code>工作神器</code>， 雖然很貴，但卻很值得投資。我不敢說我 Mac 用的多好，但使用了 3 年的 macOS，多少累積了一些經驗，試過不少 app，目前還會繼續用的，基本上都是工作用起來很順的 app，在此分享給大家。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3</p>
-<h2 id="檔案管理">檔案管理</h2><hr>
-<ul>
-<li><strong>Finder (內建)</strong> : 內建的 Finder 就已經很好用了</li>
-</ul>
-<h2 id="瀏覽器">瀏覽器</h2><hr>
-<ul>
-<li><strong>Safari (內建)</strong> : 我自己看網站，會使用 Safari，與 macOS 整合較好，也比較省電</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.google.com.tw/chrome/" target="_blank" rel="external">Chrome</a> (free)</strong> : 測試程式會使用 Chrome</li>
-</ul>
-<h2 id="程式開發">程式開發</h2><hr>
-<ul>
-<li><strong><a href="https://code.visualstudio.com/" target="_blank" rel="external">Visual Studio Code</a> (free)</strong> : 可以開發 .NET Core、Angular、Bash Script、PowerShell、Docker … 等等</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.jetbrains.com/webstorm/" target="_blank" rel="external">JetBrains WebStorm</a> (paid)</strong> : Angular 開發神器，尤其 refactoring 非常強悍</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.jetbrains.com/rider/" target="_blank" rel="external">JetBrains Rider</a> (paid)</strong> : .NET Core 開發神器，尤其 refactoring 非常強悍</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.jetbrains.com/datagrip/" target="_blank" rel="external">JetBrains DataGrip</a> (paid)</strong> : 連接各種資料庫，只要這一套都能搞定</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.getpostman.com/" target="_blank" rel="external">Postman</a> (free/paid)</strong> : 測試 API 標準工具，若要更強功能可付費</li>
-</ul>
-<h2 id="文字編輯器">文字編輯器</h2><hr>
-<ul>
-<li><strong><a href="https://www.sublimetext.com/" target="_blank" rel="external">Sublime Text</a> (free)</strong> : 我沒用很多，只有在修改 blog 內文時，才會使用</li>
-</ul>
-<h2 id="Markdown_編輯器">Markdown 編輯器</h2><hr>
-<ul>
-<li><strong><a href="https://typora.io/" target="_blank" rel="external">Typora</a> (free)</strong> : 編輯 markdown 神器，所見即所得的方式編輯 markdown，天天使用</li>
-</ul>
-<h2 id="終端機">終端機</h2><hr>
-<ul>
-<li><strong><a href="https://www.iterm2.com/" target="_blank" rel="external">iTerm 2</a> (free)</strong> : macOS 內建的 terminal 很難用，一定要裝 iTerm 2 才能發揮 macOS 的 terminal 威力</li>
-</ul>
-<h2 id="Git_管理">Git 管理</h2><hr>
-<ul>
-<li><strong><a href="https://www.sourcetreeapp.com/" target="_blank" rel="external">SourceTree</a> (free)</strong> : Bitbucket 所出的圖形化 git 管理軟體，功能強大</li>
-</ul>
-<h2 id="虛擬機器">虛擬機器</h2><hr>
-<ul>
-<li><strong><a href="https://www.parallels.com/products/desktop/" target="_blank" rel="external">Parallel Desktop</a> (paid)</strong> : macOS 的 VM 第一品牌，速度最快，尤其整合 Windows 10 部分非常好，還可以在 Parallel Dekstop 跑一個虛擬 macOS，方便測試用</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.docker.com/docker-mac" target="_blank" rel="external">Docker for Mac</a> (free)</strong> : 若要在 macOS 使用 docker，可使用原廠的 Docker for Mac，不用搭配其他 VM</li>
-</ul>
-<h2 id="通訊軟體">通訊軟體</h2><hr>
-<ul>
-<li><strong><a href="https://zoom.us/" target="_blank" rel="external">Zoom</a> (free)</strong> : 視訊最流暢的通訊軟體</li>
-</ul>
-<ul>
-<li><strong><a href="https://macos.telegram.org/" target="_blank" rel="external">Telegram</a> (free)</strong> : 適合文字模式傳訊息</li>
-</ul>
-<ul>
-<li><strong><a href="https://slack.com/downloads/osx" target="_blank" rel="external">Slack</a> (free)</strong> : 適合接受 CI server 所傳送的訊息</li>
-</ul>
-<h2 id="截圖與影像處理">截圖與影像處理</h2><hr>
-<ul>
-<li><strong><a href="https://itunes.apple.com/tw/app/techsmith-snagit-2018/id1260954767?mt=12" target="_blank" rel="external">Snagit</a> (paid)</strong> : 截圖第一品牌，也可以做簡單的影像處理，基本上我部落格的圖片都是靠 Snagit 處理</li>
-</ul>
-<h2 id="簡報工具">簡報工具</h2><hr>
-<ul>
-<li><strong>Keynote</strong> (內建) : 算是 Apple 最具代表性的 Mac app</li>
-</ul>
-<h2 id="英英/英漢字典">英英/英漢字典</h2><hr>
-<ul>
-<li><p><strong><a href="https://itunes.apple.com/us/app/oxford-advanced-learners-dict/id553809551?mt=12" target="_blank" rel="external">Oxford Advanced Learner’s Dictionary</a> (paid)</strong> : macOS 最好的英英字典</p>
-</li>
-<li><p><strong>Dictionary (內建)</strong> : macOS 有內建英漢字典，但可惜是簡體中文</p>
-</li>
-</ul>
-<h2 id="RSS_閱讀器">RSS 閱讀器</h2><hr>
-<ul>
-<li><strong><a href="https://itunes.apple.com/tw/app/reeder-3/id880001334?mt=12" target="_blank" rel="external">Reeder</a> (paid)</strong> : 訂閱大神的 RSS，算中規中矩</li>
-</ul>
-<h2 id="密碼管理">密碼管理</h2><hr>
-<ul>
-<li><strong><a href="https://itunes.apple.com/tw/app/1password/id443987910?mt=12" target="_blank" rel="external">1Password</a> (paid)</strong> : 儲存密碼，在 iphone 也能讀取</li>
-</ul>
-<h2 id="音樂管理">音樂管理</h2><hr>
-<ul>
-<li><strong>iTunes (內建)</strong> : 若你願意去編輯 MP3 tag，則 iTunes 非常好用，也與 iPhone 整合良好</li>
-</ul>
-<h2 id="Trackpad_管理">Trackpad 管理</h2><hr>
-<ul>
-<li><strong><a href="https://www.boastr.net/" target="_blank" rel="external">BetterTouchTool</a> (paid)</strong> : Macbook 的 trackpad 是有名的好用，macOS 內建已經使用很多手勢，不過這還沒完全榨出 trackpad 淺能，BetterTouchTool 讓我們可以自訂更多的手勢，甚至還可以自訂 touch bar，若你是 Trackpad 重度使用者，強烈推薦此神器</li>
-</ul>
-<h2 id="備份管理">備份管理</h2><hr>
-<ul>
-<li><strong>Time Machine (內建)</strong> : 簡單又強悍的備份工具，天天使用</li>
-</ul>
-<h2 id="套件管理">套件管理</h2><hr>
-<ul>
-<li><strong><a href="https://brew.sh/" target="_blank" rel="external">Homebrew</a> (free)</strong> : open source 的套件管理，相當於 Ubuntu 的 <code>apt-get</code></li>
-</ul>
-<h2 id="檔案格式瀏覽">檔案格式瀏覽</h2><hr>
-<ul>
-<li><strong>Preview (內建)</strong> : 支援各種格式，如 pdf 格式完全不用安裝其他軟體，內建的 Preview 就很方便</li>
-</ul>
-<h2 id="App_移除工具">App 移除工具</h2><hr>
-<ul>
-<li><strong><a href="https://freemacsoft.net/appcleaner/" target="_blank" rel="external">AppCleaner</a> (free)</strong> : 雖然 macOS 的 app 號稱可以直接丟 <code>垃圾桶</code> 刪除，但透過 AppCleaner 可以找到 app 自己用的暫存檔與記錄檔，會刪除的更乾淨</li>
-</ul>
-<h2 id="系統清理工具">系統清理工具</h2><hr>
-<ul>
-<li><strong><a href="https://itunes.apple.com/tw/app/dr-cleaner-%E5%9E%83%E5%9C%BE%E6%96%87%E4%BB%B6%E5%92%8C%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/id921458519?mt=12" target="_blank" rel="external">Dr.Cleaner Pro</a> (free/paid)</strong> : 趨勢科技產品，幫你刪除沒用的暫存檔</li>
-</ul>
-<h2 id="解壓縮工具">解壓縮工具</h2><hr>
-<ul>
-<li><strong><a href="https://itunes.apple.com/tw/app/dr-cleaner-pro-system-clean/id1133028347?l=en&amp;mt=12" target="_blank" rel="external">The Unarchiver</a> (free)</strong> : 任何壓縮格式檔案都能解開</li>
-</ul>
-<h2 id="其他輔助工具">其他輔助工具</h2><hr>
-<ul>
-<li><strong><a href="https://www.parallels.com/products/toolbox/" target="_blank" rel="external">Parallels Toolbox</a> (paid)</strong> : Parallel Desktop 所送的小工具，如 <code>Do Not Sleep</code> 與 <code>Do Not Disturb</code>，可以在你在簡報時，避免 Macbook 休眠或通訊軟體干擾</li>
-</ul>
-<ul>
-<li><strong><a href="https://bjango.com/mac/istatmenus/" target="_blank" rel="external">iStat Menus</a> (paid)</strong> : 在 menu 顯示 CPU / 記憶體 / 網路 / SSD …等使用量</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.macbartender.com/" target="_blank" rel="external">Bartender</a> (paid)</strong> : 將 menu 的 icon 加以隱藏，僅留下你想要的 icon</li>
-</ul>
-<ul>
-<li><strong><a href="https://www.jetbrains.com/toolbox/" target="_blank" rel="external">JetBrains Toolbox</a> (paid)</strong> : 快速使用 JetBrains 工具開啟專案，且負責更新 JetBrains 工具</li>
-</ul>
-<ul>
-<li><p><strong><a href="https://www.alfredapp.com/" target="_blank" rel="external">Alfred</a> (free/paid)</strong> : 超強取代內建 Spotlight 工具，強烈推薦</p>
-</li>
-<li><p><strong><a href="https://itunes.apple.com/tw/app/manico/id724472954?mt=12" target="_blank" rel="external">Manico</a> (paid)</strong> : 快速切換 app 的小工具</p>
-</li>
-<li><p><strong><a href="https://www.dropbox.com/zh_TW/downloading" target="_blank" rel="external">Dropbox</a></strong> : 有名的網路硬碟，與 macOS 整合良好</p>
-</li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>我用的 macOS 工具不算多，也還在持續優化自己的工作流程，以上是我們目前幾乎天天會用到的 app</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[野人獻曝一下自己用的 App]]>
     
     </summary>
     
