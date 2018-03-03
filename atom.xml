@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-03T13:01:48.545Z</updated>
+  <updated>2018-03-03T14:40:49.883Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/jenkins/netcore-slack/"/>
     <id>http://oomusou.io/jenkins/netcore-slack/</id>
     <published>2018-03-06T12:23:43.000Z</published>
-    <updated>2018-03-03T13:01:48.545Z</updated>
+    <updated>2018-03-03T14:40:49.883Z</updated>
     <content type="html"><![CDATA[<p>在使用 TDD 開發時，儘管單元測試執行速度較快，但可能僅執行一部分的單元測試而已；而整合測試與驗收測試更慢，實務上不可能真的花時間去等待測試結果，而是希望在背景不斷地執行，在本機配合 Docker 執行 Jenkins 後，只要每次有新的 commit，就會自動執行所有測試，並將測試結果傳送到 Slack。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -41,7 +41,7 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NumberLib;</span><br><span class="line"><span class="keyword">using</span> Xunit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">NumberLibTest</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NumberServiceTest</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> NumberService _numberService = <span class="keyword">new</span> NumberService();</span><br><span class="line">        </span><br><span class="line">        [Fact]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShouldReturnTrueGivenEvenValue</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = _numberService.isEven(<span class="number">2</span>);</span><br><span class="line">            Assert.True(result, <span class="string">"2 should return true"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [Fact]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShouldReturnFalseGivenOddValue</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = _numberService.isEven(<span class="number">1</span>);</span><br><span class="line">            Assert.False(result, <span class="string">"1 should return false"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>提供兩個測試案例，分別測試傳回 <code>true</code> 與 <code>false</code>。</p>
 <p><img src="/images/jenkins/netcore-slack/slack001.png" alt="slack001"></p>
-<h2 id="執行單元測試">執行單元測試</h2><hr>
+<h2 id="執行_Unit_Test">執行 Unit Test</h2><hr>
 <p><img src="/images/jenkins/netcore-slack/slack002.png" alt="slack002"></p>
 <p>直接在 Rider 執行單元測試，確認結果正確。</p>
 <h2 id="建立_Git_Repository">建立 Git Repository</h2><hr>
