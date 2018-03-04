@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>如何使Hexo以文章分類為URI? | 點燈坊</title>
+  <title>如何使 Hexo 以文章分類為 URI ? | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
-  <meta name="description" content="將預設以日期為URI改成文章分類">
+  <meta name="description" content="將預設以日期為 URI 改成文章分類">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
- <meta name="description" content="將預設以日期為URI改成文章分類">
+ <meta name="description" content="將預設以日期為 URI 改成文章分類">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何使Hexo以文章分類為URI?">
-<meta property="og:url" content="http://oomusou.io/hexo/hexo-uri-category/index.html">
+<meta property="og:title" content="如何使 Hexo 以文章分類為 URI ?">
+<meta property="og:url" content="http://oomusou.io/hexo/uri-category/index.html">
 <meta property="og:site_name" content="點燈坊">
-<meta property="og:description" content="將預設以日期為URI改成文章分類">
+<meta property="og:description" content="將預設以日期為 URI 改成文章分類">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta property="og:updated_time" content="2018-03-04T06:38:07.530Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何使Hexo以文章分類為URI?">
-<meta name="twitter:description" content="將預設以日期為URI改成文章分類">
+<meta name="twitter:title" content="如何使 Hexo 以文章分類為 URI ?">
+<meta name="twitter:description" content="將預設以日期為 URI 改成文章分類">
  
 
   
@@ -81,7 +81,7 @@
     	 
 	
 		<div class="page-header">		
-			<h1> 如何使Hexo以文章分類為URI?</h1>
+			<h1> 如何使 Hexo 以文章分類為 URI ?</h1>
 		</div>		
 	
 
@@ -95,7 +95,7 @@
 
 	
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 將預設以日期為URI改成文章分類			
+			<i class="fa fa-info-circle"></i> 將預設以日期為 URI 改成文章分類			
 		</div> <!-- alert -->
 		
 
@@ -107,23 +107,23 @@
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>Hexo預設是以<code>日期</code>為URI，且將所有文章放在<code>source/_post</code>目錄下，本文討論如何改成以<code>分類</code>為URI。</p>
+	    <p>Hexo 預設是以 <code>日期</code> 為URI，且將所有文章放在 <code>source/_post</code> 目錄下，本文討論如何改成以 <code>分類</code> 為URI。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>Hexo 3.1.1</p>
 <h2 id="問題">問題</h2><hr>
-<p>以<code>日期</code>為URI的優點是只要看網址，就可以得知該文章的寫作日期，但缺點是若該文章日後經過<code>重構</code>，網址卻還是過去的日期，會被以為是<code>過時</code>的文章；若是去修改日期，又會造成網址的改變，造成原有的超連結錯誤。</p>
-<p>此外，Hexo預設將所有文章都放在<code>source/_post</code>目錄下，若文章數量少還好，若文章多到一個地步就會想開<code>資料夾</code>管理，可是若一開資料夾，URI就會變成<code>日期 + 資料夾</code>的怪異情況。</p>
+<p>以 <code>日期</code> 為 URI 的優點是只要看網址，就可以得知該文章的寫作日期，但缺點是若該文章日後經過 <code>重構</code>，網址卻還是過去的日期，會被以為是 <code>過時</code> 的文章；若是去修改日期，又會造成網址的改變，造成原有的超連結錯誤。</p>
+<p>此外，Hexo預設將所有文章都放在 <code>source/_post</code> 目錄下，若文章數量少還好，若文章多到一個地步就會想開 <code>資料夾</code>管理，可是若一開資料夾，URI 就會變成 <code>日期 + 資料夾</code> 的怪異情況。</p>
 <h2 id="討論">討論</h2><hr>
-<p>預設在Hexo根目錄的<code>_config.yml</code>的設定如下：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">url:</span> <span class="string">http:</span><span class="comment">//yoursite.com</span></span><br><span class="line"><span class="string">root:</span> /</span><br><span class="line"><span class="string">permalink:</span> :year<span class="regexp">/:month/</span>:day<span class="regexp">/:title/</span></span><br><span class="line"><span class="string">permalink_defaults:</span></span><br></pre></td></tr></table></figure></p>
-<p>在<code>permalink</code>設定為<code>年/月/日/檔名</code>，若建立<code>新資料夾</code>，也會包含在<code>檔名</code>裡面。</p>
+<p>預設在Hexo根目錄的 <code>_config.yml</code> 的設定如下：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">url:</span> <span class="string">http:</span><span class="comment">//yoursite.com</span></span><br><span class="line"><span class="string">root:</span> /</span><br><span class="line"><span class="string">permalink:</span> :year<span class="regexp">/:month/</span>:day<span class="regexp">/:title/</span></span><br><span class="line"><span class="string">permalink_defaults:</span></span><br></pre></td></tr></table></figure></p>
+<p>在 <code>permalink</code> 設定為 <code>年/月/日/檔名</code>，若建立 <code>新資料夾</code>，也會包含在 <code>檔名</code> 裡面。</p>
 <h2 id="解決方法">解決方法</h2><hr>
-<p>將<code>_config.yml</code>改成如下設定：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">url:</span> <span class="string">http:</span><span class="comment">//oomusou.io</span></span><br><span class="line"><span class="string">root:</span> /</span><br><span class="line"><span class="string">permalink:</span> :title/</span><br><span class="line"><span class="string">permalink_defaults:</span></span><br></pre></td></tr></table></figure></p>
-<p>將<code>年/月/日</code>拿掉後，只留下<code>檔名</code>即可，這樣URI就會與<code>source/_post</code>下的資料夾同步。</p>
+<p>將 <code>_config.yml</code> 改成如下設定：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">url:</span> <span class="string">http:</span><span class="comment">//oomusou.io</span></span><br><span class="line"><span class="string">root:</span> /</span><br><span class="line"><span class="string">permalink:</span> :title/</span><br><span class="line"><span class="string">permalink_defaults:</span></span><br></pre></td></tr></table></figure></p>
+<p>將 <code>年/月/日</code> 拿掉後，只留下 <code>檔名</code> 即可，這樣 URI 就會與 <code>source/_post</code> 下的資料夾同步。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>這樣日後文章若有<code>重構</code>，可以隨時修改<code>日期</code>，不會被誤認為過時的文章，且首頁也會當成最新文章顯示，最重要的是網址<code>不會改變</code>。</li>
-<li>可任意根據需要在<code>source/_post</code>建立資料夾，且URI會與資料夾同步，一來檔案再多也可方便管理，二來以分類為URI也比較清楚。</li>
+<li>這樣日後文章若有 <code>重構</code>，可以隨時修改 <code>日期</code>，不會被誤認為過時的文章，且首頁也會當成最新文章顯示，最重要的是網址 <code>不會改變</code></li>
+<li>可任意根據需要在 <code>source/_post</code> 建立資料夾，且 URI 會與資料夾同步，一來檔案再多也可方便管理，二來以分類為URI也比較清楚</li>
 </ul>
 	  
 	</div>
@@ -134,7 +134,7 @@
 <ul class="pagination">
 	 
 				
-    	<li class="prev"><a href="/hexo/hexo-template/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+    	<li class="prev"><a href="/hexo/template/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
   		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>

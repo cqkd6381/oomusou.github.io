@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hexo擴充標籤快速導覽 | 點燈坊</title>
+  <title>Hexo 擴充標籤快速導覽 | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
-  <meta name="description" content="Hexo擴充標籤整理">
+  <meta name="description" content="Hexo 擴充標籤整理">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
- <meta name="description" content="Hexo擴充標籤整理">
+ <meta name="description" content="Hexo 擴充標籤整理">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hexo擴充標籤快速導覽">
-<meta property="og:url" content="http://oomusou.io/hexo/hexo-tag-overview/index.html">
+<meta property="og:title" content="Hexo 擴充標籤快速導覽">
+<meta property="og:url" content="http://oomusou.io/hexo/tag-overview/index.html">
 <meta property="og:site_name" content="點燈坊">
-<meta property="og:description" content="Hexo擴充標籤整理">
+<meta property="og:description" content="Hexo 擴充標籤整理">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta property="og:updated_time" content="2018-03-04T06:39:17.297Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo擴充標籤快速導覽">
-<meta name="twitter:description" content="Hexo擴充標籤整理">
+<meta name="twitter:title" content="Hexo 擴充標籤快速導覽">
+<meta name="twitter:description" content="Hexo 擴充標籤整理">
  
 
   
@@ -81,7 +81,7 @@
     	 
 	
 		<div class="page-header">		
-			<h1> Hexo擴充標籤快速導覽</h1>
+			<h1> Hexo 擴充標籤快速導覽</h1>
 		</div>		
 	
 
@@ -95,7 +95,7 @@
 
 	
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> Hexo擴充標籤整理			
+			<i class="fa fa-info-circle"></i> Hexo 擴充標籤整理			
 		</div> <!-- alert -->
 		
 
@@ -107,20 +107,20 @@
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>Hexo除了支援Markdown標籤外，還另外擴充了一些標籤，以彌補Markdown的不足，如引用書中或Twitter的句子、插入Youtube影片…等，這些都是原本Markdown所沒有的。本文特別整理出Hexo 3目前所支援的擴充標籤。</p>
-<p>由於這些屬Hexo擴充，無法在一般Markdown Preview顯示，必須經過Hexo編譯後才能在瀏覽器顯示。</p>
+	    <p>Hexo 除了支援 Markdown 標籤外，還另外擴充了一些標籤，以彌補 Markdown 的不足，如引用書中或 Twitter 的句子、插入 Youtube 影片…等，這些都是原本 Markdown 所沒有的。本文特別整理出 Hexo 3 目前所支援的擴充標籤。</p>
+<p>由於這些屬 Hexo 擴充，無法在一般 Markdown preview 顯示，必須經過 Hexo 編譯後才能在瀏覽器顯示。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>Hexo 3.1.1</p>
 <h2 id="Images">Images</h2><hr>
-<p>Markdown的<code>![]()</code>無法指定圖片的大小，只能依照RWD自動改變。Hexo所擴充的<code>img</code>可以指定寬度，這對指定<code>svg</code>格式的圖片非常有用。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>svg格式不用特別考慮圖片寬度，只要使用Google Doc預設的Arial 14字型即可。因為svg格式為向量可縮放，再依實際需求指定 <code>img</code>的<code>width</code>，<code>height</code>不用指定。</span></span></span></p>
+<p>Markdown 的 <code>![]()</code> 無法指定圖片的大小，只能依照 RWD 自動改變。Hexo 所擴充的 <code>img</code> 可以指定寬度，這對指定 <code>svg</code>格式的圖片非常有用。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>svg 格式不用特別考慮圖片寬度，只要使用 Google Doc 預設的 Arial 14 字型即可。因為 svg 格式為向量可縮放，再依實際需求指定 <code>img</code> 的 <code>width</code>，<code>height</code> 不用指定。</span></span></span></p>
 <h3 id="語法">語法</h3><figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="collection">&#123;% img <span class="collection">[class names]</span> /path/to/image <span class="collection">[width]</span> <span class="collection">[height]</span> <span class="collection">[title text <span class="collection">[alt text]</span>]</span> %&#125;</span></span><br></pre></td></tr></table></figure>
 <h3 id="使用svg">使用svg</h3><figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="expression">&#123;% <span class="variable">img</span> <span class="end-block">/images</span><span class="end-block">/php</span><span class="end-block">/php-generator</span><span class="end-block">/yield</span>000<span class="variable">.svg</span> 180 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
 <img src="/images/php/php-generator/yield000.svg" width="180">
 <h2 id="Block_Quote">Block Quote</h2><hr>
-<p>類似Markdown的<code>&gt;</code>，但提供更進階的功能，如在文章中插入引言，可包含作者與超連結。</p>
+<p>類似 Markdown 的 <code>&gt;</code>，但提供更進階的功能，如在文章中插入引言，可包含作者與超連結。</p>
 <h3 id="語法-1">語法</h3><figure class="highlight inform7"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% blockquote <span class="comment">[author<span class="comment">[, source]</span>]</span> <span class="comment">[link]</span> <span class="comment">[source_link_title]</span> %&#125;</span><br><span class="line">content</span><br><span class="line">&#123;% endblockquote %&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="基本用法">基本用法</h3><p>與Markdown的<code>&gt;</code>結果相同。</p>
+<h3 id="基本用法">基本用法</h3><p>與 Markdown 的 <code>&gt;</code> 結果相同。</p>
 <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="var_expand">% blockquote %</span>&#125;</span><br><span class="line">念念不忘，必有迴響。有一口氣，點一盞燈，有燈就有人。</span><br><span class="line">&#123;<span class="var_expand">% endblockquote %</span>&#125;</span><br></pre></td></tr></table></figure>
 <blockquote><p>念念不忘，必有迴響。有一口氣，點一盞燈，有燈就有人。</p>
 </blockquote>
@@ -128,11 +128,11 @@
 <figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="var_expand">% blockquote 孔子, &amp;nbsp;- 論語 %</span>&#125;</span><br><span class="line">學而時習之，不亦悅乎。</span><br><span class="line">&#123;<span class="var_expand">% endblockquote %</span>&#125;</span><br></pre></td></tr></table></figure>
 <blockquote><p>學而時習之，不亦悅乎。</p>
 <footer><strong>孔子</strong><cite>&nbsp;- 論語</cite></footer></blockquote>
-<h3 id="引用Twitter">引用Twitter</h3><p>第1個參數為Twitter帳號，第2個參數為Twitter留言網址。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>第1個參數與第2個參數原本只需留一個空格，可能因為受到<a href="https://github.com/wzpan/hexo-theme-freemind" target="_blank" rel="external">Freemind</a>主題的CSS所影響，需多留一個空格，否則字會連在一起。</span></span></span></p>
-<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="expression">&#123;% <span class="variable">blockquote</span> @<span class="variable">oomusou</span>  <span class="variable">https</span>:/<span class="end-block">/twitter.com</span><span class="end-block">/oomusou</span><span class="end-block">/status</span>/636320431549497344 %&#125;</span><span class="xml"></span><br><span class="line">我一本書會讀3次，第一次先略讀，重點在先大概知道這本書的架構；第二次會精讀，重點在理解；第三次會實際實作，驗證書中內容，並整理至Blog，算是消化成自己的東西，以後就只需查自己的Blog即可。</span><br><span class="line"></span><span class="expression">&#123;% <span class="variable">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<blockquote><p>我一本書會讀3次，第一次先略讀，重點在先大概知道這本書的架構；第二次會精讀，重點在理解；第三次會實際實作，驗證書中內容，並整理至Blog，算是消化成自己的東西，以後就只需查自己的Blog即可。</p>
+<h3 id="引用Twitter">引用Twitter</h3><p>第 1 個參數為 Twitter 帳號，第 2 個參數為Twitter留言網址。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>第 1 個參數與第 2 個參數原本只需留一個空格，可能因為受到  <a href="https://github.com/wzpan/hexo-theme-freemind" target="_blank" rel="external">Freemind</a>主題的 CSS 所影響，需多留一個空格，否則字會連在一起。</span></span></span></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% <span class="keyword">blockquote </span><span class="comment">@oomusou  https://twitter.com/oomusou/status/636320431549497344 %&#125;</span></span><br><span class="line">我一本書會讀 <span class="number">3</span> 次，第一次先略讀，重點在先大概知道這本書的架構；第二次會精讀，重點在理解；第三次會實際實作，驗證書中內容，並整理至 <span class="keyword">Blog，算是消化成自己的東西，以後就只需查自己的 </span><span class="keyword">Blog </span>即可。</span><br><span class="line">&#123;% endblockquote %&#125;</span><br></pre></td></tr></table></figure>
+<blockquote><p>我一本書會讀 3 次，第一次先略讀，重點在先大概知道這本書的架構；第二次會精讀，重點在理解；第三次會實際實作，驗證書中內容，並整理至 Blog，算是消化成自己的東西，以後就只需查自己的 Blog 即可。</p>
 <footer><strong>@oomusou </strong><cite><a href="https://twitter.com/oomusou/status/636320431549497344" target="_blank" rel="external">twitter.com/oomusou/status/636320431549497344</a></cite></footer></blockquote>
-<h3 id="引用網路上文章">引用網路上文章</h3><p>第1個參數為人名，第2個參數為網址，第3個參數為網址所顯的標題。<span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>第1個參數與第2個參數原本只需留一個空格，可能因為受到<a href="https://github.com/wzpan/hexo-theme-freemind" target="_blank" rel="external">Freemind</a>主題的CSS所影響，需多留一個空格，否則字會連在一起。</span></span></span></p>
+<h3 id="引用網路上文章">引用網路上文章</h3><p>第 1 個參數為人名，第 2 個參數為網址，第 3 個參數為網址所顯的標題。<span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>第 1 個參數與第 2 個參數原本只需留一個空格，可能因為受到 <a href="https://github.com/wzpan/hexo-theme-freemind" target="_blank" rel="external">Freemind</a>主題的 CSS 所影響，需多留一個空格，否則字會連在一起。</span></span></span></p>
 <figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% blockquote 一代宗師  https://zh.wikipedia.org/wiki/<span class="decorator">%E4</span><span class="decorator">%B8</span><span class="decorator">%80</span><span class="decorator">%E4</span><span class="decorator">%BB</span><span class="decorator">%A3</span><span class="decorator">%E5</span><span class="decorator">%AE</span><span class="decorator">%97</span><span class="decorator">%E5</span><span class="decorator">%B8</span><span class="decorator">%AB</span> 維基百科%&#125;</span><br><span class="line">念念不忘，必有迴響。有一口氣，點一盞燈，有燈就有人。</span><br><span class="line">&#123;% endblockquote %&#125;</span><br></pre></td></tr></table></figure>
 <blockquote><p>念念不忘，必有迴響。有一口氣，點一盞燈，有燈就有人。</p>
 <footer><strong>一代宗師 </strong><cite><a href="https://zh.wikipedia.org/wiki/%E4%B8%80%E4%BB%A3%E5%AE%97%E5%B8%AB" target="_blank" rel="external">維基百科</a></cite></footer></blockquote>
@@ -156,7 +156,7 @@
 <h3 id="基本用法-2">基本用法</h3><div class="video-container"><iframe src="//www.youtube.com/embed/EKyirtVHsK0" frameborder="0" allowfullscreen></iframe></div>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>本文是根據Hexo官方文件：<a href="https://hexo.io/zh-tw/docs/tag-plugins.html#Backtick_Code_Block" target="_blank" rel="external">Hexo 標籤外掛</a>實際測試所得知的結果，事實上Hexo官方支援的擴充標籤遠比本文所列的多，不過有可能因為受到<a href="https://github.com/wzpan/hexo-theme-freemind" target="_blank" rel="external">Freemind</a>主題的CSS所影響，有些擴充結果不正常，因此沒有列出。</li>
+<li>本文是根據 Hexo 官方文件：<a href="https://hexo.io/zh-tw/docs/tag-plugins.html#Backtick_Code_Block" target="_blank" rel="external">Hexo 標籤外掛</a>實際測試所得知的結果，事實上 Hexo 官方支援的擴充標籤遠比本文所列的多，不過有可能因為受到 <a href="https://github.com/wzpan/hexo-theme-freemind" target="_blank" rel="external">Freemind</a>主題的 CSS 所影響，有些擴充結果不正常，因此沒有列出</li>
 </ul>
 	  
 	</div>
