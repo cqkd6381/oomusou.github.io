@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/design-pattern/cor/</loc>
+    <lastmod>2018-03-06T01:49:39.059Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/hexo/template/</loc>
     <lastmod>2018-03-04T06:43:05.834Z</lastmod>
   </url>
@@ -134,11 +139,6 @@
   <url>
     <loc>http://oomusou.io/docker/ubuntu/</loc>
     <lastmod>2018-02-24T12:53:58.420Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/design-pattern/cor/</loc>
-    <lastmod>2018-02-23T02:09:14.725Z</lastmod>
   </url>
   
   <url>

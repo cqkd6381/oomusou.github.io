@@ -1391,7 +1391,7 @@
     <link href="http://oomusou.io/design-pattern/cor/"/>
     <id>http://oomusou.io/design-pattern/cor/</id>
     <published>2018-02-21T12:23:43.000Z</published>
-    <updated>2018-02-23T02:09:14.725Z</updated>
+    <updated>2018-03-06T01:49:39.059Z</updated>
     <content type="html"><![CDATA[<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1489,7 +1489,7 @@
 <p>實務上推薦使用 Guard Clause，變免使用 nested if 與 else</p>
 </blockquote>
 <p><code>Nested if</code> 經過 Guard Clause 重構後，已經相當清爽了，但仍然還沒進入 OOP 層次，我們將繼續重構。</p>
-<h3 id="以_OOP_實踐">以 OOP 實踐</h3><p><strong>CheckerInterface</strong></p>
+<h3 id="Chain_of_Responsibility">Chain of Responsibility</h3><p><strong>CheckerInterface</strong></p>
 <p><img src="/images/design-pattern/cor/cor002.svg" alt="cor002"></p>
 <p><strong>checker.interface.ts</strong></p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> CheckerInterface </span>&#123;</span><br><span class="line">  setNextChecker(checker: CheckerInterface): CheckerInterface;</span><br><span class="line">  check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1549,13 +1549,13 @@
 <blockquote>
 <p>目前為止，我們已經在 Angular 實現了經典的 Chain of Resposibility Pattern，但還可以對此 pattern 做小幅重構。</p>
 </blockquote>
-<h3 id="重構_OOP">重構 OOP</h3><p><strong>IntegerChecker</strong></p>
+<h3 id="Refactoring">Refactoring</h3><p><strong>IntegerChecker</strong></p>
 <p><img src="/images/design-pattern/cor/cor005.svg" alt="cor005"></p>
 <p><strong>integer.checker.ts</strong></p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; AbstractChecker &#125; from <span class="string">'./abstract.checker'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> IntegerChecker extends AbstractChecker &#123;</span><br><span class="line">  check(source: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> !<span class="built_in">Number</span>.isInteger(source) ? <span class="literal">false</span> :</span><br><span class="line">           !<span class="keyword">this</span>.nextChecker ? <span class="literal">true</span> :</span><br><span class="line">           <span class="keyword">this</span>.nextChecker.check(source);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用 Guard Clause 寫法雖然已經非常精簡，但若使用 <code>?:</code>，則可寫出更精簡，且可讀性更高的寫法。</p>
 <p><code>DoubleChecker</code> 與 <code>TripleChecker</code> 的寫法類似，就不再贅述。</p>
-<h3 id="以_FP_實踐">以 FP 實踐</h3><p>Chain of Responsibility 雖然是 OOP 的 Design Pattern，但亦可使用 FP 實踐。</p>
+<h3 id="Functional_Way">Functional Way</h3><p>Chain of Responsibility 雖然是 OOP 的 Design Pattern，但亦可使用 FP 實踐。</p>
 <p><strong>checker.interface.ts</strong></p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> CheckerInterface </span>&#123;</span><br><span class="line">  (source: <span class="built_in">number</span>): <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>之前 <code>CheckerInterface</code> 雖然定義了 <code>setNextChecker()</code> 與 <code>check()</code> 兩個 method，但平心而論，只有 <code>check()</code> 才是真的 <code>if</code> 所要用的 method，<code>setNextChecker()</code> 算是 pattern 本身所使用的 method。</p>
@@ -1595,7 +1595,7 @@
 <blockquote>
 <p>OOP  版當然也可以使用陣列內放 <code>ConcreteHandler</code> 方式，不過由於沒有 FP 版精妙，因此不特別說明</p>
 </blockquote>
-<h3 id="重構_FP">重構 FP</h3><p>原本 OOP 版是只要回傳 <code>false</code>，就不會執行下一個 object；但 <code>Array.every()</code> 卻要求我們執行所有的 function，所以效能較差。</p>
+<h3 id="Refactoring-1">Refactoring</h3><p>原本 OOP 版是只要回傳 <code>false</code>，就不會執行下一個 object；但 <code>Array.every()</code> 卻要求我們執行所有的 function，所以效能較差。</p>
 <p>JavaScript 原生提供了 <code>Array.some()</code>，只要回傳 <code>true</code>，就不會執行下一個 function，跟我們的需求很類似，但又不完全一樣，因此只好自己打造 <code>Array.any()</code>。</p>
 <p>19 行</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">check(productNo: <span class="built_in">number</span>): <span class="built_in">boolean</span> &#123;</span><br><span class="line">  <span class="built_in">Array</span>.prototype.any = <span class="function"><span class="keyword">function</span>(<span class="params">fn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> !<span class="keyword">this</span>.some(item =&gt; !fn(item));</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.checkers.any(checker =&gt; checker(productNo));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
