@@ -1391,7 +1391,7 @@
     <link href="http://oomusou.io/design-pattern/cor/"/>
     <id>http://oomusou.io/design-pattern/cor/</id>
     <published>2018-02-21T12:23:43.000Z</published>
-    <updated>2018-03-07T03:52:18.853Z</updated>
+    <updated>2018-03-07T04:01:59.031Z</updated>
     <content type="html"><![CDATA[<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1406,7 +1406,7 @@
 <p>先使用一般的寫法完成，最後再重構成 Chain of Responsbility。</p>
 <h2 id="Definition">Definition</h2><blockquote>
 <p>Chain of Responsibility Pattern</p>
-<p>將 <code>nested if</code> 改由外部決定的 <code>物件串列</code> 表示</p>
+<p>將 <code>nested if</code> 改由 <code>外部決定</code> 的 <code>物件串列</code> 表示</p>
 </blockquote>
 <p><img src="/images/design-pattern/cor/cor007.svg" alt="cor007"></p>
 <p><img src="/images/design-pattern/cor/cor006.svg" alt="cor006"></p>
