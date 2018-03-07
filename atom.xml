@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-07T07:05:22.223Z</updated>
+  <updated>2018-03-07T13:30:44.755Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/state/"/>
     <id>http://oomusou.io/design-pattern/state/</id>
     <published>2018-03-09T12:23:43.000Z</published>
-    <updated>2018-03-07T07:05:22.223Z</updated>
+    <updated>2018-03-07T13:30:44.755Z</updated>
     <content type="html"><![CDATA[<p>State Pattern 是 OOP 中著名的 Design Pattern，當 method 的行為會隨著 field 而改變時特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -69,7 +69,7 @@
 <li>每個 <code>if 要處理的邏輯</code> 使用一個 class，符合 <code>單一職責原則</code></li>
 <li>將來若有新的 <code>if 要處理的邏輯</code>，不用修改 service，而是新增 <code>ConcreState</code>，符合 <code>開放封閉原則</code></li>
 <li>Client 與 <code>if 判斷</code> 解耦合，兩者都僅相依於 interface，符合 <code>依賴反轉原則</code></li>
-<li>可使用 state diagram 清楚描述轉態轉變</li>
+<li>可使用 state diagram 清楚描述狀態轉變</li>
 </ul>
 <p><strong>缺點</strong> </p>
 <ul>
