@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-07T06:57:15.057Z</updated>
+  <updated>2018-03-07T07:05:22.223Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/state/"/>
     <id>http://oomusou.io/design-pattern/state/</id>
     <published>2018-03-09T12:23:43.000Z</published>
-    <updated>2018-03-07T06:57:15.057Z</updated>
+    <updated>2018-03-07T07:05:22.223Z</updated>
     <content type="html"><![CDATA[<p>State Pattern 是 OOP 中著名的 Design Pattern，當 method 的行為會隨著 field 而改變時特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -27,12 +27,12 @@
 <h2 id="User_Story">User Story</h2><hr>
 <p><img src="/images/design-pattern/state/state000.png" alt="state000"></p>
 <ul>
-<li>模擬 iPhone 的 <code>Home</code> 的動作</li>
+<li>模擬 iPhone 的 <code>Home</code> 鍵動作</li>
 <li><code>Home</code> 雖然只有一個按鍵，但在不同的情境下有不同的功能<ul>
-<li>當在 locked 下，可以 unlock</li>
-<li>當在 unlocked 下，可以進入 desktop</li>
-<li>當在 app 開啟下，可以回到 desktop</li>
-<li>當在 desktop 下，可以切換 desktop</li>
+<li>當在 <code>Locked</code> 下，可以 <code>Unlocked</code></li>
+<li>當在 <code>Unlocked</code> 下，可以進入 <code>Home</code></li>
+<li>當在 <code>App</code> 開啟下，可以回到 <code>Home</code></li>
+<li>當在 <code>Desktop</code> 下，可以切換 <code>Home</code></li>
 </ul>
 </li>
 </ul>

@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 OOP 實現 Finite State Machine">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-07T06:57:15.057Z">
+<meta property="og:updated_time" content="2018-03-07T07:05:22.223Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在 Angular 實現 State Pattern ?">
 <meta name="twitter:description" content="使用 OOP 實現 Finite State Machine">
@@ -114,12 +114,12 @@
 <h2 id="User_Story">User Story</h2><hr>
 <p><img src="/images/design-pattern/state/state000.png" alt="state000"></p>
 <ul>
-<li>模擬 iPhone 的 <code>Home</code> 的動作</li>
+<li>模擬 iPhone 的 <code>Home</code> 鍵動作</li>
 <li><code>Home</code> 雖然只有一個按鍵，但在不同的情境下有不同的功能<ul>
-<li>當在 locked 下，可以 unlock</li>
-<li>當在 unlocked 下，可以進入 desktop</li>
-<li>當在 app 開啟下，可以回到 desktop</li>
-<li>當在 desktop 下，可以切換 desktop</li>
+<li>當在 <code>Locked</code> 下，可以 <code>Unlocked</code></li>
+<li>當在 <code>Unlocked</code> 下，可以進入 <code>Home</code></li>
+<li>當在 <code>App</code> 開啟下，可以回到 <code>Home</code></li>
+<li>當在 <code>Desktop</code> 下，可以切換 <code>Home</code></li>
 </ul>
 </li>
 </ul>
