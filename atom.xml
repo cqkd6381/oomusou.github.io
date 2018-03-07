@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-07T13:40:49.910Z</updated>
+  <updated>2018-03-07T14:31:11.852Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/state/"/>
     <id>http://oomusou.io/design-pattern/state/</id>
     <published>2018-03-09T12:23:43.000Z</published>
-    <updated>2018-03-07T13:40:49.910Z</updated>
+    <updated>2018-03-07T14:31:11.852Z</updated>
     <content type="html"><![CDATA[<p>State Pattern 是 OOP 中著名的 Design Pattern，當 method 的行為會隨著 field 而改變時特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1682,7 +1682,7 @@
     <link href="http://oomusou.io/design-pattern/cor/"/>
     <id>http://oomusou.io/design-pattern/cor/</id>
     <published>2018-02-21T12:23:43.000Z</published>
-    <updated>2018-03-07T05:53:12.501Z</updated>
+    <updated>2018-03-07T14:31:09.036Z</updated>
     <content type="html"><![CDATA[<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
