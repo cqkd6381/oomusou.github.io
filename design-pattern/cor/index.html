@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="專門應付特殊場的 if else">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-07T04:01:59.031Z">
+<meta property="og:updated_time" content="2018-03-07T05:53:12.501Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在 Angular 實現 Chain Of Responsibility Pattern ?">
 <meta name="twitter:description" content="專門應付特殊場的 if else">
@@ -121,17 +121,18 @@
 <p>先使用一般的寫法完成，最後再重構成 Chain of Responsbility。</p>
 <h2 id="Definition">Definition</h2><blockquote>
 <p>Chain of Responsibility Pattern</p>
-<p>將 <code>nested if</code> 改由 <code>外部決定</code> 的 <code>物件串列</code> 表示</p>
+<p>當多個物件都必須依序處理訊息，訂定統一個 interface，避免 client 與物件直接耦合<br>將 <code>外部 nested if</code> 改由 <code>外部決定</code> 的 <code>物件串列</code> 表示</p>
 </blockquote>
 <p><img src="/images/design-pattern/cor/cor007.svg" alt="cor007"></p>
 <p><img src="/images/design-pattern/cor/cor006.svg" alt="cor006"></p>
 <ul>
-<li><strong>Client</strong> : <code>ConcreteHandler</code> 的 user，實務上可能是 component 或者 service</li>
+<li><strong>Client</strong> : <code>ConcreteHandler</code> 的 user，實務上可能是 component 或 service</li>
 <li><strong>HandlerInterface</strong> : 定義 <code>ConcreteHandler</code> 的 interface</li>
 <li><strong>AbstractHandler</strong> : 實作各 <code>ConcreteHandler</code> 共用的部分</li>
 <li><strong>ConcreteHandler</strong> : 將 <code>if</code> 封裝成物件</li>
 </ul>
-<p>一個 <code>if</code> 放在一個 <code>ConcreteHandler</code> 物件內，當一個 <code>if</code> 判斷完後，就換下一個 <code>ConcreteHandler</code> 物件，由於物件是串起來的，所以稱為 <code>Chain</code> of Responsibility。</p>
+<p>一個 <code>if</code> 放在一個 <code>ConcreteHandler</code> 物件內，當一個 <code>if</code> 判斷完後，就換下一個 <code>ConcreteHandler</code> 物件。</p>
+<p>由於物件是串起來的，因此稱為 <code>Chain</code> of Responsibility。</p>
 <p><strong>適用時機</strong></p>
 <ul>
 <li>深層 <code>nested if</code></li>
@@ -141,7 +142,7 @@
 <p><strong>優點</strong></p>
 <ul>
 <li>每個 <code>if 判斷</code> 使用一個 class，符合 <code>單一職責原則</code></li>
-<li>將來若有新的 <code>if判斷</code>，不用修改 service，而是新增 <code>ConcreteHandler</code>，符合 <code>開放封閉原則</code></li>
+<li>將來若有新的 <code>if 判斷</code>，不用修改 service，而是新增 <code>ConcreteHandler</code>，符合 <code>開放封閉原則</code></li>
 <li>Client 與 <code>if 判斷</code> 解耦合，兩者都僅相依於 interface，符合 <code>依賴反轉原則</code></li>
 <li><code>if</code> 邏輯物件化後，可在 run-time 自由組合與加入 <code>if</code> 物件 (組合 <code>ConcreteHandler</code>)</li>
 </ul>
@@ -375,7 +376,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Angular/">Angular<span>43</span></a></li> <li><a href="/tags/Design-Pattern/">Design Pattern<span>8</span></a></li>
+  <li><a href="/tags/Angular/">Angular<span>44</span></a></li> <li><a href="/tags/Design-Pattern/">Design Pattern<span>9</span></a></li>
     </ul>
 	</div>
 		
