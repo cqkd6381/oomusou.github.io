@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 OOP 實現 Finite State Machine">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-07T13:30:44.755Z">
+<meta property="og:updated_time" content="2018-03-07T13:40:49.910Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在 Angular 實現 State Pattern ?">
 <meta name="twitter:description" content="使用 OOP 實現 Finite State Machine">
@@ -170,6 +170,12 @@
 <li>只有 <code>Home</code> 才能切到 <code>Desktop</code></li>
 </ul>
 <p><img src="/images/design-pattern/state/state002.svg" alt="state002"></p>
+<ul>
+<li><code>AppComponent</code> 相當於 <code>Client</code></li>
+<li><code>PhoneContext</code> 相當於 <code>Context</code>，<code>AppComponent</code> 負責注入 <code>PhoneContext</code>，無論怎麼重構，<code>PhoneContext</code> 都是穩定的，不會導致 <code>AppComponent</code> 修改</li>
+<li><code>PhoneStateInterface</code> 相當於 <code>State</code> interface，訂出所有 state 標準</li>
+<li><code>LockedState</code> 及其他 state 都是 <code>ConcreteState</code>，為實際 <code>if</code> 所處理的邏輯</li>
+</ul>
 <h2 id="Implmentation">Implmentation</h2><hr>
 <p><strong>app.component.html</strong></p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">button</span> (<span class="attribute">click</span>)=<span class="value">"onHomeClick()"</span>&gt;</span>Home<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">button</span> (<span class="attribute">click</span>)=<span class="value">"onOpenAppClick()"</span>&gt;</span>Open App<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">button</span> (<span class="attribute">click</span>)=<span class="value">"onSwitchDesktopClick()"</span>&gt;</span>Switch Desktop<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">&#123;&#123; message &#125;&#125;</span><br></pre></td></tr></table></figure>
