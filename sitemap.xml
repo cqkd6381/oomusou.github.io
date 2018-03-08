@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/vscode/netcore/</loc>
+    <lastmod>2018-03-08T09:11:37.670Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/design-pattern/state/</loc>
     <lastmod>2018-03-08T02:23:22.038Z</lastmod>
   </url>
