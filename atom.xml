@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-07T14:31:11.852Z</updated>
+  <updated>2018-03-08T01:40:10.239Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/state/"/>
     <id>http://oomusou.io/design-pattern/state/</id>
     <published>2018-03-09T12:23:43.000Z</published>
-    <updated>2018-03-07T14:31:11.852Z</updated>
+    <updated>2018-03-08T01:40:10.239Z</updated>
     <content type="html"><![CDATA[<p>State Pattern 是 OOP 中著名的 Design Pattern，當 method 的行為會隨著 field 而改變時特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -53,15 +53,15 @@
 <ul>
 <li><strong>Client</strong> : <code>Context</code> 的 user，實務上可能是 component 或 controller</li>
 <li><strong>Context</strong> : 根據 field 的不同，<code>request()</code> 會有不同功能，實務上可能是 service</li>
-<li><strong>State</strong> : 定義 <code>ConcreteState</code> 的 interface，只有 <code>handle()</code> ，負責封裝 <code>if</code> 要處理的邏輯</li>
-<li><strong>ConcreteState</strong> : 將 <code>if</code> 要處理的邏輯封裝成物件</li>
+<li><strong>State</strong> : 定義 <code>ConcreteState</code> 的 interface，只有 <code>handle()</code> ，負責封裝 <code>if 要處理的邏輯</code></li>
+<li><strong>ConcreteState</strong> : 將 <code>if 要處理的邏輯</code> 封裝成物件</li>
 </ul>
 <p>一個 <code>if</code> 要處理的邏輯放在一個 <code>ConcreteState</code> 物件內，並根據 state diagram 指定下一個 state。</p>
 <p>由於 method 的行為會根據 field (state) 改變，因此稱為 <code>State</code>  Pattern。</p>
 <p><strong>適用時機</strong></p>
 <ul>
 <li>深層 <code>nested if</code></li>
-<li>在 compile-time 就可決定 <code>if</code> 組合 (以 state diagram 描述)</li>
+<li>在 design-time 就可決定 <code>if</code> 組合 (以 state diagram 描述)</li>
 <li>當 method 的行為會隨著 field 而改變時</li>
 </ul>
 <p><strong>優點</strong></p>
