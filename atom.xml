@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-08T09:11:37.670Z</updated>
+  <updated>2018-03-08T10:35:17.029Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 Ubuntu 安裝 VS Code ?]]></title>
+    <link href="http://oomusou.io/vscode/ubuntu/"/>
+    <id>http://oomusou.io/vscode/ubuntu/</id>
+    <published>2018-03-11T12:23:43.000Z</published>
+    <updated>2018-03-08T10:35:17.029Z</updated>
+    <content type="html"><![CDATA[<p>由於 VS Code 本來就是跨平台，因此也可以在 Ubuntu 使用 VS Code。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Ubuntu 16.04<br>VS Code 1.21.0</p>
+<h2 id="Download">Download</h2><hr>
+<p><img src="/images/vscode/ubuntu/ubuntu000.png" alt="ubuntu000"></p>
+<ol>
+<li>到 <a href="https://code.visualstudio.com/" target="_blank" rel="external">VS Code</a> 官網，選擇 <code>deb</code> 格式下載。</li>
+</ol>
+<p><img src="/images/vscode/ubuntu/ubuntu001.png" alt="ubuntu001"></p>
+<ol>
+<li>選擇將檔案存下來到 <code>~/Downloads</code> 目錄</li>
+</ol>
+<h2 id="安裝_deb">安裝 deb</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd Downloads</span><br><span class="line">$ sudo dpkg -<span class="tag">i</span> code_1.<span class="number">21.0</span>-<span class="number">1520420608</span>_amd64<span class="class">.deb</span></span><br><span class="line">$ code</span><br></pre></td></tr></table></figure>
+<p>使用 dpkg 安裝 <code>deb</code>。</p>
+<ul>
+<li><strong>-i</strong> : <code>i</code> stall，安裝 <code>deb</code></li>
+</ul>
+<p>使用 <code>code</code> 執行 VS Code。</p>
+<p><img src="/images/vscode/ubuntu/ubuntu002.png" alt="ubuntu002"></p>
+<ol>
+<li>輸入 <code>cd Downloads</code> 將目前目錄切到 <code>Downloads</code>，因為 Firefox 將 <code>deb</code> 下載到 <code>~/Downloads</code> 目錄下</li>
+<li>輸入 <code>sudo dpkg -i code_1.21.0-1520420608_amd64.deb</code> 安裝 <code>deb</code></li>
+<li>輸入 <code>code</code> 執行 VS Code</li>
+</ol>
+<p><img src="/images/vscode/ubuntu/ubuntu003.png" alt="ubuntu003"></p>
+<p>VS Code 成功執行在 Ubuntu。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>VS Code 在 Ubuntu 安裝稍微不一樣，需要使用 <code>dpkg</code> 安裝 <code>deb</code> 格式</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[Ubuntu 也可以安裝 VS Code]]>
+    
+    </summary>
+    
+      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
+    
+      <category term="VS Code" scheme="http://oomusou.io/tags/VS-Code/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 VS Code 建立 .NET Core 開發環境 ?]]></title>
@@ -2460,151 +2510,6 @@
     </summary>
     
       <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Docker 安裝 Ubuntu ?]]></title>
-    <link href="http://oomusou.io/docker/ubuntu/"/>
-    <id>http://oomusou.io/docker/ubuntu/</id>
-    <published>2018-02-16T12:23:43.000Z</published>
-    <updated>2018-02-24T12:53:58.420Z</updated>
-    <content type="html"><![CDATA[<p>以前在 macOS 安裝 Ubuntu 都要先安裝 Parallel Desktop，然後再將 Ubuntu 安裝在 Parallel Desktop 上，安裝了 Docker for Mac 後，只要下載 Ubuntu 的 Docker image，Ubuntu 就能以 container 形式跑在 Docker 上。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)</p>
-<h2 id="搜尋_Ubuntu_Image">搜尋 Ubuntu Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker search ubuntu</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker search</code> 搜尋 Docker Hub 的 image。</p>
-<p><img src="/images/docker/ubuntu/ubuntu000.png" alt="ubuntu000"></p>
-<ol>
-<li>使用 Docker 第一步就是使用 <code>docker search</code> 到 Docker Hub 搜尋 image 下載</li>
-<li>找到 <code>ubuntu</code> image</li>
-<li>7234 star</li>
-<li>為 official image</li>
-</ol>
-<blockquote>
-<p>下載 Docker image 時，盡量使用 official  image，而不要使用別人包過的 image，因為可能會有後門或木馬</p>
-</blockquote>
-<h2 id="下載_Ubuntu_Image">下載 Ubuntu Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker pull ubuntu</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker pull</code> 下載 image 到本機。</p>
-<p><img src="/images/docker/ubuntu/ubuntu001.png" alt="ubuntu001"></p>
-<h2 id="建立_Container">建立 Container</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyUbuntu -dt ubuntu</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container。</p>
-<ul>
-<li><code>--name</code> : 替 container 取一個人能夠識別的名字 <code>MyUbuntu</code> ( 若省略，Docker 將隨機命名 )</li>
-<li><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
-<li><code>-t</code> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
-<li><code>ubuntu</code> : Ubuntu 的官方 image 名稱</li>
-</ul>
-<blockquote>
-<p>Docker container  重要觀念</p>
-<p>One process per container</p>
-<ul>
-<li>一個 container 應該只有 process</li>
-<li>若有多個 process，就應該有多個 container</li>
-<li>process 執行完，container 則釋放停止執行</li>
-</ul>
-<p>當 process 執行完，container 會自動釋放，<code>ubuntu</code> image 預設並沒有執行任何 process，所以 <code>start</code> 完後會自動釋放，為了讓 container 不會執行完立即釋放，因此特別加上 <code>-t</code>，讓此 container 預設執行 <code>bash</code>，使的 container 不會釋放</p>
-</blockquote>
-<p><img src="/images/docker/ubuntu/ubuntu002.png" alt="ubuntu002"></p>
-<ol>
-<li>使用 <code>docker run</code> 建立 container 並執行 bash 進入 terminal</li>
-</ol>
-<h2 id="觀察_Container">觀察 Container</h2><hr>
-<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps -<span class="literal">a</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker ps -a</code> 顯示所有 container。</p>
-<p><code>-a</code> : <code>a</code>ll 顯示所有 container，包含所有 <code>正在執行</code> 或者 <code>尚未執行</code> 的 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu005.png" alt="ubuntu005"></p>
-<ol>
-<li>輸入 <code>docker ps -a</code></li>
-<li><code>MyUbuntu</code> container 已經被建立</li>
-</ol>
-<h2 id="啟動_Container">啟動 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker start <span class="constant">MyUbuntu</span></span><br><span class="line"><span class="variable">$ </span>docker ps</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker start</code> 重新啟動已經在硬碟，但還沒有執行的 container。</p>
-<p>使用 <code>docker ps</code> 顯示目前執行中的 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu006.png" alt="ubuntu006"></p>
-<ol>
-<li>輸入 <code>docker start MyUbuntu</code> 啟動 <code>MyUbuntu</code> container</li>
-<li>輸入 <code>docker ps</code> 顯示目前執行中的 container</li>
-<li><code>MyUbuntu</code> container 執行中。</li>
-</ol>
-<h2 id="進入_Container_的_terminal">進入 Container 的 terminal</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyUbuntu bash</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
-<ul>
-<li><code>-i</code> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
-<li><code>-t</code> : <code>t</code>erminal，可對 terminal 顯示資料</li>
-<li><code>MyUbuntu</code> : Container 名稱</li>
-<li><code>bash</code> : 對 container 下的指令</li>
-</ul>
-<p><img src="/images/docker/ubuntu/ubuntu007.png" alt="ubuntu007"></p>
-<ol>
-<li>使用 <code>docker exec -it</code> 進入 container 的 terminal</li>
-<li>已經進入 Ubuntu 的 terminal</li>
-</ol>
-<h2 id="離開_Ubuntu">離開 Ubuntu</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">exit</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>exit</code> 離開 Ubuntu 的 terminal。</p>
-<p><img src="/images/docker/ubuntu/ubuntu008.png" alt="ubuntu008"></p>
-<h2 id="停止_Container">停止 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker stop <span class="constant">MyUbuntu</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker stop</code> 停止 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu010.png" alt="ubuntu010"></p>
-<ol>
-<li>輸入 <code>docker stop MyUbuntu</code> 停止 <code>MyUbuntu</code> container</li>
-<li>輸入 <code>docker ps</code> 顯示目前執行中的 container</li>
-</ol>
-<p>目前已經沒有執行中的 container，表示 <code>MyUbuntu</code> container 已經停止執行。</p>
-<h2 id="刪除_Container">刪除 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rm <span class="constant">MyUbuntu</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker rm</code> 刪除在硬碟中的 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu011.png" alt="ubuntu011"></p>
-<ol>
-<li>輸入 <code>docker rm MyUbuntu</code> 刪除 <code>MyUbuntu</code> container</li>
-<li>輸入 <code>docker ps -a</code> 顯示所有在硬碟的 container</li>
-</ol>
-<blockquote>
-<p>要刪除 container 之前，必須先停止 container，才能加以刪除。</p>
-</blockquote>
-<h2 id="顯示所有_Image">顯示所有 Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker images</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker images</code> 顯示目前在硬碟所有的 image。</p>
-<p><img src="/images/docker/ubuntu/ubuntu012.png" alt="ubuntu012"></p>
-<ol>
-<li>輸入 <code>docker images</code> 顯示目前在硬碟的所有 image</li>
-<li>目前有 <code>ubuntu</code> image</li>
-</ol>
-<h2 id="刪除_Image">刪除 Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rmi ubuntu</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker rmi</code> 刪除 image。</p>
-<ul>
-<li><code>rm</code> : 刪除</li>
-<li><code>i</code> : <code>i</code>mage</li>
-</ul>
-<p><img src="/images/docker/ubuntu/ubuntu013.png" alt="ubuntu013"></p>
-<ol>
-<li>輸入 <code>docker rmi ubuntu</code> 刪除 <code>ubuntu</code> image</li>
-<li>輸入 <code>docker images</code> 確認是否 image 已被刪除</li>
-</ol>
-<h2 id="Summary">Summary</h2><hr>
-<p><img src="/images/docker/ubuntu/ubuntu014.svg" alt="ubuntu014"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>本文為 Docker 最基本的操作，是使用 Docker 一定要會的基本指令</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[以 Docker 基本指令建立 Ubuntu]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
     
   </entry>
   
