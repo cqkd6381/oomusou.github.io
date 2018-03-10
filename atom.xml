@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-10T14:29:27.154Z</updated>
+  <updated>2018-03-10T18:13:35.706Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[Compose Function (TypeScript vs. F#)]]></title>
-    <link href="http://oomusou.io/fsharp/compose-function/"/>
-    <id>http://oomusou.io/fsharp/compose-function/</id>
+    <title><![CDATA[Function Composition (TypeScript vs. F#)]]></title>
+    <link href="http://oomusou.io/fsharp/function-composition/"/>
+    <id>http://oomusou.io/fsharp/function-composition/</id>
     <published>2018-03-13T12:23:43.000Z</published>
-    <updated>2018-03-10T14:29:27.154Z</updated>
+    <updated>2018-03-10T18:13:35.706Z</updated>
     <content type="html"><![CDATA[<p>數學的 <code>fog(x) = f(g(x))</code> 就是 FP 的 Compose Function，本文分別以 TypeScript 與 F# 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
