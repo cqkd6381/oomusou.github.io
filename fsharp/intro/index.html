@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="千年傳統，全新感受">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-02-27T08:38:00.341Z">
+<meta property="og:updated_time" content="2018-03-10T04:43:04.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="F# 的特色與歷史簡介">
 <meta name="twitter:description" content="千年傳統，全新感受">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FSharp_的歷史"><span class="toc-article-text">FSharp 的歷史</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Functional_Programming_定義"><span class="toc-article-text">Functional Programming 定義</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Higher_Order_Function"><span class="toc-article-text">Higher Order Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Pipeline_與_Currying"><span class="toc-article-text">Pipeline 與 Currying</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Compose"><span class="toc-article-text">Compose</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FSharp_的歷史"><span class="toc-article-text">FSharp 的歷史</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Functional_Programming_定義"><span class="toc-article-text">Functional Programming 定義</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Higher_Order_Function"><span class="toc-article-text">Higher Order Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Pipeline_與_Currying"><span class="toc-article-text">Pipeline 與 Currying</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Compose"><span class="toc-article-text">Compose</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Q&A"><span class="toc-article-text">Q&A</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -206,6 +206,14 @@
 <p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
 <p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
 <p><code>&gt;&gt;</code> 不只代表 compose，也代表執行方向，所以也有 <code>&lt;&lt;</code>。</p>
+<h2 id="Q&amp;A">Q&amp;A</h2><hr>
+<blockquote>
+<p>Q : 學 F# 目前能做什麼 ?</p>
+</blockquote>
+<ol>
+<li>F# 可跑在 .NET Core，所以能用 F# 寫 ASP.NET MVC、ASP.NET Web API、UWP 與 Console App</li>
+<li>F# 可用來寫 Azure Function</li>
+</ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>本文簡單的展示 F# 最關鍵的 Pipeline、Currying 與 Compose，這些都是 OOP 語言很難見到的強悍功能，透過 F# 的簡單實作，讓我們在練習 FP 時更加方便</li>

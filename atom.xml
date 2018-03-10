@@ -1224,7 +1224,7 @@
     <link href="http://oomusou.io/fsharp/intro/"/>
     <id>http://oomusou.io/fsharp/intro/</id>
     <published>2018-03-01T12:23:43.000Z</published>
-    <updated>2018-02-27T08:38:00.341Z</updated>
+    <updated>2018-03-10T04:43:04.387Z</updated>
     <content type="html"><![CDATA[<p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1324,6 +1324,14 @@
 <p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
 <p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
 <p><code>&gt;&gt;</code> 不只代表 compose，也代表執行方向，所以也有 <code>&lt;&lt;</code>。</p>
+<h2 id="Q&amp;A">Q&amp;A</h2><hr>
+<blockquote>
+<p>Q : 學 F# 目前能做什麼 ?</p>
+</blockquote>
+<ol>
+<li>F# 可跑在 .NET Core，所以能用 F# 寫 ASP.NET MVC、ASP.NET Web API、UWP 與 Console App</li>
+<li>F# 可用來寫 Azure Function</li>
+</ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>本文簡單的展示 F# 最關鍵的 Pipeline、Currying 與 Compose，這些都是 OOP 語言很難見到的強悍功能，透過 F# 的簡單實作，讓我們在練習 FP 時更加方便</li>
