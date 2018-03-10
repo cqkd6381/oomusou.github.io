@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-10T11:11:15.692Z</updated>
+  <updated>2018-03-10T14:16:37.808Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,46 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Compose Function (TypeScript vs. F#)]]></title>
+    <link href="http://oomusou.io/fsharp/compose-function/"/>
+    <id>http://oomusou.io/fsharp/compose-function/</id>
+    <published>2018-03-13T12:23:43.000Z</published>
+    <updated>2018-03-10T14:16:37.808Z</updated>
+    <content type="html"><![CDATA[<p>數學的 <code>fog(x) = f(g(x))</code> 就是 FP 的 Compose Function，本文分別以 TypeScript 與 F# 實現。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>TypeScript 2.5.3<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>定義 <code>f(x) = x + 1</code> 與 <code>g(x) = x * 2</code>，希望實作出 <code>fog(x) = f(g(x))</code></p>
+<h2 id="Task">Task</h2><hr>
+<p>分別以 TypeScript 與 C# 實作。</p>
+<h2 id="TypeScript">TypeScript</h2><hr>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> f = x =&gt; x + <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> g = x =&gt; x * <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> fog = x =&gt; f(g(x));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> v = fog(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(v);</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fog = x =&gt; f(g(x));</span><br></pre></td></tr></table></figure>
+<p>使用 arrow function 實作，重點是仍然回傳的 <code>f(g(x))</code> 仍是 function。</p>
+<h2 id="FSharp">FSharp</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = x + <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> g x = x * <span class="number">2</span></span><br><span class="line"><span class="keyword">let</span> fog = g &gt;&gt; f</span><br><span class="line">   </span><br><span class="line"><span class="keyword">let</span> v = fog <span class="number">10</span></span><br><span class="line">   </span><br><span class="line">printfn <span class="string">"%i"</span> v</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fog = g &gt;&gt; f</span><br></pre></td></tr></table></figure>
+<p>以 <code>g &gt;&gt; f</code> 表示，很清楚以 <code>從左至右</code> 表示。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>至於 TypeScript 與 F# 何者語法較優，結果已經很明顯了。</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[同時以 TypeScript 與 F# 實作 Compose Function]]>
+    
+    </summary>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+      <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 F# 之 Function]]></title>
@@ -2616,33 +2656,6 @@
     </summary>
     
       <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 macOS 徹底刪除 App 所留下的設定檔 ?]]></title>
-    <link href="http://oomusou.io/macos/uninstall-folder/"/>
-    <id>http://oomusou.io/macos/uninstall-folder/</id>
-    <published>2018-02-18T12:23:43.000Z</published>
-    <updated>2018-02-16T03:43:18.000Z</updated>
-    <content type="html"><![CDATA[<p>關於 macOS 的原生 app，雖然可以透過 <code>AppCleaner</code> 或原廠提供了 <code>Uninstall App</code> 移除，但實務上仍會發現一些 app 自己的 <code>設定檔</code> 或 <code>暫存檔</code>，無法百分之百的從系統刪除，需手動加以處理。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3</p>
-<h2 id="Directory">Directory</h2><hr>
-<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">/<span class="keyword">Library</span></span><br><span class="line">~/<span class="keyword">Library</span></span><br><span class="line"></span><br><span class="line">/<span class="keyword">Library</span>/Application Support</span><br><span class="line">~/<span class="keyword">Library</span>/Application Support</span><br><span class="line"></span><br><span class="line">/<span class="keyword">Library</span>/Preferences</span><br><span class="line">~/<span class="keyword">Library</span>/Preferences</span><br><span class="line"></span><br><span class="line">/usr/local</span><br></pre></td></tr></table></figure>
-<p>這幾個目錄，是 app 常見的 <code>設定檔</code> 與 <code>暫存檔</code> 使用目錄，除了依賴 <code>AppCleaner</code> 外，這幾個目錄最好手動檢查一下，是否有尚未移除檔案。</p>
-<h2 id="Concluson">Concluson</h2><hr>
-<ul>
-<li>目前在 macOS 尚未有完美的 <code>反安裝 App</code> 解決方案時，手動檢查這幾個目錄是必要的。</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[幾個需要手動刪除檔案的目錄]]>
-    
-    </summary>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
     
   </entry>
   
