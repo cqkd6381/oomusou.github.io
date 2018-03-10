@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-10T09:17:16.778Z</updated>
+  <updated>2018-03-10T11:11:15.692Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/function/"/>
     <id>http://oomusou.io/fsharp/function/</id>
     <published>2018-03-12T12:23:43.000Z</published>
-    <updated>2018-03-10T09:17:16.778Z</updated>
+    <updated>2018-03-10T11:11:15.692Z</updated>
     <content type="html"><![CDATA[<p>F# 身為 function first-first language，最迷人的當然就是 function 部分。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -28,7 +28,7 @@
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>由於 function 也被視為 value，因此同樣使用 <code>let</code> 定義 function</li>
-<li><code>f</code> 為 function name，<code>x</code> 為 argument，之間以 space 隔開即可</li>
+<li><code>f</code> 為 function name，<code>x</code> 為 parameter，之間以 space 隔開</li>
 <li><code>=</code> 右側為 function 定義</li>
 <li>由於 pure function 要求要有回傳值，所以 <code>x + 1</code> 將被回傳，不用加上 <code>return</code></li>
 <li>不必使用 <code>;</code> 結束</li>
@@ -40,15 +40,15 @@
 </ul>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> sumPlus x =</span><br><span class="line"><span class="comment">// OK: inner list1 hides the outer list1.</span></span><br><span class="line">   <span class="keyword">let</span> list1 = [<span class="number">1</span>; <span class="number">5</span>; <span class="number">10</span>]</span><br><span class="line">   x + List.sum list1</span><br></pre></td></tr></table></figure>
 <ul>
-<li>若 function 內的 value 與 function 外的 value 名稱相同，則 function 內的 value 會蓋掉 (shadow) 掉 function 外的變數，因此 <code>sumPlus</code> 的 <code>list</code> 為 <code>[1; 5; 10]</code></li>
+<li>若 function 內的 value 與 function 外的 value 名稱相同，則 function 內的 value 會蓋掉 (shadow) function 外的變數，因此 <code>sumPlus</code> 的 <code>list</code> 為 <code>[1; 5; 10]</code></li>
 </ul>
 <blockquote>
-<p>雖然 value 相同，F# 會自動啟動 shadow 機制，但實務上不建議重複使用 value 名稱，將造成閱讀上與維護上的困難</p>
+<p>雖然 value 相同，F# 會啟動 shadow 機制，但實務上還是不建議重複使用 value 名稱，將造成維護上的困難</p>
 </blockquote>
 <h2 id="Parameter">Parameter</h2><hr>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f (x : int) = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>亦可在 parameter 加上型別，必須使用 <code>()</code>，在 parameter 名稱加上 <code>:</code> 與 <code>型別</code></li>
+<li>亦可在 parameter 加上型別，必須使用 <code>()</code>，在 parameter 名稱之後加上 <code>:</code> 與 <code>型別</code></li>
 </ul>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <ul>
@@ -57,7 +57,7 @@
 <p><img src="/images/fsharp/function/function000.png" alt="function000"></p>
 <p>只要將滑鼠移動到 parameter，就可看到其型別為 <code>int</code>。</p>
 <blockquote>
-<p>F# 的 parameter 雖然不用寫型別，但不代表 F# 沒有型別，而是因為其強悍的 Type Inference 機制，讓我們可以少打點字，閱讀上真的想知道型別，就靠 IDE 工具</p>
+<p>F# 的 parameter 雖然不用寫型別，但不代表 F# 沒有型別，而是因為其強悍的 Type Inference 機制，讓我們可以少打點字，閱讀上真的想知道型別，就靠 IDE 顯示型別</p>
 <p>實務上建議 parameter 不用寫型別，使用 Type Inference 即可</p>
 </blockquote>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = (x, x)</span><br></pre></td></tr></table></figure>
@@ -70,7 +70,7 @@
 <h2 id="Function_Body">Function Body</h2><hr>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cylinderVolume radius length =</span><br><span class="line">    <span class="comment">// Define a local value pi.</span></span><br><span class="line">    <span class="keyword">let</span> pi = <span class="number">3.14159</span></span><br><span class="line">    length * pi * radius * radius</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>若 function 內的程式碼不只一行時，則換行並加以縮排，不用使用 <code>{}</code></p>
+<li><p>若 function 內的程式碼不只一行時，則 <code>=</code> 換行之後並加以縮排，不必使用 <code>{}</code></p>
 </li>
 <li><p>Function 內的 value 的 scope 僅限於 function 內，因此 <code>pi</code> 只有 <code>cylinderVolume</code>  可讀取</p>
 </li>
@@ -103,8 +103,8 @@
 <h2 id="Calling_a_Function">Calling a Function</h2><hr>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vol = cylinderVolume <span class="number">2.0</span> <span class="number">3.0</span></span><br></pre></td></tr></table></figure>
 <ul>
-<li>Parameter 不需使用 <code>()</code>，只要與 function name 用 space 隔開即可</li>
-<li>Parameter 之間不需要 <code>,</code>，只需用 space 隔開即可</li>
+<li>Argument 不需使用 <code>()</code>，只要與 function name 用 space 隔開即可</li>
+<li>Argument 之間不需要 <code>,</code>，只需用 space 隔開即可</li>
 </ul>
 <blockquote>
 <p>傳入 parameter 不需 <code>()</code> 與 <code>,</code>，減少打字時間</p>
@@ -129,6 +129,7 @@
 <ol>
 <li>Argument 無法一次提供，需要逐次提供時</li>
 <li>Function 的某些重要 argument 先由底層 library 提供，並傳回新的 function 給 client，client 只要提供剩下的參數即可</li>
+<li>實現 Decorator Pattern</li>
 </ol>
 <h2 id="Recursive_Function">Recursive Function</h2><hr>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">rec</span> fib n = <span class="keyword">if</span> n &lt; <span class="number">2</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> fib (n - <span class="number">1</span>) + fib (n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
@@ -149,7 +150,7 @@
 <ul>
 <li>因此可定義 <code>increment</code> function，再將 <code>increment</code> 傳入 <code>apply</code></li>
 </ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> apply2 ( f: int -&gt; int -&gt; int) x y = f x y</span><br><span class="line"><span class="keyword">let</span> mul x y = x * y</span><br><span class="line"><span class="keyword">let</span> result2 = apply2 mul <span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> apply2 (f: int -&gt; int -&gt; int) x y = f x y</span><br><span class="line"><span class="keyword">let</span> mul x y = x * y</span><br><span class="line"><span class="keyword">let</span> result2 = apply2 mul <span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>當 function 有多個 parameter 時，其型別表示為多個 <code>-&gt;</code> 串起來，如 <code>let mul x y = x * y</code>，則 <code>mul</code> 的型別為  <code>int -&gt; int -&gt; int</code></li>
 </ul>
