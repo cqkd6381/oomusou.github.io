@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="同時以 TypeScript 與 F# 實作 Compose Function">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-10T14:16:37.808Z">
+<meta property="og:updated_time" content="2018-03-10T14:29:27.154Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Compose Function (TypeScript vs. F#)">
 <meta name="twitter:description" content="同時以 TypeScript 與 F# 實作 Compose Function">
@@ -114,7 +114,7 @@
 <h2 id="User_Story">User Story</h2><hr>
 <p>定義 <code>f(x) = x + 1</code> 與 <code>g(x) = x * 2</code>，希望實作出 <code>fog(x) = f(g(x))</code></p>
 <h2 id="Task">Task</h2><hr>
-<p>分別以 TypeScript 與 C# 實作。</p>
+<p>分別以 TypeScript 與 F# 實作。</p>
 <h2 id="TypeScript">TypeScript</h2><hr>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> f = x =&gt; x + <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> g = x =&gt; x * <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> fog = x =&gt; f(g(x));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> v = fog(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(v);</span><br></pre></td></tr></table></figure>
 <p>第 3 行</p>
