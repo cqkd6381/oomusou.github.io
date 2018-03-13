@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/aws/sqs/</loc>
+    <lastmod>2018-03-13T08:09:28.847Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/angular/di-interface/</loc>
     <lastmod>2018-03-11T08:49:37.512Z</lastmod>
   </url>
@@ -682,7 +687,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-code-generation/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-project-template/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -707,27 +712,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/laravel-service/</loc>
-    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/laravel/laravel-repository/</loc>
-    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/tdd/tdd-factory-ocp/</loc>
-    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/laravel/laravel-architecture/</loc>
-    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-github/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -737,17 +722,37 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-project-template/</loc>
+    <loc>http://oomusou.io/laravel/laravel-service/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-refactor-closure/</loc>
-    <lastmod>2016-08-06T03:11:22.000Z</lastmod>
+    <loc>http://oomusou.io/tdd/tdd-factory-ocp/</loc>
+    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/phpstorm/phpstorm-github/</loc>
+    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/laravel/laravel-repository/</loc>
+    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/phpstorm/phpstorm-code-generation/</loc>
+    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://oomusou.io/phpstorm/phpstorm-refactor-di/</loc>
+    <lastmod>2016-08-06T03:11:22.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/phpstorm/phpstorm-refactor-closure/</loc>
     <lastmod>2016-08-06T03:11:22.000Z</lastmod>
   </url>
   
@@ -837,7 +842,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/php/php-namespace/</loc>
+    <loc>http://oomusou.io/php/php-psr2/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -853,6 +858,11 @@
   
   <url>
     <loc>http://oomusou.io/refactor/refactor-remove-assignments-to-parameters/</loc>
+    <lastmod>2016-03-22T14:03:51.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/laravel/laravel-service-provider/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -877,22 +887,17 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-exception-inspection/</loc>
-    <lastmod>2016-03-22T14:03:51.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/tdd/tdd-phpunit-native-function/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/php/php-trait/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-exception-inspection/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/php/php-psr2/</loc>
+    <loc>http://oomusou.io/php/php-trait/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -903,6 +908,11 @@
   
   <url>
     <loc>http://oomusou.io/tdd/tdd-solid/</loc>
+    <lastmod>2016-03-22T14:03:51.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/php/php-namespace/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -943,11 +953,6 @@
   
   <url>
     <loc>http://oomusou.io/laravel/laravel-package-hello-world/</loc>
-    <lastmod>2016-03-22T14:03:51.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/laravel/laravel-service-provider/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   

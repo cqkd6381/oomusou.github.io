@@ -1,0 +1,301 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 .NET Framework 使用有 FIFO 的 AWS SQS ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 .NET Framework 與 AWS Toolkit for Visual Studio">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 .NET Framework 與 AWS Toolkit for Visual Studio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 .NET Framework 使用有 FIFO 的 AWS SQS ?">
+<meta property="og:url" content="http://oomusou.io/aws/sqs/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 .NET Framework 與 AWS Toolkit for Visual Studio">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-13T08:09:28.847Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 .NET Framework 使用有 FIFO 的 AWS SQS ?">
+<meta name="twitter:description" content="使用 .NET Framework 與 AWS Toolkit for Visual Studio">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 .NET Framework 使用有 FIFO 的 AWS SQS ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 .NET Framework 與 AWS Toolkit for Visual Studio			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_AWS_Toolkit_for_Visual_Studio"><span class="toc-article-text">安裝 AWS Toolkit for Visual Studio</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Project"><span class="toc-article-text">建立 Project</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#寫入_Message_進_Queue"><span class="toc-article-text">寫入 Message 進 Queue</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#從_Queue_讀出_Message"><span class="toc-article-text">從 Queue 讀出 Message</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Q&A"><span class="toc-article-text">Q&A</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>在非同步的資料處理當中，Queue 是常見的應用，本文使用 .NET Framework + AWS Toolkit for Visual Studio 控制有 FIFO 的 AWS SQS。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Windows 10 Pro 1709 16299.251<br>.NET Framework 4.6.2<br>Visual Studio 2017 15.5.7<br>AWS Toolkit for Visual Studio</p>
+<h2 id="安裝_AWS_Toolkit_for_Visual_Studio">安裝 AWS Toolkit for Visual Studio</h2><hr>
+<p><img src="/images/aws/sqs/sqs001.png" alt="sqs001"></p>
+<ol>
+<li>到 AWS 官網下載 <a href="https://aws.amazon.com/visualstudio/" target="_blank" rel="external">AWS Toolkit for Visual Studio</a></li>
+<li>選擇 <code>AWS Toolkit for Visual Studio 2017</code></li>
+</ol>
+<p><img src="/images/aws/sqs/sqs002.png" alt="sqs002"></p>
+<ol>
+<li>按 <code>Download</code> 開始下載</li>
+</ol>
+<p><img src="/images/aws/sqs/sqs003.png" alt="sqs003"></p>
+<ol>
+<li><code>AWSToolkitPackage.vsix</code> 會下載到 <code>Downloads</code> 目錄下</li>
+<li>執行 <code>AWSToolkitPackage</code> 安裝 AWS Toolkit for Visual Studio</li>
+</ol>
+<p><img src="/images/aws/sqs/sqs004.png" alt="sqs004"></p>
+<p>安裝完成後，重新啟動 Visual Studio 2017 就會出現 <code>AWS Getting Started</code> 首頁。</p>
+<h2 id="建立_Project">建立 Project</h2><hr>
+<p><img src="/images/aws/sqs/sqs005.png" alt="sqs005"></p>
+<p><strong><em>File -&gt; New Project</em></strong></p>
+<p><strong><em>Visual C# -&gt; AWS Samples -&gt; App Services -&gt; AWS SQS Sample</em></strong></p>
+<p><img src="/images/aws/sqs/sqs006.png" alt="sqs006"></p>
+<p>第一次建立專案時，會要求你建立 <code>Account Profile</code> 與 <code>Region</code>。</p>
+<ol>
+<li>按 <code>+</code> 新增</li>
+</ol>
+<p><img src="/images/aws/sqs/sqs007.png" alt="sqs007"></p>
+<ol>
+<li>輸入 <code>Access Key ID</code> 與 <code>Secret Access Key</code></li>
+</ol>
+<p><img src="/images/aws/sqs/sqs008.png" alt="sqs008"></p>
+<ol>
+<li>會自動選擇美西的 server</li>
+</ol>
+<blockquote>
+<p>AWS 並不是所有的 SQS 都支援 FIFO，如東京的 server 的 SQS 就不支援 FIFO</p>
+</blockquote>
+<h2 id="寫入_Message_進_Queue">寫入 Message 進 Queue</h2><hr>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> Amazon.SQS;</span><br><span class="line"><span class="keyword">using</span> Amazon.SQS.Model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">SQSSendMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="comment">// SQSClient from AWSSDK</span></span><br><span class="line">            <span class="keyword">var</span> amazonSqsClient = <span class="keyword">new</span> AmazonSQSClient();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// FIFO quene URL</span></span><br><span class="line">            <span class="keyword">string</span> myQueueUrl = <span class="string">"https://sqs.us-west-2.amazonaws.com/781160412246/ecfe.fifo"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Send 3 messages to FIFO queue</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">var</span> message = <span class="string">"message"</span> + i;</span><br><span class="line">                    <span class="keyword">var</span> sendMessageRequest = <span class="keyword">new</span> SendMessageRequest</span><br><span class="line">                    &#123;</span><br><span class="line">                        QueueUrl = myQueueUrl,</span><br><span class="line">                        MessageBody = message,</span><br><span class="line">                        MessageGroupId = <span class="string">"Senao"</span></span><br><span class="line">                    &#125;;</span><br><span class="line"></span><br><span class="line">                    amazonSqsClient.SendMessage(sendMessageRequest);</span><br><span class="line">                    Console.WriteLine(<span class="string">"Send message &#123;0&#125;"</span>, message);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (AmazonSQSException ex)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(<span class="string">"Caught Exception: "</span> + ex.Message);</span><br><span class="line">                Console.WriteLine(<span class="string">"Response Status Code: "</span> + ex.StatusCode);</span><br><span class="line">                Console.WriteLine(<span class="string">"Error Code: "</span> + ex.ErrorCode);</span><br><span class="line">                Console.WriteLine(<span class="string">"Error Type: "</span> + ex.ErrorType);</span><br><span class="line">                Console.WriteLine(<span class="string">"Request ID: "</span> + ex.RequestId);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(<span class="string">"Press Enter to continue..."</span>);</span><br><span class="line">            Console.Read();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// SQSClient from AWSSDK</span></span><br><span class="line"><span class="keyword">var</span> amazonSqsClient = <span class="keyword">new</span> AmazonSQSClient();</span><br></pre></td></tr></table></figure>
+<p>要使用 SQS，首先要建立 <code>AmazonSQSClient</code> 物件，所有的操作都從 <code>AmazonSQSClient</code> 開始。</p>
+<p>14 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// FIFO quene URL</span></span><br><span class="line"><span class="keyword">string</span> myQueueUrl = <span class="string">"https://sqs.us-west-2.amazonaws.com/781160412246/ecfe.fifo"</span>;</span><br></pre></td></tr></table></figure>
+<p>無論是 <code>寫入 message</code>、<code>讀出 message</code> 或者 <code>刪除 message</code>，都必須靠 <code>QueueUrl</code> 辨識你所要控制的 queue。</p>
+<p>23 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> sendMessageRequest = <span class="keyword">new</span> SendMessageRequest</span><br><span class="line">&#123;</span><br><span class="line">    QueueUrl = myQueueUrl,</span><br><span class="line">    MessageBody = message,</span><br><span class="line">    MessageGroupId = <span class="string">"oomusou"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">amazonSqsClient.SendMessage(sendMessageRequest);</span><br><span class="line">Console.WriteLine(<span class="string">"Send message &#123;0&#125;"</span>, message);</span><br></pre></td></tr></table></figure>
+<p>建立 <code>SendMessageRequest</code> DTO，其中 <code>QueueUrl</code> 為 queue 的 URL；而 <code>MessageBody</code> 為要傳入 queue 的內容。</p>
+<blockquote>
+<p>FIFO queue 與 Standard queue 最大的差別在於 <code>MessageGroupId</code>，根據 AWS 文件，只有相同的 <code>MessageGroupId</code> 才能使用 FIFO queue，並保證 message 會 <code>先進先出</code>，若沒指定 <code>MessageGroupId</code> 則視為 Standard Queue，並不保證 message 會 <code>先進先出</code>。</p>
+</blockquote>
+<p>再將 <code>SendMessageRequest</code> DTO 傳入 <code>AmazonSQSClient.SendMessage()</code>，正式將資料寫入 queue。</p>
+<h2 id="從_Queue_讀出_Message">從 Queue 讀出 Message</h2><hr>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> Amazon;</span><br><span class="line"><span class="keyword">using</span> Amazon.SQS;</span><br><span class="line"><span class="keyword">using</span> Amazon.SQS.Model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">SQSReceiveMessage</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="comment">// SQSClient from AWSSDK</span></span><br><span class="line">            <span class="keyword">var</span> amazonSqsClient = <span class="keyword">new</span> AmazonSQSClient();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// FIFO quene URL</span></span><br><span class="line">            <span class="keyword">string</span> myQueueUrl = <span class="string">"https://sqs.us-west-2.amazonaws.com/781160412246/ecfe.fifo"</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">// Send 3 messages to FIFO queue</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="comment">// Read message from FIFO queue</span></span><br><span class="line">                    <span class="keyword">var</span> receiveMessageRequest = <span class="keyword">new</span> ReceiveMessageRequest</span><br><span class="line">                    &#123;</span><br><span class="line">                        QueueUrl = myQueueUrl</span><br><span class="line">                    &#125;;</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">var</span> receiveMessageResponse = amazonSqsClient.ReceiveMessage(receiveMessageRequest);</span><br><span class="line">                    <span class="keyword">if</span> (receiveMessageResponse.Messages != <span class="keyword">null</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">var</span> message = receiveMessageResponse.Messages[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(message.Body))</span><br><span class="line">                        &#123;</span><br><span class="line">                            Console.WriteLine(<span class="string">"Read message: &#123;0&#125;"</span>, message.Body);</span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                        <span class="comment">// Delete message from FIFO queue</span></span><br><span class="line">                        <span class="keyword">var</span> messageRecieptHandle = message.ReceiptHandle;</span><br><span class="line">                        <span class="keyword">var</span> deleteMessageRequest = <span class="keyword">new</span> DeleteMessageRequest</span><br><span class="line">                        &#123;</span><br><span class="line">                            QueueUrl = myQueueUrl,</span><br><span class="line">                            ReceiptHandle = messageRecieptHandle</span><br><span class="line">                        &#125;;</span><br><span class="line">                        amazonSqsClient.DeleteMessage(deleteMessageRequest);</span><br><span class="line">                        Console.WriteLine(<span class="string">"Delete message: &#123;0&#125;"</span>, message.Body);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">catch</span> (AmazonSQSException ex)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(<span class="string">"Caught Exception: "</span> + ex.Message);</span><br><span class="line">                Console.WriteLine(<span class="string">"Response Status Code: "</span> + ex.StatusCode);</span><br><span class="line">                Console.WriteLine(<span class="string">"Error Code: "</span> + ex.ErrorCode);</span><br><span class="line">                Console.WriteLine(<span class="string">"Error Type: "</span> + ex.ErrorType);</span><br><span class="line">                Console.WriteLine(<span class="string">"Request ID: "</span> + ex.RequestId);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">            Console.WriteLine(<span class="string">"Press Enter to continue..."</span>);</span><br><span class="line">            Console.Read();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>39 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> receiveMessageRequest = <span class="keyword">new</span> ReceiveMessageRequest</span><br><span class="line">&#123;</span><br><span class="line">    QueueUrl = myQueueUrl</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> receiveMessageResponse = amazonSqsClient.ReceiveMessage(receiveMessageRequest);</span><br></pre></td></tr></table></figure>
+<p>建立 <code>ReceiveMessageRequest</code> DTO，其中 <code>QueueUrl</code> 為 queue 的 URL。</p>
+<p>再將 <code>ReceiveMessageRequest</code> DTO 傳入 <code>AmazonSQSClient.ReceiveMessage()</code>，正式從 queue 讀出資料。</p>
+<p>45 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (receiveMessageResponse.Messages != <span class="keyword">null</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> message = receiveMessageResponse.Messages[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(message.Body))</span><br><span class="line">    &#123;</span><br><span class="line">        Console.WriteLine(<span class="string">"Read message: &#123;0&#125;"</span>, message.Body);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中 <code>receiveMessageResponse.Messages</code> 為 <code>List&lt;Message&gt;</code>，預設每次 <code>ReceiveMessage()</code> 只會從 queue 讀出一筆 message，且資料在 <code>message.Body</code> 內。</p>
+<p>55 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Delete message from FIFO queue</span></span><br><span class="line"><span class="keyword">var</span> messageRecieptHandle = message.ReceiptHandle;</span><br><span class="line"><span class="keyword">var</span> deleteMessageRequest = <span class="keyword">new</span> DeleteMessageRequest</span><br><span class="line">&#123;</span><br><span class="line">    QueueUrl = myQueueUrl,</span><br><span class="line">    ReceiptHandle = messageRecieptHandle</span><br><span class="line">&#125;;</span><br><span class="line">                        amazonSqsClient.DeleteMessage(deleteMessageRequest);</span><br></pre></td></tr></table></figure>
+<p>建立 <code>DeleteMessageRequest</code> DTO，其中 <code>QueueUrl</code> 為 queue 的 URL；此外 <code>ReceipeHandle</code> 為要刪除 message 的 handle。</p>
+<p><code>ReceipeHandle</code> 由 <code>message.ReceiptHandle</code> 獲得。</p>
+<p>再將 <code>DeleteMessageRequest</code> DTO 傳入 <code>AmazonSQSClient.DeleteMessage()</code>，正式從 queue 刪除資料。</p>
+<blockquote>
+<p>根據 AWS SQS 特性，若不從 SQS 刪除 message， 若繼續下  <code>ReceiveMessage()</code> ，仍然會讀取到相同的 message，唯有刪除了 <code>message</code> 之後，才會依 FIFO 順序讀到下一筆 message</p>
+</blockquote>
+<p><img src="/images/aws/sqs/sqs010.png" alt="sqs010"></p>
+<p>依序寫入 <code>message0</code>、<code>message1</code> 與 <code>message2</code> 三筆資料進有 FIFO 的 AWS SQS。</p>
+<p><img src="/images/aws/sqs/sqs011.png" alt="sqs011"></p>
+<p>依序讀出 <code>message0</code>、<code>message1</code> 與 <code>message2</code> 。</p>
+<h2 id="Q&amp;A">Q&amp;A</h2><hr>
+<blockquote>
+<p>Q : 如何查看 AWS SQS API ?</p>
+</blockquote>
+<p><img src="/images/aws/sqs/sqs009.png" alt="sqs009"></p>
+<p>到 <a href="https://docs.aws.amazon.com/sdkfornet/v3/apidocs/Index.html" target="_blank" rel="external">AWS SDK for .NET API Reference</a> 官網，查詢 <code>Amazon.SQS</code> 的 <code>AmazonSQSClient</code>，所有 SQS 的 API 都是由這裡展開出來。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>FIFO queue 與 Standard queue 最大的差異在於 <code>SendMessage()</code> 的 DTO 必須包含 <code>MessageGroupId</code>，才能保證相同 <code>MessageGroupId</code> 有 FIFO 的 <code>先進先出</code> 特性</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/SQSFIFOSample" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://aws.amazon.com/" target="_blank" rel="external">AWS</a>, <a href="https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/welcome.html" target="_blank" rel="external">AWS SDK for .NET Developer Guide</a><br><a href="https://aws.amazon.com/" target="_blank" rel="external">AWS</a>, <a href="https://aws.amazon.com/visualstudio/" target="_blank" rel="external">AWS Toolkit for Visual Studio</a><br><a href="https://aws.amazon.com/" target="_blank" rel="external">AWS</a>, <a href="https://docs.aws.amazon.com/sdk-for-net/v3/developer-guide/sqs-apis-intro.html" target="_blank" rel="external">Messaging Using Amazon SQS</a><br><a href="https://aws.amazon.com/" target="_blank" rel="external">AWS</a>, <a href="https://docs.aws.amazon.com/sdkfornet/v3/apidocs/Index.html" target="_blank" rel="external">AWS SDK for .NET API Reference</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/function-composition/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-14 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Framework/">.NET Framework<span>1</span></a></li> <li><a href="/tags/AWS/">AWS<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
