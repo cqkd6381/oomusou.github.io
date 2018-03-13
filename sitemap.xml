@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/vs/shortcut/</loc>
+    <lastmod>2018-03-13T11:12:31.060Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/aws/sqs/</loc>
     <lastmod>2018-03-13T08:09:28.847Z</lastmod>
   </url>
