@@ -43,7 +43,7 @@
     <link href="http://oomusou.io/vs/shortcut/"/>
     <id>http://oomusou.io/vs/shortcut/</id>
     <published>2018-03-15T12:23:43.000Z</published>
-    <updated>2018-03-13T11:12:31.060Z</updated>
+    <updated>2018-03-13T14:46:57.172Z</updated>
     <content type="html"><![CDATA[<p>只要安裝了 Parallel Desktop，就可以在 macOS 執行 Windows 10 與 Visual Studio，但一些 Visual Studio 的熱鍵會先被 macOS 攔截，且 mac 鍵盤又天生沒有 Home / End / Page Down / Page Up，再加上 Touch Bar 之後，我們會希望盡量不要用到 <code>F1 ~ F12</code>，在種種條件下， 我們該如何在 macOS 上高效率的使用 Visual Studio 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -97,23 +97,25 @@
 <p>根據 JetBrains 習慣，<code>⌘ + ⌦</code> 相當於 Delete Line，這在 Visual Studio 對應的熱鍵為 <code>Ctrl + Shift + L</code>。</p>
 <h2 id="Start_Without_Debugging">Start Without Debugging</h2><hr>
 <p><code>Start without Debugging</code> 也是 Visual Studio 常用的熱鍵，但預設是 <code>Ctrl + F5</code>，對於 macOS 而言，一般我們不會用到 <code>F1 ~ F12</code>，而是將這些熱鍵讓給 Touch Bar，所以建議更改 Visual Studio 熱鍵。</p>
-<p>根據 JetBrains 習慣，<code>⌃ + R</code> 相當於 Start without Debugging，在此採用 JetBrains 的熱鍵。</p>
+<p>將 <code>⇧ + ⌥ + R</code> 設定為 Start without Debugging。</p>
 <p><img src="/images/vs/shortcut/shortcut010.png" alt="shortcut010"></p>
 <p><strong><em>Tools -&gt; Options</em></strong></p>
 <p><img src="/images/vs/shortcut/shortcut011.png" alt="shortcut011"></p>
 <ol>
-<li>輸入 <code>keyboard</code></li>
-<li><code>Show commands containing</code> 輸入 <code>Start</code></li>
+<li>選擇 <code>keyboard</code></li>
+<li><code>Show commands containing</code> 輸入 <code>Debug.Start</code></li>
 <li>選擇 <code>Debug.StartWithoutDebugging</code></li>
-<li>新增 <code>Ctrl + R</code> 熱鍵</li>
+<li>新增 <code>Shift + Alt + R</code> 熱鍵</li>
 </ol>
 <h2 id="Start_Debugging">Start Debugging</h2><hr>
 <p><code>Start Debugging</code> 也是 Visual Studio 常用的熱鍵，但預設是 <code>F5</code>，我們一樣希望 <code>F1 ~ F12</code> 讓給 Touch Bar，所以建議更改 Visual Studio 熱鍵。</p>
-<p>根據 JetBrains 習慣，<code>⌃ + Ｄ</code> 相當於 Start Debugging，在此採用 JetBrains 的熱鍵。</p>
+<p>將 <code>⇧ + ⌥ + D</code> 設定為 Start Debugging。</p>
 <p><img src="/images/vs/shortcut/shortcut012.png" alt="shortcut012"></p>
 <ol>
+<li>選擇 <code>keyboard</code></li>
+<li><code>Show commands containing</code> 輸入 <code>Debug.Start</code></li>
 <li>選擇 <code>Debug.Start</code></li>
-<li>新增 <code>Ctrl + D</code> 熱鍵</li>
+<li>新增 <code>Shift + Alt + D</code> 熱鍵</li>
 </ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
