@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-14T05:29:02.515Z</updated>
+  <updated>2018-03-14T05:30:05.105Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/project-template/"/>
     <id>http://oomusou.io/netcore/project-template/</id>
     <published>2018-03-16T13:23:43.000Z</published>
-    <updated>2018-03-14T05:29:02.515Z</updated>
+    <updated>2018-03-14T05:30:05.105Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
 <a id="more"></a>
 <h2 id="列出目前所有_Project_Template">列出目前所有 Project Template</h2><hr>
@@ -54,7 +54,7 @@
 <p><a href="https://github.com/dotnet" target="_blank" rel="external">.NET Foundation</a>, <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[發現更多 C# 與 F# 的有趣應用]]>
+    <![CDATA[發現更多 C# 與 F# 有趣的應用]]>
     
     </summary>
     
