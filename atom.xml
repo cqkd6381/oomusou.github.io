@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-14T05:30:05.105Z</updated>
+  <updated>2018-03-14T05:46:40.099Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/project-template/"/>
     <id>http://oomusou.io/netcore/project-template/</id>
     <published>2018-03-16T13:23:43.000Z</published>
-    <updated>2018-03-14T05:30:05.105Z</updated>
+    <updated>2018-03-14T05:46:40.099Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
 <a id="more"></a>
 <h2 id="列出目前所有_Project_Template">列出目前所有 Project Template</h2><hr>
@@ -28,8 +28,9 @@
 <li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
 </ul>
 <p><img src="/images/netcore/project-template/template000.png" alt="template000"></p>
-<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
+<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
 <p><img src="/images/netcore/project-template/template001.png" alt="template001"></p>
+<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
 <h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
 <p><img src="/images/netcore/project-template/template002.png" alt="template002"></p>
 <p>以 F# 為例，.NET Core 官網也提供不少有趣的 project template，如 <code>Fable</code>，可以讓我們寫 F#，但最後編譯成 JavaScript。</p>
