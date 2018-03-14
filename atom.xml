@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-14T07:59:19.371Z</updated>
+  <updated>2018-03-14T08:03:37.922Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[如何安裝其他 .NET Core Project Template ?]]></title>
+    <title><![CDATA[如何安裝與移除其他 Project Template ?]]></title>
     <link href="http://oomusou.io/netcore/project-template/"/>
     <id>http://oomusou.io/netcore/project-template/</id>
     <published>2018-03-16T13:23:43.000Z</published>
-    <updated>2018-03-14T07:59:19.371Z</updated>
+    <updated>2018-03-14T08:03:37.922Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
