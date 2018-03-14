@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-14T05:22:49.565Z</updated>
+  <updated>2018-03-14T05:29:02.515Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/project-template/"/>
     <id>http://oomusou.io/netcore/project-template/</id>
     <published>2018-03-16T13:23:43.000Z</published>
-    <updated>2018-03-14T05:22:49.565Z</updated>
+    <updated>2018-03-14T05:29:02.515Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
 <a id="more"></a>
 <h2 id="列出目前所有_Project_Template">列出目前所有 Project Template</h2><hr>
@@ -32,7 +32,7 @@
 <p><img src="/images/netcore/project-template/template001.png" alt="template001"></p>
 <h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
 <p><img src="/images/netcore/project-template/template002.png" alt="template002"></p>
-<p>以 F# 為例，事實上 .NET Core 官網還提供不少有趣的 project template，如 <code>Fable</code>，可以讓我們寫 F#，但最後編譯成 JavaScript。</p>
+<p>以 F# 為例，.NET Core 官網也提供不少有趣的 project template，如 <code>Fable</code>，可以讓我們寫 F#，但最後編譯成 JavaScript。</p>
 <p>我們以 <code>Fable</code> 為例安裝新的 project template。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Fable.Template::*"</span></span><br></pre></td></tr></table></figure>
 <ul>
