@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-16T13:51:12.142Z</updated>
+  <updated>2018-03-16T14:23:50.377Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,242 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何驗證 Class Library ?]]></title>
+    <link href="http://oomusou.io/netcore/console/"/>
+    <id>http://oomusou.io/netcore/console/</id>
+    <published>2018-03-16T22:23:43.000Z</published>
+    <updated>2018-03-16T14:23:50.377Z</updated>
+    <content type="html"><![CDATA[<p>雖然我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案，但畢竟是 class library，無法看到結果，此時我們會建立另外一個 console app 專案當成 client，用來測試 class library 的結果。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>console</strong> : 建立 console 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/console/console000.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
+<p><img src="/images/netcore/console/console001.png" alt="onsole00"></p>
+<ol>
+<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/console/console002.png" alt="onsole01"></p>
+<ol>
+<li><code>.vscode</code> 被 VS Code 自動建立</li>
+</ol>
+<h2 id="新增_Project_Reference">新增 Project Reference</h2><hr>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="keyword">add</span> <span class="keyword">reference</span> ../MyClassLib/MyClassLib.csproj</span><br></pre></td></tr></table></figure>
+<p>因為 <code>MyConsole</code> 需要使用 <code>MyClassLib</code>，所以使用 <code>dotnet add reference</code> 新增 project reference。</p>
+<p><img src="/images/netcore/console/console003.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet add reference ../MyClassLib/MyClassLib.csproj</code> 將 <code>MyClassLib</code> project 加入 reference</li>
+<li>觀察 <code>MyConsole.csproj</code></li>
+<li><code>MyClassLib.csproj</code>  被加入在  <code>&lt;ItemGroup&gt;</code> 下的 <code>&lt;ProjectReference&gt;</code> </li>
+</ol>
+<blockquote>
+<p>若你不想下 <code>dotnet add reference</code> 指令，也可以直接修改 <code>MyConsole.csproj</code> 檔案</p>
+</blockquote>
+<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> MyClassLib;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyConsole</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> calculatorService = <span class="keyword">new</span> CalculatorService();</span><br><span class="line">            <span class="keyword">var</span> result = calculatorService.Sum(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125; + &#123;1&#125; = &#123;2&#125;"</span>, <span class="number">1</span>, <span class="number">1</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立 <code>CalculatorService</code> 物件，並執行 <code>Sum()</code>。</p>
+<p><img src="/images/netcore/console/console004.png" alt="onsole00"></p>
+<ol>
+<li>開啟 <code>Program.cs</code></li>
+<li>建立 <code>CalculatorService</code> 物件並執行</li>
+</ol>
+<h2 id="編譯_Console_App">編譯 Console App</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 編譯專案。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/console/console005.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet build -c Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>自動執行 <code>dotnet restore</code></li>
+<li>最後 build 出 <code>MyConsole.dll</code></li>
+</ol>
+<blockquote>
+<p>注意 <code>dotnet restore</code> 與 <code>dotnet build</code> 時，<code>MyClassLib</code> 與 <code>MyConsole</code> 兩個專案都會重新 build 與 restore</p>
+</blockquote>
+<h2 id="執行_Console_App">執行 Console App</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet run</code> 執行專案。</p>
+<p><img src="/images/netcore/console/console006.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
+</ol>
+<h2 id="發佈_Console_App">發佈 Console App</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyConsole</span> $ <span class="keyword">dotnet</span> publish -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet publish</code> 將編譯後的 dll 與其 dependency 整理到 <code>publish</code> 目錄，將來只要將此目錄 deploy 到 server 即可。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet publish</code> 是將 <code>Debug</code> 模式的 dll 整理至 <code>publish</code> 目錄，若要整理 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/console/console007.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet publish -c Release</code> 將欲 deploy 的檔案整理到 <code>bin/Release/netcoreapp2.0/publish</code> 目錄</li>
+<li>在 <code>publish</code> 目錄下，我們發現除了有 <code>MyConsole.dll</code> 外，還有 reference 的 <code>MyClassLib.dll</code>，<code>dotnet publish</code> 也一並幫我們整理到 <code>publish</code> 目錄了</li>
+</ol>
+<h2 id="執行_Console_App-1">執行 Console App</h2><hr>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyProject $ dotnet run bin/</span>Release<span class="regexp">/netcoreapp2.0/</span>publish<span class="regexp">/MyConsole.dll</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet</code> 執行 publish 後的 dll。</p>
+<p><img src="/images/netcore/console/console008.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet</code> 直接執行  publish 過的 <code>MyConsole.dll</code></li>
+<li>馬上出現 <code>1 + 1 = 2</code> ，不用等待</li>
+</ol>
+<h2 id="其他相關指令">其他相關指令</h2><hr>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">remove</span> <span class="keyword">reference</span> *.csproj</span><br></pre></td></tr></table></figure>
+<p>移除 project reference。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="type">list</span> <span class="keyword">reference</span></span><br></pre></td></tr></table></figure>
+<p>列出所有 project reference。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Console app 適合用來測試 class library</li>
+<li>使用 <code>dotnet add reference</code> 新增 project reference</li>
+<li><code>dotnet publish</code> 時，會一併將 class library 的 dll 也整理到 <code>publish</code> 目錄</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 .NET Core SDK 建立]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何建立 Class Library ?]]></title>
+    <link href="http://oomusou.io/netcore/classlib/"/>
+    <id>http://oomusou.io/netcore/classlib/</id>
+    <published>2018-03-16T15:23:43.000Z</published>
+    <updated>2018-03-16T14:06:47.257Z</updated>
+    <content type="html"><![CDATA[<p>除了 Console app 扮演 client 的角色，另外一個常見需求就是建立自己的 class library，我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<h2 id="建立_Class_Library_專案">建立 Class Library 專案</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> classlib -o MyClassLib</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>classlib</strong> : 建立 class library 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyClassLib</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/classlib/lib000.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet new classlib -o MyClasLib</code> 將 class library 類型專案建立在 <code>MyClassLib</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyClassLib</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。 </p>
+<p><img src="/images/netcore/classlib/lib001.png" alt="ib00"></p>
+<ul>
+<li>使用 VS Code 開啟 <code>MyClassLib</code></li>
+</ul>
+<h2 id="編輯_CalculatorService-cs">編輯 CalculatorService.cs</h2><hr>
+<p><strong>CalculatorService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyClassLib</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CalculatorService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>) </span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立 <code>CalculatorService</code>，並有一個 <code>Sum()</code>。</p>
+<p><img src="/images/netcore/classlib/lib002.png" alt="ib00"></p>
+<ol>
+<li>開啟 <code>CalculatorService.cs</code></li>
+<li>建立 <code>Sum()</code></li>
+</ol>
+<h2 id="編譯_Class_Library">編譯 Class Library</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyClassLib $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 編譯專案。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/classlib/lib003.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet build -c Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>自動執行 <code>dotnet restore</code></li>
+<li>最後 build 出 <code>MyClassLib.dll</code></li>
+</ol>
+<blockquote>
+<p>注意是 build 到 <code>Release</code> 目錄</p>
+</blockquote>
+<p><strong>使用 MSBuild</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyClassLib $ dotnet msbuild /p</span><span class="symbol">:Configuration=Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>msbuild</code> 編譯專案。</p>
+<p><img src="/images/netcore/classlib/lib004.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet msbuild /p:Configuration=Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>最後 build 出 <code>MyClassLib.dll</code></li>
+</ol>
+<blockquote>
+<p>注意使用 MSBuild 時，並沒有執行 <code>dotnet restore</code></p>
+</blockquote>
+<h2 id="建置_NuGet_Package">建置 NuGet Package</h2><hr>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyClassLib $ dotnet <span class="built_in">pack</span> -c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet pack</code> 將 class library 打包成 Nuget package。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet pack</code> 是以 <code>Debug</code> 模式打包，若要以 <code>Release</code> 打包，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/classlib/lib005.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet pack -c Release</code> 以 <code>Release</code> 模式打包</li>
+<li>最後 build 出 <code>MyClassLib.1.0.0.nupkg</code></li>
+<li>在 <code>bin/Release/</code> 會看到 <code>MyClassLib.1.0.0.nupkg</code></li>
+</ol>
+<h2 id="發佈_Class_Library">發佈 Class Library</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyClassLib</span> $ <span class="keyword">dotnet</span> publish -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet publish</code> 將編譯後的 dll 與其 dependency 整理到 <code>publish</code> 目錄，將來只要將此目錄 deploy 到 server 即可。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet publish</code> 是將 <code>Debug</code> 模式的 dll 整理至 <code>publish</code> 目錄，若要整理 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p>![ib00](/images/netcore/classlib</p>
+<ol>
+<li>輸入 <code>dotnet publish -c Release</code> 將欲 deploy 的檔案整理到 <code>bin/Release/netcoreapp2.0/publish</code> 目錄</li>
+<li>我們發現總共有 3 個檔案<ul>
+<li><code>MyClassLib.dll</code> : 以 IL 為內容的 assembly</li>
+<li><code>MyClassLib.deps.json</code> : 描述執行 dll 所需要的 dependency</li>
+<li><code>MyClassLib.pdb</code> : 在 production 環境啟動 debug 時使用</li>
+</ul>
+</li>
+</ol>
+<p><strong>使用 MSBuild</strong></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">~/MyClassLib $ dotnet msbuild /</span><span class="string">t:</span>Publish /<span class="string">p:</span>Configuration=Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>msbuild</code> 發佈專案。</p>
+<p><img src="/images/netcore/classlib/lib007.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet msbuild /t:Publish /p:Configuration=Release</code> 以 <code>Release</code> 發佈</li>
+<li>一樣發布 <code>3</code> 個檔案</li>
+</ol>
+<blockquote>
+<p>注意使用 MSBuild 時，並沒有執行 <code>dotnet restore</code></p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Class library 與 console app 的建置模式並沒有什麼差別，因為 console app 其實也是 dll</li>
+<li>一樣可以使用 MSBuild 編譯與發佈 class library，但不會事先執行 <code>dotnet restore</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 .NET Core SDK 建立]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何安裝與移除 Project Template ?]]></title>
@@ -1968,240 +2204,6 @@
       <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
     
       <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何為 Slack 設定 Bitbucket 通知 ?]]></title>
-    <link href="http://oomusou.io/slack/bibucket/"/>
-    <id>http://oomusou.io/slack/bibucket/</id>
-    <published>2018-03-02T12:23:43.000Z</published>
-    <updated>2018-03-03T14:55:00.923Z</updated>
-    <content type="html"><![CDATA[<p>當對 Bitbucket 有任何動作時，我們希望在 Slack 的 channel 能收到通知，如此可避免所有訊息都透過 Email，只有真正與人相關的訊息才使用 Email，讓 Slack 成為持續整合的訊息中心。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Slack 3.0.5</p>
-<h2 id="設定_Slack">設定 Slack</h2><hr>
-<h3 id="新增_Channel">新增 Channel</h3><p><img src="/images/slack/bitbucket/bitbucket000.png" alt="bitbucket000"></p>
-<ol>
-<li>按下 <code>Channels</code> 右側的 <code>+</code> 新增 channel</li>
-</ol>
-<p><img src="/images/slack/bitbucket/bitbucket001.png" alt="bitbucket001"></p>
-<ol>
-<li><strong>Privacy</strong> : 設定為 <code>Public</code> 或 <code>Private</code> channel</li>
-<li><strong>Name</strong> : 設定 channel 名稱</li>
-<li><strong>Purpose</strong> : channel 的功能描述，可以不輸入</li>
-<li><strong>Send invites to</strong> : 設定 channel 成員，可以稍後再設定</li>
-<li>按 <code>Create Channel</code> 開始建立 channel</li>
-</ol>
-<h3 id="設定_Notification">設定 Notification</h3><p><img src="/images/slack/bitbucket/bitbucket002.png" alt="bitbucket002"></p>
-<ol>
-<li>選擇欲設定的 channel</li>
-<li>選擇右上方的 <code>option</code></li>
-<li>選擇 <code>Add an app</code></li>
-</ol>
-<h3 id="加入_Bitbucket_App">加入 Bitbucket App</h3><p><img src="/images/slack/bitbucket/bitbucket003.png" alt="bitbucket003"></p>
-<p>Slack 將開啟瀏覽器</p>
-<ol>
-<li>稍微往下捲輸入 <code>Bitbucket</code></li>
-<li>選擇 <code>Bitbucket</code></li>
-</ol>
-<h3 id="新增_Configuration">新增 Configuration</h3><p><img src="/images/slack/bitbucket/bitbucket004.png" alt="bitbucket004"></p>
-<ol>
-<li>按 <code>Add Configuration</code> 加入 Bitbucket</li>
-</ol>
-<h3 id="新增_Integration">新增 Integration</h3><p><img src="/images/slack/bitbucket/bitbucket005.png" alt="bitbucket005"></p>
-<ol>
-<li>按 <code>Add Bitbucket Integration</code> 正式加入整合 Bitbucket</li>
-</ol>
-<h3 id="Slack_設定完成">Slack 設定完成</h3><p><img src="/images/slack/bitbucket/bitbucket006.png" alt="bitbucket006"></p>
-<ol>
-<li>介紹 Bitbucket 設定流程</li>
-</ol>
-<blockquote>
-<p>Slack 部分已經設定完成，接下來是 Bitbucket 的設定</p>
-<p>Slack 網頁先不要關閉，稍後會用到</p>
-</blockquote>
-<h2 id="設定_Bitbucket">設定 Bitbucket</h2><hr>
-<h3 id="新增_Webhooks">新增 Webhooks</h3><p><img src="/images/slack/bitbucket/bitbucket007.png" alt="bitbucket007"></p>
-<ol>
-<li>到 Bitbucket 選擇你要設定的 repository</li>
-<li>選擇 <code>Settings</code></li>
-<li>選擇 <code>Webhooks</code></li>
-<li>按下 <code>Add webhook</code></li>
-</ol>
-<p><img src="/images/slack/bitbucket/bitbucket008.png" alt="bitbucket008"></p>
-<ol>
-<li><strong>Title</strong> : 依需求設定</li>
-<li><strong>URL</strong> : 貼一段 Slack 所提供的 URL，至於要貼什麼呢 ? 稍後會介紹</li>
-<li><strong>Triggers</strong> : 設定什麼 Bitbucket 動作要通知 Slack，預設是 <code>Push</code>，但也可以設定的更細</li>
-<li>按 <code>Save</code> 儲存設定</li>
-</ol>
-<p><img src="/images/slack/bitbucket/bitbucket009.png" alt="bitbucket009"></p>
-<blockquote>
-<p>Q : <strong>URL</strong> 要設定什麼呢 ?</p>
-</blockquote>
-<ol>
-<li>回到 Slack 最後的網頁往下捲到 <code>Step 2</code></li>
-<li>將 <code>http:/hooks.slack.com……</code> 的 URL 複製下來，貼到 Bitbucket 的 <code>URL</code> 欄位</li>
-</ol>
-<p><img src="/images/slack/bitbucket/bitbucket010.png" alt="bitbucket010"></p>
-<ol>
-<li>儲存後會看到剛剛新增的 webhook 已經出現</li>
-</ol>
-<h2 id="Slack">Slack</h2><hr>
-<p><img src="/images/slack/bitbucket/bitbucket011.png" alt="bitbucket011"></p>
-<p>回到 Slack，當任何 <code>push</code> 到 GitBucket 時，channel 都會收到通知。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Slack 提供了一個不錯的 CI 訊息平台，讓訊息從 Email 解放</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[讓 Slack 成為 CI 的訊息中心]]>
-    
-    </summary>
-    
-      <category term="Bitbucket" scheme="http://oomusou.io/tags/Bitbucket/"/>
-    
-      <category term="Slack" scheme="http://oomusou.io/tags/Slack/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[F# 的特色與歷史簡介]]></title>
-    <link href="http://oomusou.io/fsharp/intro/"/>
-    <id>http://oomusou.io/fsharp/intro/</id>
-    <published>2018-03-01T12:23:43.000Z</published>
-    <updated>2018-03-10T04:43:04.387Z</updated>
-    <content type="html"><![CDATA[<p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4<br>F# 4.1</p>
-<h2 id="FSharp_的歷史">FSharp 的歷史</h2><hr>
-<p>F# 並不像 C-style 語言，反而比較像 Python，事實上 F# 是從 ML、OCaml、Python、Haskell、Scala、Erlang … 等語言獲得靈感，除了 Python  大家較為熟悉外，剩下的都是 Functional Programming Language，由此可見 F# 的 F 就是 <code>F</code>untional，所以 F# 號稱是 function first language，也就是 F# 雖然也支援 OOP，但 FP 是其主要特色。</p>
-<p>個人大概在 2010 年曾經接觸過 F#，當初的感覺 F# 是個 <code>外星語言</code>，很難體會 F# 的優點在哪裡，學沒多久就放棄了，但經過這幾年 Laravel Collection、JavaScript 、Linq 、Rx.js 與 AWS Lambda 的轟炸，越來越覺得 FP 的可愛，OOP 也能藉由 FP 手法，產生出現更優雅的實作方式。</p>
-<p>這幾年一直想尋找一個 FP 語言來練習，期間摸過 Elixir 、Scala、Clojure，但成效一直有限，一直到最近複習 F#，才發現 F# 是一個很簡單的 FP 語言，以前看不懂的地方，瞬間都看懂了，只是當年還無法欣賞 F#。</p>
-<h2 id="Functional_Programming_定義">Functional Programming 定義</h2><hr>
-<p>一個語言要能實現 FP，必須有 4 個條件：</p>
-<ul>
-<li>能將 function 指定為變數</li>
-<li>能將 function 存到 collection 內</li>
-<li>能將 function 以參數型式傳入 function</li>
-<li>能在 function 回傳 function</li>
-</ul>
-<p>簡單來說，function 要能如一般變數與 object 一樣使用。</p>
-<p><code>能將 function 以參數型式傳入 function</code> 導致了 Higher Order Function 的觀念出現，如 Rx.js 一堆 operator，就是 Higher Order Function。</p>
-<p><code>能在 function 回傳 function</code> 則導致了 Pipeline、Compose 與 Currying 的觀念出現。</p>
-<p>一般 OOP 語言都會某種程度的支援 FP，如 Higher Order Function 在 C#、JavaScript、PHP … 都可以實現。</p>
-<p>但 Pipeline、Compose 與 Currying 在一般 OOP 語言則沒有，或者要另外安裝其他 package 才能實現，但這些觀念在 F# 都是原生支援。</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>我們想將陣列 <code>1, 2, 3, 4, 5</code> 的資料中，將所 <code>奇數</code> 平方再加 <code>1</code>。</p>
-<h2 id="Task">Task</h2><hr>
-<p>根據 JavaScript、Linq 、Rx.js 的經驗，我們不再使用迴圈，而會使用 Higher Order Function 來解決問題。</p>
-<h2 id="Higher_Order_Function">Higher Order Function</h2><hr>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        <span class="keyword">let</span> odds = List.filter isOdd values</span><br><span class="line">        <span class="keyword">let</span> squares = List.map square odds</span><br><span class="line">        <span class="keyword">let</span> result = List.map addOne squares</span><br><span class="line">        result</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>12 行</p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> odds = List.<span class="built_in">filter</span> isOdd <span class="built_in">values</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>List.filter</code> 先找出所有 <code>奇數</code> 。</p>
-<ul>
-<li><code>isOdd</code> : 傳入 <code>判斷奇數</code> 的 function</li>
-<li><code>values</code> : 傳入欲處理資料</li>
-<li><code>odds</code> : 回傳所有 <code>奇數</code> </li>
-</ul>
-<p>第 7 行</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>定義 <code>isOdd</code>，當 <code>% 2</code> 餘數不為 <code>0</code> 時為 <code>奇數</code> 。</p>
-<blockquote>
-<p>在 F#，因為已經將 function 視為一般變數，所以無論是 value 或 function，都統一使用 <code>let</code></p>
-</blockquote>
-<p>13 行</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares = <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square odds</span><br></pre></td></tr></table></figure>
-<p>既然已經找出所有 <code>奇數</code>，接下來就是使用 <code>List.map</code> 計算 <code>平方</code>。</p>
-<ul>
-<li><code>square</code> : 傳入 <code>計算平方</code> 的 function</li>
-<li><code>odds</code> : 傳入所有<code>奇數</code></li>
-<li><code>squares</code> : 回傳所有 <code>平方</code></li>
-</ul>
-<p>第 8 行</p>
-<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> <span class="built_in">square</span> x = x <span class="built_in">*</span> x</span><br></pre></td></tr></table></figure>
-<p>定義 <code>square</code>，計算平方。</p>
-<p>14 行</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="literal">result</span> = <span class="type">List</span>.map addOne squares</span><br></pre></td></tr></table></figure>
-<p>既然已經計算出所有 <code>奇數的平方</code>，接下來就是使用 <code>List.map</code> 計算 <code>+1</code>。</p>
-<ul>
-<li><code>square</code> : 傳入 <code>計算+1</code> 的 function</li>
-<li><code>odds</code> : 傳入所有<code>奇數的平方</code></li>
-<li><code>squares</code> : 回傳所有 <code>平方+1</code></li>
-</ul>
-<p>第 9 行</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">let</span> <span class="keyword">addOne </span>x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<p>定義 <code>addOne</code>，計算 <code>+1</code>。</p>
-<p>15 行</p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">result</span></span><br></pre></td></tr></table></figure>
-<p>要回傳的變數， F# 不用寫 <code>return</code>。</p>
-<blockquote>
-<p>相對於 C-style 語言，我們發現 F# 有幾個特色</p>
-<ol>
-<li>沒有 <code>{}</code>，完全用縮排表示，類似 Python</li>
-<li>Function 傳入參數不需 <code>()</code>，只需空白隔開即可</li>
-<li>變數與 function 統一使用 <code>let</code></li>
-<li>回傳值不需要 <code>return</code></li>
-</ol>
-<p>這些只是語法的差異，只要習慣即可，不過平心而論，C-style 語言寫久，會發現 code 都一堆 <code>()</code> <code>{}</code> 與 <code>return</code> 都是贅字，F# 這種 coding style 乾淨很多</p>
-</blockquote>
-<h2 id="Pipeline_與_Currying">Pipeline 與 Currying</h2><hr>
-<p>由於 <code>List.filter</code>、<code>List.map</code> 與 <code>List.map</code> 是依序處理，因此我們要不斷定義中繼變數 : <code>odds</code> 與 <code>squares</code> 傳入，事實上這些也是多餘的，若能省略則更好，這就是 Pipeline。</p>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        values </span><br><span class="line">        |&gt; List.filter isOdd</span><br><span class="line">        |&gt; List.map square</span><br><span class="line">        |&gt; List.map addOne</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>12 行</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">values </span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span>filter isOdd</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> addOne</span><br></pre></td></tr></table></figure>
-<p><code>|&gt;</code> 為 F# 的 Pipeline 符號，表示將 function 的 output 作為下一個 function 的 input。</p>
-<p>因此我們可以透過 <code>|&gt;</code> 表示先執行 <code>List.flter</code>，然後再將結果傳入 <code>List.map</code>，最後再將結果傳入 <code>List.map</code>，這樣可以很清楚的表示流程，語意比 imperative 寫法更清楚。</p>
-<blockquote>
-<p> Q : 可以明明 <code>List.map</code> 與 <code>List.filter</code> 是 2 個參數，第 1 個參數是 function，第 2 個參數是 value，但為什麼 value 都不用傳呢 ?</p>
-</blockquote>
-<p>當 function 參數沒有傳完全時，F# 將回傳一個新的 function，新的 function 只要傳入剩下的參數即可，這稱為 Currying。</p>
-<p>當 <code>List.filter isOdd</code> 只傳入 1 個參數時，由於參數沒有傳完整，將回傳一個新的  function，然後 <code>|&gt;</code> 再將 <code>values</code> 傳入新的 function，如此 <code>List.filter</code> 才算完整，才能回傳 <code>所有奇數</code>，最後再將 <code>所有奇數</code>透過 <code>|&gt;</code> 傳給下一個 <code>List.map</code>，剩下以此類推。</p>
-<h2 id="Compose">Compose</h2><hr>
-<p>Pipeline 雖然已經夠清楚，但 pipeline 基本上仍然是回傳 value，若我們能將所有 function 先組合好，最後統一透過一個 function 執行，那就更好了，這就是 Compose。</p>
-<p><strong>Program.fs</strong><br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">let</span> sqaureAddOne = square &gt;&gt; addOne</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func = List.filter isOdd &gt;&gt; List.map sqaureAddOne</span><br><span class="line">    </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
-<p>12 行</p>
-<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> func = <span class="built_in">List</span><span class="built_in">.</span>filter isOdd &gt;&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> sqaureAddOne</span><br></pre></td></tr></table></figure>
-<p><code>&gt;&gt;</code> 為 F# 的 compose 符號，專門負責組合 function。</p>
-<p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
-<p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
-<p><code>&gt;&gt;</code> 不只代表 compose，也代表執行方向，所以也有 <code>&lt;&lt;</code>。</p>
-<h2 id="Q&amp;A">Q&amp;A</h2><hr>
-<blockquote>
-<p>Q : 學 F# 目前能做什麼 ?</p>
-</blockquote>
-<ol>
-<li>F# 可跑在 .NET Core，所以能用 F# 寫 ASP.NET MVC、ASP.NET Web API、UWP 與 Console App</li>
-<li>F# 可用來寫 Azure Function</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>本文簡單的展示 F# 最關鍵的 Pipeline、Currying 與 Compose，這些都是 OOP 語言很難見到的強悍功能，透過 F# 的簡單實作，讓我們在練習 FP 時更加方便</li>
-<li><p>F# 並不是要取代 C#，事實上在 .NET Core，C# 仍是必學的語言，只是透過學習 F#，能訓練自己 FP 的思維，進而用在 C# 與 TypeScript 上</p>
-</li>
-<li><p>若語言間的 paradigm 相同，只是 syntax 不同，則沒有學習新語言的必要；但若透過更好的 syntax，讓你學到不同的 paradigm，這就有意義了，這就是學習 F# 的原因</p>
-</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/MyFirstFSharp" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tour" target="_blank" rel="external">Tour of F#</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[千年傳統，全新感受]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   

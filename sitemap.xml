@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/console/</loc>
+    <lastmod>2018-03-16T14:23:50.377Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/classlib/</loc>
+    <lastmod>2018-03-16T14:06:47.257Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/project-template/</loc>
     <lastmod>2018-03-16T13:51:12.142Z</lastmod>
   </url>
