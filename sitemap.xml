@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/project-template/</loc>
+    <lastmod>2018-03-16T13:51:12.142Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/restore/</loc>
-    <lastmod>2018-03-16T08:38:41.460Z</lastmod>
+    <lastmod>2018-03-16T13:36:29.324Z</lastmod>
   </url>
   
   <url>

@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="NuGet 特有的管理機制">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-16T08:38:41.460Z">
+<meta property="og:updated_time" content="2018-03-16T13:36:29.324Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入探討 dotnet restore">
 <meta name="twitter:description" content="NuGet 特有的管理機制">
@@ -144,11 +144,11 @@
 </ol>
 <p><img src="/images/netcore/restore/restore001.png" alt="estore00"></p>
 <ol>
-<li>觀察 <code>nuget.g.props</code>，雖然很多資訊看不懂，但最少看到 <code>&lt;NuGetPackageRoot&gt;</code> 記載著 NuGet 目錄放在 <code>/Users/oomusou/.nuget/packages</code>，這樣 compiler 就可以從這個目錄抓到 NuGet package 放哪裡<blockquote>
-<p>只所以沒用 VS Code 開啟專案，是因為 VS Code 還會自動建立其他目錄與檔案，怕模糊焦點，所以這裡選擇 Sublime Text</p>
-</blockquote>
-</li>
+<li>觀察 <code>nuget.g.props</code>，雖然很多資訊看不懂，但最少看到 <code>&lt;NuGetPackageRoot&gt;</code> 記載著 NuGet 目錄放在 <code>/Users/oomusou/.nuget/packages</code>，這樣 compiler 就可以從這個目錄抓到 NuGet package 放哪裡</li>
 </ol>
+<blockquote>
+<p>之所以沒用 VS Code 開啟專案，是因為 VS Code 還會自動建立其他目錄與檔案，怕模糊焦點，所以這裡選擇 Sublime Text</p>
+</blockquote>
 <h2 id="刪除_obj_目錄">刪除 obj 目錄</h2><hr>
 <p><img src="/images/netcore/restore/restore002.png" alt="estore00"></p>
 <ol>
@@ -191,9 +191,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/netcore/project-template/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -229,7 +229,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/NET-Core/">.NET Core<span>20</span></a></li>
+  <li><a href="/tags/NET-Core/">.NET Core<span>21</span></a></li>
     </ul>
 	</div>
 		

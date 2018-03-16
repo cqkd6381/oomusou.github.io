@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-16T08:38:41.460Z</updated>
+  <updated>2018-03-16T13:51:12.142Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,91 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何安裝與移除 Project Template ?]]></title>
+    <link href="http://oomusou.io/netcore/project-template/"/>
+    <id>http://oomusou.io/netcore/project-template/</id>
+    <published>2018-03-16T14:23:43.000Z</published>
+    <updated>2018-03-16T13:51:12.142Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk001.png" alt="sdk001"></p>
+<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
+<p><img src="/images/netcore/project-template/sdk002.png" alt="sdk001"></p>
+<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
+<h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
+<p><img src="/images/netcore/project-template/sdk003.png" alt="sdk003"></p>
+<p>以 C# 為例，.NET Core 官網亦提供了 <code>AWS Lambda .NET Core Templates</code>，讓我們自動安裝相關工具與 NuGet package。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Amazon.Lambda.Templates::*"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-i</strong> : <code>i</code>nstall，使用 <code>dotnet new -i</code> 安裝新 project template</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk004.png" alt="sdk004"></p>
+<ol>
+<li>輸入 <code>dotnet new -i &quot;Amazon.Lambda.Templates::*&quot;</code> 安裝 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>由於 <code>Amazon Lambda</code> project template 的 NuGet package 較大，安裝要一點時間</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk005.png" alt="sdk005"></p>
+<ol>
+<li>安裝完後會自動執行 <code>dotnet new -l</code>，會安裝不少 <code>Amazon Lambda</code> 相關的 project template</li>
+</ol>
+<h2 id="移除_Project_Template">移除 Project Template</h2><hr>
+<p>既然能安裝 project template，也就要能移除 project template，但比較麻煩。</p>
+<p>.NET Core SDK 預設將所有的 project template 安裝在 <code>Users/oomusou/.templateengine/dotnetcli/v2.1.101/packages</code> 目錄下。</p>
+<blockquote>
+<p>其中 <code>oomusou</code> 為 user name</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk006.png" alt="sdk006"></p>
+<ol>
+<li><code>amazon.lambda.template.2.0.3.nupkg</code> 為剛剛所安裝的 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>我們可以發現每個 project template 事實上都是 NuGet package</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -u .../amazon.lambda.templates<span class="number">.2</span><span class="number">.0</span><span class="number">.3</span>.nupkg</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-u</strong> : <code>u</code>ninstall，使用 <code>dotnet new -u</code> 移除已安裝的 project template NuGet package</li>
+</ul>
+<blockquote>
+<p>NuGet package 不可使用 <code>./</code> 方式，但可用完整路徑或 <code>~/</code></p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk007.png" alt="sdk007"></p>
+<ol>
+<li>輸入 <code>dotnet new -u /Users/…/amazon.lambda.templates.2.0.3.nupkg</code>，必須是完整路徑或 <code>~/</code>，不可為 <code>./</code></li>
+</ol>
+<p><img src="/images/netcore/project-template/sdk008.png" alt="sdk008"></p>
+<ol>
+<li><code>Amazon Lambda</code> project template 已順利移除。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>若想知道 C# 與 F# 還有什麼應用，可上 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 發現更多有趣的 project template</li>
+<li>若要移除 project template，NuGet package 必須使用 <code>完整路徑</code> 或 <code>~/</code>，不可使用 <code>./</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[發現更多有趣的 .NET Core 應用]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[深入探討 dotnet restore]]></title>
     <link href="http://oomusou.io/netcore/restore/"/>
     <id>http://oomusou.io/netcore/restore/</id>
     <published>2018-03-16T14:23:43.000Z</published>
-    <updated>2018-03-16T08:38:41.460Z</updated>
+    <updated>2018-03-16T13:36:29.324Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 提供了 <code>dotnet restore</code> 指令，但官網的說明很簡單，只說明了他是 <code>restore dependency</code>，到底什麼是 <code>restore dependency</code> 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -57,11 +137,11 @@
 </ol>
 <p><img src="/images/netcore/restore/restore001.png" alt="estore00"></p>
 <ol>
-<li>觀察 <code>nuget.g.props</code>，雖然很多資訊看不懂，但最少看到 <code>&lt;NuGetPackageRoot&gt;</code> 記載著 NuGet 目錄放在 <code>/Users/oomusou/.nuget/packages</code>，這樣 compiler 就可以從這個目錄抓到 NuGet package 放哪裡<blockquote>
-<p>只所以沒用 VS Code 開啟專案，是因為 VS Code 還會自動建立其他目錄與檔案，怕模糊焦點，所以這裡選擇 Sublime Text</p>
-</blockquote>
-</li>
+<li>觀察 <code>nuget.g.props</code>，雖然很多資訊看不懂，但最少看到 <code>&lt;NuGetPackageRoot&gt;</code> 記載著 NuGet 目錄放在 <code>/Users/oomusou/.nuget/packages</code>，這樣 compiler 就可以從這個目錄抓到 NuGet package 放哪裡</li>
 </ol>
+<blockquote>
+<p>之所以沒用 VS Code 開啟專案，是因為 VS Code 還會自動建立其他目錄與檔案，怕模糊焦點，所以這裡選擇 Sublime Text</p>
+</blockquote>
 <h2 id="刪除_obj_目錄">刪除 obj 目錄</h2><hr>
 <p><img src="/images/netcore/restore/restore002.png" alt="estore00"></p>
 <ol>
@@ -2122,113 +2202,6 @@
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Docker 安裝 Jenkins ?]]></title>
-    <link href="http://oomusou.io/docker/jenkins/"/>
-    <id>http://oomusou.io/docker/jenkins/</id>
-    <published>2018-02-28T12:23:43.000Z</published>
-    <updated>2018-02-26T10:25:35.310Z</updated>
-    <content type="html"><![CDATA[<p>若要在 macOS 執行 Jenkins，由於 Jenkins 是由 Java 開發，當然可以直接在 macOS 安裝原生的 Jenkins，若是測試與學習的角度，更好的選擇就是安裝 Docker 版的 Jenkins，若要移除 Jenkins，直接刪除 Docker 的 container 與 image 即可，不會污染到 macOS 環境。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>Jenkins 2.89.4</p>
-<h2 id="下載_Jenkins_Image">下載 Jenkins Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker pull jenkins/<span class="symbol">jenkins:</span>lts</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker pull</code> 下載 image 到本機。</p>
-<blockquote>
-<p>lts : 表示 Long time support 版本，通常較為穩定</p>
-</blockquote>
-<p><img src="/images/docker/jenkins/docker000.png" alt="docker000"></p>
-<h2 id="建立_Container">建立 Container</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkins -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
-<ul>
-<li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyJenkins</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
-<li><strong>-p</strong> : Docker 外部與 Jenkins 內部所對應的 port，其中左邊為外部 Docker 的 port，右邊為 Jenkins 內部的 port</li>
-<li><strong>-v</strong> : 建立 <code>JENKINS_HOME</code> 環境變數，其目錄在 <code>/var/jenkins_home</code>，為 Jenkins 的工作目錄</li>
-</ul>
-<p><img src="/images/docker/jenkins/docker001.png" alt="docker001"></p>
-<ol>
-<li><code>docker run</code> 除了建立 container 外，還會順便執行 container。</li>
-</ol>
-<h2 id="Unlock_Jenkins">Unlock Jenkins</h2><hr>
-<p><img src="/images/docker/jenkins/docker002.png" alt="docker002"></p>
-<p>Jenkins 一旦啟動後，就必須在 browser 設定 Jenkins，安裝 plugin。</p>
-<p>一開始會要求輸入 Administrator password，並提示預設密碼已經寫在 <code>/var/jenkins_home/secrets/initialAdminPassword</code>。</p>
-<p>由於我們現在是使用 Docker，因此該目錄是在 container 內，而不是在 host，因此要進入 container 內讀出 <code>initialAdminPassword</code> 。</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>exec -it <span class="constant">MyJenkins </span>bash</span><br><span class="line">jenkins<span class="variable">@54ceef740712</span><span class="symbol">:/</span><span class="variable">$ </span>cat /var/jenkins_home/secrets/initialAdminPassword</span><br></pre></td></tr></table></figure>
-<p>先進入 Jenkins 的 terminal，再將密碼 <code>cat</code> 出來。</p>
-<p><img src="/images/docker/jenkins/docker009.png" alt="docker009"></p>
-<ol>
-<li>輸入 <code>exec it MyJenkins bash</code> 進入 Jenkins terminal</li>
-<li>輸入 <code>cat /var/jenkins_home/secrets/initialAdminPassword</code> 顯示密碼</li>
-</ol>
-<h2 id="Customize_Jenkins">Customize Jenkins</h2><hr>
-<p><img src="/images/docker/jenkins/docker010.png" alt="docker010"></p>
-<p>選擇 <code>Install suggested plugins</code> 安裝預設 plugin。</p>
-<h2 id="Getting_Started">Getting Started</h2><hr>
-<p><img src="/images/docker/jenkins/docker011.png" alt="docker011"></p>
-<p>需要一些時間安裝 plugin。</p>
-<h2 id="Create_Admin_User">Create Admin User</h2><hr>
-<p><img src="/images/docker/jenkins/docker012.png" alt="docker012"></p>
-<p>建立管理者密碼，按 <code>Save and Finish</code> 繼續。</p>
-<h2 id="Start_Using_Jenkins">Start Using Jenkins</h2><hr>
-<p><img src="/images/docker/jenkins/docker013.png" alt="docker013"></p>
-<p>按 <code>Start using Jenkins</code> 結束 <code>Jenkins</code> 設定。</p>
-<h2 id="Welcome_to_Jenkins">Welcome to Jenkins</h2><hr>
-<p><img src="/images/docker/jenkins/docker014.png" alt="docker014"></p>
-<p>熟悉的 Jenkins 設定介面已經呈現，Jenkins 到此算安裝完成。</p>
-<h2 id="將_Container_儲存成_Image">將 Container 儲存成 Image</h2><hr>
-<p>目前為止 Jenkins 已經設定好，也安裝了預設 plugin，所以在 container 內的 <code>/var/jenkins_home</code> 已經有不少資料，我們將以目前 container 儲存成 image，將來若 Jenkins container 被我們玩壞了，可以直接再以此 image 建立全新 container，或者將新的 image 匯出成 <code>tar</code>，可將此 <code>tar</code> 加以備份，或者將 <code>tar</code> 檔交給其他人匯入成 image。</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker commit <span class="constant">MyJenkins </span>oomusou/jenkins</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker commit</code> 將 container 儲存成自己的 image。</p>
-<p><img src="/images/docker/jenkins/docker015.png" alt="docker015"></p>
-<ol>
-<li>輸入 <code>docker commit MyJenkins oomusou/jenkins</code> 將 <code>MyJenkins</code> container 儲存成 <code>oomusou/jenkins</code> image</li>
-<li>輸入 <code>docker images</code> 可以看到 <code>oomusou/jenkins</code> 已經新增</li>
-</ol>
-<h2 id="將_Image_匯出成_Tar">將 Image 匯出成 Tar</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker save -o MyJenkins<span class="class">.tar</span> oomusou/jenkins</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker save</code> 將 image 匯出成 <code>tar</code> 檔。</p>
-<ul>
-<li><strong>-o</strong> : 指定匯出 <code>tar</code>檔的檔名</li>
-</ul>
-<p><img src="/images/docker/jenkins/docker016.png" alt="docker016"></p>
-<ol>
-<li>輸入 <code>docker save -o MyJenkins.tar oomusou/jenkins</code> 將 <code>oomusou/jenkins</code> image 匯出成 <code>MyJenkins.tar</code></li>
-<li>硬碟已經產生 <code>MyJenkins.tar</code></li>
-</ol>
-<h2 id="從_Tar_匯入成_Image">從 Tar 匯入成 Image</h2><hr>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="operator"><span class="keyword">load</span> -<span class="keyword">i</span> MyJenkins.tar</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker load</code> 將 <code>tar</code> 檔匯入成 image。</p>
-<ul>
-<li><strong>-i</strong> : 指定匯入 <code>tar</code>檔的檔名</li>
-</ul>
-<p><img src="/images/docker/jenkins/docker017.png" alt="docker017"></p>
-<ol>
-<li>輸入 <code>docker load -i MyJenkins.tar</code> 將 <code>MyJenkins.tar</code> 匯入成 <code>oomusou/jenkins</code> image</li>
-</ol>
-<h2 id="建立新的_Container">建立新的 Container</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkins -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home oomusou/jenkins</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
-<p><img src="/images/docker/jenkins/docker018.png" alt="docker018"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>若使用 Jenkins Docker，則整個過程分成 Docker 操作與 Jenkins 設定部分</li>
-<li>可將最後設定好的 Jenkins 儲存成 image 與 <code>tar</code>，可將 <code>tar</code> 加以備份或傳給其他人</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[直接以 Docker 使用 Jenkins]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
     
   </entry>
   
