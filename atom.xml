@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-16T14:23:50.377Z</updated>
+  <updated>2018-03-17T13:49:50.370Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,424 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[深入探討 F# 之 Discriminated Union]]></title>
+    <link href="http://oomusou.io/fsharp/union/"/>
+    <id>http://oomusou.io/fsharp/union/</id>
+    <published>2018-03-17T02:23:43.000Z</published>
+    <updated>2018-03-17T13:49:50.370Z</updated>
+    <content type="html"><![CDATA[<p>將實質上不同的型別，在邏輯上看成相同的型別。如 function 可能回傳 <code>int</code> 或 <code>bool</code> 兩種型別，可為此 function 特別建立 <code>IntOrBool</code> 型別，同時包含 <code>int</code> 與 <code>bool</code>，這就是 Discriminated Union，簡稱 <code>union</code>。</p>
+<p>若說 <code>tuple</code> 是將不同型別加以 AND，則 <code>union</code> 是將不同型別加以 OR。</p>
+<a id="more"></a>
+<h2 id="Definition">Definition</h2><hr>
+<p>將不同的型別，整合成單一型別。</p>
+<blockquote>
+<p>Q : 為什麼要稱為 <code>Discriminated</code> Union？</p>
+</blockquote>
+<p>因為不是簡單的將不同型別加以 union 而已，而可以將不同的型別取 <code>case-identifier</code> 加以區別 (discriminated)，所以稱為 <code>Discriminated</code> Union。</p>
+<h2 id="Syntax">Syntax</h2><hr>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ attributes ]&#10;type type-name =&#10;    | case-identifier1 [of [ fieldname1 : ] type1 [ * [ fieldname2 : ] type2 ...]&#10;    | case-identifier2 [of [fieldname3 : ]type3 [ * [ fieldname4 : ]type4 ...]&#10;...</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>type-name</strong> : 定義 <code>union</code> 的型別名稱</li>
+<li><strong>I</strong> : 因為 <code>union</code> 包含多種型別，所以使用 <code>|</code>，第一個 <code>|</code> 可省略</li>
+<li><strong>case-identifider</strong> : 為每個型別取一個別名，必須為 <code>大駝峰</code></li>
+<li><strong>of</strong> : 每個別名的型別，可以是內建型別，也可以是自己定義的其他 type</li>
+<li><strong>*</strong> : 若 <code>of</code> 之後為 <code>tuple</code>，不同 type 以 <code>*</code> 區別不同型別</li>
+<li><strong>fieldname</strong> : 若 <code>of</code> 型別是 <code>tuple</code>，可為 <code>tuple</code> 內每個型別取別名</li>
+</ul>
+<p>以上只有 <code>type-name</code> 與 <code>case-identifier</code> 為必須，其他都可省略。</p>
+<blockquote>
+<p>簡單來說，<code>|</code> 之後稱為 case，<code>of</code> 之後稱為 field</p>
+<p>Case 不可省略，但 field 可省略</p>
+</blockquote>
+<h2 id="Case">Case</h2><hr>
+<h3 id="Case_of_Primitive_Type">Case of Primitive Type</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= </span><br><span class="line">  | Int <span class="keyword">of</span> int</span><br><span class="line">  | Bool <span class="keyword">of</span> bool</span><br></pre></td></tr></table></figure>
+<p>如 function 找得到資料會傳回 <code>int</code> 型態的的 <code>orderId</code>，若找不到則傳回 <code>bool</code> 型態的 <code>false</code>，也就是回傳型態可能是 <code>int</code> 或  <code>bool</code>，可將此型態重新定義為 <code>OrderId</code> union，則無論傳回 <code>int</code> 或 <code>bool</code> 都是 <code>OrderId</code> union，且也只能傳回 <code>int</code> 或  <code>bool</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= Int <span class="keyword">of</span> int | Bool <span class="keyword">of</span> bool</span><br></pre></td></tr></table></figure>
+<p>若 case 很少，也可以寫成一行，則第一個 <code>|</code> 可省略。</p>
+<h3 id="Case_of_Unnamed_Type">Case of Unnamed Type</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>=</span><br><span class="line">    | Rectangle <span class="keyword">of</span> int * int</span><br><span class="line">    | Circle <span class="keyword">of</span> int</span><br><span class="line">    | Prism <span class="keyword">of</span> int * int * int</span><br></pre></td></tr></table></figure>
+<p><code>of</code> 之後的型別，如是 unnamed type，可以直接 inline 表示，如直接指定為 <code>tuple</code> 。</p>
+<p>如打算將 <code>Rectangle</code>、<code>Circle</code> 與 <code>Prism</code> 三個型別定義出一個新的 <code>Shape</code> union，只要是 <code>Rectangle</code> 或 <code>Circle</code> 或 <code>Prism</code> 之一，都算是 <code>Shape</code>。</p>
+<ul>
+<li><code>Rectangle</code> 為 <code>int</code> * <code>int</code> 組合的 <code>tuple</code></li>
+<li><code>Circle</code> 為 <code>int</code></li>
+<li><code>Prism</code> 為 <code>int</code> <em> <code>int</code> </em> <code>int</code> 組合的 <code>tuple</code></li>
+</ul>
+<blockquote>
+<p>type * type 為 tuple 的型別定義方式</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">MixedType</span> </span>= </span><br><span class="line">    Tuple <span class="keyword">of</span> int * int</span><br><span class="line">    List <span class="keyword">of</span> int list</span><br></pre></td></tr></table></figure>
+<p><code>Collection</code> 也屬於 unnamed type，亦可直接 inline 表示。</p>
+<blockquote>
+<p><code>int list</code> 表示為 <code>list</code> 型別，其 element 型別為 <code>int</code>。</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rectangle = Rectangle (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> circle = Circle <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> prism = Prism (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>當建立 <code>union</code> 時，以類似 constructor 的方式建立，稱為 case constructor，唯沒有 <code>new</code>， <code>class</code> 換成 <code>case</code>，且必須要照 <code>定義順序</code> 傳入。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">C</span> </span>= </span><br><span class="line">    | Circle <span class="keyword">of</span> int </span><br><span class="line">    | Rectangle <span class="keyword">of</span> int * int</span><br><span class="line"></span><br><span class="line">[<span class="number">1.</span><span class="number">.10</span>]</span><br><span class="line">|&gt; List.map Circle</span><br><span class="line"></span><br><span class="line">[<span class="number">1.</span><span class="number">.10</span>]</span><br><span class="line">|&gt; List.zip [<span class="number">21.</span><span class="number">.30</span>]</span><br><span class="line">|&gt; List.map Rectangle</span><br></pre></td></tr></table></figure>
+<p>Case contructor 本質就是 function，因此任何可傳入 function 之處，就可傳入 case constructor。</p>
+<h3 id="Case_of_Named_Type">Case of Named Type</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; first: string; last: string &#125;</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">IntOrBool</span> </span>= Int <span class="keyword">of</span> int | Bool <span class="keyword">of</span> bool</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">MixedType</span> </span>= </span><br><span class="line">    | Person <span class="keyword">of</span> Person       </span><br><span class="line">    | IntOrBool <span class="keyword">of</span> IntOrBool</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">MixedType</span> </span>= </span><br><span class="line">    | Person <span class="keyword">of</span>  &#123; first: string; last: string &#125;  <span class="comment">// error</span></span><br><span class="line">    | IntOrBool <span class="keyword">of</span> (Int <span class="keyword">of</span> int | Bool <span class="keyword">of</span> bool)    <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+<p><code>of</code> 之後的型別若是 named type，則必須先用 <code>type</code> 定義好型別，如 <code>record</code> 或 <code>union</code>，不能以 inline 的方式表示。</p>
+<h2 id="Field">Field</h2><hr>
+<p>若 case 的型別為 <code>tuple</code>，雖能在 <code>of</code> 之後簡單的宣告 <code>int * int</code>，有幾個缺點 :</p>
+<ol>
+<li>要建立 <code>union</code> 時，只能依照 <code>定義順序</code> 傳入，可讀性較差</li>
+<li>無法由 <code>tuple</code> 看出其 domain 上的意義</li>
+</ol>
+<p>若我們加上 field，則清楚許多。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>=</span><br><span class="line">    | Rectangle <span class="keyword">of</span> width : int * length : int</span><br><span class="line">    | Circle <span class="keyword">of</span> radius: int</span><br><span class="line">    | Prism <span class="keyword">of</span> width: int * length : int * height: int</span><br></pre></td></tr></table></figure>
+<p>在 <code>of</code> 之後加上 field，可明確表達出 <code>tuple</code> 的每個 element 的 domain 意義。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rectangle = Rectangle (length = <span class="number">1</span>, width = <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> circle = Circle (radius = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">let</span> prism = Prism (width = <span class="number">1</span>, length = <span class="number">2</span>, height = <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>建立 <code>union</code> 時，可在 case constructor 明確指定其 field，如此可讀性更高，且不用依照 <code>定義順序</code> 傳入。</p>
+<h2 id="Empty_Case">Empty Case</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Directory</span> </span>= </span><br><span class="line">    | Root                   </span><br><span class="line">    | Subdirectory <span class="keyword">of</span> string</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Result</span> </span>= </span><br><span class="line">    | Success                </span><br><span class="line">    | ErrorMessage <span class="keyword">of</span> string</span><br></pre></td></tr></table></figure>
+<p>Case 並不一定要搭配 type，若該 case 並不需要任何型態的值傳入，可以不指定 type。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myDir1 = Root</span><br><span class="line"><span class="keyword">let</span> myDir2 = Subdirectory <span class="string">"bin"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myResult1 = Success</span><br><span class="line"><span class="keyword">let</span> myResult2 = ErrorMessage <span class="string">"not found"</span></span><br></pre></td></tr></table></figure>
+<p>沒有 type 的 case，其 case constructor 就不用傳入任何值。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Size</span> </span>= Small | Medium | Large</span><br><span class="line"><span class="keyword">let</span> mySize = Small</span><br></pre></td></tr></table></figure>
+<p>當全部 case 都沒有 type 時，其功能等效於 <code>enum</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Size</span> </span>= Small     | Medium     | Large     <span class="comment">// DU</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Size</span> </span>= Small = <span class="number">0</span> | Medium = <span class="number">1</span> | Large = <span class="number">2</span> <span class="comment">// enum</span></span><br></pre></td></tr></table></figure>
+<p><code>union</code> 與 <code>enum</code> 都使用 type 定義，沒有指定 <code>int</code> 值為 <code>union</code>，有則為 <code>enum</code>。</p>
+<blockquote>
+<p>Q : F# 也有 <code>enum</code>，我該用 <code>union</code> 還是 <code>enum</code> 呢 ?</p>
+</blockquote>
+<p>F# 的 <code>union</code> 功能較強，<code>enum</code> 只是 <code>union</code> 的特例，實務上應優先使用 <code>union</code>，除非有以下需求：</p>
+<ol>
+<li>Case 必須搭配 <code>int</code></li>
+<li><code>union</code> 必須與其他 .NET 語言搭配時</li>
+</ol>
+<p>才必須使用 <code>enum</code>。</p>
+<blockquote>
+<p>F# 的 <code>enum</code> 與 .NET 的 <code>enum</code> 是相同的</p>
+</blockquote>
+<h2 id="Single_Case">Single Case</h2><hr>
+<p>雖然 <code>union</code> 原本的用途是用在將不同的型別整合成單一型別，也就是將不同的 case 整合成一個 <code>union</code>，但實務上有一種應用是一個 <code>union</code> 只有一個 case，所謂的 single case。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">CustomerId</span> </span>= int</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= int</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> printOrderId (orderId: OrderId) = </span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> custId = <span class="number">1</span></span><br><span class="line">printOrderId custId</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> CustomerId = int</span><br><span class="line"><span class="keyword">type</span> OrderId = int</span><br></pre></td></tr></table></figure>
+<p><code>type</code> 能對 primitive type 取 alias，所以我們分別對  <code>int</code> 定義成 <code>CustomerId</code> type 與 <code>OrderId</code> type。</p>
+<p>第 4 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> printOrderId (orderId: OrderId) = </span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br></pre></td></tr></table></figure>
+<p>建立 <code>printOrderId</code> function，傳入參數的型別為 <code>OrderId</code>。</p>
+<p>第 7 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> custId = <span class="number">1</span></span><br><span class="line">printOrderId custId</span><br></pre></td></tr></table></figure>
+<p><code>custId</code> 的型別為 <code>int</code>，傳入 <code>printOrderId</code> compiler 也沒報錯，明明要的是 <code>OrderId</code> 型別。</p>
+<p>因為 <code>OrderId</code> 與 <code>CustomerId</code> 都只能算是 <code>int</code> 的 alias，還不算是個型別。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">CustomerId</span> </span>= CustomerId <span class="keyword">of</span> int</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= OrderId <span class="keyword">of</span> int</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> printOrderId (OrderId orderId) =</span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> custId = CustomerId <span class="number">1</span></span><br><span class="line">printOrderId custId                   <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">CustomerId</span> </span>= CustomerId <span class="keyword">of</span> int</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= OrderId <span class="keyword">of</span> int</span><br></pre></td></tr></table></figure>
+<ul>
+<li>定義 <code>CustomerId</code> union，其 case 為 <code>CustomerId</code>，型別為 <code>int</code></li>
+<li>定義 <code>OrderId</code> union，其 case 為 <code>OrderId</code>，型別為 <code>int</code></li>
+</ul>
+<blockquote>
+<p>當使用 single case 的 <code>union</code> 時，type 會與 case 相同</p>
+</blockquote>
+<p>第 4 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> printOrderId (OrderId orderId) =</span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br></pre></td></tr></table></figure>
+<p>建立 <code>printOrderId</code> function，傳入參數的型別為 <code>OrderId</code>。</p>
+<p>與之前的 <code>printOrderId</code> function 一樣。</p>
+<p>第 7 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> custId = CustomerId <span class="number">1</span></span><br><span class="line">printOrderId custId                   <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+<p><code>custId</code> 型別不再是 <code>int</code>，而是 <code>CustomerId</code>，因為使用了 <code>CustomerId</code>  的 case constructor 建立。</p>
+<p><code>custId</code> 傳入  <code>printOrderId</code> 後，如願出現 compiler error，因為 <code>OrderId</code> 與 <code>CustomerId</code> 都是具體的 type，而不只是 alias。</p>
+<h2 id="Destructor">Destructor</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getShapeHeight shape =</span><br><span class="line">    <span class="keyword">match</span> shape <span class="keyword">with</span></span><br><span class="line">    | Rectangle(height = h) -&gt; h</span><br><span class="line">    | Circle(radius = r) -&gt; <span class="number">2.</span> * r</span><br><span class="line">    | Prism(height = h) -&gt; h</span><br></pre></td></tr></table></figure>
+<p>當 <code>union</code> 傳入 function 後，可使用 Pattern Matching 與 field 將 <code>tuple</code> 的值取出。</p>
+<p><code>with</code> 之後配合的 <code>union</code> 的 case，<code>()</code> 內配合 field，可以直接取出該 field 的值。</p>
+<blockquote>
+<p>使用 field 之後，可輕易的配合 Pattern Matching 取出 <code>tuple</code> 內的值</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getCustomerId (CustomerId customerId) = </span><br><span class="line">    printfn <span class="string">"The CustomerId is %i"</span> customerId</span><br></pre></td></tr></table></figure>
+<p>在 function 的 paramter 使用 <code>()</code>，將 case 寫在 parameter 之前，則自動會將傳入的 <code>union</code> destruct 成 value。</p>
+<blockquote>
+<p>語法雖然很類似 C#，但別忘了 F# 的 type 是在 <code>:</code> 之後，所以 <code>CustomerId</code> 寫在前面並不是型別，而是 <code>union</code> 的 case</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> (CustomerId customerId) = custId </span><br><span class="line"><span class="keyword">let</span> CustomerId customerIdInt = custId <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+<p><code>custId</code> 為 <code>CustomerId</code> union，會直接 destruct 成 <code>customerId</code>。</p>
+<blockquote>
+<p>使用 destructor 時，一定要加上 <code>()</code>，否則會誤以為是新的 function</p>
+</blockquote>
+<h2 id="Equality">Equality</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Contact</span> </span>= </span><br><span class="line">    | Email <span class="keyword">of</span> string </span><br><span class="line">    | Phone <span class="keyword">of</span> int</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> email1 = Email <span class="string">"bob@example.com"</span></span><br><span class="line"><span class="keyword">let</span> email2 = Email <span class="string">"bob@example.com"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> areEqual = (email1=email2) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>雖然 <code>union</code> 為 reference type，但 <code>union</code> 的比較卻像 value type，只要 type 一樣，value 一樣，<code>union</code> 就算一樣。</p>
+<h2 id="Representation">Representation</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Contact</span> </span>= Email <span class="keyword">of</span> string | Phone <span class="keyword">of</span> int</span><br><span class="line"><span class="keyword">let</span> email = Email <span class="string">"bob@example.com"</span></span><br><span class="line"></span><br><span class="line">printfn <span class="string">"%A"</span> email    <span class="comment">// nice</span></span><br></pre></td></tr></table></figure>
+<p><code>printfn</code> 使用 <code>%A</code> 支援 <code>union</code>。</p>
+<h2 id="Object_Hierarchy">Object Hierarchy</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>=</span><br><span class="line">    | Circle <span class="keyword">of</span> float</span><br><span class="line">    | EquilateralTriangle <span class="keyword">of</span> double</span><br><span class="line">    | Square <span class="keyword">of</span> double</span><br><span class="line">    | Rectangle <span class="keyword">of</span> double * double</span><br></pre></td></tr></table></figure>
+<p>若使用 OOP，會設計 <code>Shape</code> interface，再由 <code>Circle</code>、<code>EquilateralTriangle</code>、<code>Square</code> 與 <code>Rectangle</code> 實踐 <code>Shape</code>，如此需要開 5 個檔案。</p>
+<p>若使用 <code>union</code>，只要 5 行就可解決。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pi = <span class="number">3.141592654</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> area myShape =</span><br><span class="line">    <span class="keyword">match</span> myShape <span class="keyword">with</span></span><br><span class="line">    | Circle radius -&gt; pi * radius * radius</span><br><span class="line">    | EquilateralTriangle s -&gt; (sqrt <span class="number">3.0</span>) / <span class="number">4.0</span> * s * s</span><br><span class="line">    | Square s -&gt; s * s</span><br><span class="line">    | Rectangle (h, w) -&gt; h * w</span><br></pre></td></tr></table></figure>
+<p>若使用 OOP，由於各種形狀計算面積的公式不同，勢必在 <code>Shape</code> interface 開 <code>area()</code>，再由  <code>Circle</code>、<code>EquilateralTriangle</code>、<code>Square</code> 與 <code>Rectangle</code> 各自實作 <code>area()</code>。</p>
+<p>但在 FP 的 F#，只需使用 pattern matching 根據 <code>union</code> 的不同 case 實作即可，6 行即可解決。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>F# 的 <code>union</code> 非常強大，可以算是 <code>enum</code> 的威力加強版，搭配 Pattern Matching 更是如虎添翼</li>
+<li><code>union</code> 配合 <code>tuple</code> 可以定義出複雜的 domain model</li>
+<li>Single case 的 <code>union</code> 可以替 domain 定義一個更有意義的型別名稱，且兼具 type safety 與 compiler 保護</li>
+</ul>
+<h2 id="Reference">Reference</h2><p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/discriminated-unions" target="_blank" rel="external">Discriminated Unions</a><br><a href="https://fsharpforfunandprofit.com" target="_blank" rel="external">F# for fum and profit</a>, <a href="https://fsharpforfunandprofit.com/posts/discriminated-unions/" target="_blank" rel="external">Discriminated Unions</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[將不同型別 OR 起來]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何管理 Package Reference ?]]></title>
+    <link href="http://oomusou.io/netcore/package-reference/"/>
+    <id>http://oomusou.io/netcore/package-reference/</id>
+    <published>2018-03-17T01:23:43.000Z</published>
+    <updated>2018-03-17T13:37:07.964Z</updated>
+    <content type="html"><![CDATA[<p>實務上我們一定會用到別人寫的 NuGet package，我們該如何使用 .NET Core SDK 加入 package reference 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>console</strong> : 建立 console 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/package-reference/pkg000.png" alt="kg00"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
+<p><img src="/images/netcore/package-reference/pkg001.png" alt="onsole00"></p>
+<ol>
+<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/package-reference/pkg002.png" alt="onsole01"></p>
+<ol>
+<li><code>.vscode</code> 被 VS Code 自動建立</li>
+</ol>
+<h2 id="新增_Package_Reference">新增 Package Reference</h2><hr>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="built_in">add</span> <span class="keyword">package</span> Newtonsoft.Json</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet add package</code> 加入 NuGet package。</p>
+<p><img src="/images/netcore/package-reference/pkg003.png" alt="kg00"></p>
+<ol>
+<li>輸入 <code>dotnet add package Newtonsoft.Json</code> 新增 <code>Newtonsoft.Json</code> package</li>
+</ol>
+<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
+<p><strong>program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> Newtonsoft.Json;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyConsole</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> students = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Sam"</span>,</span><br><span class="line">                <span class="string">"Kevin"</span>,</span><br><span class="line">                <span class="string">"Jessie"</span></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> json = JsonConvert.SerializeObject(students);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(json);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>JsonConvert.SerializeObject()</code> 將 <code>List</code> 轉成 JSON string。</p>
+<h2 id="執行_Console_App">執行 Console App</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet run</code> 執行專案。</p>
+<p><img src="/images/netcore/package-reference/pkg004.png" alt="kg00"></p>
+<ol>
+<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
+</ol>
+<h2 id="其他相關指令">其他相關指令</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet remove <span class="package"><span class="keyword">package</span> <span class="title">Newtonsoft</span>.<span class="title">Json</span></span></span><br></pre></td></tr></table></figure>
+<p>移除 package reference。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>使用 <code>dotnet add package</code> 與 <code>dotnet remove package</code>，我們就可在 project 中新增與移除 NuGet package</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 .NET Core SDK 管理 Package Reference]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何建立 Solution ?]]></title>
+    <link href="http://oomusou.io/netcore/solution/"/>
+    <id>http://oomusou.io/netcore/solution/</id>
+    <published>2018-03-17T00:23:43.000Z</published>
+    <updated>2018-03-17T13:29:51.629Z</updated>
+    <content type="html"><![CDATA[<p>對於大型專案，我們可以建立 solution 管理眾多 project，只要對 solution 下 <code>dotnet build</code> ，就可以全部 project 都一起 build。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<h2 id="建立_Solution">建立 Solution</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> sln -n MySolution</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new sln</code> 建立 solution。</p>
+<ul>
+<li><strong>-n</strong> : 建立 <code>.sln</code> 檔案即可，不用建立目錄</li>
+</ul>
+<blockquote>
+<p>Solution 是 Microsoft 技術特別的觀念，算 project 的集合，一個 solution 可以有多個 project</p>
+</blockquote>
+<p><img src="/images/netcore/solution/sln000.png" alt="sln00"></p>
+<ol>
+<li>輸入 <code>dotnet new sln -n MySolution</code> 在目前目錄建立 <code>MySolution.sln</code></li>
+<li>已建立 <code>MySolution.sln</code> 在目前目錄下</li>
+</ol>
+<h2 id="將_Project_加入_Solution">將 Project 加入 Solution</h2><hr>
+<p><strong>macOS/Linux</strong></p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln MySolution.sln add <span class="keyword">*</span><span class="keyword">*</span>/<span class="keyword">*</span>.csproj</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet sln … add</code> 將 project 加入 solution</p>
+<blockquote>
+<p><code>**/*.csproj</code> 表示目前目錄下 <code>所有子目錄</code> 的 <code>cspoj</code></p>
+</blockquote>
+<p><img src="/images/netcore/solution/sln001.png" alt="ln00"></p>
+<ol>
+<li>輸入 <code>dotnet sln MySolution.sln add **/*.csproj</code> 將目前目錄下的所有 project 都加入 <code>MySolution.sln</code></li>
+</ol>
+<p><strong>Windows</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln MySolution<span class="class">.sln</span> add MyConsole/MyConsole<span class="class">.csproj</span></span><br><span class="line">$ dotnet sln MySolution<span class="class">.sln</span> add MyClassLib/MyClassLib<span class="class">.csproj</span></span><br><span class="line">$ dotnet sln MySolution<span class="class">.sln</span> add MyClassLib.Tests/MyClassLib<span class="class">.Tests</span><span class="class">.csproj</span></span><br></pre></td></tr></table></figure>
+<p>Windows 只能乖乖地用 <code>3</code> 次 <code>dotnet sln … add</code> 。</p>
+<p><img src="/images/netcore/solution/sln002.png" alt="ln00"></p>
+<ol>
+<li>一個一個 project 加入 <code>MySolution.sln</code></li>
+</ol>
+<h2 id="編譯整個_Solution">編譯整個 Solution</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">build </span>MySolution.sln</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 將 solution 下所有 project 一起編譯。</p>
+<p><img src="/images/netcore/solution/sln003.png" alt="ln00"></p>
+<ol>
+<li>輸入 <code>dotnet build MySolution.sln</code> 編譯整個 <code>MySolution</code></li>
+<li><code>MySolution</code> 下所有 project 都執行 <code>dotnet restore</code></li>
+<li><code>MySoluton</code> 下所有 project 都執行 <code>dotnet build</code> 編譯新的 dll</li>
+</ol>
+<h2 id="將整個_Solution_建立_Package">將整個 Solution 建立 Package</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>dotnet pack <span class="constant">MySolution.</span>sln</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet pack</code> 將 solution 下所有 project 建立 NuGet package。</p>
+<p><img src="/images/netcore/solution/sln004.png" alt="ln00"></p>
+<ol>
+<li>輸入 <code>dotnet pack MySolution.sln</code> 將整個 <code>MySolution</code> 建立 package</li>
+<li><code>MySolution</code> 下所有 project 都執行 <code>dotnet restore</code></li>
+<li><code>MySoluton</code> 下所有 project 都執行 <code>dotnet pack</code> </li>
+</ol>
+<blockquote>
+<p>只有 <code>MyConsole</code> 與 <code>MyClassLib</code> 會建立 package，<code>MyClassLib.Tests</code> 因為是 Unit Test，所以不會建立 package</p>
+</blockquote>
+<h2 id="發佈整個_Solution">發佈整個 Solution</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>dotnet publish <span class="constant">MySolution.</span>sln</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet publish</code> 將 solution 下所有 project 都加以 publish。</p>
+<p><img src="/images/netcore/solution/sln005.png" alt="ln00"></p>
+<ol>
+<li>輸入 <code>dotnet publish MySolution.sln</code> 將整個 <code>MySolution</code> 下的所有 project 都加以 publish</li>
+<li><code>MySolution</code> 下所有 project 都執行 <code>dotnet restore</code></li>
+<li><code>MySoluton</code> 下所有 project 都執行 <code>dotnet publish</code> </li>
+</ol>
+<h2 id="其他相關指令">其他相關指令</h2><hr>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln <span class="keyword">*</span>.sln remove <span class="keyword">*</span>.csproj</span><br></pre></td></tr></table></figure>
+<p>將 project 從 solution 移除。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln *<span class="class">.sln</span> list</span><br></pre></td></tr></table></figure>
+<p>列出 solution 共有哪些 project。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Solution 在 .NET Core SDK 中，重要性已經不如 Visual Studio，但對於大型專案，卻可透過 solution 對所有 project 下指令，還是非常好用</li>
+<li>VS Code 不一定要使用 solution，但若專案也需要被 Visual Studio 或 Rider 開啟，則建議建立 solution</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 .NET Core SDK 建立 Solution]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何建立 Unit Test ?]]></title>
+    <link href="http://oomusou.io/netcore/unit-test/"/>
+    <id>http://oomusou.io/netcore/unit-test/</id>
+    <published>2018-03-16T23:23:43.000Z</published>
+    <updated>2018-03-17T13:21:29.561Z</updated>
+    <content type="html"><![CDATA[<p>雖然我們可以使用 console app 來測試 class library，但比較好的方式是建立 unit test，搭配各種測試案例測試 class library 的結果。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<h2 id="建立_Unit_Test_專案">建立 Unit Test 專案</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> mstest -o MyClassLib.Tests</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>mstest</strong> : 建立  MSTest 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyClassLib.Tests</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/unit-test/ut000.png" alt="t00"></p>
+<ol>
+<li>輸入 <code>dotnet new mstest -o MyClasLib.Tests</code> 將 MSTest 類型專案建立在 <code>MyClassLib.Tests</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<blockquote>
+<p>除了 MSTest，.NET Core SDK 預設還支援 xUnit，若想使用 NUnit，可到 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 下載 NUnit project template</p>
+</blockquote>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyClassLib.Tests</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。 </p>
+<p><img src="/images/netcore/unit-test/ut001.png" alt="t00"></p>
+<ul>
+<li>使用 VS Code 開啟 <code>MyClassLib.Tests</code></li>
+</ul>
+<h2 id="新增_Project_Reference">新增 Project Reference</h2><hr>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="keyword">add</span> <span class="keyword">reference</span> ../MyClassLib/MyClassLib.csproj</span><br></pre></td></tr></table></figure>
+<p>因為 <code>MyClassLib.Tests</code> 需要使用 <code>MyClassLib</code>，所以使用 <code>dotnet add reference</code> 新增 project reference。</p>
+<p><img src="/images/netcore/unit-test/ut002.png" alt="t00"></p>
+<ol>
+<li>輸入 <code>dotnet add reference ../MyClassLib/MyClassLib.csproj</code> 將 <code>MyClassLib</code> project 加入 reference</li>
+<li>觀察 <code>MyConsole.csproj</code></li>
+<li><code>MyClassLib.csproj</code>  被加入在  <code>&lt;ItemGroup&gt;</code> 下的 <code>&lt;ProjectReference&gt;</code> </li>
+<li>其他 package 被加入在 <code>&lt;ItemGroup&gt;</code> 下的 <code>&lt;PackageReference&gt;</code></li>
+</ol>
+<blockquote>
+<p>Project reference 與 package reference 都被記錄在 <code>csproj</code> 中，其中 <code>&lt;ProjectReference&gt;</code> 紀錄 project reference，而 <code>&lt;PackageReference&gt;</code> 記錄 package reference</p>
+</blockquote>
+<h2 id="編輯_UnitTest1-cs">編輯 UnitTest1.cs</h2><hr>
+<p><strong>UnitTest1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.VisualStudio.TestTools.UnitTesting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyClassLib.Tests</span></span><br><span class="line">&#123;</span><br><span class="line">    [TestClass]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">    &#123;</span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod1</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> CalculatorService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.Sum(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">2</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根據 <code>3A原則</code> 建立 <code>CalculatorService</code> 的 Unit Test。</p>
+<p><img src="/images/netcore/unit-test/ut003.png" alt="t00"></p>
+<ol>
+<li>開啟 <code>UnitTest1.cs</code></li>
+<li>建立 <code>CalculatorService</code> 的 Unit Test</li>
+</ol>
+<h2 id="執行_Unit_Test">執行 Unit Test</h2><hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProjet $ dotnet <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet test</code> 執行單元測試。</p>
+<p><img src="/images/netcore/unit-test/ut004.png" alt="t00"></p>
+<ol>
+<li>輸入 <code>dotnet test</code> 執行單元測試</li>
+<li>測試通過，得到 <code>綠燈</code></li>
+</ol>
+<h2 id="其他相關指令">其他相關指令</h2><hr>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">remove</span> <span class="keyword">reference</span> *.csproj</span><br></pre></td></tr></table></figure>
+<p>移除 project reference。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="type">list</span> <span class="keyword">reference</span></span><br></pre></td></tr></table></figure>
+<p>列出所有 project reference。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>.NET Core SDK 支援各種 Unit Test，包括 MSTest、xUnit 與 NUnit</li>
+<li>使用 <code>dotnet add reference</code> 新增 project reference</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 .NET Core SDK 建立 Unit Test]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何驗證 Class Library ?]]></title>
     <link href="http://oomusou.io/netcore/console/"/>
     <id>http://oomusou.io/netcore/console/</id>
     <published>2018-03-16T22:23:43.000Z</published>
-    <updated>2018-03-16T14:23:50.377Z</updated>
+    <updated>2018-03-17T13:16:05.262Z</updated>
     <content type="html"><![CDATA[<p>雖然我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案，但畢竟是 class library，無法看到結果，此時我們會建立另外一個 console app 專案當成 client，用來測試 class library 的結果。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -123,7 +536,7 @@
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[使用 .NET Core SDK 建立]]>
+    <![CDATA[使用 .NET Core SDK 建立 Class Library]]>
     
     </summary>
     
@@ -1683,527 +2096,6 @@
       <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
     
       <category term="Slack" scheme="http://oomusou.io/tags/Slack/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Jenkins 對 .NET Core 實現個人的持續整合 ?]]></title>
-    <link href="http://oomusou.io/jenkins/netcore-slack/"/>
-    <id>http://oomusou.io/jenkins/netcore-slack/</id>
-    <published>2018-03-06T12:23:43.000Z</published>
-    <updated>2018-03-03T14:40:49.883Z</updated>
-    <content type="html"><![CDATA[<p>在使用 TDD 開發時，儘管單元測試執行速度較快，但可能僅執行一部分的單元測試而已；而整合測試與驗收測試更慢，實務上不可能真的花時間去等待測試結果，而是希望在背景不斷地執行，在本機配合 Docker 執行 Jenkins 後，只要每次有新的 commit，就會自動執行所有測試，並將測試結果傳送到 Slack。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>.NET Core 2.1.4<br>Jenkins 2.89.4<br>Slack 3.0.5<br>Rider 2017.3.1</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>我們希望每次 <code>git push</code> 到 Git 後，Jenkins 就會自動跑 Unit Test，若失敗則會通知 Slack。</p>
-<h2 id="Task">Task</h2><hr>
-<ul>
-<li>Git 直接使用本機的 git repository</li>
-<li>Jenkins 使用本機的 Docker</li>
-<li>Slack 可裝在本機或行動裝置</li>
-</ul>
-<h2 id="建立_-NET_Core_專案">建立 .NET Core 專案</h2><hr>
-<p><strong>NumberService.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">NumberLib</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NumberService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">isEven</span>(<span class="params"><span class="keyword">int</span> <span class="keyword">value</span></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">value</span> % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>isEven()</code> 若為偶數傳回 <code>true</code> ，奇數傳回 <code>false</code>。</p>
-<p><img src="/images/jenkins/netcore-slack/slack000.png" alt="slack000"></p>
-<p><strong>NuberServiceTest.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NumberLib;</span><br><span class="line"><span class="keyword">using</span> Xunit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">NumberLibTest</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">NumberServiceTest</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> NumberService _numberService = <span class="keyword">new</span> NumberService();</span><br><span class="line">        </span><br><span class="line">        [Fact]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShouldReturnTrueGivenEvenValue</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = _numberService.isEven(<span class="number">2</span>);</span><br><span class="line">            Assert.True(result, <span class="string">"2 should return true"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [Fact]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">ShouldReturnFalseGivenOddValue</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = _numberService.isEven(<span class="number">1</span>);</span><br><span class="line">            Assert.False(result, <span class="string">"1 should return false"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>提供兩個測試案例，分別測試傳回 <code>true</code> 與 <code>false</code>。</p>
-<p><img src="/images/jenkins/netcore-slack/slack001.png" alt="slack001"></p>
-<h2 id="執行_Unit_Test">執行 Unit Test</h2><hr>
-<p><img src="/images/jenkins/netcore-slack/slack002.png" alt="slack002"></p>
-<p>直接在 Rider 執行單元測試，確認結果正確。</p>
-<h2 id="建立_Git_Repository">建立 Git Repository</h2><hr>
-<p>要實現持續整合，Git 是其中的關鍵，唯有透過版控，才能在每個版本的變動觸發 Jenkins 自動執行測試。</p>
-<p><img src="/images/jenkins/netcore-slack/slack003.png" alt="slack003"></p>
-<p>直接在 Rider 建立 Git repository。</p>
-<h2 id="設定_Jenkins">設定 Jenkins</h2><hr>
-<p><strong>建立與執行 Jenkins Container</strong></p>
-<p>若要 macOS 執行 Jenkins，最簡單的方法是透過 Docker，但只使用官方的 Jenkins image 是不夠的，因為我們必須在 Jenkins 的 Linux 環境跑單元測試，也就是說 Linux 必須要有 .NET Core SDK 環境。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於建立 image 建立，詳細請參考 <a href="/docker/jenkins-core/">如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?</a></span></span></span></p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkinsCore -<span class="tag">p</span> <span class="number">8080</span>:<span class="number">8080</span> -<span class="tag">p</span> <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home -v /Users/oomusou/Code:/var/<span class="tag">code</span>   oomusou/jenkins-core</span><br></pre></td></tr></table></figure>
-<p>在建立 container 時，較特別的為</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">v /<span class="constant">Users</span>/oomusou/<span class="constant">Code</span><span class="symbol">:/var/code</span></span></span><br></pre></td></tr></table></figure>
-<p><code>-v</code> 是設定 host os 的目錄，相當於 container 內對應的目錄。</p>
-<p>如此就能使用 macOS 的開發工具，如 Rider 在 <code>/Users/oomusou/Code</code>，但 Jenkins 跑單元測試時是在 Linux 的 <code>/var/code</code> 目錄下。</p>
-<p><strong>Manage Jenkins</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack004.png" alt="slack004"></p>
-<ol>
-<li>左側選 <code>Manage Jenkins</code></li>
-<li>右側選 <code>Configure Global Security</code></li>
-</ol>
-<p><strong>Configure Global Security</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack005.png" alt="slack005"></p>
-<ol>
-<li>不勾選 <code>Enable security</code></li>
-<li>不勾選 <code>CSRF Protection</code></li>
-</ol>
-<blockquote>
-<p>因為 Jenkins 只是跑在本機，所以使用較寬鬆的 security 設定</p>
-</blockquote>
-<p><strong>建立 Jenkins Job</strong></p>
-<p>每一個自動化，在 Jenkins 稱為 Job。</p>
-<p><img src="/images/jenkins/netcore-slack/slack006.png" alt="slack006"></p>
-<ol>
-<li>若是第一次使用 Jenkins，可使用首頁的 <code>create new jobs</code> 建立新 job</li>
-<li>若已經有其他 job，可使用左上角的 <code>New Item</code> 建立新 job</li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack007.png" alt="slack007"></p>
-<ol>
-<li>輸入 Job 名稱</li>
-<li>選擇 <code>Freestyle project</code></li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack008.png" alt="slack008"></p>
-<ol>
-<li>選擇 <code>Build</code></li>
-<li>選擇 <code>Add build step</code></li>
-<li>選擇 <code>Execute shell</code></li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack009.png" alt="slack009"></p>
-<p>切換到 <code>/var/code</code> 的單元測試目錄下，使用 <code>dotnet test</code> 執行單元測試。</p>
-<blockquote>
-<p>目前是在 Linux 下跑單元測試，也可彌補之前只在 macOS 跑單元測試，但 production 是 Linux 的缺憾</p>
-</blockquote>
-<p><img src="/images/jenkins/netcore-slack/slack010.png" alt="slack010"></p>
-<ol>
-<li>選擇 <code>Build Now</code>，第一次執行 job</li>
-<li>Jenkins 執行單元測試，得到 <code>藍燈</code></li>
-</ol>
-<h2 id="設定_Git">設定 Git</h2><hr>
-<p>目前為止，Jenkins Job 已經設定好，但必須手動使用 <code>Build Now</code> 執行 Job，我們希望的是每次 Git commit，就會自動執行 Jenkins job，不用我們操心。</p>
-<p><strong>新增 post-commit</strong><br><strong>post-commit</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/sh</span></span><br><span class="line">curl http://localhost:<span class="number">8080</span>/job/NumberSeriveUnitTest/build</span><br><span class="line"><span class="built_in">echo</span> <span class="string">"post commit trigger"</span></span><br></pre></td></tr></table></figure>
-<p>到專案的 <code>.git/hooks</code>目錄下，新增 <code>post-commit</code>，讓每次 Git commit 時執行 Jenkins job。</p>
-<p>Jenkins 的網址規則為 <code>/job/[Job名稱]/build</code>。</p>
-<p>最後記得使用 <code>chmod +x post-commit</code> 讓 <code>post-commit</code> 有執行權限。</p>
-<p><strong>建立新 Commit</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack011.png" alt="slack011"></p>
-<ol>
-<li>將 <code>false</code> 改成 <code>true</code></li>
-<li>新增 commit</li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack012.png" alt="slack012"></p>
-<p>Jenkins 自動執行單元測試，得到 <code>紅燈</code>。</p>
-<blockquote>
-<p>這個 <code>紅燈</code> 是我們預期的，因為由 <code>false</code> 改成 <code>true</code>，單元測試一定會失敗</p>
-</blockquote>
-<h2 id="設定_Slack">設定 Slack</h2><hr>
-<p>目前為止，每次 Git commit 都會自動執行 Jenkins 單元測試，唯每次都必須回到 Jenkins 才知道單元測試是否成功，若能將結果推送到 Slack，我們就能把 Slack 當成持續整合的訊息平台。</p>
-<p><strong>新增 Channel</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack013.png" alt="slack013"></p>
-<ol>
-<li>按下 <code>Channels</code> 右側的 <code>+</code> 新增 channel</li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack014.png" alt="slack014"></p>
-<ol>
-<li><strong>Privacy</strong> : 設定為 <code>Public</code> 或 <code>Private</code> channel</li>
-<li><strong>Name</strong> : 設定 channel 名稱</li>
-<li><strong>Purpose</strong> : channel 的功能描述，可以不輸入</li>
-<li><strong>Send invites to</strong> : 設定 channel 成員，可以稍後再設定</li>
-<li>按 <code>Create Channel</code> 開始建立 channel</li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack015.png" alt="slack015"></p>
-<ol>
-<li>按 <code>Got It!</code> 進入 channel</li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack016.png" alt="slack016"></p>
-<ol>
-<li>正式進入 channel，將來 Jenkins 訊息會傳進此 channel</li>
-</ol>
-<p><strong>新增 Notification</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack017.png" alt="slack017"></p>
-<ol>
-<li>選擇右上方的 <code>option</code></li>
-<li>選擇 <code>Add an app</code></li>
-</ol>
-<p><strong>新增 Jenkins App</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack018.png" alt="slack018"></p>
-<p>Slack 將開啟瀏覽器</p>
-<ol>
-<li>稍微往下捲輸入 <code>Jenkins</code></li>
-<li>選擇 <code>Jenkins CI</code></li>
-</ol>
-<p><strong>新增 Configuration</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack019.png" alt="slack019"></p>
-<ol>
-<li>按 <code>Add Configuration</code> 加入 Jenkins CI</li>
-</ol>
-<p><strong>新增 Integration</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack020.png" alt="slack020"></p>
-<ol>
-<li>按 <code>Add Bitbucket Integration</code> 正式加入整合 Jenkins</li>
-</ol>
-<p><strong>Slack 設定完成</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack021.png" alt="slack021"></p>
-<ol>
-<li>介紹 Jenkins 設定流程</li>
-</ol>
-<blockquote>
-<p>Slack 部分已經設定完成，接下來是 Jenkins 的設定</p>
-<p>Slack 網頁先不要關閉，稍後會用到</p>
-</blockquote>
-<h2 id="設定_Jenkins-1">設定 Jenkins</h2><hr>
-<p><strong>Manage Jenkins</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack022.png" alt="slack022"></p>
-<ol>
-<li>左側選擇 <code>Manage Jenkins</code></li>
-<li>右側選擇 <code>Manage Plugins</code></li>
-</ol>
-<p><strong>安裝 Slack Plugin</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack023.png" alt="slack023"></p>
-<ol>
-<li>選擇 <code>Avaliable</code> tab</li>
-<li>選擇 <code>Slack Notification Plugin</code></li>
-<li>按 <code>Download now and Install after restart</code></li>
-</ol>
-<p><strong>新增 Webhook</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack024.png" alt="slack024"></p>
-<ol>
-<li>左側選擇 <code>Manage Jenkins</code></li>
-<li>右側選擇 <code>Configure System</code></li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack025.png" alt="slack025"></p>
-<p>在 <code>Global Slack Notifier Settings</code> 下設定</p>
-<ol>
-<li><strong>Base URL</strong> : 貼一段 Slack 所提供的 URL</li>
-<li><strong>Integration Token</strong> : 貼一段 Slack 所提供的 token</li>
-</ol>
-<blockquote>
-<p>Q : 要貼什麼 Base URL 與 token 呢 ?</p>
-</blockquote>
-<p><img src="/images/jenkins/netcore-slack/slack026.png" alt="slack026"></p>
-<p>回到 Slack 最後的網頁往下捲到 <code>Step 3</code></p>
-<ol>
-<li>將 <code>Base URL</code> 與 <code>Integration Token</code> 複製貼上</li>
-</ol>
-<p>最後按 <code>Save</code> 存檔。</p>
-<p><strong>設定 Job</strong></p>
-<p><img src="/images/jenkins/netcore-slack/slack027.png" alt="slack027"></p>
-<ol>
-<li>選擇要發 Slack 通知的 job</li>
-<li>按 <code>Configure</code> 設定</li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack028.png" alt="slack028"></p>
-<p>在 Jenkins 執行完 <code>build</code> 動作後，無論成功或失敗，將結果通知 Slack</p>
-<ol>
-<li>選擇 <code>Post-build Actions</code></li>
-<li>選擇 <code>Add post-build action</code></li>
-<li>選擇 <code>Slack Notification</code></li>
-</ol>
-<p><img src="/images/jenkins/netcore-slack/slack029.png" alt="slack029"></p>
-<p>選擇希望 Jenkins 通知 Slack 的動作 :</p>
-<ol>
-<li>選擇 <code>Notify Failure</code>、 <code>Notify Success</code> 與 <code>Notify Unstable</code></li>
-</ol>
-<blockquote>
-<p>建議不用選擇太多 action，<code>success</code> 確認 Jenkins 還活著，<code>Failure</code> 與 <code>Unstable</code> 確認 CI 失敗即可</p>
-</blockquote>
-<p><img src="/images/jenkins/netcore-slack/slack030.png" alt="slack030"></p>
-<p>新增一個 Git commit，就可發現 Slack 收到 Jenkins 測試成功 <code>綠燈</code> 的訊息。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>實務上若 Git repository 放在 GitHub 或 Bitbucket，則可將 Jenkins 放到雲端主機的 VM 上，大致上的流程與設定與本文類似</li>
-<li>本文雖然只針對單元測試示範，但也適用於整合測試與驗收測試</li>
-<li>將較耗時的整合測試與驗收測試交給 Jenkins 處理，在開發時只要針對單元測試即可，若 Slack 出現紅燈，再回來關注整合測試與驗收測試失敗的部分</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[Jenkins 也可與 .NET Core 搭配實現持續整合]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="Git" scheme="http://oomusou.io/tags/Git/"/>
-    
-      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
-    
-      <category term="Slack" scheme="http://oomusou.io/tags/Slack/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?]]></title>
-    <link href="http://oomusou.io/docker/jenkins-core/"/>
-    <id>http://oomusou.io/docker/jenkins-core/</id>
-    <published>2018-03-05T12:23:43.000Z</published>
-    <updated>2018-03-03T02:03:07.328Z</updated>
-    <content type="html"><![CDATA[<p>雖然 .NET Core SDK 與 Jenkins 都各自提供官方 Docker image，但實務上使用 Jenkins 做持續整合時，我們會從 Jenkins 將 Git repository clone 下來，然後跑 <code>dotnet test</code> 執行單元測試，但 <code>dotnet test</code> 需要 .NET Core SDK 環境才能執行，因此我們必須建立自己的 Dockerfile，產生包含 .NET Core SDK 的 Docker image。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.12.0-ce-mac55 (23011)<br>Jenkins 2.89.4<br>.NET Core SDK 2.1.4</p>
-<h2 id="Dockerfile">Dockerfile</h2><hr>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> jenkins/jenkins:lts</span><br><span class="line"></span><br><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructiions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install dependency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y curl libunwind8 gettext apt-transport-https</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install the .NET Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Switch back to the jenkins user.</span></span><br><span class="line"><span class="built_in">USER</span> jenkins</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
-<p>以 <code>jenkins/jenkins:lts</code> 作為 image 的基底。</p>
-<p>第 3 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br></pre></td></tr></table></figure>
-<p>因為即將使用 <code>apt-get</code> 安裝 package，所以直接切換到 <code>root</code> 帳號執行以下動作。</p>
-<p>第 6 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span></span><br></pre></td></tr></table></figure>
-<p>顯示目前 image 的版本資訊。</p>
-<blockquote>
-<p>此段並非安裝 .NET Core SDK 所必須，但因為 Linux 的 ditribution 眾多，每個 <code>Dockerfile</code> 的寫法也會有所差異，因此這行可以幫助 <code>Dockerfile</code> 撰寫，尤其  <code>jenkins/jenkins:lts</code> 是用 Debian 9 所建立，因此 dependency 又與 Ubuntu 16.04 LTS  不太一樣</p>
-</blockquote>
-<p>第 9 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Based on instructiions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install dependency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y curl libunwind8 gettext apt-transport-https</span></span><br></pre></td></tr></table></figure>
-<p>由於 Jenkins image 是根據 Debian 9 所建立，根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Debian 9</a>，若要在 Debian 9 安裝 .NET Core，還必須安裝以下額外 package :</p>
-<ul>
-<li>curl</li>
-<li>libunwind8</li>
-<li>gettext</li>
-<li>apt-transport-https</li>
-</ul>
-<p>14 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-stretch-prod stretch main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span></span><br></pre></td></tr></table></figure>
-<p>根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Debian 9</a> 所描述，要安裝 .NET Core SDK 前，必須先將 <code>microsoft.gpg</code> 裝好。</p>
-<p>20 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install the .NET Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span></span><br></pre></td></tr></table></figure>
-<p>所有的 dependency 與  <code>microsoft.gpg</code> 都裝好後，就可以正式安裝 .NET Core SDK 了。</p>
-<p>24 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Switch back to the jenkins user.</span></span><br><span class="line"><span class="built_in">USER</span> jenkins</span><br></pre></td></tr></table></figure>
-<p>由於剛剛是以 <code>root</code> 帳號安裝 .NET Core SDK，最後切回預設的 <code>jenkins</code> 帳號。</p>
-<h2 id="建立_Image">建立 Image</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/JenkinsCore $ docker <span class="keyword">build </span>-t oomusou/jenkins-core .</span><br></pre></td></tr></table></figure>
-<p>進入 <code>Dockerfile</code> 所在的目錄，使用 <code>docker build</code> 建立自己的 image。</p>
-<ul>
-<li><strong>-t</strong> : Docker image 的名稱</li>
-<li><strong>.</strong> : 將目前目錄的 <code>Dockerfile</code> 建立成 image</li>
-</ul>
-<p><img src="/images/docker/jenkins-core/jenkins000.png" alt="jenkins000"></p>
-<ol>
-<li>輸入 <code>docker build -t oomusou/jenkins-core .</code> 將 <code>Dockerfile</code> 建立成 <code>oomusou/jenkins-core</code></li>
-<li><code>uname -a &amp;&amp; cat /etc/*release</code> 顯示出為 <code>Debian</code> ，證明 Jenkins image 是由 Debian 建立</li>
-</ol>
-<h2 id="建立並執行_Container">建立並執行 Container</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkinsCore -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home oomusou/jenkins-core</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
-<ul>
-<li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyJenkinsCore</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
-<li><strong>-p</strong> : Docker 外部與 Jenkins 內部所對應的 port，其中左邊為外部 Docker 的 port，右邊為 Jenkins 內部的 port</li>
-<li><strong>-v</strong> : 建立 <code>JENKINS_HOME</code> 環境變數，其目錄在 <code>/var/jenkins_home</code>，為 Jenkins 的工作目錄</li>
-</ul>
-<p><img src="/images/docker/jenkins-core/jenkins001.png" alt="jenkins001"></p>
-<ol>
-<li>輸入 <code>docker run …</code> 建立並執行 container</li>
-</ol>
-<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><p>–<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker exec -it <span class="constant">MyJenkinsCore </span>bash</span><br><span class="line">root<span class="variable">@xxx</span><span class="symbol">:/</span><span class="comment"># dotnet --version</span></span><br></pre></td></tr></table></figure></p>
-<p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
-<ul>
-<li><code>-i</code> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
-<li><code>-t</code> : <code>t</code>erminal，可對 terminal 顯示資料</li>
-<li><code>MyUbuntuCore</code> : Container 名稱</li>
-<li><code>bash</code> : 對 container 下的指令</li>
-</ul>
-<p><img src="/images/docker/jenkins-core/jenkins002.png" alt="jenkins002"></p>
-<ol>
-<li>輸入 <code>docker exec -it</code> 進入 container 的 terminal</li>
-<li>輸入 <code>dotnet —version</code> 確認 .NET Core SDK 已經安裝成功</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>由於 Jenkins 是依照 Debian 9 所建立，因此所需要的 dependency 與 Ubuntu 稍有不同</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/debian9/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Debian 9</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[Jenkins 包含 .NET Core 才能進行單元測試]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Ubuntu 安裝 .NET Core ?]]></title>
-    <link href="http://oomusou.io/netcore/linux-install/"/>
-    <id>http://oomusou.io/netcore/linux-install/</id>
-    <published>2018-03-04T12:23:43.000Z</published>
-    <updated>2018-03-02T14:22:16.987Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core 為 Microsoft 的跨平台解決方案，只要裝上 .NET Core SDK，就可在 Linux 執行與開發 .NET Core App，本文以 Ubuntu 為例。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Parallel Desktop 13 for Mac 13.3.0 (43321)<br>Ubuntu 16.04<br>.NET Core SDK 2.1.4</p>
-<h2 id="安裝_Dependency">安裝 Dependency</h2><hr>
-<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></span><br><span class="line">$ sudo apt-<span class="built_in">get</span> install curl</span><br></pre></td></tr></table></figure>
-<p>根據官網的 <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a>，若要在 Linux 安裝 .NET Core，在 Ubuntu 還必須安裝以下額外 package :</p>
-<ul>
-<li>libunwind8</li>
-<li>liblttng-ust0</li>
-<li>libcurl3</li>
-<li>libssl1.0.0</li>
-<li>libuuid1</li>
-<li>libkrb5-3</li>
-<li>zlib1g</li>
-<li>libicu52 (for 14.X)</li>
-<li>libicu55 (for 16.X)</li>
-<li>libicu57 (for 17.X)</li>
-</ul>
-<p>這些 package 在 Ubuntu 其實都已經內建，所以不用特別安裝。</p>
-<p>其中 <code>curl</code> 在並不算 .NET Core SDK 所需要的 package，但接下來要用 <code>curl</code> 安裝 <code>microsoft.qpg</code>，所以也需要特別安裝。 </p>
-<p><img src="/images/netcore/linux-install/linux000.png" alt="linux000"></p>
-<ol>
-<li>輸入 <code>sudo apt-get update</code> 更新本機套件清單</li>
-<li>輸入  <code>sudo apt-get install curl</code> 安裝 <code>curl</code></li>
-</ol>
-<h2 id="安裝_microsoft-qpg">安裝 microsoft.qpg</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl https:<span class="comment">//packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span></span><br><span class="line">$ sudo mv microsoft<span class="class">.gpg</span> /etc/apt/trusted<span class="class">.gpg</span><span class="class">.d</span>/microsoft<span class="class">.gpg</span></span><br><span class="line">$ sudo sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>curl</code> 下載 <code>microsoft.qpg</code> 並安裝之。</p>
-<p>加入 Microsoft 套件庫位置。</p>
-<p><img src="/images/netcore/linux-install/linux001.png" alt="linux001"></p>
-<ol>
-<li>輸入 <code>curl …</code> 下載 <code>microsoft.qpg</code> 到本機</li>
-<li>將 <code>microsoft.qpg</code> 移到適當目錄</li>
-<li>加入 Microsoft 套件庫位置</li>
-</ol>
-<h2 id="安裝_-NET_Core_SDK">安裝 .NET Core SDK</h2><hr>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get <span class="operator"><span class="keyword">install</span> apt-transport-https</span><br><span class="line">$ sudo apt-<span class="keyword">get</span> <span class="keyword">update</span></span><br><span class="line">$ sudo apt-<span class="keyword">get</span> <span class="keyword">install</span> -y <span class="keyword">dotnet</span>-sdk-<span class="number">2.1</span><span class="number">.4</span></span></span><br></pre></td></tr></table></figure>
-<p>安裝 <code>apt-transport-https</code> 套件。</p>
-<p>由於剛剛新加入了 Microsoft 自己的套件庫，所以需要在執行 <code>apt-get update</code> 更新一次。</p>
-<p>正式安裝 .NET Core SDK 2.1.4。</p>
-<p><img src="/images/netcore/linux-install/linux002.png" alt="linux002"></p>
-<ol>
-<li>輸入 <code>sudo apt-get install apt-transport-https</code> 安裝 <code>apt-transport-https</code> 套件</li>
-<li>輸入 <code>sudo apt-get update</code> 更新本機套件清單</li>
-<li>輸入 <code>sudo apt-get install -y dotnet-sdk-2.1.4</code> 安裝 .NET Core SDK </li>
-</ol>
-<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">dotnet</span> <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
-<p>輸入 <code>dotnet —version</code> 確認 .NET Core SDK 已經安裝成功</p>
-<p><img src="/images/netcore/linux-install/linux003.png" alt="linux003"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Linux 有分不同 distribution，在不同 distribution 安裝 .NET Core 的方法大同小異，詳細請參考 .NET Core 官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a> ，自行選擇不同的 distribution</li>
-<li>在 Linux 上也可以選擇自行下載 <code>tar.gz</code> 方式安裝，詳情請參考 <a href="https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-linux-x64-binaries" target="_blank" rel="external">.NET Core 2.1.4 SDK (Binaries for Linux x64)</a></li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-linux-x64-binaries" target="_blank" rel="external">.NET Core 2.1.4 SDK (Binaries for Linux x64)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[自行在 Linux 安裝 .NET Core]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何建立含有 .NET Core SDK 的 Docker Image ?]]></title>
-    <link href="http://oomusou.io/docker/ubuntu-core/"/>
-    <id>http://oomusou.io/docker/ubuntu-core/</id>
-    <published>2018-03-03T12:23:43.000Z</published>
-    <updated>2018-03-03T01:50:26.665Z</updated>
-    <content type="html"><![CDATA[<p>雖然 Microsoft 官方提供 .NET Core 的 Docker image，但實務上建置環境時，可能先使用其他 server 的 image，然後再加裝 .NET Core SDK 環境，如此就需要自行建立 <code>Dockerfile</code>，並建立自己的 image。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.12.0-ce-mac55 (23011)<br>Ubuntu 16.04.3 LTS<br>.NET Core SDK 2.1.4</p>
-<h2 id="Dockerfile">Dockerfile</h2><hr>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br><span class="line"></span><br><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructiions at https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x</span></span><br><span class="line"><span class="comment"># Install dependency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y libunwind8 liblttng-ust0 libcurl3 libssl1.<span class="number">0.0</span> libuuid1 libkrb5-<span class="number">3</span> zlib1g libicu55 curl</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install the .Net Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get install apt-transport-https</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span></span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br></pre></td></tr></table></figure>
-<p>以 <code>ubuntu</code> 這個 image 為基底建立 image。</p>
-<blockquote>
-<p>Q : 為什麼不用 <code>ubuntu:lts</code> 呢 ?</p>
-<p>預設 <code>ubuntu</code> 即 <code>ubuntu:latest</code>，而 <code>ubuntu:latest</code> 指的就是 latest lts，所以已經是 LTS 版本</p>
-</blockquote>
-<p>第 3 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Switch to root to install .NET Core SDK</span></span><br><span class="line"><span class="built_in">USER</span> root</span><br></pre></td></tr></table></figure>
-<p>因為即將使用 <code>apt-get</code> 安裝 package，所以直接切換到 <code>root</code> 帳號執行以下動作。</p>
-<p>第 6 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Show distro information!</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">uname <span class="operator">-a</span> &amp;&amp; cat /etc/*release</span></span><br></pre></td></tr></table></figure>
-<p>顯示目前 image 的版本資訊。</p>
-<blockquote>
-<p>此段並非安裝 .NET Core SDK 所必須，但因為 Linux 的 ditribution 眾多，每個 <code>Dockerfile</code> 的寫法也會有所差異，因此這行可以幫助 <code>Dockerfile</code> 撰寫</p>
-</blockquote>
-<p>第 9 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Based on instructiions at https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x</span></span><br><span class="line"><span class="comment"># Install depency for .NET Core 2</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y libunwind8 liblttng-ust0 libcurl3 libssl1.<span class="number">0.0</span> libuuid1 libkrb5-<span class="number">3</span> zlib1g libicu55 curl</span></span><br></pre></td></tr></table></figure>
-<p>根據官網的 <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a>，若要在 Linux 安裝 .NET Core，在 Ubuntu 還必須安裝以下額外 package :</p>
-<ul>
-<li>libunwind8</li>
-<li>liblttng-ust0</li>
-<li>libcurl3</li>
-<li>libssl1.0.0</li>
-<li>libuuid1</li>
-<li>libkrb5-3</li>
-<li>zlib1g</li>
-<li>libicu52 (for 14.X)</li>
-<li>libicu55 (for 16.X)</li>
-<li>libicu57 (for 17.X)</li>
-</ul>
-<p>其中 <code>curl</code> 在並不算 .NET Core SDK 所需要的 package，但接下來要用 <code>curl</code> 安裝 <code>microsoft.qpg</code>，所以也需要特別安裝。 </p>
-<p>14 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Based on instructions at https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current</span></span><br><span class="line"><span class="comment"># Install microsoft.qpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span></span><br></pre></td></tr></table></figure>
-<p>根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a> 所描述，要安裝 .NET Core SDK 前，必須先將 <code>microsoft.gpg</code> 裝好。</p>
-<p>20 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install the .Net Core framework</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get install apt-transport-https</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">4</span></span></span><br></pre></td></tr></table></figure>
-<p>所有的 dependency 與  <code>microsoft.gpg</code> 都裝好後，就可以正式安裝 .NET Core SDK 了。</p>
-<h2 id="建立_Image">建立 Image</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/UbuntuCore $ docker <span class="keyword">build </span>-t oomusou/ubuntu-core .</span><br></pre></td></tr></table></figure>
-<p>進入 <code>Dockerfile</code> 所在的目錄，使用 <code>docker build</code> 建立自己的 image。</p>
-<ul>
-<li><strong>-t</strong> : Docker image 的名稱</li>
-<li><strong>.</strong> : 將目前目錄的 <code>Dockerfile</code> 建立成 image</li>
-</ul>
-<p><img src="/images/docker/ubuntu-core/ubuntu002.png" alt="ubuntu002"></p>
-<ol>
-<li>輸入 <code>docker build -t oomusou/ubuntu-core .</code> 將 <code>Dockerfile</code> 建立成 <code>oomusou/ubuntu-core</code></li>
-<li><code>uname -a &amp;&amp; cat /etc/*release</code> 顯示出 Linux 資訊</li>
-</ol>
-<h2 id="建立並執行_Container">建立並執行 Container</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyUbuntuCore -dt oomusou/ubuntu-core</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
-<ul>
-<li><code>--name</code> : 替 container 取一個人能夠識別的名字 ( 若省略，Docker 將隨機命名 )</li>
-<li><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
-<li><code>-t</code> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
-<li><code>oomusou/ubuntu-core</code> : 剛剛自己建立的 image</li>
-</ul>
-<p><img src="/images/docker/ubuntu-core/ubuntu000.png" alt="ubuntu000"></p>
-<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker exec -it <span class="constant">MyUbuntuCore </span>bash</span><br><span class="line">root<span class="variable">@xxx</span><span class="symbol">:/</span><span class="comment"># dotnet --version</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
-<ul>
-<li><code>-i</code> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
-<li><code>-t</code> : <code>t</code>erminal，可對 terminal 顯示資料</li>
-<li><code>MyUbuntuCore</code> : Container 名稱</li>
-<li><code>bash</code> : 對 container 下的指令</li>
-</ul>
-<p><img src="/images/docker/ubuntu-core/ubuntu001.png" alt="ubuntu001"></p>
-<ol>
-<li>輸入 <code>docker exec -it</code> 進入 container 的 terminal</li>
-<li>輸入 <code>dotnet —version</code> 確認 .NET Core SDK 已經安裝成功</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>如使用 Jenkins 對 .NET Core 進行持續整合，實務上會把專案 <code>git clone</code> 到 Jenkins 端執行單元測試，此時執行 <code>dotnet test</code> 就必須有 .NET Core SDK 環境，但我們不會使用 .NET Core 的 Docker image，而會使用 Jenkins 所提供的 image，此時就必須自己寫 <code>Dockerfile</code>，並將 .NET Core SDK 環境安裝在 Jenkins 上。</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[由 Dockerfile 安裝 .NET Core SDK]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
     
   </entry>
   

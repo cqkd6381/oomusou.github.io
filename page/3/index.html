@@ -99,6 +99,142 @@
 	<!-- display as entry -->	
 		<h3 class="title">
 			
+			<div class="article-title"><a href="/jenkins/netcore-slack/" title="Jenkins 也可與 .NET Core 搭配實現持續整合">如何使用 Jenkins 對 .NET Core 實現個人的持續整合 ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/jenkins/netcore-slack/"><img src="/images/feature/jenkins.png" alt="如何使用 Jenkins 對 .NET Core 實現個人的持續整合 ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>在使用 TDD 開發時，儘管單元測試執行速度較快，但可能僅執行一部分的單元測試而已；而整合測試與驗收測試更慢，實務上不可能真的花時間去等待測試結果，而是希望在背景不斷地執行，在本機配合 Docker 執行 Jenkins 後，只要每次有新的 commit，就會自動執行所有測試，並將測試結果傳送到 Slack。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/jenkins/netcore-slack/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
+			<div class="article-title"><a href="/docker/jenkins-core/" title="Jenkins 包含 .NET Core 才能進行單元測試">如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/docker/jenkins-core/"><img src="/images/feature/docker.png" alt="如何建立含有 .NET Core SDK 的 Jenkins Docker Image ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>雖然 .NET Core SDK 與 Jenkins 都各自提供官方 Docker image，但實務上使用 Jenkins 做持續整合時，我們會從 Jenkins 將 Git repository clone 下來，然後跑 <code>dotnet test</code> 執行單元測試，但 <code>dotnet test</code> 需要 .NET Core SDK 環境才能執行，因此我們必須建立自己的 Dockerfile，產生包含 .NET Core SDK 的 Docker image。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/docker/jenkins-core/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
+			<div class="article-title"><a href="/netcore/linux-install/" title="自行在 Linux 安裝 .NET Core">如何在 Ubuntu 安裝 .NET Core ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/netcore/linux-install/"><img src="/images/feature/netcore.png" alt="如何在 Ubuntu 安裝 .NET Core ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>.NET Core 為 Microsoft 的跨平台解決方案，只要裝上 .NET Core SDK，就可在 Linux 執行與開發 .NET Core App，本文以 Ubuntu 為例。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/netcore/linux-install/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
+			<div class="article-title"><a href="/docker/ubuntu-core/" title="由 Dockerfile 安裝 .NET Core SDK">如何建立含有 .NET Core SDK 的 Docker Image ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/docker/ubuntu-core/"><img src="/images/feature/docker.png" alt="如何建立含有 .NET Core SDK 的 Docker Image ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>雖然 Microsoft 官方提供 .NET Core 的 Docker image，但實務上建置環境時，可能先使用其他 server 的 image，然後再加裝 .NET Core SDK 環境，如此就需要自行建立 <code>Dockerfile</code>，並建立自己的 image。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/docker/ubuntu-core/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
 			<div class="article-title"><a href="/slack/bibucket/" title="讓 Slack 成為 CI 的訊息中心">如何為 Slack 設定 Bitbucket 通知 ?</a></div>						
 		</h3>
 	
@@ -293,142 +429,6 @@
     <div class="col-md-10"></div>
     <div class="col-md-2">
 	  <a type="button" href="/docker/netcore/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/fsharp/setup/" title="在 macOS 也能輕易的開發 F#">如何設定 F# 開發環境 ?</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/fsharp/setup/"><img src="/images/feature/fsharp.png" alt="如何設定 F# 開發環境 ?"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>.NET Core 可以跑在 macOS，只要安裝 .NET Core SDK，搭配使用 VS Code 或 Rider，就可以練習 F# 了。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/fsharp/setup/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/design-pattern/cor/" title="專門應付特殊場的 if else">如何在 Angular 實現 Chain Of Responsibility Pattern ?</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/design-pattern/cor/"><img src="/images/feature/dp.png" alt="如何在 Angular 實現 Chain Of Responsibility Pattern ?"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>Chain of Responsibility 是 OOP 中著名的 Design Pattern，在特殊場合使用特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/design-pattern/cor/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/typescript/interface/" title="Interface 是 TypeScript 的招牌菜">深入探討 TypeScript 之 Interface</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/typescript/interface/"><img src="/images/feature/typescript.png" alt="深入探討 TypeScript 之 Interface"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>TypeScript 與 ECMAScript 最大的差別就是 interface，一些 TypeScript 先進的功能，陸續被 ECMAScript 所接受，但由於 ECMAScript 偏向動態弱型別觀念，將來採用 interface 的機會渺茫，interface 也成為 TypeScript 與 ECMAScript 最大的分水嶺。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/typescript/interface/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/macos/uninstall-folder/" title="幾個需要手動刪除檔案的目錄">如何在 macOS 徹底刪除 App 所留下的設定檔 ?</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/macos/uninstall-folder/"><img src="/images/feature/macos.png" alt="如何在 macOS 徹底刪除 App 所留下的設定檔 ?"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>關於 macOS 的原生 app，雖然可以透過 <code>AppCleaner</code> 或原廠提供了 <code>Uninstall App</code> 移除，但實務上仍會發現一些 app 自己的 <code>設定檔</code> 或 <code>暫存檔</code>，無法百分之百的從系統刪除，需手動加以處理。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/macos/uninstall-folder/#more" class="btn btn-default more">Read More</a>
     </div>
   </div>
 </div>
