@@ -191,11 +191,11 @@
     <link href="http://oomusou.io/netcore/package-reference/"/>
     <id>http://oomusou.io/netcore/package-reference/</id>
     <published>2018-03-17T01:23:43.000Z</published>
-    <updated>2018-03-17T13:37:07.964Z</updated>
+    <updated>2018-03-19T02:12:29.063Z</updated>
     <content type="html"><![CDATA[<p>實務上我們一定會用到別人寫的 NuGet package，我們該如何使用 .NET Core SDK 加入 package reference 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dotnet new</code> 建立 project。</p>
@@ -260,11 +260,11 @@
     <link href="http://oomusou.io/netcore/solution/"/>
     <id>http://oomusou.io/netcore/solution/</id>
     <published>2018-03-17T00:23:43.000Z</published>
-    <updated>2018-03-17T13:29:51.629Z</updated>
+    <updated>2018-03-19T02:12:57.838Z</updated>
     <content type="html"><![CDATA[<p>對於大型專案，我們可以建立 solution 管理眾多 project，只要對 solution 下 <code>dotnet build</code> ，就可以全部 project 都一起 build。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="建立_Solution">建立 Solution</h2><hr>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> sln -n MySolution</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dotnet new sln</code> 建立 solution。</p>
@@ -352,11 +352,11 @@
     <link href="http://oomusou.io/netcore/unit-test/"/>
     <id>http://oomusou.io/netcore/unit-test/</id>
     <published>2018-03-16T23:23:43.000Z</published>
-    <updated>2018-03-17T13:21:29.561Z</updated>
+    <updated>2018-03-19T02:13:03.167Z</updated>
     <content type="html"><![CDATA[<p>雖然我們可以使用 console app 來測試 class library，但比較好的方式是建立 unit test，搭配各種測試案例測試 class library 的結果。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="建立_Unit_Test_專案">建立 Unit Test 專案</h2><hr>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> mstest -o MyClassLib.Tests</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dotnet new</code> 建立 project。</p>
@@ -435,11 +435,11 @@
     <link href="http://oomusou.io/netcore/console/"/>
     <id>http://oomusou.io/netcore/console/</id>
     <published>2018-03-16T22:23:43.000Z</published>
-    <updated>2018-03-17T13:16:05.262Z</updated>
+    <updated>2018-03-19T02:08:07.099Z</updated>
     <content type="html"><![CDATA[<p>雖然我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案，但畢竟是 class library，無法看到結果，此時我們會建立另外一個 console app 專案當成 client，用來測試 class library 的結果。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dotnet new</code> 建立 project。</p>
@@ -552,11 +552,11 @@
     <link href="http://oomusou.io/netcore/classlib/"/>
     <id>http://oomusou.io/netcore/classlib/</id>
     <published>2018-03-16T15:23:43.000Z</published>
-    <updated>2018-03-16T14:06:47.257Z</updated>
+    <updated>2018-03-19T02:07:58.045Z</updated>
     <content type="html"><![CDATA[<p>除了 Console app 扮演 client 的角色，另外一個常見需求就是建立自己的 class library，我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="建立_Class_Library_專案">建立 Class Library 專案</h2><hr>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> classlib -o MyClassLib</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dotnet new</code> 建立 project。</p>
@@ -671,11 +671,11 @@
     <link href="http://oomusou.io/netcore/project-template/"/>
     <id>http://oomusou.io/netcore/project-template/</id>
     <published>2018-03-16T14:23:43.000Z</published>
-    <updated>2018-03-16T13:51:12.142Z</updated>
+    <updated>2018-03-19T02:12:37.070Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
 <ul>
@@ -751,11 +751,11 @@
     <link href="http://oomusou.io/netcore/restore/"/>
     <id>http://oomusou.io/netcore/restore/</id>
     <published>2018-03-16T14:23:43.000Z</published>
-    <updated>2018-03-16T13:36:29.324Z</updated>
+    <updated>2018-03-19T02:12:42.846Z</updated>
     <content type="html"><![CDATA[<p>.NET Core SDK 提供了 <code>dotnet restore</code> 指令，但官網的說明很簡單，只說明了他是 <code>restore dependency</code>，到底什麼是 <code>restore dependency</code> 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1<br>Node.js 8.9.4<br>NPM 5.7.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Node.js 8.9.4<br>NPM 5.7.1</p>
 <h2 id="NuGet_vs-_NPM">NuGet vs. NPM</h2><hr>
 <p>NuGet 與 NPM 都是為了解決 package dependency 的問題</p>
 <p>相同之處 :</p>
@@ -843,11 +843,11 @@
     <link href="http://oomusou.io/netcore/basic-sdk/"/>
     <id>http://oomusou.io/netcore/basic-sdk/</id>
     <published>2018-03-16T13:23:43.000Z</published>
-    <updated>2018-03-16T08:33:31.541Z</updated>
+    <updated>2018-03-19T02:07:33.283Z</updated>
     <content type="html"><![CDATA[<p>Console app 是最基本的 .NET Core 專案類型，常用在測試 class library、提供 class library 範例程式，或者開發跨平台的 CLI 工具，我們可以使用 <code>ng new console</code> 建立 console app 型態專案。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dotnet new</code> 建立專案。</p>
@@ -992,11 +992,11 @@
     <link href="http://oomusou.io/netcore/sdk/"/>
     <id>http://oomusou.io/netcore/sdk/</id>
     <published>2018-03-16T12:23:43.000Z</published>
-    <updated>2018-03-16T08:23:57.894Z</updated>
+    <updated>2018-03-19T02:12:51.294Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 為了要跨平台，在 .NET Core SDK 提供了全套的 CLI，讓我們可以完全用 command 方式管理專案。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
 <h2 id="為什麼要用_Command_?">為什麼要用 Command ?</h2><hr>
 <p>傳統 .NET Framework 都是在 Visual Studio 以 GUI 方式操作，GUI 對 End User 是友善的，但對 Developer 與 DevOps 而言卻不見得友善 :</p>
 <ol>
