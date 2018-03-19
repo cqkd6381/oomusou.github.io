@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/typescript/generics/</loc>
+    <lastmod>2018-03-19T08:34:32.149Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/linux-install/</loc>
     <lastmod>2018-03-19T02:13:22.792Z</lastmod>
   </url>
