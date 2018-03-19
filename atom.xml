@@ -1654,11 +1654,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何在 Angular 實現 State Pattern ?]]></title>
+    <title><![CDATA[如何使用 TypeScript 實現 State Pattern ?]]></title>
     <link href="http://oomusou.io/design-pattern/state/"/>
     <id>http://oomusou.io/design-pattern/state/</id>
     <published>2018-03-09T12:23:43.000Z</published>
-    <updated>2018-03-08T02:23:22.038Z</updated>
+    <updated>2018-03-19T01:47:27.630Z</updated>
     <content type="html"><![CDATA[<p>State Pattern 是 OOP 中著名的 Design Pattern，當 method 的行為會隨著 field 而改變時特別有效。在本文中，我們將以 Angular 與 TypeScript 實現。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1941,6 +1941,8 @@
       <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
     
       <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
+    
+      <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
     
   </entry>
   

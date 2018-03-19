@@ -2,6 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/design-pattern/state/</loc>
+    <lastmod>2018-03-19T01:47:27.630Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/design-pattern/cor/</loc>
+    <lastmod>2018-03-19T01:47:17.563Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/design-pattern/observer/</loc>
+    <lastmod>2018-03-19T01:47:07.419Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/design-pattern/pubsub/</loc>
+    <lastmod>2018-03-19T01:47:02.307Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/union/</loc>
     <lastmod>2018-03-17T13:56:20.372Z</lastmod>
   </url>
@@ -94,16 +114,6 @@
   <url>
     <loc>http://oomusou.io/vscode/netcore/</loc>
     <lastmod>2018-03-08T09:11:37.670Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/design-pattern/state/</loc>
-    <lastmod>2018-03-08T02:23:22.038Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/design-pattern/cor/</loc>
-    <lastmod>2018-03-07T14:31:09.036Z</lastmod>
   </url>
   
   <url>
@@ -374,16 +384,6 @@
   <url>
     <loc>http://oomusou.io/design-pattern/nullobject/</loc>
     <lastmod>2018-02-18T10:16:38.148Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/design-pattern/observer/</loc>
-    <lastmod>2018-02-18T10:15:25.012Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/design-pattern/pubsub/</loc>
-    <lastmod>2018-02-18T10:15:18.689Z</lastmod>
   </url>
   
   <url>
