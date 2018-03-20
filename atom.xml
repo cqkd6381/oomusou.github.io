@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-20T16:09:29.518Z</updated>
+  <updated>2018-03-20T16:19:24.457Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/polymorphism/"/>
     <id>http://oomusou.io/fsharp/polymorphism/</id>
     <published>2018-03-21T12:23:43.000Z</published>
-    <updated>2018-03-20T16:09:29.518Z</updated>
+    <updated>2018-03-20T16:19:24.457Z</updated>
     <content type="html"><![CDATA[<p>OOP 最自豪的就是 Polymorphism (多型)，若使用 FP，該如何實現這個 OOP 的招牌菜呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -79,7 +79,7 @@
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>FP 使用 <code>union</code> 即可實作出 OOP 的 <code>繼承</code> 概念</li>
-<li>FP 使用 Pattern Matching 即可時做 OOP 的 <code>virtual/override</code> 概念</li>
+<li>FP 使用 Pattern Matching 即可實作出 OOP 的 <code>virtual/override</code> 概念</li>
 <li>F# 的程式碼明顯比 C# 精簡</li>
 <li>並不是要比較哪個語言的優劣，只想強調 OOP 與 FP 以不同的思維，都可以實作出 Polymorphism</li>
 </ul>
