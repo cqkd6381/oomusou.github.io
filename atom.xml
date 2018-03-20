@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-19T08:34:32.149Z</updated>
+  <updated>2018-03-20T10:17:46.182Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,218 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 C# 實現 Strategy Pattern ?]]></title>
+    <link href="http://oomusou.io/design-pattern/strategy/"/>
+    <id>http://oomusou.io/design-pattern/strategy/</id>
+    <published>2018-03-20T12:23:43.000Z</published>
+    <updated>2018-03-20T10:17:46.182Z</updated>
+    <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中使用 <code>interface</code> 最經典的應用，隨著 FP 逐漸受到重視，Strategy Pattern 在實作上也有了新的面貌。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>C# 7.2</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
+<ul>
+<li>超過 1000 元，則 <code>滿千送百</code></li>
+<li>不到 1000 元，則 <code>全館八折</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>先使用一般  <code>if else</code> 寫法完全需求，最後再分別以 OOP 與 FP 手法重構 Strategy Pattern。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Strategy Pattern</p>
+<p>將不同演算法抽象化成相同 interface，讓高階模組與實際演算法解耦合，而彼此僅相依於 interface，進而可動態切換演算法</p>
+<p>此為 OOP <code>多型</code> 最典型應用，可以一次看到 <code>單一職責原則</code>、<code>開放封閉原則</code>、<code>依賴反轉原則</code>、、<code>最小知識原則</code></p>
+</blockquote>
+<p><img src="/images/design-pattern/strategy/strategy016.svg" alt="trategy01"></p>
+<ul>
+<li><strong>Client</strong> : <code>Context</code> 的 user，實務上可能是 component 或 controller</li>
+<li><strong>Context</strong> : 提供 client 呼叫的 class，實務上可能是 service</li>
+<li><strong>Strategy</strong> : 定義 <code>ConcreteStrategy</code> 的 interface，只有 <code>Execute()</code>，負責要封裝的演算法邏輯</li>
+<li><strong>ConcreteStrategy</strong> :  封裝演算法邏輯</li>
+</ul>
+<p><strong>適用時機</strong></p>
+<ul>
+<li>需要使用 <code>if else</code> 在 run-time 切換不同的演算法</li>
+</ul>
+<p><strong>優點</strong></p>
+<ul>
+<li>每個演算法使用一個  strategy class，符合 <code>單一職責原則</code></li>
+<li>將來若有新的演算法要加入，不用修改 service，而是新增 <code>ConcreStrategy</code>，符合 <code>開放封閉原則</code></li>
+<li>Client 與演算法解耦合，兩者都緊相依於 interface，符合 <code>依賴反轉原則</code></li>
+<li>Client 不需知道有哪些 strategy，符合 <code>最小知識原則</code></li>
+</ul>
+<p><strong>缺點</strong></p>
+<ul>
+<li>若可選擇的演算法過多，容易造成 strategy class 數量爆炸</li>
+</ul>
+<p>在 GoF 的 Strategy Pattern 中，要求 Client 去 new strategy 傳入 <code>Context</code>。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> context = <span class="keyword">new</span> Context(<span class="keyword">new</span> ConcreteStrage1());</span><br><span class="line"><span class="keyword">var</span> result = context.Request();</span><br></pre></td></tr></table></figure>
+<p>但實務上，<code>Context</code> 、<code>Strategy</code>、<code>ConcreteStrategy</code> 都會在 Class Library 內，根據 <code>最小知識原則</code>，client 應該知道越少 class 越好，還要 client 知道 Class Library 有哪些 strategy class 似乎違反 <code>最小知識原則</code>。</p>
+<p><strong>實務上作法</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy017.svg" alt="trategy01"></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> context = <span class="keyword">new</span> Context();</span><br><span class="line"><span class="keyword">var</span> ressult = context.Request(StrategyEnum.ConcreteStrategy1);</span><br></pre></td></tr></table></figure>
+<p>Client 不必負責知道 strategy，但會將 <code>enum</code> 開放給 client，client 只需將 <code>enum</code> 傳入 <code>Context</code> 即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> strategy = StrategyFactory.Create(strategyEnum);</span><br><span class="line"><span class="keyword">return</span> strategy.Execute();</span><br></pre></td></tr></table></figure>
+<p>至於 <code>Context.Requst()</code> 內部會透過 <code>StrategyFactory.Create()</code> 傳回適當的 strategy。</p>
+<p>若真的要由 client 決定 strategy，也可以將 <code>StrategyFactory</code> 開放給 client 使用，最少 client 只要知道 <code>StrategyFactory</code> 即可，而不需知道所有 strategy class，符合 <code>最小知識原則</code> 要求。</p>
+<blockquote>
+<p>實務上 Strategy Pattern 會與 Factory Pattern 搭配，至於 Factory 是否要暴露給 client，可視需求決定</p>
+</blockquote>
+<h2 id="Architecture">Architecture</h2><hr>
+<p><img src="/images/design-pattern/strategy/strategy001.png" alt="trategy00"></p>
+<ul>
+<li><code>OrderService</code> 相當於 <code>Context</code></li>
+<li><code>StrategyFactory</code> 負責根據需求選擇 strategy</li>
+<li><code>StrategyInterface</code> 定義個演算法抽象化的 method 名稱</li>
+<li><code>RebateStrategy</code> 實作 <code>買千送百</code></li>
+<li><code>DiscountStrategy</code> 實作 <code>全館八折</code></li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><img src="/images/design-pattern/strategy/strategy002.svg" alt="trategy00"></p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line">            <span class="keyword">var</span> originalPrice = <span class="number">1200</span>;</span><br><span class="line">            <span class="keyword">var</span> realPrice = orderService.GetPrice(originalPrice);</span><br><span class="line">            Console.WriteLine(<span class="string">"Original price:&#123;0&#125;, Real price:&#123;1&#125;"</span>, originalPrice, realPrice);</span><br><span class="line"></span><br><span class="line">            originalPrice = <span class="number">800</span>;</span><br><span class="line">            realPrice = orderService.GetPrice(originalPrice);</span><br><span class="line">            Console.WriteLine(<span class="string">"Original price:&#123;0&#125;, Real price:&#123;1&#125;"</span>, originalPrice, realPrice);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line"><span class="keyword">var</span> originalPrice = <span class="number">1200</span>;</span><br><span class="line"><span class="keyword">var</span> realPrice = orderService.GetPrice(originalPrice);</span><br></pre></td></tr></table></figure>
+<p>將商業邏輯都寫在 <code>OrderService</code>，當 <code>originalPrice</code> 傳入 <code>GetPrice()</code> 後，應回傳 <code>滿千送百</code> 或 <code>全館八折</code> 後的 <code>realPrice</code>。</p>
+<h3 id="If_Else">If Else</h3><p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy003.svg" alt="trategy00"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (price &lt; <span class="number">1000</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> price * <span class="number">0.8</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> price - <span class="number">100</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>if else</code> 很直覺的寫出程式碼，在不同 price 條件下，會有不同的計算 price 商業邏輯。</p>
+<p>若計算 price 商業邏輯選擇不多，基本上使用 <code>if else</code> 無傷大雅，若選擇很多，使用 <code>if else</code> 的方式就會有以下問題 :</p>
+<ul>
+<li><code>GetPrice()</code> 含有太多計算 price 商業邏輯，將來不容易維護，違反 <code>單一職責原則</code></li>
+<li>將來若要增加 price 商業邏輯，勢必繼續修改 <code>GetPrice()</code> 與 <code>if else</code>，將來不容易違誤，違反 <code>開放封閉原則</code></li>
+</ul>
+<h3 id="Unit_Test">Unit Test</h3><p>在重構之前，必須要有測試保護，才能確保沒把原本的商業邏輯重構壞，因此我們先準備好 <code>OrderService</code> 的 Unit Test，確保每個 <code>if else</code> 的 path 都有測到。</p>
+<p><strong>UnitTest1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.VisualStudio.TestTools.UnitTesting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary.Tests</span></span><br><span class="line">&#123;</span><br><span class="line">    [TestClass]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">    &#123;</span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> 當價錢為<span class="number">1200</span>送百後應為<span class="number">1100</span>()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> OrderService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.GetPrice(<span class="number">1200</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">1100</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> 當價錢為<span class="number">800</span>打八折後應為<span class="number">640</span>()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> OrderService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.GetPrice(<span class="number">800</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">640</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於本文重點不是在講 Unit Test，因此就不浪費篇幅解釋以上程式碼。</p>
+<p><img src="/images/design-pattern/strategy/strategy000.png" alt="trategy00"></p>
+<h3 id="Strategy_Pattern">Strategy Pattern</h3><p><strong>StrategyInterface</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy004.svg" alt="trategy00"></p>
+<p><strong>StrategyInterface.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">StrategyInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>StrategyInterface</code> 有 <code>CalculatePrice()</code>，將來其他 strategy 必須遵守此 interface。</p>
+<p><strong>RebateStrategy</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy005.svg" alt="trategy00"></p>
+<p><strong>RebateStrategy.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RebateStrategy</span> : <span class="title">StrategyInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price - <span class="number">100.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>實作 <code>StrategyInterface</code>，實現 <code>買千送百</code> 。</p>
+<p><strong>DiscountStrategy</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy006.svg" alt="trategy00"></p>
+<p><strong>DiscountStrategy.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DiscountStrategy</span> : <span class="title">StrategyInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price * <span class="number">0.80</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>實作 <code>StrategyInterface</code>，實現 <code>全館八折</code> 。</p>
+<p><strong>StrategyFactory</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy007.svg" alt="trategy00"></p>
+<p><strong>StrategyFactory.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Dynamic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">StrategyFactory</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> StrategyInterface <span class="title">Create</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price &lt; <span class="number">1000</span> ? (StrategyInterface) <span class="keyword">new</span> DiscountStrategy() : <span class="keyword">new</span> RebateStrategy();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>目前有 <code>RebateStrategy</code> 與 <code>DiscountStrategy</code> 兩個 strategy，到底 <code>OrderService.GetPrice()</code> 該選擇拿個 strategy 呢 ?</p>
+<p>特別新增 <code>StrategyFactory</code> 專責負責根據不同的 price，選擇不同的 strategy。</p>
+<blockquote>
+<p>Strategy Pattern 實務上都會搭配 Factory Pattern，由 <code>factory</code>  根據條件選擇適當的 strategy</p>
+</blockquote>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy008.svg" alt="trategy00"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> StrategyFactory.Create(price).calculatePrice(price);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>OrderService</code> 可輕易的根據 <code>Create(price)</code> 回傳的 strategy，呼叫 <code>calculatePrice()</code>。</p>
+<h3 id="Delegate">Delegate</h3><p>雖然 <code>StrategyInterface</code> 定義了 <code>CalculatePrice()</code>，但整個 <code>interface</code> 只有一個 method，顯然使用 <code>interface</code> 有殺雞用牛刀之嫌，此時可將 <code>interface</code> 退化成 <code>delegate</code>。</p>
+<p><img src="/images/design-pattern/strategy/strategy009.svg" alt="trategy00"></p>
+<p><strong>CalculatePriceDelegate</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy010.svg" alt="trategy01"></p>
+<p><strong>CalculatePriceDelegate.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">double</span> <span class="title">CalculatePriceDelegate</span>(<span class="params"><span class="keyword">double</span> price</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>CalculatePriceDelegate</code> delegate，其 signature 為 <code>double =&gt; double</code>，也就是 input 為 <code>double</code>，return 為 <code>double</code>。</p>
+<blockquote>
+<p>Q : Delegate 到底是什麼 ?</p>
+</blockquote>
+<p>Delegate 在 C# 1.0 就已經提出，C 對於 function，只提供了一個 function pointer ，C# 想為 function pointer 提供 type safety 功能，因此提出了 <code>delegate</code>。</p>
+<p>簡單的說，<code>delegate</code> 就是 function 的 named type，將 function 取一個 <code>有名稱</code> 的 <code>型別</code>，之後就可以用 delegate 所定義的型別當作 function 的 spec，若 function 不符合 <code>delegate</code> 的 signature，則 compiler 會報錯，達到 type safety 目標。</p>
+<p><code>delegate</code> 是 C# 支援 FP 的濫觴，所有的 C# 的 Functional 支援，都是從 <code>delegate</code> 開始。</p>
+<blockquote>
+<p>實務上 Strategy Pattern 通常只有一個 method，所以就很適合將 interface 退化成 delegate</p>
+</blockquote>
+<p><strong>PriceStrategy</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy011.svg" alt="trategy01"></p>
+<p><strong>PriceStrategy.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">PriceStrategy</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">CalculateRebatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price - <span class="number">100.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">CalculateDiscountPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price * <span class="number">0.8</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將每個 strategy 以 function 表示，此時改用 static function 即可。</p>
+<p>一般來說，OOP 都建議不要使用 <code>static</code>，但這裡是例外，此時是將 class 當成 module 看待，<code>static function</code> 是當成 FP 的 <code>pure function</code> 使用，也就是這種 class 將沒有 field，也不使用 OOP 的 <code>繼承</code> 與 <code>組合</code>。</p>
+<p>如此我們就 Strategy Pattern 的 strategy class 爆炸問題解決，無論幾個 strategy，都永遠只有一個 strategy class。</p>
+<blockquote>
+<p>OOP 將所有的 strategy 都拆成一個 class，很容易因為 strategy 過多，而造成 class 爆炸，這也是 OOP 一直被人詬病的問題之一，FP 將 strategy class 退化成 strategy function，並將所有 strategy 放在同一個 class 內，避免 class 滿天飛</p>
+</blockquote>
+<p><strong>StrategyFactory</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy012.svg" alt="trategy01"></p>
+<p><strong>StrategyFactory.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">StrategyFactory</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CalculatePriceDelegate <span class="title">Create</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price &lt; <span class="number">1000</span></span><br><span class="line">                ? (CalculatePriceDelegate) PriceStrategy.CalculateDiscountPrice</span><br><span class="line">                : PriceStrategy.CalculateRebatePrice;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>StrategyFactory</code> 的 <code>Create()</code> 從原本回傳 strategy object 改成回傳 strategy function，也就是所有的 function 都必須符合 <code>CalculatePriceDelegate</code> delegate 型別，若違反 <code>delegate</code> ，將會 compiler 錯誤。</p>
+<blockquote>
+<p>Delegate 就是 function 的 interface，這樣 compiler 才能幫我們檢查</p>
+</blockquote>
+<h3 id="Func">Func</h3><p>雖然 <code>CalculatePriceDelegate</code> 定義 function 的 spec 的理念很不錯，若 <code>delegate</code> 只使用一遍，真的需要開一個檔案建立 <code>delegate</code> 嗎 ?</p>
+<p><strong>StrategyFactory</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy012.svg" alt="trategy01"></p>
+<p><strong>StrategyFactory.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">StrategyFactory</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; Create(<span class="keyword">double</span> price)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> price &lt; <span class="number">1000</span></span><br><span class="line">                ? (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt;) PriceStrategy.CalculateDiscountPrice</span><br><span class="line">                : PriceStrategy.CalculateRebatePrice;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>delegate</code> 退化成 <code>Func&lt;T&gt;</code> ，其中泛型第一個參數為 input 型別，最後一個參數為 return 型別，也就是 <code>Func&lt;double, double&gt;</code> 其實與 <code>delegate double CalculatePriceDelegate(double price);</code> 意義完全相同，只是 <code>Func&lt;T&gt;</code> 沒有型別名稱，而 <code>delegate</code> 有型別名稱而已。</p>
+<p>如此我們就將 <code>StrategyInterface</code> 消滅了。</p>
+<blockquote>
+<p>Q : Delegate vs. Func<t> vs. Action<t></t></t></p>
+</blockquote>
+<ul>
+<li><strong>Delegate</strong> : C# 1.0，可為 function 定義型別，並且定義型別名稱</li>
+<li><strong>Func<t></t></strong> : C# 3.0，可為 function 定義型別，但不用定應型別名稱，適用於有 return 值的 funciton</li>
+<li><strong>Action<t></t></strong> : C# 3.0，可為 function 定義型別，但不用定義型別名稱，適用無 return 值 (void) 的 function</li>
+</ul>
+<blockquote>
+<p>若 function type 需要重複使用，則建議使用 <code>delegate</code>，並取一個型別名稱</p>
+<p>若 function type 只用一次，不需要型別名稱，則建議使用 <code>Func&lt;T&gt;</code> 或 <code>Action&lt;T&gt;</code></p>
+</blockquote>
+<h3 id="Lambda">Lambda</h3><p><code>StrategyFactory</code> 回傳 strategy function 的理念雖然不錯，若 <code>StrategyFactory</code> 在整個 project 只使用一次而已，是否真的要另外開一個 class ?</p>
+<p><img src="/images/design-pattern/strategy/strategy014.svg" alt="trategy01"></p>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy015.svg" alt="trategy01"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Func&lt;<span class="keyword">double</span>, Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt;&gt; CreateStrategy =</span><br><span class="line">                (orignalPrice) =&gt; price &gt; <span class="number">1000</span></span><br><span class="line">                    ? (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt;) PriceStrategy.CalculateRebatePrice</span><br><span class="line">                    : PriceStrategy.CalculateRebatePrice;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> strategy = CreateStrategy(price);</span><br><span class="line">            <span class="keyword">return</span> strategy(price);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>C# 3.0 提出了 Lambda，讓我們可以直接在 function 定義新的 function，而不一定要將 function 建立在 class 內。</p>
+<p>直接在 <code>GetPrice()</code> 內定義 <code>CreateStrategy()</code>。</p>
+<p><code>Func&lt;&gt;</code> 第一個參數 <code>double</code> 為 <code>CreateStrategy()</code> 的 input 參數型別。</p>
+<p>因為 <code>CreateStrategy()</code>  是回傳 <code>Func&lt;double, double&gt;</code> 的 funciton，故第 2 個參數為 <code>Func&lt;double, double&gt;</code>。</p>
+<p>如此我們就將 <code>StrategyFactory</code> class 消滅了。</p>
+<h3 id="Local_Function">Local Function</h3><p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/strategy/strategy015.svg" alt="trategy01"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; CreateStrategy(<span class="keyword">double</span> originPrice) =&gt; </span><br><span class="line">                originPrice &gt; <span class="number">1000</span></span><br><span class="line">                ? (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt;) PriceStrategy.CalculateRebatePrice</span><br><span class="line">                : PriceStrategy.CalculateDiscountPrice;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> strategy = CreateStrategy(price); </span><br><span class="line">            <span class="keyword">return</span> strategy(price);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Lambda 雖然讓我們可以在 function 內定義 funtion，但 <code>Func&lt;double, Func&lt;double, double&gt;&gt;</code> 寫法有點恐怖。</p>
+<p>C# 7.0 提出了 Local Function，類似宣告 function 的寫法，讓 function 的定義更人性化。</p>
+<blockquote>
+<p>實務上建議使用 Local Function 取代 Lambda</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Strategy Pattern、State Pattern 與 Chain of Responsibility 都是在解決 <code>if else</code> 問題，但 intention 不太一樣</li>
+<li>FP 的出現，讓 Design Pattern 的實踐方式，不再只有 OOP 一途，可視實際需求決定該使用 OOP 或 FP</li>
+<li>OOP 讓我們以 <code>抽象設計</code> 的角度看系統，但 FP 讓我們以 <code>簡化設計</code> 的角度看系統，實務上建議以 OOP 做第一階段的重構，再輔以 FP 做第二階段的重構，可解決 OOP 容易 Over Design 的問題</li>
+<li>C# 1.0 主要是 OOP，C# 2.0 主要是泛型，C# 3.0 之後主要是 FP 部分，如 Lambda、LINQ，C# 也是在 3.0 開始與 Java 分道揚鑣，朝向 OOP + FP 雙 hybrid 語言目標邁進，尤其 C# 7.0 非常明顯，如 Tuple、Descontruction、Pattern Matching、Local Function … 都是 FP 語言很基本的機制</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Core2OrderStrategy" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 FP 將有不同的實現方式]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
+    
+      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 TypeScript 之 Generics]]></title>
@@ -965,6 +1177,86 @@
   </entry>
   
   <entry>
+    <title><![CDATA[如何安裝與移除 Project Template ?]]></title>
+    <link href="http://oomusou.io/netcore/project-template/"/>
+    <id>http://oomusou.io/netcore/project-template/</id>
+    <published>2018-03-16T14:23:43.000Z</published>
+    <updated>2018-03-19T02:12:37.070Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk001.png" alt="sdk001"></p>
+<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
+<p><img src="/images/netcore/project-template/sdk002.png" alt="sdk001"></p>
+<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
+<h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
+<p><img src="/images/netcore/project-template/sdk003.png" alt="sdk003"></p>
+<p>以 C# 為例，.NET Core 官網亦提供了 <code>AWS Lambda .NET Core Templates</code>，讓我們自動安裝相關工具與 NuGet package。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Amazon.Lambda.Templates::*"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-i</strong> : <code>i</code>nstall，使用 <code>dotnet new -i</code> 安裝新 project template</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk004.png" alt="sdk004"></p>
+<ol>
+<li>輸入 <code>dotnet new -i &quot;Amazon.Lambda.Templates::*&quot;</code> 安裝 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>由於 <code>Amazon Lambda</code> project template 的 NuGet package 較大，安裝要一點時間</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk005.png" alt="sdk005"></p>
+<ol>
+<li>安裝完後會自動執行 <code>dotnet new -l</code>，會安裝不少 <code>Amazon Lambda</code> 相關的 project template</li>
+</ol>
+<h2 id="移除_Project_Template">移除 Project Template</h2><hr>
+<p>既然能安裝 project template，也就要能移除 project template，但比較麻煩。</p>
+<p>.NET Core SDK 預設將所有的 project template 安裝在 <code>Users/oomusou/.templateengine/dotnetcli/v2.1.101/packages</code> 目錄下。</p>
+<blockquote>
+<p>其中 <code>oomusou</code> 為 user name</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk006.png" alt="sdk006"></p>
+<ol>
+<li><code>amazon.lambda.template.2.0.3.nupkg</code> 為剛剛所安裝的 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>我們可以發現每個 project template 事實上都是 NuGet package</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -u .../amazon.lambda.templates<span class="number">.2</span><span class="number">.0</span><span class="number">.3</span>.nupkg</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-u</strong> : <code>u</code>ninstall，使用 <code>dotnet new -u</code> 移除已安裝的 project template NuGet package</li>
+</ul>
+<blockquote>
+<p>NuGet package 不可使用 <code>./</code> 方式，但可用完整路徑或 <code>~/</code></p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk007.png" alt="sdk007"></p>
+<ol>
+<li>輸入 <code>dotnet new -u /Users/…/amazon.lambda.templates.2.0.3.nupkg</code>，必須是完整路徑或 <code>~/</code>，不可為 <code>./</code></li>
+</ol>
+<p><img src="/images/netcore/project-template/sdk008.png" alt="sdk008"></p>
+<ol>
+<li><code>Amazon Lambda</code> project template 已順利移除。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>若想知道 C# 與 F# 還有什麼應用，可上 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 發現更多有趣的 project template</li>
+<li>若要移除 project template，NuGet package 必須使用 <code>完整路徑</code> 或 <code>~/</code>，不可使用 <code>./</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[發現更多有趣的 .NET Core 應用]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[深入探討 dotnet restore]]></title>
     <link href="http://oomusou.io/netcore/restore/"/>
     <id>http://oomusou.io/netcore/restore/</id>
@@ -1049,86 +1341,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[NuGet 特有的管理機制]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何安裝與移除 Project Template ?]]></title>
-    <link href="http://oomusou.io/netcore/project-template/"/>
-    <id>http://oomusou.io/netcore/project-template/</id>
-    <published>2018-03-16T14:23:43.000Z</published>
-    <updated>2018-03-19T02:12:37.070Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
-</ul>
-<p><img src="/images/netcore/project-template/sdk001.png" alt="sdk001"></p>
-<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
-<p><img src="/images/netcore/project-template/sdk002.png" alt="sdk001"></p>
-<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
-<h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
-<p><img src="/images/netcore/project-template/sdk003.png" alt="sdk003"></p>
-<p>以 C# 為例，.NET Core 官網亦提供了 <code>AWS Lambda .NET Core Templates</code>，讓我們自動安裝相關工具與 NuGet package。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Amazon.Lambda.Templates::*"</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-i</strong> : <code>i</code>nstall，使用 <code>dotnet new -i</code> 安裝新 project template</li>
-</ul>
-<p><img src="/images/netcore/project-template/sdk004.png" alt="sdk004"></p>
-<ol>
-<li>輸入 <code>dotnet new -i &quot;Amazon.Lambda.Templates::*&quot;</code> 安裝 <code>Amazon Lambda</code> project template</li>
-</ol>
-<blockquote>
-<p>由於 <code>Amazon Lambda</code> project template 的 NuGet package 較大，安裝要一點時間</p>
-</blockquote>
-<p><img src="/images/netcore/project-template/sdk005.png" alt="sdk005"></p>
-<ol>
-<li>安裝完後會自動執行 <code>dotnet new -l</code>，會安裝不少 <code>Amazon Lambda</code> 相關的 project template</li>
-</ol>
-<h2 id="移除_Project_Template">移除 Project Template</h2><hr>
-<p>既然能安裝 project template，也就要能移除 project template，但比較麻煩。</p>
-<p>.NET Core SDK 預設將所有的 project template 安裝在 <code>Users/oomusou/.templateengine/dotnetcli/v2.1.101/packages</code> 目錄下。</p>
-<blockquote>
-<p>其中 <code>oomusou</code> 為 user name</p>
-</blockquote>
-<p><img src="/images/netcore/project-template/sdk006.png" alt="sdk006"></p>
-<ol>
-<li><code>amazon.lambda.template.2.0.3.nupkg</code> 為剛剛所安裝的 <code>Amazon Lambda</code> project template</li>
-</ol>
-<blockquote>
-<p>我們可以發現每個 project template 事實上都是 NuGet package</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -u .../amazon.lambda.templates<span class="number">.2</span><span class="number">.0</span><span class="number">.3</span>.nupkg</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-u</strong> : <code>u</code>ninstall，使用 <code>dotnet new -u</code> 移除已安裝的 project template NuGet package</li>
-</ul>
-<blockquote>
-<p>NuGet package 不可使用 <code>./</code> 方式，但可用完整路徑或 <code>~/</code></p>
-</blockquote>
-<p><img src="/images/netcore/project-template/sdk007.png" alt="sdk007"></p>
-<ol>
-<li>輸入 <code>dotnet new -u /Users/…/amazon.lambda.templates.2.0.3.nupkg</code>，必須是完整路徑或 <code>~/</code>，不可為 <code>./</code></li>
-</ol>
-<p><img src="/images/netcore/project-template/sdk008.png" alt="sdk008"></p>
-<ol>
-<li><code>Amazon Lambda</code> project template 已順利移除。</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>若想知道 C# 與 F# 還有什麼應用，可上 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 發現更多有趣的 project template</li>
-<li>若要移除 project template，NuGet package 必須使用 <code>完整路徑</code> 或 <code>~/</code>，不可使用 <code>./</code></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[發現更多有趣的 .NET Core 應用]]>
     
     </summary>
     
@@ -1286,6 +1498,32 @@
   </entry>
   
   <entry>
+    <title><![CDATA[F# 語法檢定考]]></title>
+    <link href="http://oomusou.io/fsharp/syntax-all/"/>
+    <id>http://oomusou.io/fsharp/syntax-all/</id>
+    <published>2018-03-16T12:23:43.000Z</published>
+    <updated>2018-03-14T07:57:49.606Z</updated>
+    <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>F# 4.1</p>
+<h2 id="Overview_of_F#_Syntax">Overview of F# Syntax</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is presented with permission from Scott Wlaschin, the original author.  This has been slightly modified.</span></span><br><span class="line"><span class="comment">// Single line comments use a double slash.</span></span><br><span class="line"><span class="comment">(* </span><br><span class="line">    Multi-line comments can be done this way (though double-slash is usually used).</span><br><span class="line">*)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== "Variables" (but not really) ==========</span></span><br><span class="line"><span class="comment">// The "let" keyword defines an (immutable) value</span></span><br><span class="line"><span class="keyword">let</span> myInt = <span class="number">5</span></span><br><span class="line"><span class="keyword">let</span> myFloat = <span class="number">3.14</span></span><br><span class="line"><span class="keyword">let</span> myString = <span class="string">"hello"</span>   <span class="comment">// note that no types needed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Lists ============</span></span><br><span class="line"><span class="keyword">let</span> twoToFive = [ <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span> ]        <span class="comment">// Square brackets create a list with</span></span><br><span class="line">                                     <span class="comment">// semicolon delimiters.</span></span><br><span class="line"><span class="keyword">let</span> oneToFive = <span class="number">1</span> :: twoToFive   <span class="comment">// :: creates list with new 1st element</span></span><br><span class="line"><span class="comment">// The result is [1; 2; 3; 4; 5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> zeroToFive = [<span class="number">0</span>;<span class="number">1</span>] @ twoToFive   <span class="comment">// @ concats two lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IMPORTANT: commas are never used as delimiters, only semicolons!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Functions ========</span></span><br><span class="line"><span class="comment">// The "let" keyword also defines a named function.</span></span><br><span class="line"><span class="keyword">let</span> square x = x * x          <span class="comment">// Note that no parens are used.</span></span><br><span class="line">square <span class="number">3</span>                      <span class="comment">// Now run the function. Again, no parens.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add x y = x + y           <span class="comment">// don't use add (x,y)! It means something</span></span><br><span class="line">                              <span class="comment">// completely different.</span></span><br><span class="line">add <span class="number">2</span> <span class="number">3</span>                       <span class="comment">// Now run the function.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// to define a multiline function, just use indents. No semicolons needed.</span></span><br><span class="line"><span class="keyword">let</span> evens list =</span><br><span class="line">   <span class="keyword">let</span> isEven x = x % <span class="number">2</span> = <span class="number">0</span>     <span class="comment">// Define "isEven" as an inner ("nested") function</span></span><br><span class="line">   List.filter isEven list      <span class="comment">// List.filter is a library function</span></span><br><span class="line">                                <span class="comment">// with two parameters: a boolean function</span></span><br><span class="line">                                <span class="comment">// and a list to work on</span></span><br><span class="line">  </span><br><span class="line">evens oneToFive               <span class="comment">// Now run the function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You can use parens to clarify precedence. In this example,</span></span><br><span class="line"><span class="comment">// do "map" first, with two args, then do "sum" on the result.</span></span><br><span class="line"><span class="comment">// Without the parens, "List.map" would be passed as an arg to List.sum</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100 =</span><br><span class="line">   List.sum (List.map square [ <span class="number">1</span> .. <span class="number">100</span> ])</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can pipe the output of one operation to the next using "|&gt;"</span></span><br><span class="line"><span class="comment">// Here is the same sumOfSquares function written using pipes</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100piped =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map square |&gt; List.sum  <span class="comment">// "square" was defined earlier</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// you can define lambdas (anonymous functions) using the "fun" keyword</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100withFun =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map (<span class="keyword">fun</span> x -&gt; x * x) |&gt; List.sum</span><br><span class="line"></span><br><span class="line"><span class="comment">// In F# returns are implicit -- no "return" needed. A function always</span></span><br><span class="line"><span class="comment">// returns the value of the last expression used.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Pattern Matching ========</span></span><br><span class="line"><span class="comment">// Match..with.. is a supercharged case/switch statement.</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">match</span> x <span class="keyword">with</span></span><br><span class="line">| <span class="string">"a"</span> -&gt; printfn <span class="string">"x is a"</span></span><br><span class="line">| <span class="string">"b"</span> -&gt; printfn <span class="string">"x is b"</span></span><br><span class="line">| _ -&gt; printfn <span class="string">"x is something else"</span>   <span class="comment">// underscore matches anything</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Some(..) and None are roughly analogous to Nullable wrappers</span></span><br><span class="line"><span class="keyword">let</span> validValue = Some(<span class="number">99</span>)</span><br><span class="line"><span class="keyword">let</span> invalidValue = None</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example, match..with matches the "Some" and the "None",</span></span><br><span class="line"><span class="comment">// and also unpacks the value in the "Some" at the same time.</span></span><br><span class="line"><span class="keyword">let</span> optionPatternMatch input =</span><br><span class="line">   <span class="keyword">match</span> input <span class="keyword">with</span></span><br><span class="line">    | Some i -&gt; printfn <span class="string">"input is an int=%d"</span> i</span><br><span class="line">    | None -&gt; printfn <span class="string">"input is missing"</span></span><br><span class="line"></span><br><span class="line">optionPatternMatch validValue</span><br><span class="line">optionPatternMatch invalidValue</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Complex Data Types =========</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Tuple types are pairs, triples, etc. Tuples use commas.</span></span><br><span class="line"><span class="keyword">let</span> twoTuple = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> threeTuple = (<span class="string">"a"</span>, <span class="number">2</span>, <span class="keyword">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Record types have named fields. Semicolons are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; First: string; Last: string &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="comment">// You can also use new lines to elide the semiclon.</span></span><br><span class="line"><span class="keyword">let</span> person2 =</span><br><span class="line">    &#123; First=<span class="string">"Jane"</span></span><br><span class="line">      Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Union types have choices. Vertical bars are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Temp</span> </span>= </span><br><span class="line">    | DegreesC <span class="keyword">of</span> float</span><br><span class="line">    | DegreesF <span class="keyword">of</span> float</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = DegreesF <span class="number">98.6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Types can be combined recursively in complex ways.</span></span><br><span class="line"><span class="comment">// E.g. here is a union type that contains a list of the same type:</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Employee</span> </span>= </span><br><span class="line">  | Worker <span class="keyword">of</span> Person</span><br><span class="line">  | Manager <span class="keyword">of</span> Employee list</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jdoe = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="keyword">let</span> worker = Worker jdoe</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Printing =========</span></span><br><span class="line"><span class="comment">// The printf/printfn functions are similar to the</span></span><br><span class="line"><span class="comment">// Console.Write/WriteLine functions in C#.</span></span><br><span class="line">printfn <span class="string">"Printing an int %i, a float %f, a bool %b"</span> <span class="number">1</span> <span class="number">2.0</span> <span class="keyword">true</span></span><br><span class="line">printfn <span class="string">"A string %s, and something generic %A"</span> <span class="string">"hello"</span> [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// all complex types have pretty printing built in</span></span><br><span class="line">printfn <span class="string">"twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"</span> </span><br><span class="line">         twoTuple person1 temp worker</span><br></pre></td></tr></table></figure>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://blogs.msdn.microsoft.com/dotnet/" target="_blank" rel="external">.NET Blog</a>, <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/" target="_blank" rel="external">Get Started with F# as a C# developer</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[.NET Core SDK 簡介]]></title>
     <link href="http://oomusou.io/netcore/sdk/"/>
     <id>http://oomusou.io/netcore/sdk/</id>
@@ -1343,32 +1581,6 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[F# 語法檢定考]]></title>
-    <link href="http://oomusou.io/fsharp/syntax-all/"/>
-    <id>http://oomusou.io/fsharp/syntax-all/</id>
-    <published>2018-03-16T12:23:43.000Z</published>
-    <updated>2018-03-14T07:57:49.606Z</updated>
-    <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>F# 4.1</p>
-<h2 id="Overview_of_F#_Syntax">Overview of F# Syntax</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is presented with permission from Scott Wlaschin, the original author.  This has been slightly modified.</span></span><br><span class="line"><span class="comment">// Single line comments use a double slash.</span></span><br><span class="line"><span class="comment">(* </span><br><span class="line">    Multi-line comments can be done this way (though double-slash is usually used).</span><br><span class="line">*)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== "Variables" (but not really) ==========</span></span><br><span class="line"><span class="comment">// The "let" keyword defines an (immutable) value</span></span><br><span class="line"><span class="keyword">let</span> myInt = <span class="number">5</span></span><br><span class="line"><span class="keyword">let</span> myFloat = <span class="number">3.14</span></span><br><span class="line"><span class="keyword">let</span> myString = <span class="string">"hello"</span>   <span class="comment">// note that no types needed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Lists ============</span></span><br><span class="line"><span class="keyword">let</span> twoToFive = [ <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span> ]        <span class="comment">// Square brackets create a list with</span></span><br><span class="line">                                     <span class="comment">// semicolon delimiters.</span></span><br><span class="line"><span class="keyword">let</span> oneToFive = <span class="number">1</span> :: twoToFive   <span class="comment">// :: creates list with new 1st element</span></span><br><span class="line"><span class="comment">// The result is [1; 2; 3; 4; 5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> zeroToFive = [<span class="number">0</span>;<span class="number">1</span>] @ twoToFive   <span class="comment">// @ concats two lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IMPORTANT: commas are never used as delimiters, only semicolons!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Functions ========</span></span><br><span class="line"><span class="comment">// The "let" keyword also defines a named function.</span></span><br><span class="line"><span class="keyword">let</span> square x = x * x          <span class="comment">// Note that no parens are used.</span></span><br><span class="line">square <span class="number">3</span>                      <span class="comment">// Now run the function. Again, no parens.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add x y = x + y           <span class="comment">// don't use add (x,y)! It means something</span></span><br><span class="line">                              <span class="comment">// completely different.</span></span><br><span class="line">add <span class="number">2</span> <span class="number">3</span>                       <span class="comment">// Now run the function.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// to define a multiline function, just use indents. No semicolons needed.</span></span><br><span class="line"><span class="keyword">let</span> evens list =</span><br><span class="line">   <span class="keyword">let</span> isEven x = x % <span class="number">2</span> = <span class="number">0</span>     <span class="comment">// Define "isEven" as an inner ("nested") function</span></span><br><span class="line">   List.filter isEven list      <span class="comment">// List.filter is a library function</span></span><br><span class="line">                                <span class="comment">// with two parameters: a boolean function</span></span><br><span class="line">                                <span class="comment">// and a list to work on</span></span><br><span class="line">  </span><br><span class="line">evens oneToFive               <span class="comment">// Now run the function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You can use parens to clarify precedence. In this example,</span></span><br><span class="line"><span class="comment">// do "map" first, with two args, then do "sum" on the result.</span></span><br><span class="line"><span class="comment">// Without the parens, "List.map" would be passed as an arg to List.sum</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100 =</span><br><span class="line">   List.sum (List.map square [ <span class="number">1</span> .. <span class="number">100</span> ])</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can pipe the output of one operation to the next using "|&gt;"</span></span><br><span class="line"><span class="comment">// Here is the same sumOfSquares function written using pipes</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100piped =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map square |&gt; List.sum  <span class="comment">// "square" was defined earlier</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// you can define lambdas (anonymous functions) using the "fun" keyword</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100withFun =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map (<span class="keyword">fun</span> x -&gt; x * x) |&gt; List.sum</span><br><span class="line"></span><br><span class="line"><span class="comment">// In F# returns are implicit -- no "return" needed. A function always</span></span><br><span class="line"><span class="comment">// returns the value of the last expression used.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Pattern Matching ========</span></span><br><span class="line"><span class="comment">// Match..with.. is a supercharged case/switch statement.</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">match</span> x <span class="keyword">with</span></span><br><span class="line">| <span class="string">"a"</span> -&gt; printfn <span class="string">"x is a"</span></span><br><span class="line">| <span class="string">"b"</span> -&gt; printfn <span class="string">"x is b"</span></span><br><span class="line">| _ -&gt; printfn <span class="string">"x is something else"</span>   <span class="comment">// underscore matches anything</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Some(..) and None are roughly analogous to Nullable wrappers</span></span><br><span class="line"><span class="keyword">let</span> validValue = Some(<span class="number">99</span>)</span><br><span class="line"><span class="keyword">let</span> invalidValue = None</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example, match..with matches the "Some" and the "None",</span></span><br><span class="line"><span class="comment">// and also unpacks the value in the "Some" at the same time.</span></span><br><span class="line"><span class="keyword">let</span> optionPatternMatch input =</span><br><span class="line">   <span class="keyword">match</span> input <span class="keyword">with</span></span><br><span class="line">    | Some i -&gt; printfn <span class="string">"input is an int=%d"</span> i</span><br><span class="line">    | None -&gt; printfn <span class="string">"input is missing"</span></span><br><span class="line"></span><br><span class="line">optionPatternMatch validValue</span><br><span class="line">optionPatternMatch invalidValue</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Complex Data Types =========</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Tuple types are pairs, triples, etc. Tuples use commas.</span></span><br><span class="line"><span class="keyword">let</span> twoTuple = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> threeTuple = (<span class="string">"a"</span>, <span class="number">2</span>, <span class="keyword">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Record types have named fields. Semicolons are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; First: string; Last: string &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="comment">// You can also use new lines to elide the semiclon.</span></span><br><span class="line"><span class="keyword">let</span> person2 =</span><br><span class="line">    &#123; First=<span class="string">"Jane"</span></span><br><span class="line">      Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Union types have choices. Vertical bars are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Temp</span> </span>= </span><br><span class="line">    | DegreesC <span class="keyword">of</span> float</span><br><span class="line">    | DegreesF <span class="keyword">of</span> float</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = DegreesF <span class="number">98.6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Types can be combined recursively in complex ways.</span></span><br><span class="line"><span class="comment">// E.g. here is a union type that contains a list of the same type:</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Employee</span> </span>= </span><br><span class="line">  | Worker <span class="keyword">of</span> Person</span><br><span class="line">  | Manager <span class="keyword">of</span> Employee list</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jdoe = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="keyword">let</span> worker = Worker jdoe</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Printing =========</span></span><br><span class="line"><span class="comment">// The printf/printfn functions are similar to the</span></span><br><span class="line"><span class="comment">// Console.Write/WriteLine functions in C#.</span></span><br><span class="line">printfn <span class="string">"Printing an int %i, a float %f, a bool %b"</span> <span class="number">1</span> <span class="number">2.0</span> <span class="keyword">true</span></span><br><span class="line">printfn <span class="string">"A string %s, and something generic %A"</span> <span class="string">"hello"</span> [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// all complex types have pretty printing built in</span></span><br><span class="line">printfn <span class="string">"twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"</span> </span><br><span class="line">         twoTuple person1 temp worker</span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://blogs.msdn.microsoft.com/dotnet/" target="_blank" rel="external">.NET Blog</a>, <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/" target="_blank" rel="external">Get Started with F# as a C# developer</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
@@ -2241,36 +2453,6 @@
       <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
     
       <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使 macOS 與 Docker 共享目錄 ?]]></title>
-    <link href="http://oomusou.io/docker/mount-host-dir/"/>
-    <id>http://oomusou.io/docker/mount-host-dir/</id>
-    <published>2018-03-08T12:23:43.000Z</published>
-    <updated>2018-03-03T15:32:27.666Z</updated>
-    <content type="html"><![CDATA[<p>當開發環境都 Docker 化，最常遇到的問題就是開發環境該如何與測試環境分離，如 IDE 裝在 macOS，如 WebStorm / Rider / VS Code，且 code 也放在 macOS，但實際 build code 或跑測試，卻是在 container 內，因此勢必要將 macOS 的目錄與 container 共享。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)</p>
-<h2 id="參數_-v">參數 -v</h2><hr>
-<p>由於每個人要分享的目錄都不一樣，所以不能將共享目錄寫在 <code>Dockerfile</code>，而必須在使用 <code>docker run</code> 建立 container 加上 <code>-v</code></p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkinsCore -<span class="tag">p</span> <span class="number">8080</span>:<span class="number">8080</span> -<span class="tag">p</span> <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home -v /Users/oomusou/Code:/var/<span class="tag">code</span>   oomusou/jenkins-core</span><br></pre></td></tr></table></figure>
-<p>以上為例</p>
-<figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-<span class="ruby">v /<span class="constant">Users</span>/oomusou/<span class="constant">Code</span><span class="symbol">:/var/code</span></span></span><br></pre></td></tr></table></figure>
-<p>所有程式都放在 macOS 的 <code>/Users/oomusou/Code</code>，我們希望對應到 container 內的 <code>/var/code</code>，只要 <code>/Users/oomusou/Code</code> 有任何修改，在 container 內都看得到。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>一個很小的參數，但實務上卻非常有用</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[讓開發環境與測試環境分離]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
     
   </entry>
   
