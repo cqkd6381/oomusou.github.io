@@ -91,7 +91,7 @@
     <link href="http://oomusou.io/fsharp/polymorphism/"/>
     <id>http://oomusou.io/fsharp/polymorphism/</id>
     <published>2018-03-21T12:23:43.000Z</published>
-    <updated>2018-03-21T13:01:45.352Z</updated>
+    <updated>2018-03-21T13:34:57.860Z</updated>
     <content type="html"><![CDATA[<p>OOP 最自豪的就是 Polymorphism (多型)，若使用 FP，該如何實現這個 OOP 的招牌菜呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
