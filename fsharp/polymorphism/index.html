@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="體會 OOP 與 FP 不同的思維">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-20T16:19:24.457Z">
+<meta property="og:updated_time" content="2018-03-21T01:41:23.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 FP 實現 OOP 的 Polymorphism ?">
 <meta name="twitter:description" content="體會 OOP 與 FP 不同的思維">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Shape_Again"><span class="toc-article-text">Shape Again</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#CSharp"><span class="toc-article-text">CSharp</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FSharp"><span class="toc-article-text">FSharp</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Shape_Again"><span class="toc-article-text">Shape Again</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#CSharp"><span class="toc-article-text">CSharp</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FSharp"><span class="toc-article-text">FSharp</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -158,18 +158,21 @@
 </blockquote>
 <p>15 行</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> circle = Circle <span class="number">10.0</span></span><br><span class="line">    <span class="keyword">let</span> rectangle = Rectangle (<span class="number">2.0</span>, <span class="number">3.0</span>)</span><br><span class="line">    <span class="keyword">let</span> triangle = Triangle (<span class="number">4.0</span>, <span class="number">5.0</span>)</span><br><span class="line">    </span><br><span class="line">    [circle; rectangle; triangle]</span><br><span class="line">    |&gt; List.map area</span><br><span class="line">    |&gt; List.iter (printfn <span class="string">"%A"</span>)</span><br></pre></td></tr></table></figure>
-<p>不必使用 <code>foreach</code> ，只要以 Pipeline 方式透過 <code>List.map</code> 執行每個物件的 <code>area()</code>，最後再將計算的結果交給 <code>printfn</code> 顯示</p>
+<p>不必使用 <code>foreach</code> ，只要以 Pipeline 方式透過 <code>List.map</code> 執行每個物件的 <code>area()</code>，再以 Pipeline 方式透過 <code>List.iter</code> 將計算的結果交給 <code>printfn</code> 顯示。</p>
 <blockquote>
-<p>C# 雖然也可以使用 LINQ 方式，與 F# 極為類似，不過 LINQ 已經屬於 functional ，已經不是傳統 OOP 的 imperative </p>
+<p>C# 雖然也可以使用 LINQ 方式，與 F# 極為類似，不過 LINQ 已經屬於 functional ，不是傳統 OOP 的 imperative </p>
 </blockquote>
 <p><img src="/images/fsharp/polymorphism/poly002.png" alt="oly00"></p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>FP 使用 <code>union</code> 即可實作出 OOP 的 <code>繼承</code> 概念</li>
 <li>FP 使用 Pattern Matching 即可實作出 OOP 的 <code>virtual/override</code> 概念</li>
+<li>OOP 是將 data 與 function 合一，都包在 class 內；FP 是將 data 與 function 分離，data 歸 Type，function 還是 function</li>
 <li>F# 的程式碼明顯比 C# 精簡</li>
 <li>並不是要比較哪個語言的優劣，只想強調 OOP 與 FP 以不同的思維，都可以實作出 Polymorphism</li>
 </ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://fsharpforfunandprofit.com/" target="_blank" rel="external">F# for fun and profit</a>, <a href="https://fsharpforfunandprofit.com/posts/key-concepts/" target="_blank" rel="external">Four Key Concepts</a></p>
 	  
 	</div>
 
