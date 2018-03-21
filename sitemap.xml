@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/typescript/generics/</loc>
+    <lastmod>2018-03-21T06:17:00.095Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/design-pattern/strategy/</loc>
     <lastmod>2018-03-21T06:13:23.576Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>http://oomusou.io/fsharp/polymorphism/</loc>
     <lastmod>2018-03-21T01:41:23.528Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/typescript/generics/</loc>
-    <lastmod>2018-03-19T08:34:32.149Z</lastmod>
   </url>
   
   <url>

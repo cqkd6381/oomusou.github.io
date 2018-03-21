@@ -384,7 +384,7 @@
     <link href="http://oomusou.io/typescript/generics/"/>
     <id>http://oomusou.io/typescript/generics/</id>
     <published>2018-03-18T12:23:43.000Z</published>
-    <updated>2018-03-19T08:34:32.149Z</updated>
+    <updated>2018-03-21T06:17:00.095Z</updated>
     <content type="html"><![CDATA[<p><code>泛型</code> 是物件導向 <code>多型</code> 的延伸技術，多型是以 interface 為基礎，在 <code>執行時期</code> 決定適當型別；而泛型則是以 type parameter 為基礎，在 <code>編譯時期</code> 決定適當型別。</p>
 <p>泛型也是 TypeScript 的一大特色，預計 ECMAScript 將來也不會採用泛型。</p>
 <a id="more"></a>
@@ -610,8 +610,8 @@
 </ul>
 <blockquote>
 <p>對於 array 這種 container 類型的型別，我們不必只是宣告空洞的 <code>array</code> 型別而已，而是真正以 array 的內容來宣告型別。</p>
-<h3 id="Repository_處理不同_Model">Repository 處理不同 Model</h3></blockquote>
-<p>Repository 負責處理資料庫邏輯，實務上會發現有些 method 在所有的 repository 都會出現，因此會想定義 abstract repository，其他 repository 則繼承此 abstract repository。</p>
+</blockquote>
+<h3 id="Repository_處理不同_Model">Repository 處理不同 Model</h3><p>Repository 負責處理資料庫邏輯，實務上會發現有些 method 在所有的 repository 都會出現，因此會想定義 abstract repository，其他 repository 則繼承此 abstract repository。</p>
 <blockquote>
 <p>這裡的 model 指的是 .NET 的 entity，以 ORM 來描述 table 的一筆資料，而 CodeIgniter 的 model 則類似於 repository。</p>
 </blockquote>
