@@ -103,7 +103,7 @@
     <link href="http://oomusou.io/design-pattern/strategy/"/>
     <id>http://oomusou.io/design-pattern/strategy/</id>
     <published>2018-03-20T12:23:43.000Z</published>
-    <updated>2018-03-20T10:17:46.182Z</updated>
+    <updated>2018-03-21T02:13:15.767Z</updated>
     <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中使用 <code>interface</code> 最經典的應用，隨著 FP 逐漸受到重視，Strategy Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
