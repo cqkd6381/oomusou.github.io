@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 FP 將有不同的實現方式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-21T06:13:23.576Z">
+<meta property="og:updated_time" content="2018-03-22T01:32:59.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 C# 實現 Strategy Pattern ?">
 <meta name="twitter:description" content="使用 FP 將有不同的實現方式">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Architecture"><span class="toc-article-text">Architecture</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Implementation"><span class="toc-article-text">Implementation</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#If_Else"><span class="toc-article-text">If Else</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Unit_Test"><span class="toc-article-text">Unit Test</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Strategy_Pattern"><span class="toc-article-text">Strategy Pattern</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Delegate"><span class="toc-article-text">Delegate</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Func"><span class="toc-article-text">Func</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Lambda"><span class="toc-article-text">Lambda</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Local_Function"><span class="toc-article-text">Local Function</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Architecture"><span class="toc-article-text">Architecture</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Implementation"><span class="toc-article-text">Implementation</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#If_Else"><span class="toc-article-text">If Else</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Unit_Test"><span class="toc-article-text">Unit Test</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Strategy_Pattern"><span class="toc-article-text">Strategy Pattern</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Delegate"><span class="toc-article-text">Delegate</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Func"><span class="toc-article-text">Func</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Lambda"><span class="toc-article-text">Lambda</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Local_Function"><span class="toc-article-text">Local Function</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -219,7 +219,12 @@
 <p><strong>OrderService.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> StrategyFactory.Create(price).calculatePrice(price);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>OrderService</code> 可輕易的根據 <code>Create(price)</code> 回傳的 strategy，呼叫 <code>calculatePrice()</code>。</p>
-<h3 id="Delegate">Delegate</h3><p>雖然 <code>StrategyInterface</code> 定義了 <code>CalculatePrice()</code>，但整個 <code>interface</code> 只有一個 method，顯然使用 <code>interface</code> 有殺雞用牛刀之嫌，此時可將 <code>interface</code> 退化成 <code>delegate</code>。</p>
+<h3 id="Delegate">Delegate</h3><p>從 Strategy Pattern，我們看到了 OOP 幾個缺點：</p>
+<ul>
+<li>原本簡單的 <code>if ... else</code> 被拆成很多檔案，導致 class 爆炸</li>
+<li><code>interface</code> 雖然有制定 spec 與 compiler 編譯檢查的優點，但是是否有為 <code>interface</code> 開一個檔案的需要？</li>
+</ul>
+<p>雖然 <code>StrategyInterface</code> 定義了 <code>CalculatePrice()</code>，但整個 <code>interface</code> 只有一個 method，顯然使用 <code>interface</code> 有殺雞用牛刀之嫌，此時可將 <code>interface</code> 退化成 <code>delegate</code>。</p>
 <p><img src="/images/design-pattern/strategy/strategy009.svg" alt="trategy00"></p>
 <p><strong>CalculatePriceDelegate</strong></p>
 <p><img src="/images/design-pattern/strategy/strategy010.svg" alt="trategy01"></p>
@@ -289,6 +294,16 @@
 <blockquote>
 <p>實務上建議使用 Local Function 取代 Lambda</p>
 </blockquote>
+<h2 id="Summary">Summary</h2><hr>
+<p>以 SOLID 角度重新審視經過 FP 二次重構後的 Strategy Pattern：</p>
+<ul>
+<li><strong>單一職責原則</strong>：將所有的 strategy 統一整理在 <code>PriceStrategy</code>，符合 SRP</li>
+<li><strong>開放封閉原則</strong>：將來若有新的 strategy，只要統一加在 <code>PriceStrategy</code> 即可，符合 OCP</li>
+<li><strong>里氏替換原則</strong>：因為沒用到繼承，所以沒有違反 LSP 問題</li>
+<li><strong>最小知識原則</strong>：strategy 並沒有暴露到 client，符合 LKP</li>
+<li><strong>介面隔離原則</strong>：因為從 <code>interface</code> 退化成 <code>delegate</code>，FP 天生符合 ISP</li>
+<li><strong>依賴反轉原則</strong>：service 與 strategy 之間的耦合僅限於 <code>delegate</code> 與 <code>Func&lt;T&gt;</code>，而不是直接耦合與特定 function，符合 DIP</li>
+</ul>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>Strategy Pattern、State Pattern 與 Chain of Responsibility 都是在解決 <code>if else</code> 問題，但 intention 不太一樣</li>
