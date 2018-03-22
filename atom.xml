@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-22T08:34:15.860Z</updated>
+  <updated>2018-03-22T09:47:52.805Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/type-forwarding/"/>
     <id>http://oomusou.io/netcore/type-forwarding/</id>
     <published>2018-03-22T12:23:43.000Z</published>
-    <updated>2018-03-22T08:34:15.860Z</updated>
+    <updated>2018-03-22T09:47:52.805Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 能跨平台看似很神奇，事實上底層所使用的技術為 Type Forwarding，說穿了就是 Proxy Pattern 的應用。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -61,7 +61,7 @@
 <p>我們並沒有對 <code>ConsoleApp</code> 將 <code>ClassLibrary2</code> 加入 project reference，而是因為 Type Forwarding</p>
 </blockquote>
 <h2 id="觀察_netstandard_Assembly">觀察 netstandard Assembly</h2><hr>
-<p>Metapackage 與 .NET Standard 與談了這麼多，是否感覺很抽象呢 ? 讓我們以反組譯 <code>netstandard</code> Assembly 來理解其中的黑魔法。</p>
+<p>Metapackage 與 .NET Standard 談了這麼多，是否感覺很抽象呢 ? 讓我們以反組譯 <code>netstandard</code> Assembly 來理解其中的黑魔法。</p>
 <p>使用 Visual Studio 2017 開啟 solution。</p>
 <p><img src="/images/netcore/type-forwarding/type002.png" alt="ype00"></p>
 <p><strong><em>View -&gt; Object Browser</em></strong> 開啟 Object Browser，可以讓我們看到整個 solution 所用到的 assembly。</p>
