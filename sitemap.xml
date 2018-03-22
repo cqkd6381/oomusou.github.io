@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/type-forwarding/</loc>
+    <lastmod>2018-03-22T08:34:15.860Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/metapackage/</loc>
+    <lastmod>2018-03-22T07:40:41.230Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/design-pattern/strategy/</loc>
     <lastmod>2018-03-22T02:17:29.995Z</lastmod>
   </url>
@@ -14,11 +24,6 @@
   <url>
     <loc>http://oomusou.io/typescript/generics/</loc>
     <lastmod>2018-03-21T06:17:00.095Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/metapackage/</loc>
-    <lastmod>2018-03-21T06:08:17.306Z</lastmod>
   </url>
   
   <url>

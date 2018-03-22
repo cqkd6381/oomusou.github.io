@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-21T06:08:17.306Z</updated>
+  <updated>2018-03-22T08:34:15.860Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,113 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[深入探討 .NET Core 之 Type Forwarding]]></title>
+    <link href="http://oomusou.io/netcore/type-forwarding/"/>
+    <id>http://oomusou.io/netcore/type-forwarding/</id>
+    <published>2018-03-22T12:23:43.000Z</published>
+    <updated>2018-03-22T08:34:15.860Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core 能跨平台看似很神奇，事實上底層所使用的技術為 Type Forwarding，說穿了就是 Proxy Pattern 的應用。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>Visual Studio 2017 15.6.2</p>
+<h2 id="Definition">Definition</h2><hr>
+<p>Client 在不改變 assembly reference 狀態下，就可使用其他 assembly 所提供的 class。</p>
+<p><img src="/images/netcore/type-forwarding/type007.svg" alt="ype00"></p>
+<p>.NET App 會直接與 <code>Assembly A</code> 耦合，僅能使用 <code>Assembly A</code> 的 <code>MyClass</code>。</p>
+<p><img src="/images/netcore/type-forwarding/type008.svg" alt="ype00"></p>
+<p>.NET App 依然只與 <code>Assembly A</code> 耦合，但卻能夠透過 Type Forwarding 使用 <code>Assembly B</code> 的 <code>MyClass</code>。</p>
+<h2 id="實戰_Type_Forwarding">實戰 Type Forwarding</h2><hr>
+<h3 id="建立_ClassLibrary1">建立 ClassLibrary1</h3><p><strong>Class1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Class1</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>ClassLibrary1</code> assembly 建立 <code>Class1.Sum()</code>。</p>
+<h3 id="建立_ConsoleApp">建立 ConsoleApp</h3><p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> object1 = <span class="keyword">new</span> Class1();</span><br><span class="line">            <span class="keyword">var</span> result = object1.Sum(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            Console.WriteLine(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>ConsoleApp</code> 使用 <code>ClassLibrary1</code> 的 <code>Class1.Sum()</code>。</p>
+<p><img src="/images/netcore/type-forwarding/type000.png" alt="ype00"></p>
+<ol>
+<li>目前只有 <code>ClassLibrary1</code> 與 <code>ConsoleApp</code></li>
+<li>執行結果為 <code>2</code></li>
+<li><code>ConsoleApp</code> 的 project reference 只有 <code>ClassLibrary1</code></li>
+</ol>
+<h3 id="建立_ClassLibrary2">建立 ClassLibrary2</h3><p><strong>Class1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Class1</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>ClassLibrary1</code> 的 <code>Class1.cs</code> 全部程式碼搬到 <code>ClassLibrary2</code>。</p>
+<h3 id="ClassLibrary1_使用_Type_Forwarding">ClassLibrary1 使用 Type Forwarding</h3><p><strong>Class1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Runtime.CompilerServices;</span><br><span class="line"></span><br><span class="line">[assembly:TypeForwardedTo(<span class="keyword">typeof</span>(ClassLibrary1.Class1))]</span><br></pre></td></tr></table></figure>
+<p>因為 <code>ClassLibrary1</code> 的 <code>Class1.cs</code> 程式碼已經搬到 <code>ClassLibrary2</code>，將原本 <code>ClassLibrary1</code> 的 <code>Class1.cs</code> 加上 Type Forwarding。</p>
+<p>當 <code>ConsoleApp</code> 使用 <code>ClassLibrary1</code> assembly 的 <code>ClassLibrary1.Class1</code> 時，會自動 Type Forwarding 到 <code>ClassLibrary2</code> assembly 的 <code>ClassLibrary1.Class1</code> 。</p>
+<p>Rebuild 整個 solution 的 3 個 project 並執行。</p>
+<p><img src="/images/netcore/type-forwarding/type001.png" alt="ype00"></p>
+<ol>
+<li>目前有 <code>ClassLibrary1</code> 、<code>ClassLibrary2</code> 與 <code>ConsoleApp</code></li>
+<li>執行結果依然為 <code>2</code></li>
+<li>原本 <code>ConsoleApp</code> 的 project reference 只有 <code>ClassLibrary1</code>，因為 Type Forwarding，所以現在也有了 <code>ClassLibrary2</code></li>
+</ol>
+<blockquote>
+<p>我們並沒有對 <code>ConsoleApp</code> 將 <code>ClassLibrary2</code> 加入 project reference，而是因為 Type Forwarding</p>
+</blockquote>
+<h2 id="觀察_netstandard_Assembly">觀察 netstandard Assembly</h2><hr>
+<p>Metapackage 與 .NET Standard 與談了這麼多，是否感覺很抽象呢 ? 讓我們以反組譯 <code>netstandard</code> Assembly 來理解其中的黑魔法。</p>
+<p>使用 Visual Studio 2017 開啟 solution。</p>
+<p><img src="/images/netcore/type-forwarding/type002.png" alt="ype00"></p>
+<p><strong><em>View -&gt; Object Browser</em></strong> 開啟 Object Browser，可以讓我們看到整個 solution 所用到的 assembly。</p>
+<ol>
+<li>展開 <code>ClassLibrary1</code>，看不到任何 namespace 與 class，因為我們已經在 <code>ClassLibrary1</code> 使用 Type Forwarding。</li>
+<li>展開 <code>ClassLibrary2</code>，我們看到了 <code>ClassLibrary1</code> namespace 與 <code>Class1</code> class。</li>
+</ol>
+<blockquote>
+<p>若 assembly 使用了 Type Forwarding，使用 Object Browser 將看不到該 assembly 任何實作的 namespace 與 class</p>
+</blockquote>
+<p><img src="/images/netcore/type-forwarding/type003.png" alt="ype00"></p>
+<ol>
+<li>點擊 <code>mscorlib</code> 與 <code>netstandard</code> 兩個 assembly ，亦發現沒有任何實作的 namespace 與 class，其中 <code>mscorlib</code> 就是 <code>Microsoft.NETCore.App</code>，而 <code>netstandard</code> 就是 <code>NETStandard.Library</code></li>
+<li>顯示 <code>netstandard</code> assembly 的實際路徑</li>
+</ol>
+<blockquote>
+<p>由於 <code>mscorlib</code> 與 <code>netstandard</code> 都沒有任何實作，根據 <code>ClassLibrary1</code> 的經驗推測，很可能也是用了 Type Forwarding </p>
+</blockquote>
+<p><img src="/images/netcore/type-forwarding/type004.png" alt="ype00"></p>
+<p>使用 ILSpy 反組譯 <code>netstandard</code> assembly，我們可以發現真的沒有任何實作，但大量使用了 Type Forwarding。</p>
+<p>在傳統 .NET Framework 世界裡，我們是直接參考 .NET Framework 內某個 assembly 的 class，也因此與 Windows 平台的 assembly 的 class 耦合。</p>
+<p>但在 .NET Core 世界裡，我們改參考 .NET Standard，再由 .NET Standard 透過 Type Forwarding 方式參考實際 host 的 assembly 的 class，若 host  是 macOS，則參考 macOS 上的 assembly 的 class，若 host 是 Linux，則參考 Linux 上的 assembly 的 class。</p>
+<blockquote>
+<p>因為 client 只與有 Type Forwarding 的 .NET Standard 耦合，而沒與特定平台的 class 耦合，所以 .NET Core 能達到跨平台，在不同 host os 下，不用編譯就可以自動找到正確的 class</p>
+</blockquote>
+<h2 id="Proxy_Pattern">Proxy Pattern</h2><hr>
+<blockquote>
+<p>Proxy Pattern</p>
+<p>Client 為了避免與實際物件耦合，改透過相同 interface 的 <code>白手套</code> proxy 耦合，再由 proxy 負責與實際物件溝通</p>
+</blockquote>
+<p><img src="/images/netcore/type-forwarding/type005.svg" alt="ype00"></p>
+<p><code>Client</code> 實際上要使用 <code>RealSubject</code>，但為了將 <code>RealSubject</code> 與 <code>Client</code> 解耦合，<code>Client</code> 只與相同 interface 的 <code>Proxy</code> 耦合，再由白手套 <code>Proxy</code> 使用 <code>RealSubject</code>。</p>
+<p><strong>.NET Standard</strong></p>
+<p><img src="/images/netcore/type-forwarding/type006.svg" alt="ype00"></p>
+<p><code>Client</code> 實際上要使用各平台的 <code>.NET Core SDK</code>，但為了將各平台的 <code>.NET Core SDK</code> 與 <code>Client</code> 解耦合，<code>Client</code> 只與一樣遵守 .NET Standard 的 <code>netstandard</code> 耦合，再由白手套 <code>netstandard</code> 透過 Type Forwarding 使用各平台的 <code>.NET Core SDK</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Metapackage 與 .NET Standard 不是什麼黑魔法，只是一個使用 Type Forwarding 的 DLL</li>
+<li>我們只要跟 .NET Standard 耦合即可，它會使用 Type Forwarding 幫我們使用各平台實際的 class</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/TypeForwarding" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/framework/app-domains/type-forwarding-in-the-common-language-runtime" target="_blank" rel="external">Type Fowarding in the Common Language Runtime</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[解開 .NET Core 跨平台的黑魔法]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[.NET Core 之 Metapackage 簡介]]></title>
     <link href="http://oomusou.io/netcore/metapackage/"/>
     <id>http://oomusou.io/netcore/metapackage/</id>
     <published>2018-03-21T13:23:43.000Z</published>
-    <updated>2018-03-21T06:08:17.306Z</updated>
+    <updated>2018-03-22T07:40:41.230Z</updated>
     <content type="html"><![CDATA[<p>Metapackage 為 .NET Core 2.0 所提出，目的在簡化對 package 的管理。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -48,7 +150,7 @@
 </ul>
 <p>針對這兩個缺點，.NET Core 2.0 提出了 Metapackage 概念。</p>
 <h2 id="Metapackage">Metapackage</h2><hr>
-<p>.NET Core 包含了以下主要 Metapackage：</p>
+<p>.NET Core 包含了以下幾個主要 Metapackage：</p>
 <ul>
 <li><strong>NETStandard.Library</strong>：包含 .NET Standard 所定義 API 的全部 package</li>
 <li><strong>Microsoft.NETCore.App</strong>：包含 .NET Core 所需要 API 的全部 package，也包含 .NET Standard，但沒有包含全部的 .NET Standard 的 package</li>
@@ -1351,6 +1453,86 @@
   </entry>
   
   <entry>
+    <title><![CDATA[如何安裝與移除 Project Template ?]]></title>
+    <link href="http://oomusou.io/netcore/project-template/"/>
+    <id>http://oomusou.io/netcore/project-template/</id>
+    <published>2018-03-16T14:23:43.000Z</published>
+    <updated>2018-03-19T02:12:37.070Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk001.png" alt="sdk001"></p>
+<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
+<p><img src="/images/netcore/project-template/sdk002.png" alt="sdk001"></p>
+<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
+<h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
+<p><img src="/images/netcore/project-template/sdk003.png" alt="sdk003"></p>
+<p>以 C# 為例，.NET Core 官網亦提供了 <code>AWS Lambda .NET Core Templates</code>，讓我們自動安裝相關工具與 NuGet package。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Amazon.Lambda.Templates::*"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-i</strong> : <code>i</code>nstall，使用 <code>dotnet new -i</code> 安裝新 project template</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk004.png" alt="sdk004"></p>
+<ol>
+<li>輸入 <code>dotnet new -i &quot;Amazon.Lambda.Templates::*&quot;</code> 安裝 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>由於 <code>Amazon Lambda</code> project template 的 NuGet package 較大，安裝要一點時間</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk005.png" alt="sdk005"></p>
+<ol>
+<li>安裝完後會自動執行 <code>dotnet new -l</code>，會安裝不少 <code>Amazon Lambda</code> 相關的 project template</li>
+</ol>
+<h2 id="移除_Project_Template">移除 Project Template</h2><hr>
+<p>既然能安裝 project template，也就要能移除 project template，但比較麻煩。</p>
+<p>.NET Core SDK 預設將所有的 project template 安裝在 <code>Users/oomusou/.templateengine/dotnetcli/v2.1.101/packages</code> 目錄下。</p>
+<blockquote>
+<p>其中 <code>oomusou</code> 為 user name</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk006.png" alt="sdk006"></p>
+<ol>
+<li><code>amazon.lambda.template.2.0.3.nupkg</code> 為剛剛所安裝的 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>我們可以發現每個 project template 事實上都是 NuGet package</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -u .../amazon.lambda.templates<span class="number">.2</span><span class="number">.0</span><span class="number">.3</span>.nupkg</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-u</strong> : <code>u</code>ninstall，使用 <code>dotnet new -u</code> 移除已安裝的 project template NuGet package</li>
+</ul>
+<blockquote>
+<p>NuGet package 不可使用 <code>./</code> 方式，但可用完整路徑或 <code>~/</code></p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk007.png" alt="sdk007"></p>
+<ol>
+<li>輸入 <code>dotnet new -u /Users/…/amazon.lambda.templates.2.0.3.nupkg</code>，必須是完整路徑或 <code>~/</code>，不可為 <code>./</code></li>
+</ol>
+<p><img src="/images/netcore/project-template/sdk008.png" alt="sdk008"></p>
+<ol>
+<li><code>Amazon Lambda</code> project template 已順利移除。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>若想知道 C# 與 F# 還有什麼應用，可上 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 發現更多有趣的 project template</li>
+<li>若要移除 project template，NuGet package 必須使用 <code>完整路徑</code> 或 <code>~/</code>，不可使用 <code>./</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[發現更多有趣的 .NET Core 應用]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[深入探討 dotnet restore]]></title>
     <link href="http://oomusou.io/netcore/restore/"/>
     <id>http://oomusou.io/netcore/restore/</id>
@@ -1435,86 +1617,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[NuGet 特有的管理機制]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何安裝與移除 Project Template ?]]></title>
-    <link href="http://oomusou.io/netcore/project-template/"/>
-    <id>http://oomusou.io/netcore/project-template/</id>
-    <published>2018-03-16T14:23:43.000Z</published>
-    <updated>2018-03-19T02:12:37.070Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
-</ul>
-<p><img src="/images/netcore/project-template/sdk001.png" alt="sdk001"></p>
-<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
-<p><img src="/images/netcore/project-template/sdk002.png" alt="sdk001"></p>
-<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
-<h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
-<p><img src="/images/netcore/project-template/sdk003.png" alt="sdk003"></p>
-<p>以 C# 為例，.NET Core 官網亦提供了 <code>AWS Lambda .NET Core Templates</code>，讓我們自動安裝相關工具與 NuGet package。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Amazon.Lambda.Templates::*"</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-i</strong> : <code>i</code>nstall，使用 <code>dotnet new -i</code> 安裝新 project template</li>
-</ul>
-<p><img src="/images/netcore/project-template/sdk004.png" alt="sdk004"></p>
-<ol>
-<li>輸入 <code>dotnet new -i &quot;Amazon.Lambda.Templates::*&quot;</code> 安裝 <code>Amazon Lambda</code> project template</li>
-</ol>
-<blockquote>
-<p>由於 <code>Amazon Lambda</code> project template 的 NuGet package 較大，安裝要一點時間</p>
-</blockquote>
-<p><img src="/images/netcore/project-template/sdk005.png" alt="sdk005"></p>
-<ol>
-<li>安裝完後會自動執行 <code>dotnet new -l</code>，會安裝不少 <code>Amazon Lambda</code> 相關的 project template</li>
-</ol>
-<h2 id="移除_Project_Template">移除 Project Template</h2><hr>
-<p>既然能安裝 project template，也就要能移除 project template，但比較麻煩。</p>
-<p>.NET Core SDK 預設將所有的 project template 安裝在 <code>Users/oomusou/.templateengine/dotnetcli/v2.1.101/packages</code> 目錄下。</p>
-<blockquote>
-<p>其中 <code>oomusou</code> 為 user name</p>
-</blockquote>
-<p><img src="/images/netcore/project-template/sdk006.png" alt="sdk006"></p>
-<ol>
-<li><code>amazon.lambda.template.2.0.3.nupkg</code> 為剛剛所安裝的 <code>Amazon Lambda</code> project template</li>
-</ol>
-<blockquote>
-<p>我們可以發現每個 project template 事實上都是 NuGet package</p>
-</blockquote>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -u .../amazon.lambda.templates<span class="number">.2</span><span class="number">.0</span><span class="number">.3</span>.nupkg</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-u</strong> : <code>u</code>ninstall，使用 <code>dotnet new -u</code> 移除已安裝的 project template NuGet package</li>
-</ul>
-<blockquote>
-<p>NuGet package 不可使用 <code>./</code> 方式，但可用完整路徑或 <code>~/</code></p>
-</blockquote>
-<p><img src="/images/netcore/project-template/sdk007.png" alt="sdk007"></p>
-<ol>
-<li>輸入 <code>dotnet new -u /Users/…/amazon.lambda.templates.2.0.3.nupkg</code>，必須是完整路徑或 <code>~/</code>，不可為 <code>./</code></li>
-</ol>
-<p><img src="/images/netcore/project-template/sdk008.png" alt="sdk008"></p>
-<ol>
-<li><code>Amazon Lambda</code> project template 已順利移除。</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>若想知道 C# 與 F# 還有什麼應用，可上 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 發現更多有趣的 project template</li>
-<li>若要移除 project template，NuGet package 必須使用 <code>完整路徑</code> 或 <code>~/</code>，不可使用 <code>./</code></li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[發現更多有趣的 .NET Core 應用]]>
     
     </summary>
     
@@ -1672,32 +1774,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[F# 語法檢定考]]></title>
-    <link href="http://oomusou.io/fsharp/syntax-all/"/>
-    <id>http://oomusou.io/fsharp/syntax-all/</id>
-    <published>2018-03-16T12:23:43.000Z</published>
-    <updated>2018-03-14T07:57:49.606Z</updated>
-    <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>F# 4.1</p>
-<h2 id="Overview_of_F#_Syntax">Overview of F# Syntax</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is presented with permission from Scott Wlaschin, the original author.  This has been slightly modified.</span></span><br><span class="line"><span class="comment">// Single line comments use a double slash.</span></span><br><span class="line"><span class="comment">(* </span><br><span class="line">    Multi-line comments can be done this way (though double-slash is usually used).</span><br><span class="line">*)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== "Variables" (but not really) ==========</span></span><br><span class="line"><span class="comment">// The "let" keyword defines an (immutable) value</span></span><br><span class="line"><span class="keyword">let</span> myInt = <span class="number">5</span></span><br><span class="line"><span class="keyword">let</span> myFloat = <span class="number">3.14</span></span><br><span class="line"><span class="keyword">let</span> myString = <span class="string">"hello"</span>   <span class="comment">// note that no types needed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Lists ============</span></span><br><span class="line"><span class="keyword">let</span> twoToFive = [ <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span> ]        <span class="comment">// Square brackets create a list with</span></span><br><span class="line">                                     <span class="comment">// semicolon delimiters.</span></span><br><span class="line"><span class="keyword">let</span> oneToFive = <span class="number">1</span> :: twoToFive   <span class="comment">// :: creates list with new 1st element</span></span><br><span class="line"><span class="comment">// The result is [1; 2; 3; 4; 5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> zeroToFive = [<span class="number">0</span>;<span class="number">1</span>] @ twoToFive   <span class="comment">// @ concats two lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IMPORTANT: commas are never used as delimiters, only semicolons!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Functions ========</span></span><br><span class="line"><span class="comment">// The "let" keyword also defines a named function.</span></span><br><span class="line"><span class="keyword">let</span> square x = x * x          <span class="comment">// Note that no parens are used.</span></span><br><span class="line">square <span class="number">3</span>                      <span class="comment">// Now run the function. Again, no parens.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add x y = x + y           <span class="comment">// don't use add (x,y)! It means something</span></span><br><span class="line">                              <span class="comment">// completely different.</span></span><br><span class="line">add <span class="number">2</span> <span class="number">3</span>                       <span class="comment">// Now run the function.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// to define a multiline function, just use indents. No semicolons needed.</span></span><br><span class="line"><span class="keyword">let</span> evens list =</span><br><span class="line">   <span class="keyword">let</span> isEven x = x % <span class="number">2</span> = <span class="number">0</span>     <span class="comment">// Define "isEven" as an inner ("nested") function</span></span><br><span class="line">   List.filter isEven list      <span class="comment">// List.filter is a library function</span></span><br><span class="line">                                <span class="comment">// with two parameters: a boolean function</span></span><br><span class="line">                                <span class="comment">// and a list to work on</span></span><br><span class="line">  </span><br><span class="line">evens oneToFive               <span class="comment">// Now run the function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You can use parens to clarify precedence. In this example,</span></span><br><span class="line"><span class="comment">// do "map" first, with two args, then do "sum" on the result.</span></span><br><span class="line"><span class="comment">// Without the parens, "List.map" would be passed as an arg to List.sum</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100 =</span><br><span class="line">   List.sum (List.map square [ <span class="number">1</span> .. <span class="number">100</span> ])</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can pipe the output of one operation to the next using "|&gt;"</span></span><br><span class="line"><span class="comment">// Here is the same sumOfSquares function written using pipes</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100piped =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map square |&gt; List.sum  <span class="comment">// "square" was defined earlier</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// you can define lambdas (anonymous functions) using the "fun" keyword</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100withFun =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map (<span class="keyword">fun</span> x -&gt; x * x) |&gt; List.sum</span><br><span class="line"></span><br><span class="line"><span class="comment">// In F# returns are implicit -- no "return" needed. A function always</span></span><br><span class="line"><span class="comment">// returns the value of the last expression used.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Pattern Matching ========</span></span><br><span class="line"><span class="comment">// Match..with.. is a supercharged case/switch statement.</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">match</span> x <span class="keyword">with</span></span><br><span class="line">| <span class="string">"a"</span> -&gt; printfn <span class="string">"x is a"</span></span><br><span class="line">| <span class="string">"b"</span> -&gt; printfn <span class="string">"x is b"</span></span><br><span class="line">| _ -&gt; printfn <span class="string">"x is something else"</span>   <span class="comment">// underscore matches anything</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Some(..) and None are roughly analogous to Nullable wrappers</span></span><br><span class="line"><span class="keyword">let</span> validValue = Some(<span class="number">99</span>)</span><br><span class="line"><span class="keyword">let</span> invalidValue = None</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example, match..with matches the "Some" and the "None",</span></span><br><span class="line"><span class="comment">// and also unpacks the value in the "Some" at the same time.</span></span><br><span class="line"><span class="keyword">let</span> optionPatternMatch input =</span><br><span class="line">   <span class="keyword">match</span> input <span class="keyword">with</span></span><br><span class="line">    | Some i -&gt; printfn <span class="string">"input is an int=%d"</span> i</span><br><span class="line">    | None -&gt; printfn <span class="string">"input is missing"</span></span><br><span class="line"></span><br><span class="line">optionPatternMatch validValue</span><br><span class="line">optionPatternMatch invalidValue</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Complex Data Types =========</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Tuple types are pairs, triples, etc. Tuples use commas.</span></span><br><span class="line"><span class="keyword">let</span> twoTuple = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> threeTuple = (<span class="string">"a"</span>, <span class="number">2</span>, <span class="keyword">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Record types have named fields. Semicolons are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; First: string; Last: string &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="comment">// You can also use new lines to elide the semiclon.</span></span><br><span class="line"><span class="keyword">let</span> person2 =</span><br><span class="line">    &#123; First=<span class="string">"Jane"</span></span><br><span class="line">      Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Union types have choices. Vertical bars are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Temp</span> </span>= </span><br><span class="line">    | DegreesC <span class="keyword">of</span> float</span><br><span class="line">    | DegreesF <span class="keyword">of</span> float</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = DegreesF <span class="number">98.6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Types can be combined recursively in complex ways.</span></span><br><span class="line"><span class="comment">// E.g. here is a union type that contains a list of the same type:</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Employee</span> </span>= </span><br><span class="line">  | Worker <span class="keyword">of</span> Person</span><br><span class="line">  | Manager <span class="keyword">of</span> Employee list</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jdoe = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="keyword">let</span> worker = Worker jdoe</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Printing =========</span></span><br><span class="line"><span class="comment">// The printf/printfn functions are similar to the</span></span><br><span class="line"><span class="comment">// Console.Write/WriteLine functions in C#.</span></span><br><span class="line">printfn <span class="string">"Printing an int %i, a float %f, a bool %b"</span> <span class="number">1</span> <span class="number">2.0</span> <span class="keyword">true</span></span><br><span class="line">printfn <span class="string">"A string %s, and something generic %A"</span> <span class="string">"hello"</span> [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// all complex types have pretty printing built in</span></span><br><span class="line">printfn <span class="string">"twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"</span> </span><br><span class="line">         twoTuple person1 temp worker</span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://blogs.msdn.microsoft.com/dotnet/" target="_blank" rel="external">.NET Blog</a>, <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/" target="_blank" rel="external">Get Started with F# as a C# developer</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[.NET Core SDK 簡介]]></title>
     <link href="http://oomusou.io/netcore/sdk/"/>
     <id>http://oomusou.io/netcore/sdk/</id>
@@ -1755,6 +1831,32 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[F# 語法檢定考]]></title>
+    <link href="http://oomusou.io/fsharp/syntax-all/"/>
+    <id>http://oomusou.io/fsharp/syntax-all/</id>
+    <published>2018-03-16T12:23:43.000Z</published>
+    <updated>2018-03-14T07:57:49.606Z</updated>
+    <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>F# 4.1</p>
+<h2 id="Overview_of_F#_Syntax">Overview of F# Syntax</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is presented with permission from Scott Wlaschin, the original author.  This has been slightly modified.</span></span><br><span class="line"><span class="comment">// Single line comments use a double slash.</span></span><br><span class="line"><span class="comment">(* </span><br><span class="line">    Multi-line comments can be done this way (though double-slash is usually used).</span><br><span class="line">*)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== "Variables" (but not really) ==========</span></span><br><span class="line"><span class="comment">// The "let" keyword defines an (immutable) value</span></span><br><span class="line"><span class="keyword">let</span> myInt = <span class="number">5</span></span><br><span class="line"><span class="keyword">let</span> myFloat = <span class="number">3.14</span></span><br><span class="line"><span class="keyword">let</span> myString = <span class="string">"hello"</span>   <span class="comment">// note that no types needed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Lists ============</span></span><br><span class="line"><span class="keyword">let</span> twoToFive = [ <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span> ]        <span class="comment">// Square brackets create a list with</span></span><br><span class="line">                                     <span class="comment">// semicolon delimiters.</span></span><br><span class="line"><span class="keyword">let</span> oneToFive = <span class="number">1</span> :: twoToFive   <span class="comment">// :: creates list with new 1st element</span></span><br><span class="line"><span class="comment">// The result is [1; 2; 3; 4; 5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> zeroToFive = [<span class="number">0</span>;<span class="number">1</span>] @ twoToFive   <span class="comment">// @ concats two lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IMPORTANT: commas are never used as delimiters, only semicolons!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Functions ========</span></span><br><span class="line"><span class="comment">// The "let" keyword also defines a named function.</span></span><br><span class="line"><span class="keyword">let</span> square x = x * x          <span class="comment">// Note that no parens are used.</span></span><br><span class="line">square <span class="number">3</span>                      <span class="comment">// Now run the function. Again, no parens.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add x y = x + y           <span class="comment">// don't use add (x,y)! It means something</span></span><br><span class="line">                              <span class="comment">// completely different.</span></span><br><span class="line">add <span class="number">2</span> <span class="number">3</span>                       <span class="comment">// Now run the function.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// to define a multiline function, just use indents. No semicolons needed.</span></span><br><span class="line"><span class="keyword">let</span> evens list =</span><br><span class="line">   <span class="keyword">let</span> isEven x = x % <span class="number">2</span> = <span class="number">0</span>     <span class="comment">// Define "isEven" as an inner ("nested") function</span></span><br><span class="line">   List.filter isEven list      <span class="comment">// List.filter is a library function</span></span><br><span class="line">                                <span class="comment">// with two parameters: a boolean function</span></span><br><span class="line">                                <span class="comment">// and a list to work on</span></span><br><span class="line">  </span><br><span class="line">evens oneToFive               <span class="comment">// Now run the function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You can use parens to clarify precedence. In this example,</span></span><br><span class="line"><span class="comment">// do "map" first, with two args, then do "sum" on the result.</span></span><br><span class="line"><span class="comment">// Without the parens, "List.map" would be passed as an arg to List.sum</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100 =</span><br><span class="line">   List.sum (List.map square [ <span class="number">1</span> .. <span class="number">100</span> ])</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can pipe the output of one operation to the next using "|&gt;"</span></span><br><span class="line"><span class="comment">// Here is the same sumOfSquares function written using pipes</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100piped =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map square |&gt; List.sum  <span class="comment">// "square" was defined earlier</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// you can define lambdas (anonymous functions) using the "fun" keyword</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100withFun =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map (<span class="keyword">fun</span> x -&gt; x * x) |&gt; List.sum</span><br><span class="line"></span><br><span class="line"><span class="comment">// In F# returns are implicit -- no "return" needed. A function always</span></span><br><span class="line"><span class="comment">// returns the value of the last expression used.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Pattern Matching ========</span></span><br><span class="line"><span class="comment">// Match..with.. is a supercharged case/switch statement.</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">match</span> x <span class="keyword">with</span></span><br><span class="line">| <span class="string">"a"</span> -&gt; printfn <span class="string">"x is a"</span></span><br><span class="line">| <span class="string">"b"</span> -&gt; printfn <span class="string">"x is b"</span></span><br><span class="line">| _ -&gt; printfn <span class="string">"x is something else"</span>   <span class="comment">// underscore matches anything</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Some(..) and None are roughly analogous to Nullable wrappers</span></span><br><span class="line"><span class="keyword">let</span> validValue = Some(<span class="number">99</span>)</span><br><span class="line"><span class="keyword">let</span> invalidValue = None</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example, match..with matches the "Some" and the "None",</span></span><br><span class="line"><span class="comment">// and also unpacks the value in the "Some" at the same time.</span></span><br><span class="line"><span class="keyword">let</span> optionPatternMatch input =</span><br><span class="line">   <span class="keyword">match</span> input <span class="keyword">with</span></span><br><span class="line">    | Some i -&gt; printfn <span class="string">"input is an int=%d"</span> i</span><br><span class="line">    | None -&gt; printfn <span class="string">"input is missing"</span></span><br><span class="line"></span><br><span class="line">optionPatternMatch validValue</span><br><span class="line">optionPatternMatch invalidValue</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Complex Data Types =========</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Tuple types are pairs, triples, etc. Tuples use commas.</span></span><br><span class="line"><span class="keyword">let</span> twoTuple = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> threeTuple = (<span class="string">"a"</span>, <span class="number">2</span>, <span class="keyword">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Record types have named fields. Semicolons are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; First: string; Last: string &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="comment">// You can also use new lines to elide the semiclon.</span></span><br><span class="line"><span class="keyword">let</span> person2 =</span><br><span class="line">    &#123; First=<span class="string">"Jane"</span></span><br><span class="line">      Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Union types have choices. Vertical bars are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Temp</span> </span>= </span><br><span class="line">    | DegreesC <span class="keyword">of</span> float</span><br><span class="line">    | DegreesF <span class="keyword">of</span> float</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = DegreesF <span class="number">98.6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Types can be combined recursively in complex ways.</span></span><br><span class="line"><span class="comment">// E.g. here is a union type that contains a list of the same type:</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Employee</span> </span>= </span><br><span class="line">  | Worker <span class="keyword">of</span> Person</span><br><span class="line">  | Manager <span class="keyword">of</span> Employee list</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jdoe = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="keyword">let</span> worker = Worker jdoe</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Printing =========</span></span><br><span class="line"><span class="comment">// The printf/printfn functions are similar to the</span></span><br><span class="line"><span class="comment">// Console.Write/WriteLine functions in C#.</span></span><br><span class="line">printfn <span class="string">"Printing an int %i, a float %f, a bool %b"</span> <span class="number">1</span> <span class="number">2.0</span> <span class="keyword">true</span></span><br><span class="line">printfn <span class="string">"A string %s, and something generic %A"</span> <span class="string">"hello"</span> [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// all complex types have pretty printing built in</span></span><br><span class="line">printfn <span class="string">"twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"</span> </span><br><span class="line">         twoTuple person1 temp worker</span><br></pre></td></tr></table></figure>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://blogs.msdn.microsoft.com/dotnet/" target="_blank" rel="external">.NET Blog</a>, <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/" target="_blank" rel="external">Get Started with F# as a C# developer</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
@@ -2196,56 +2298,6 @@
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Ubuntu 安裝 VS Code ?]]></title>
-    <link href="http://oomusou.io/vscode/ubuntu/"/>
-    <id>http://oomusou.io/vscode/ubuntu/</id>
-    <published>2018-03-11T12:23:43.000Z</published>
-    <updated>2018-03-08T10:35:17.029Z</updated>
-    <content type="html"><![CDATA[<p>由於 VS Code 本來就是跨平台，因此也可以在 Ubuntu 使用 VS Code。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>Ubuntu 16.04<br>VS Code 1.21.0</p>
-<h2 id="Download">Download</h2><hr>
-<p><img src="/images/vscode/ubuntu/ubuntu000.png" alt="ubuntu000"></p>
-<ol>
-<li>到 <a href="https://code.visualstudio.com/" target="_blank" rel="external">VS Code</a> 官網，選擇 <code>deb</code> 格式下載。</li>
-</ol>
-<p><img src="/images/vscode/ubuntu/ubuntu001.png" alt="ubuntu001"></p>
-<ol>
-<li>選擇將檔案存下來到 <code>~/Downloads</code> 目錄</li>
-</ol>
-<h2 id="安裝_deb">安裝 deb</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ cd Downloads</span><br><span class="line">$ sudo dpkg -<span class="tag">i</span> code_1.<span class="number">21.0</span>-<span class="number">1520420608</span>_amd64<span class="class">.deb</span></span><br><span class="line">$ code</span><br></pre></td></tr></table></figure>
-<p>使用 dpkg 安裝 <code>deb</code>。</p>
-<ul>
-<li><strong>-i</strong> : <code>i</code> stall，安裝 <code>deb</code></li>
-</ul>
-<p>使用 <code>code</code> 執行 VS Code。</p>
-<p><img src="/images/vscode/ubuntu/ubuntu002.png" alt="ubuntu002"></p>
-<ol>
-<li>輸入 <code>cd Downloads</code> 將目前目錄切到 <code>Downloads</code>，因為 Firefox 將 <code>deb</code> 下載到 <code>~/Downloads</code> 目錄下</li>
-<li>輸入 <code>sudo dpkg -i code_1.21.0-1520420608_amd64.deb</code> 安裝 <code>deb</code></li>
-<li>輸入 <code>code</code> 執行 VS Code</li>
-</ol>
-<p><img src="/images/vscode/ubuntu/ubuntu003.png" alt="ubuntu003"></p>
-<p>VS Code 成功執行在 Ubuntu。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>VS Code 在 Ubuntu 安裝稍微不一樣，需要使用 <code>dpkg</code> 安裝 <code>deb</code> 格式</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[Ubuntu 也可以安裝 VS Code]]>
-    
-    </summary>
-    
-      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
-    
-      <category term="VS Code" scheme="http://oomusou.io/tags/VS-Code/"/>
     
   </entry>
   
