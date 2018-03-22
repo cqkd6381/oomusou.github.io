@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 FP 將有不同的實現方式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-22T01:32:59.098Z">
+<meta property="og:updated_time" content="2018-03-22T01:57:28.813Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 C# 實現 Strategy Pattern ?">
 <meta name="twitter:description" content="使用 FP 將有不同的實現方式">
@@ -222,7 +222,7 @@
 <h3 id="Delegate">Delegate</h3><p>從 Strategy Pattern，我們看到了 OOP 幾個缺點：</p>
 <ul>
 <li>原本簡單的 <code>if ... else</code> 被拆成很多檔案，導致 class 爆炸</li>
-<li><code>interface</code> 雖然有制定 spec 與 compiler 編譯檢查的優點，但是是否有為 <code>interface</code> 開一個檔案的需要？</li>
+<li><code>interface</code> 雖然有制定 spec 與 compiler 編譯檢查的優點，但是只有一個 method 的 interface，是否有有開 <code>interface</code> 的需要？</li>
 </ul>
 <p>雖然 <code>StrategyInterface</code> 定義了 <code>CalculatePrice()</code>，但整個 <code>interface</code> 只有一個 method，顯然使用 <code>interface</code> 有殺雞用牛刀之嫌，此時可將 <code>interface</code> 退化成 <code>delegate</code>。</p>
 <p><img src="/images/design-pattern/strategy/strategy009.svg" alt="trategy00"></p>
