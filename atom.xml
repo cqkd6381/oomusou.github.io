@@ -177,7 +177,7 @@
     <link href="http://oomusou.io/design-pattern/strategy/"/>
     <id>http://oomusou.io/design-pattern/strategy/</id>
     <published>2018-03-20T12:23:43.000Z</published>
-    <updated>2018-03-22T02:12:10.413Z</updated>
+    <updated>2018-03-22T02:17:29.995Z</updated>
     <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中使用 <code>interface</code> 最經典的應用，隨著 FP 逐漸受到重視，Strategy Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -335,7 +335,7 @@
 <p><strong>StrategyFactory.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">StrategyFactory</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; Create(<span class="keyword">double</span> price)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> price &lt; <span class="number">1000</span></span><br><span class="line">                ? (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt;) PriceStrategy.CalculateDiscountPrice</span><br><span class="line">                : PriceStrategy.CalculateRebatePrice;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>將 <code>delegate</code> 退化成 <code>Func&lt;T&gt;</code> ，其中泛型第一個參數為 input 型別，最後一個參數為 return 型別，也就是 <code>Func&lt;double, double&gt;</code> 其實與 <code>delegate double CalculatePriceDelegate(double price);</code> 意義完全相同，只是 <code>Func&lt;T&gt;</code> 沒有型別名稱，而 <code>delegate</code> 有型別名稱而已。</p>
-<p>如此我們就將 <code>StrategyInterface</code> 消滅了。</p>
+<p>如此我們就將 <code>CalculatePriceDelegate</code> 消滅了。</p>
 <blockquote>
 <p>Q : Delegate vs. Func<t> vs. Action<t> vs. Predicate<t></t></t></t></p>
 </blockquote>
@@ -345,6 +345,10 @@
 <li><strong>Action<t></t></strong> : C# 3.0，可為 function 定義型別，但不用定義型別名稱，適用無 return 值 (void) 的 function</li>
 <li><strong>Predicate<t></t></strong> : C# 3.0，可為 function 定義型別，但不用定義型別名稱，適用無 return bool 的 function</li>
 </ul>
+<blockquote>
+<p>若 function type 需要重複使用，則建議使用 <code>delegate</code>，並取一個型別名稱</p>
+<p>若 function type 只用一次，不需要型別名稱，則建議使用 <code>Func&lt;T&gt;</code> 、 <code>Action&lt;T&gt;</code> 或 <code>Predicate&lt;T&gt;</code>，可視為 anonymous function type 或 unnamed funciton type</p>
+</blockquote>
 <h3 id="Lambda">Lambda</h3><p><code>StrategyFactory</code> 回傳 strategy function 的理念雖然不錯，若 <code>StrategyFactory</code> 在整個 project 只使用一次而已，是否真的要另外開一個 class ?</p>
 <p><img src="/images/design-pattern/strategy/strategy014.svg" alt="trategy01"></p>
 <p><strong>OrderService</strong></p>
