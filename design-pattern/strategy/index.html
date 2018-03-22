@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 FP 將有不同的實現方式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-22T01:57:28.813Z">
+<meta property="og:updated_time" content="2018-03-22T02:12:10.413Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 C# 實現 Strategy Pattern ?">
 <meta name="twitter:description" content="使用 FP 將有不同的實現方式">
@@ -256,7 +256,7 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">StrategyFactory</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CalculatePriceDelegate <span class="title">Create</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price &lt; <span class="number">1000</span></span><br><span class="line">                ? (CalculatePriceDelegate) PriceStrategy.CalculateDiscountPrice</span><br><span class="line">                : PriceStrategy.CalculateRebatePrice;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>StrategyFactory</code> 的 <code>Create()</code> 從原本回傳 strategy object 改成回傳 strategy function，也就是所有的 function 都必須符合 <code>CalculatePriceDelegate</code> delegate 型別，若違反 <code>delegate</code> ，將會 compiler 錯誤。</p>
 <blockquote>
-<p>Delegate 就是 function 的 interface，這樣 compiler 才能幫我們檢查</p>
+<p>簡單的說，Delegate 就是 function 的 interface 或 function 的 type，這樣 compiler 才能幫我們檢查</p>
 </blockquote>
 <h3 id="Func">Func</h3><p>雖然 <code>CalculatePriceDelegate</code> 定義 function 的 spec 的理念很不錯，若 <code>delegate</code> 只使用一遍，真的需要開一個檔案建立 <code>delegate</code> 嗎 ?</p>
 <p><strong>StrategyFactory</strong></p>
