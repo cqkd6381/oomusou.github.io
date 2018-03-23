@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-23T05:25:04.460Z</updated>
+  <updated>2018-03-23T07:25:13.839Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/strategy/"/>
     <id>http://oomusou.io/fsharp/strategy/</id>
     <published>2018-03-23T12:23:43.000Z</published>
-    <updated>2018-03-23T05:25:04.460Z</updated>
+    <updated>2018-03-23T07:25:13.839Z</updated>
     <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中 『解耦合』最經典的應用，F# 既然是 Function First Language，就讓我們以 function 的角度重新思考什麼是 『解耦合』。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -66,7 +66,7 @@
 <p>既然有不同的 strategy，就會有選擇 strategy 的邏輯，所以 factory 少不了，只是從 OOP 的 factory class 退化成 factory function。</p>
 <p>Strategy 的選擇，使用 FP 的 Pattern Matching 最適合，根據不同的條件回傳不同的 function。</p>
 <p><img src="/images/fsharp/strategy/strategy001.png" alt="trategy00"></p>
-<p>F# 雖然不用寫型別，但對於型別檢查依然非常嚴格，<code>strategyFactory()</code> 被推導為 <code>float -&gt; (float -&gt; float)</code>，也就是我們必須回傳一個 <code>float -&gt; float</code> 的 function。</p>
+<p>F# 雖然不用寫型別，但對於型別檢查依然非常嚴格，<code>strategyFactory()</code> 被 Type Inference 推導為 <code>float -&gt; (float -&gt; float)</code>，也就是我們必須回傳一個 <code>float -&gt; float</code> 的 function。</p>
 <p>在 C# 我們必須明確使用 <code>delegate</code> 或 <code>Func&lt;float, float&gt;</code> 定義 strategy 的 signature，但在 F# 都省了，因此程式碼變得非常精簡，兼具強型別語言與弱型別語言的優點。</p>
 <p>但 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 signature 畢竟不一樣，因此在使用 Pattern Matching 時，必須先將  <code>float -&gt; float</code> 整理好，因爲 F# 支援 Currying，<code>discountStrategy 0.8</code> 會自動回傳 <code>float -&gt; float</code> 的 function，如此將符合 Pattern Matching 對型別的要求。</p>
 <blockquote>
