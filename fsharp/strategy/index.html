@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="以 FP 的角度思考解耦合">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-23T03:36:41.090Z">
+<meta property="og:updated_time" content="2018-03-23T04:02:39.851Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 F# 實現 Strategy Pattern ?">
 <meta name="twitter:description" content="以 FP 的角度思考解耦合">
@@ -136,7 +136,7 @@
 <p>要將不同的 strategy <code>抽象化</code> 看成相同的物件，才能使用 <code>多型</code> 操作，所以要設計 <code>interface</code> 訂定 <code>抽象化</code> 的標準。</p>
 <p>也就是 OOP 是將焦點放在 <code>不同的部分</code>，進而將 <code>不同的部分</code> 抽象化成 Inteface。</p>
 <h2 id="FP_思考方式">FP 思考方式</h2><hr>
-<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Funciton Composition，因為 strategy 只是功能，所以是 function。</p>
+<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Function Composition，因為 strategy 只是功能，所以是 function。</p>
 <p>要將相同的部分抽出為 Higher Order Function，不同 strategy 抽成獨立 funciton，再將 strategy 以參數的方式傳入 Higher Order Function。</p>
 <p>也就是 FP 是將焦點放在 <code>相同的部分</code>，進而將 <code>相同的部分</code> 抽成 Higher Order Function。</p>
 <h2 id="Implemetation">Implemetation</h2><hr>

@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-23T03:36:41.090Z</updated>
+  <updated>2018-03-23T04:02:39.851Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/strategy/"/>
     <id>http://oomusou.io/fsharp/strategy/</id>
     <published>2018-03-23T12:23:43.000Z</published>
-    <updated>2018-03-23T03:36:41.090Z</updated>
+    <updated>2018-03-23T04:02:39.851Z</updated>
     <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中 『解耦合』最經典的應用，F# 既然是 Function First Language，就讓我們以 function 的角度重新思考什麼是 『解耦合』。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -49,7 +49,7 @@
 <p>要將不同的 strategy <code>抽象化</code> 看成相同的物件，才能使用 <code>多型</code> 操作，所以要設計 <code>interface</code> 訂定 <code>抽象化</code> 的標準。</p>
 <p>也就是 OOP 是將焦點放在 <code>不同的部分</code>，進而將 <code>不同的部分</code> 抽象化成 Inteface。</p>
 <h2 id="FP_思考方式">FP 思考方式</h2><hr>
-<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Funciton Composition，因為 strategy 只是功能，所以是 function。</p>
+<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Function Composition，因為 strategy 只是功能，所以是 function。</p>
 <p>要將相同的部分抽出為 Higher Order Function，不同 strategy 抽成獨立 funciton，再將 strategy 以參數的方式傳入 Higher Order Function。</p>
 <p>也就是 FP 是將焦點放在 <code>相同的部分</code>，進而將 <code>相同的部分</code> 抽成 Higher Order Function。</p>
 <h2 id="Implemetation">Implemetation</h2><hr>
