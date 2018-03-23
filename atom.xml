@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-22T09:47:52.805Z</updated>
+  <updated>2018-03-23T03:28:28.623Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,98 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 F# 實現 Strategy Pattern ?]]></title>
+    <link href="http://oomusou.io/fsharp/strategy/"/>
+    <id>http://oomusou.io/fsharp/strategy/</id>
+    <published>2018-03-23T12:23:43.000Z</published>
+    <updated>2018-03-23T03:28:28.623Z</updated>
+    <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中使用 <code>interface</code> 最經典的應用，F# 既然是 function first language，就讓我們以 function 的角度重新思考 Strategy Pattern。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
+<ul>
+<li>超過 1000 元，則 <code>滿千送百</code></li>
+<li>不到 1000 元，則 <code>全館8折</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>直接使用 FP 的思維完成需求。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Strategy Pattern</p>
+<p>將不同演算法抽象化成相同 interface，讓高階模組與實際演算法解耦合，而彼此僅相依於 interface，進而可動態切換演算法</p>
+</blockquote>
+<p><img src="/images/fsharp/strategy/strategy000.svg" alt="trategy00"></p>
+<p>首先思考 Strategy Pattern 的本質：</p>
+<ol>
+<li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
+<li><code>Strategy</code> 必須能動態切換</li>
+</ol>
+<p>只要能達到這兩個目標，就算完成了 Strategy Pattern。</p>
+<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
+<p>OOP 強調是 data 與 function 合一，認為什麼都是物件，所以 strategy 也是物件。</p>
+<p>要將不同的 strategy <code>抽象化</code> 看成相同的物件，才能使用 <code>多型</code> 操作，所以要設計 <code>interface</code> 訂定 <code>抽象化</code> 的標準。</p>
+<p>也就是 OOP 是將焦點放在 <code>不同的部分</code>，進而將 <code>不同的部分</code> 抽象化成 Inteface。</p>
+<h2 id="FP_思考方式">FP 思考方式</h2><hr>
+<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Funciton Composition，因為 strategy 只是功能，所以是 function。</p>
+<p>要將相同的部分抽出為 Higher Order Function，不同 strategy 抽成獨立 funciton，再將 strategy 以參數的方式傳入 Higher Order Function。</p>
+<p>也就是 FP 是將焦點放在 <code>相同的部分</code>，進而將 <code>相同的部分</code> 抽成 Higher Order Function。</p>
+<h2 id="Implemetation">Implemetation</h2><hr>
+<p><strong>Strategy.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceStrategy =</span><br><span class="line">    <span class="keyword">let</span> rebateStrategy price = price - <span class="number">100.0</span></span><br><span class="line">    <span class="keyword">let</span> discountStrategy discount price = price * discount * <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>買千送百</code> 以 <code>rebateStrategy()</code> 表示。</p>
+<p>將 <code>全館8折</code> 以 <code>discountStrategy()</code> 表示。</p>
+<p>特別注意 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 singnature 並不一樣，傳統 OOP 在使用 Strategy Pattern 時，必須先定義 strategy interface，但只要遇到 strategy 間 signature 不同時就很困擾，甚至要動用 Adapter Pattern。</p>
+<p>但因為 FP 沒有 interface 概念，所以不需要為不同的 strategy <code>抽象化</code> 成相同 interface，故也沒有 interface 很難開的困擾。</p>
+<p><strong>OrderService.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> strategyFactory price = </span><br><span class="line">        <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span>  -&gt; PriceStrategy.rebateStrategy</span><br><span class="line">        | <span class="keyword">false</span> -&gt; PriceStrategy.discountStrategy <span class="number">0.8</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> getPrice price =</span><br><span class="line">        price</span><br><span class="line">        |&gt; strategyFactory price</span><br></pre></td></tr></table></figure>
+<p>第 4 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> strategyFactory price = </span><br><span class="line">    <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">    | <span class="keyword">true</span>  -&gt; PriceStrategy.rebateStrategy</span><br><span class="line">    | <span class="keyword">false</span> -&gt; PriceStrategy.discountStrategy <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
+<p>既然有不同的 strategy，就會有選擇 strategy 的邏輯，所以 factory 少不了，只是從 OOP 的 factory class 退化成 factory function。</p>
+<p>Strategy 的選擇，使用 FP 的 Pattern Matching 最適合，根據不同的條件回傳不同的 function。</p>
+<p><img src="/images/fsharp/strategy/strategy001.png" alt="trategy00"></p>
+<p>F# 雖然不用寫型別，但對於型別檢查依然非常嚴格，<code>strategyFactory()</code> 被推導為 <code>float -&gt; (float -&gt; float)</code>，也就是我們必須回傳一個 <code>float -&gt; float</code> 的 function。</p>
+<p>在 C# 我們必須明確使用 <code>delegate</code> 或 <code>Func&lt;float, float&gt;</code> 定義 strategy 的 signature，但在 F# 都省了，因此程式碼變得非常精簡，兼具強型別語言與弱型別語言的優點。</p>
+<p>但 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 signature 畢竟不一樣，因此在使用 Pattern Matching 時，必須先將  <code>float -&gt; float</code> 整理好，因爲 F# 支援 Currying，<code>discountStrategy 0.8</code> 會自動回傳 <code>float -&gt; float</code> 的 function，如此將符合 Pattern Matching 對型別的要求。</p>
+<blockquote>
+<p>FP 不用 interface，不代表沒有型別要求，透過 Currying，可以解決 OOP 因為需求不同難開 interface 的老問題，只要在最後 signature 一樣即可，並不要求設計 function 時都要有相同的 signature，可使用 Currying 逐步完成 signature 要求</p>
+</blockquote>
+<p>第 9 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getPrice price =</span><br><span class="line">    price</span><br><span class="line">    |&gt; strategyFactory price</span><br></pre></td></tr></table></figure>
+<p>將 price 以 Pipeline 方式傳給對的 strategy 計算，其中 <code>strategyFactory price</code> 將傳回對的 strategy。</p>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line"></span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
+<p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
+<h2 id="Retrospective">Retrospective</h2><hr>
+<p>回想 Strategy Pattern 的本質：</p>
+<ol>
+<li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
+<li><code>Strategy</code> 必須能動態切換</li>
+</ol>
+<p>FP 雖然沒有定義 interface，但 strategy 已經與 context 實質解耦合，strategy 都必須嚴格遵守 <code>float -&gt; float</code> 的 signature，任何 <code>float -&gt; float</code> 的 function 都可視為 strategy。</p>
+<p>只要遵守 <code>float -&gt; float</code> 的 strategy，就能被 Pattern Matching 動態切換。</p>
+<p>所以 FP 版的 Strategy Pattern 雖然沒有 interface 也沒有 <code>多型</code>，但本質與 OOP 是相同的。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>不用很糾結一定要使用 interface 與 <code>多型</code>，重點在於 <code>解耦合</code> 與 <code>動態切換</code>，FP 使用 Type Inference 與 Higher Order Function 也能達成相同的目標</li>
+<li>FP 的 Higher Order Function，幾乎可以解決原本 OOP Design Pattern 想解決的很多問題，FP 設計時要將焦點放在 <code>相同的部分</code>，抽出 Higher Order Function 後，再透過 Function Composition 組合成新的 function</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderStrategy" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[以 FP 的角度思考解耦合]]>
+    
+    </summary>
+    
+      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 .NET Core 之 Type Forwarding]]></title>
@@ -1774,6 +1866,32 @@
   </entry>
   
   <entry>
+    <title><![CDATA[F# 語法檢定考]]></title>
+    <link href="http://oomusou.io/fsharp/syntax-all/"/>
+    <id>http://oomusou.io/fsharp/syntax-all/</id>
+    <published>2018-03-16T12:23:43.000Z</published>
+    <updated>2018-03-14T07:57:49.606Z</updated>
+    <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>F# 4.1</p>
+<h2 id="Overview_of_F#_Syntax">Overview of F# Syntax</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is presented with permission from Scott Wlaschin, the original author.  This has been slightly modified.</span></span><br><span class="line"><span class="comment">// Single line comments use a double slash.</span></span><br><span class="line"><span class="comment">(* </span><br><span class="line">    Multi-line comments can be done this way (though double-slash is usually used).</span><br><span class="line">*)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== "Variables" (but not really) ==========</span></span><br><span class="line"><span class="comment">// The "let" keyword defines an (immutable) value</span></span><br><span class="line"><span class="keyword">let</span> myInt = <span class="number">5</span></span><br><span class="line"><span class="keyword">let</span> myFloat = <span class="number">3.14</span></span><br><span class="line"><span class="keyword">let</span> myString = <span class="string">"hello"</span>   <span class="comment">// note that no types needed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Lists ============</span></span><br><span class="line"><span class="keyword">let</span> twoToFive = [ <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span> ]        <span class="comment">// Square brackets create a list with</span></span><br><span class="line">                                     <span class="comment">// semicolon delimiters.</span></span><br><span class="line"><span class="keyword">let</span> oneToFive = <span class="number">1</span> :: twoToFive   <span class="comment">// :: creates list with new 1st element</span></span><br><span class="line"><span class="comment">// The result is [1; 2; 3; 4; 5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> zeroToFive = [<span class="number">0</span>;<span class="number">1</span>] @ twoToFive   <span class="comment">// @ concats two lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IMPORTANT: commas are never used as delimiters, only semicolons!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Functions ========</span></span><br><span class="line"><span class="comment">// The "let" keyword also defines a named function.</span></span><br><span class="line"><span class="keyword">let</span> square x = x * x          <span class="comment">// Note that no parens are used.</span></span><br><span class="line">square <span class="number">3</span>                      <span class="comment">// Now run the function. Again, no parens.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add x y = x + y           <span class="comment">// don't use add (x,y)! It means something</span></span><br><span class="line">                              <span class="comment">// completely different.</span></span><br><span class="line">add <span class="number">2</span> <span class="number">3</span>                       <span class="comment">// Now run the function.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// to define a multiline function, just use indents. No semicolons needed.</span></span><br><span class="line"><span class="keyword">let</span> evens list =</span><br><span class="line">   <span class="keyword">let</span> isEven x = x % <span class="number">2</span> = <span class="number">0</span>     <span class="comment">// Define "isEven" as an inner ("nested") function</span></span><br><span class="line">   List.filter isEven list      <span class="comment">// List.filter is a library function</span></span><br><span class="line">                                <span class="comment">// with two parameters: a boolean function</span></span><br><span class="line">                                <span class="comment">// and a list to work on</span></span><br><span class="line">  </span><br><span class="line">evens oneToFive               <span class="comment">// Now run the function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You can use parens to clarify precedence. In this example,</span></span><br><span class="line"><span class="comment">// do "map" first, with two args, then do "sum" on the result.</span></span><br><span class="line"><span class="comment">// Without the parens, "List.map" would be passed as an arg to List.sum</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100 =</span><br><span class="line">   List.sum (List.map square [ <span class="number">1</span> .. <span class="number">100</span> ])</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can pipe the output of one operation to the next using "|&gt;"</span></span><br><span class="line"><span class="comment">// Here is the same sumOfSquares function written using pipes</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100piped =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map square |&gt; List.sum  <span class="comment">// "square" was defined earlier</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// you can define lambdas (anonymous functions) using the "fun" keyword</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100withFun =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map (<span class="keyword">fun</span> x -&gt; x * x) |&gt; List.sum</span><br><span class="line"></span><br><span class="line"><span class="comment">// In F# returns are implicit -- no "return" needed. A function always</span></span><br><span class="line"><span class="comment">// returns the value of the last expression used.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Pattern Matching ========</span></span><br><span class="line"><span class="comment">// Match..with.. is a supercharged case/switch statement.</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">match</span> x <span class="keyword">with</span></span><br><span class="line">| <span class="string">"a"</span> -&gt; printfn <span class="string">"x is a"</span></span><br><span class="line">| <span class="string">"b"</span> -&gt; printfn <span class="string">"x is b"</span></span><br><span class="line">| _ -&gt; printfn <span class="string">"x is something else"</span>   <span class="comment">// underscore matches anything</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Some(..) and None are roughly analogous to Nullable wrappers</span></span><br><span class="line"><span class="keyword">let</span> validValue = Some(<span class="number">99</span>)</span><br><span class="line"><span class="keyword">let</span> invalidValue = None</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example, match..with matches the "Some" and the "None",</span></span><br><span class="line"><span class="comment">// and also unpacks the value in the "Some" at the same time.</span></span><br><span class="line"><span class="keyword">let</span> optionPatternMatch input =</span><br><span class="line">   <span class="keyword">match</span> input <span class="keyword">with</span></span><br><span class="line">    | Some i -&gt; printfn <span class="string">"input is an int=%d"</span> i</span><br><span class="line">    | None -&gt; printfn <span class="string">"input is missing"</span></span><br><span class="line"></span><br><span class="line">optionPatternMatch validValue</span><br><span class="line">optionPatternMatch invalidValue</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Complex Data Types =========</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Tuple types are pairs, triples, etc. Tuples use commas.</span></span><br><span class="line"><span class="keyword">let</span> twoTuple = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> threeTuple = (<span class="string">"a"</span>, <span class="number">2</span>, <span class="keyword">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Record types have named fields. Semicolons are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; First: string; Last: string &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="comment">// You can also use new lines to elide the semiclon.</span></span><br><span class="line"><span class="keyword">let</span> person2 =</span><br><span class="line">    &#123; First=<span class="string">"Jane"</span></span><br><span class="line">      Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Union types have choices. Vertical bars are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Temp</span> </span>= </span><br><span class="line">    | DegreesC <span class="keyword">of</span> float</span><br><span class="line">    | DegreesF <span class="keyword">of</span> float</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = DegreesF <span class="number">98.6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Types can be combined recursively in complex ways.</span></span><br><span class="line"><span class="comment">// E.g. here is a union type that contains a list of the same type:</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Employee</span> </span>= </span><br><span class="line">  | Worker <span class="keyword">of</span> Person</span><br><span class="line">  | Manager <span class="keyword">of</span> Employee list</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jdoe = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="keyword">let</span> worker = Worker jdoe</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Printing =========</span></span><br><span class="line"><span class="comment">// The printf/printfn functions are similar to the</span></span><br><span class="line"><span class="comment">// Console.Write/WriteLine functions in C#.</span></span><br><span class="line">printfn <span class="string">"Printing an int %i, a float %f, a bool %b"</span> <span class="number">1</span> <span class="number">2.0</span> <span class="keyword">true</span></span><br><span class="line">printfn <span class="string">"A string %s, and something generic %A"</span> <span class="string">"hello"</span> [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// all complex types have pretty printing built in</span></span><br><span class="line">printfn <span class="string">"twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"</span> </span><br><span class="line">         twoTuple person1 temp worker</span><br></pre></td></tr></table></figure>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://blogs.msdn.microsoft.com/dotnet/" target="_blank" rel="external">.NET Blog</a>, <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/" target="_blank" rel="external">Get Started with F# as a C# developer</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[.NET Core SDK 簡介]]></title>
     <link href="http://oomusou.io/netcore/sdk/"/>
     <id>http://oomusou.io/netcore/sdk/</id>
@@ -1831,32 +1949,6 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[F# 語法檢定考]]></title>
-    <link href="http://oomusou.io/fsharp/syntax-all/"/>
-    <id>http://oomusou.io/fsharp/syntax-all/</id>
-    <published>2018-03-16T12:23:43.000Z</published>
-    <updated>2018-03-14T07:57:49.606Z</updated>
-    <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>F# 4.1</p>
-<h2 id="Overview_of_F#_Syntax">Overview of F# Syntax</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// This is presented with permission from Scott Wlaschin, the original author.  This has been slightly modified.</span></span><br><span class="line"><span class="comment">// Single line comments use a double slash.</span></span><br><span class="line"><span class="comment">(* </span><br><span class="line">    Multi-line comments can be done this way (though double-slash is usually used).</span><br><span class="line">*)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== "Variables" (but not really) ==========</span></span><br><span class="line"><span class="comment">// The "let" keyword defines an (immutable) value</span></span><br><span class="line"><span class="keyword">let</span> myInt = <span class="number">5</span></span><br><span class="line"><span class="keyword">let</span> myFloat = <span class="number">3.14</span></span><br><span class="line"><span class="keyword">let</span> myString = <span class="string">"hello"</span>   <span class="comment">// note that no types needed</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Lists ============</span></span><br><span class="line"><span class="keyword">let</span> twoToFive = [ <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span> ]        <span class="comment">// Square brackets create a list with</span></span><br><span class="line">                                     <span class="comment">// semicolon delimiters.</span></span><br><span class="line"><span class="keyword">let</span> oneToFive = <span class="number">1</span> :: twoToFive   <span class="comment">// :: creates list with new 1st element</span></span><br><span class="line"><span class="comment">// The result is [1; 2; 3; 4; 5]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> zeroToFive = [<span class="number">0</span>;<span class="number">1</span>] @ twoToFive   <span class="comment">// @ concats two lists</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// IMPORTANT: commas are never used as delimiters, only semicolons!</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Functions ========</span></span><br><span class="line"><span class="comment">// The "let" keyword also defines a named function.</span></span><br><span class="line"><span class="keyword">let</span> square x = x * x          <span class="comment">// Note that no parens are used.</span></span><br><span class="line">square <span class="number">3</span>                      <span class="comment">// Now run the function. Again, no parens.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add x y = x + y           <span class="comment">// don't use add (x,y)! It means something</span></span><br><span class="line">                              <span class="comment">// completely different.</span></span><br><span class="line">add <span class="number">2</span> <span class="number">3</span>                       <span class="comment">// Now run the function.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// to define a multiline function, just use indents. No semicolons needed.</span></span><br><span class="line"><span class="keyword">let</span> evens list =</span><br><span class="line">   <span class="keyword">let</span> isEven x = x % <span class="number">2</span> = <span class="number">0</span>     <span class="comment">// Define "isEven" as an inner ("nested") function</span></span><br><span class="line">   List.filter isEven list      <span class="comment">// List.filter is a library function</span></span><br><span class="line">                                <span class="comment">// with two parameters: a boolean function</span></span><br><span class="line">                                <span class="comment">// and a list to work on</span></span><br><span class="line">  </span><br><span class="line">evens oneToFive               <span class="comment">// Now run the function</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// You can use parens to clarify precedence. In this example,</span></span><br><span class="line"><span class="comment">// do "map" first, with two args, then do "sum" on the result.</span></span><br><span class="line"><span class="comment">// Without the parens, "List.map" would be passed as an arg to List.sum</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100 =</span><br><span class="line">   List.sum (List.map square [ <span class="number">1</span> .. <span class="number">100</span> ])</span><br><span class="line"></span><br><span class="line"><span class="comment">// You can pipe the output of one operation to the next using "|&gt;"</span></span><br><span class="line"><span class="comment">// Here is the same sumOfSquares function written using pipes</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100piped =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map square |&gt; List.sum  <span class="comment">// "square" was defined earlier</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// you can define lambdas (anonymous functions) using the "fun" keyword</span></span><br><span class="line"><span class="keyword">let</span> sumOfSquaresTo100withFun =</span><br><span class="line">   [ <span class="number">1</span> .. <span class="number">100</span> ] |&gt; List.map (<span class="keyword">fun</span> x -&gt; x * x) |&gt; List.sum</span><br><span class="line"></span><br><span class="line"><span class="comment">// In F# returns are implicit -- no "return" needed. A function always</span></span><br><span class="line"><span class="comment">// returns the value of the last expression used.</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// ======== Pattern Matching ========</span></span><br><span class="line"><span class="comment">// Match..with.. is a supercharged case/switch statement.</span></span><br><span class="line"><span class="keyword">let</span> x = <span class="string">"a"</span></span><br><span class="line"><span class="keyword">match</span> x <span class="keyword">with</span></span><br><span class="line">| <span class="string">"a"</span> -&gt; printfn <span class="string">"x is a"</span></span><br><span class="line">| <span class="string">"b"</span> -&gt; printfn <span class="string">"x is b"</span></span><br><span class="line">| _ -&gt; printfn <span class="string">"x is something else"</span>   <span class="comment">// underscore matches anything</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Some(..) and None are roughly analogous to Nullable wrappers</span></span><br><span class="line"><span class="keyword">let</span> validValue = Some(<span class="number">99</span>)</span><br><span class="line"><span class="keyword">let</span> invalidValue = None</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this example, match..with matches the "Some" and the "None",</span></span><br><span class="line"><span class="comment">// and also unpacks the value in the "Some" at the same time.</span></span><br><span class="line"><span class="keyword">let</span> optionPatternMatch input =</span><br><span class="line">   <span class="keyword">match</span> input <span class="keyword">with</span></span><br><span class="line">    | Some i -&gt; printfn <span class="string">"input is an int=%d"</span> i</span><br><span class="line">    | None -&gt; printfn <span class="string">"input is missing"</span></span><br><span class="line"></span><br><span class="line">optionPatternMatch validValue</span><br><span class="line">optionPatternMatch invalidValue</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Complex Data Types =========</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Tuple types are pairs, triples, etc. Tuples use commas.</span></span><br><span class="line"><span class="keyword">let</span> twoTuple = (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> threeTuple = (<span class="string">"a"</span>, <span class="number">2</span>, <span class="keyword">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// Record types have named fields. Semicolons are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; First: string; Last: string &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> person1 = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="comment">// You can also use new lines to elide the semiclon.</span></span><br><span class="line"><span class="keyword">let</span> person2 =</span><br><span class="line">    &#123; First=<span class="string">"Jane"</span></span><br><span class="line">      Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Union types have choices. Vertical bars are separators.</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Temp</span> </span>= </span><br><span class="line">    | DegreesC <span class="keyword">of</span> float</span><br><span class="line">    | DegreesF <span class="keyword">of</span> float</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> temp = DegreesF <span class="number">98.6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Types can be combined recursively in complex ways.</span></span><br><span class="line"><span class="comment">// E.g. here is a union type that contains a list of the same type:</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Employee</span> </span>= </span><br><span class="line">  | Worker <span class="keyword">of</span> Person</span><br><span class="line">  | Manager <span class="keyword">of</span> Employee list</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> jdoe = &#123; First=<span class="string">"John"</span>; Last=<span class="string">"Doe"</span> &#125;</span><br><span class="line"><span class="keyword">let</span> worker = Worker jdoe</span><br><span class="line"></span><br><span class="line"><span class="comment">// ========= Printing =========</span></span><br><span class="line"><span class="comment">// The printf/printfn functions are similar to the</span></span><br><span class="line"><span class="comment">// Console.Write/WriteLine functions in C#.</span></span><br><span class="line">printfn <span class="string">"Printing an int %i, a float %f, a bool %b"</span> <span class="number">1</span> <span class="number">2.0</span> <span class="keyword">true</span></span><br><span class="line">printfn <span class="string">"A string %s, and something generic %A"</span> <span class="string">"hello"</span> [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line"></span><br><span class="line"><span class="comment">// all complex types have pretty printing built in</span></span><br><span class="line">printfn <span class="string">"twoTuple=%A,\nPerson=%A,\nTemp=%A,\nEmployee=%A"</span> </span><br><span class="line">         twoTuple person1 temp worker</span><br></pre></td></tr></table></figure>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://blogs.msdn.microsoft.com/dotnet/" target="_blank" rel="external">.NET Blog</a>, <a href="https://blogs.msdn.microsoft.com/dotnet/2017/07/24/get-started-with-f-as-a-c-developer/" target="_blank" rel="external">Get Started with F# as a C# developer</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
@@ -2107,197 +2199,6 @@
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
       <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 F# 之 Function]]></title>
-    <link href="http://oomusou.io/fsharp/function/"/>
-    <id>http://oomusou.io/fsharp/function/</id>
-    <published>2018-03-12T12:23:43.000Z</published>
-    <updated>2018-03-10T11:11:15.692Z</updated>
-    <content type="html"><![CDATA[<p>F# 身為 function first-first language，最迷人的當然就是 function 部分。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>.NET Core SDK 2.4.1<br>F# 4.1</p>
-<h2 id="Syntax">Syntax</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>由於 function 也被視為 value，因此同樣使用 <code>let</code> 定義 function</li>
-<li><code>f</code> 為 function name，<code>x</code> 為 parameter，之間以 space 隔開</li>
-<li><code>=</code> 右側為 function 定義</li>
-<li>由於 pure function 要求要有回傳值，所以 <code>x + 1</code> 將被回傳，不用加上 <code>return</code></li>
-<li>不必使用 <code>;</code> 結束</li>
-</ul>
-<h2 id="Scope">Scope</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> list1 = [] <span class="comment">// module : error, function : []</span></span><br><span class="line"><span class="keyword">let</span> function1 =</span><br><span class="line">   <span class="keyword">let</span> list1 = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">   <span class="keyword">let</span> list1 = []</span><br><span class="line">   list1 <span class="comment">// []</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>當 value 名稱相同時，若在 module 會 compile error，若在 function 內則是 <code>後蓋前</code>，因此 <code>list1</code> 皆為 <code>[]</code></li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line"><span class="keyword">let</span> sumPlus x =</span><br><span class="line"><span class="comment">// OK: inner list1 hides the outer list1.</span></span><br><span class="line">   <span class="keyword">let</span> list1 = [<span class="number">1</span>; <span class="number">5</span>; <span class="number">10</span>]</span><br><span class="line">   x + List.sum list1</span><br></pre></td></tr></table></figure>
-<ul>
-<li>若 function 內的 value 與 function 外的 value 名稱相同，則 function 內的 value 會蓋掉 (shadow) function 外的變數，因此 <code>sumPlus</code> 的 <code>list</code> 為 <code>[1; 5; 10]</code></li>
-</ul>
-<blockquote>
-<p>雖然 value 相同，F# 會啟動 shadow 機制，但實務上還是不建議重複使用 value 名稱，將造成維護上的困難</p>
-</blockquote>
-<h2 id="Parameter">Parameter</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f (x : int) = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>亦可在 parameter 加上型別，必須使用 <code>()</code>，在 parameter 名稱之後加上 <code>:</code> 與 <code>型別</code></li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>儘管 paramter 不加上型別，因為 F# 的 Type Inference 機制，compiler 會自動由 function body 推導出 parameter 型別</li>
-</ul>
-<p><img src="/images/fsharp/function/function000.png" alt="function000"></p>
-<p>只要將滑鼠移動到 parameter，就可看到其型別為 <code>int</code>。</p>
-<blockquote>
-<p>F# 的 parameter 雖然不用寫型別，但不代表 F# 沒有型別，而是因為其強悍的 Type Inference 機制，讓我們可以少打點字，閱讀上真的想知道型別，就靠 IDE 顯示型別</p>
-<p>實務上建議 parameter 不用寫型別，使用 Type Inference 即可</p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> f x = (x, x)</span><br></pre></td></tr></table></figure>
-<p>若 Type Inference 無法推導出型別，就視為 <code>泛型</code>。</p>
-<p><img src="/images/fsharp/function/function001.png" alt="function001"></p>
-<p>由於 Type Inference 無法由 function body 推導出型別，所以啟動 Automatic Generalization 機制，其中 <code>&#39;a</code> 為自動推導出的 <code>泛型</code>。</p>
-<blockquote>
-<p>在 F# 要使用 <code>泛型</code>，只要不寫型別，且無法推導出具體型別，就被視為 <code>泛型</code>，syntax 比 C# 精簡很多</p>
-</blockquote>
-<h2 id="Function_Body">Function Body</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cylinderVolume radius length =</span><br><span class="line">    <span class="comment">// Define a local value pi.</span></span><br><span class="line">    <span class="keyword">let</span> pi = <span class="number">3.14159</span></span><br><span class="line">    length * pi * radius * radius</span><br></pre></td></tr></table></figure>
-<ul>
-<li><p>若 function 內的程式碼不只一行時，則 <code>=</code> 換行之後並加以縮排，不必使用 <code>{}</code></p>
-</li>
-<li><p>Function 內的 value 的 scope 僅限於 function 內，因此 <code>pi</code> 只有 <code>cylinderVolume</code>  可讀取</p>
-</li>
-</ul>
-<blockquote>
-<p>C# 程式碼中，<code>{}</code> 佔了不少行數，F# 利用縮排取代 <code>{}</code>，程式碼顯的更清爽，且輸入 <code>tab</code> 速度也比 <code>{}</code> 還快</p>
-</blockquote>
-<h2 id="Return_Value">Return Value</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cylinderVolume radius length =</span><br><span class="line">    <span class="comment">// Define a local value pi.</span></span><br><span class="line">    <span class="keyword">let</span> pi = <span class="number">3.14159</span></span><br><span class="line">    length * pi * radius * radius</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Function 最後一行的 expression 或 value 都視為 return 值，因此回傳值為 <code>length * pi * radius * radius</code> expression</li>
-<li>Function 最後一行的 expression 或 value 的型別會被推導為 return type，因為 <code>pi</code> 為 <code>float</code>，所以 return type 被推導為 <code>float</code></li>
-</ul>
-<p><img src="/images/fsharp/function/function002.png" alt="function002"></p>
-<p>只要將滑鼠移動到 function，就可看到其 return type 為 <code>float</code>。</p>
-<blockquote>
-<p>C# 程式碼中會到處充滿 <code>return</code>，F# 很聰明的用最後一行的 value 或 expression 當回傳值，讓程式碼更精簡</p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cylinderVolume radius length : float =</span><br><span class="line">   <span class="comment">// Define a local value pi.</span></span><br><span class="line">   <span class="keyword">let</span> pi = <span class="number">3.14159</span></span><br><span class="line">   length * pi * radius * radius</span><br></pre></td></tr></table></figure>
-<ul>
-<li>亦可為 return type 加上型別，只要在最後加上 <code>:</code> 與 <code>型別</code></li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cylinderVolume (radius : float) (length : float) : float =</span><br><span class="line">   <span class="comment">// Define a local value pi.</span></span><br><span class="line">   <span class="keyword">let</span> pi = <span class="number">3.14159</span></span><br><span class="line">   length * pi * radius * radius</span><br></pre></td></tr></table></figure>
-<ul>
-<li>亦可為 parameter 與 return type 全部加上型別</li>
-</ul>
-<blockquote>
-<p>實務上建議不用替 parameter 與 return type 加上型別，使用 Type Inference 即可</p>
-</blockquote>
-<h2 id="Calling_a_Function">Calling a Function</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vol = cylinderVolume <span class="number">2.0</span> <span class="number">3.0</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>Argument 不需使用 <code>()</code>，只要與 function name 用 space 隔開即可</li>
-<li>Argument 之間不需要 <code>,</code>，只需用 space 隔開即可</li>
-</ul>
-<blockquote>
-<p>傳入 parameter 不需 <code>()</code> 與 <code>,</code>，減少打字時間</p>
-</blockquote>
-<h2 id="Currying">Currying</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> smallPipeRadius = <span class="number">2.0</span></span><br><span class="line"><span class="keyword">let</span> bigPipeRadius = <span class="number">3.0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> smallPipeVolume = cylinderVolume smallPipeRadius</span><br><span class="line"><span class="keyword">let</span> bigPipeVolume = cylinderVolume bigPipeRadius</span><br></pre></td></tr></table></figure>
-<ul>
-<li>若對 function 只傳入部分 parameter，將回傳一個新的 function，可將剩下的 parameter 繼續傳給新的 function，因此可先將 <code>radius</code> 傳入 <code>cylinderVolume</code>，產生<code>smallPipeVolume</code> 與 <code>bigPipeVolume</code> 兩個新的 function</li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> length1 = <span class="number">30.0</span></span><br><span class="line"><span class="keyword">let</span> length2 = <span class="number">40.0</span></span><br><span class="line"><span class="keyword">let</span> smallPipeVol1 = smallPipeVolume length1</span><br><span class="line"><span class="keyword">let</span> smallPipeVol2 = smallPipeVolume length2</span><br><span class="line"><span class="keyword">let</span> bigPipeVol1 = bigPipeVolume length1</span><br><span class="line"><span class="keyword">let</span> bigPipeVol2 = bigPipeVolume length2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>再傳入 <code>cylinerVolume</code> 剩餘的參數 <code>length</code> 給 <code>smallPipeVolume</code> 與  <code>bigPipeVolume</code>，即可得到與  <code>cylinderVolume</code> 相同的結果</li>
-</ul>
-<blockquote>
-<p>Q : 為什麼要使用 Currying ?</p>
-</blockquote>
-<p>傳統 function 必須在所有 argument 都準備好後，才可以呼叫 function，且 function 是立即執行。</p>
-<p>若使用 currying，可分階段將 argument 傳入 function，並回傳新的 function，直到所有 argument 都具備後，function 才會真正執行。</p>
-<blockquote>
-<p>Q : 實務上何時會使用 Currying ?</p>
-</blockquote>
-<ol>
-<li>Argument 無法一次提供，需要逐次提供時</li>
-<li>Function 的某些重要 argument 先由底層 library 提供，並傳回新的 function 給 client，client 只要提供剩下的參數即可</li>
-<li>實現 Decorator Pattern</li>
-</ol>
-<h2 id="Recursive_Function">Recursive Function</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">rec</span> fib n = <span class="keyword">if</span> n &lt; <span class="number">2</span> <span class="keyword">then</span> <span class="number">1</span> <span class="keyword">else</span> fib (n - <span class="number">1</span>) + fib (n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-<ul>
-<li>若在 function body 需要呼叫 function 本身，在 function name 前面加上 <code>rec</code>，表示此為 recursive function</li>
-</ul>
-<blockquote>
-<p>有些演算法的數學，就是使用 recursive 表示，若要改用 loop 改寫反而有難度，若直接用 recursive 表示，不僅能忠實呈現演算法，也比較容易 implement</p>
-</blockquote>
-<h2 id="Function_Value">Function Value</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> apply1 (transform : int -&gt; int ) y = transform y</span><br></pre></td></tr></table></figure>
-<ul>
-<li>FP 的核心概念就是將 function 當成 value 看，稱為 Function Value。</li>
-<li>除了與 value 一樣使用 <code>let</code> 定義 function 外，也跟 value 一樣，可以將 function 當成 function 的 parameter，因此 <code>apply</code> 為 function， <code>transform</code> 為 <code>apply1</code> 的 parameter，但 <code>transform</code> 為 function，其 type 為 <code>int -&gt; int</code>，此為 <code>transfom</code> 的 input 為 <code>int</code>，output 為 <code>int</code></li>
-<li>F# 以 <code>-&gt;</code> 定義 function 的 signature type</li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> increment x = x + <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> result1 = apply1 increment <span class="number">100</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>因此可定義 <code>increment</code> function，再將 <code>increment</code> 傳入 <code>apply</code></li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> apply2 (f: int -&gt; int -&gt; int) x y = f x y</span><br><span class="line"><span class="keyword">let</span> mul x y = x * y</span><br><span class="line"><span class="keyword">let</span> result2 = apply2 mul <span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>當 function 有多個 parameter 時，其型別表示為多個 <code>-&gt;</code> 串起來，如 <code>let mul x y = x * y</code>，則 <code>mul</code> 的型別為  <code>int -&gt; int -&gt; int</code></li>
-</ul>
-<blockquote>
-<p>Q : 為什麼多 paramter 要以 <code>-&gt; … -&gt;</code> 表示</p>
-</blockquote>
-<p>別忘了 F# 的 Currying，如 <code>mul</code> 相當於以下寫法</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mul2 = mul <span class="number">2</span></span><br><span class="line"><span class="keyword">let</span> mul2x3 = mul2 <span class="number">3</span></span><br></pre></td></tr></table></figure>
-<p>所以多個 parameter 就相當於 1 個 parameter 的 function 連續呼叫多次，因此相當於 <code>-&gt;</code> 串起來多次。</p>
-<h2 id="Lambda_Expression">Lambda Expression</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result3 = apply1 (<span class="keyword">fun</span> x -&gt; x + <span class="number">1</span>) <span class="number">100</span></span><br><span class="line"><span class="keyword">let</span> result4 = apply2 (<span class="keyword">fun</span> x y -&gt; x * y ) <span class="number">10</span> <span class="number">20</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>Function 的 parameter 可以傳入 function，除了使用 <code>let</code> 先定義好 function 外，也可以直接在 arguemtn 以 unnamed function 或 anonymous function 表示，這就是 Lambda Expression</li>
-<li>Lambda Expression 以 <code>fun</code> 開頭，使用 <code>-&gt;</code> 取代 <code>=</code></li>
-</ul>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> increment = <span class="keyword">fun</span> x -&gt; x + <span class="number">1</span> <span class="comment">// let increment x = x + 1 is better</span></span><br><span class="line"><span class="keyword">let</span> result1 = apply1 increment <span class="number">100</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>就語法而言，的確可以 <code>let</code> 配合 <code>fun</code> ，但實務不建議這種寫法，因為 <code>increment</code> 的 parameter 必須由 <code>fun</code> 才能看出，較不直覺</li>
-<li>建議 <code>let</code> 與 <code>fun</code> 不要混用，將 <code>fun</code> 用在直接傳入 function 的 argument 即可</li>
-</ul>
-<h2 id="Function_Composition">Function Composition</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> function1 x = x + <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> function2 x = x * <span class="number">2</span></span><br><span class="line"><span class="keyword">let</span> h = function1 &gt;&gt; function2</span><br><span class="line"><span class="keyword">let</span> result5 = h <span class="number">100</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>若有兩個 function，需求是先執行 <code>function1</code> ，並將 <code>function1</code> 的結果傳入 <code>function2</code>，可使用 <code>&gt;&gt;</code> 將兩個 function 組合成新的 function</li>
-</ul>
-<blockquote>
-<p>在數學，我們常常有 fog(x) = f(g(x))，若以 F#，可使用 <code>let fog = g &gt;&gt; f</code> 表示，重點還是 <code>從左到右</code>，可讀性更數學更高</p>
-</blockquote>
-<h2 id="Pipelining">Pipelining</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = <span class="number">100</span> |&gt; function1 |&gt; function2</span><br></pre></td></tr></table></figure>
-<ul>
-<li>將 <code>100</code> 傳入 <code>function1</code>，並將結果傳入 <code>function2</code></li>
-</ul>
-<blockquote>
-<p>在 imperative language，我們會寫成 <code>function2(function1(100))</code>，只要層數夠多，程式碼可讀性就不高，而且還必須 <code>從右到左</code>，但使用 pipelining 之後，無論幾層都很容易閱讀，並且還是 <code>從左到右</code>。</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>本文介紹了 F# 所有的 function 功能，一些看似直覺的如 Currying、Function Composition 與 Pipelineing ….，在 F# 寫法都很直覺，但在大部分非 FP 語言實現都有難度，這就是 F# 可愛的地方</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/functions/" target="_blank" rel="external">Functions</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[強悍的 FP 支援令人著迷]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
