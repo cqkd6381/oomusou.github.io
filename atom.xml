@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-25T05:34:09.559Z</updated>
+  <updated>2018-03-25T05:43:26.507Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://oomusou.io/fsharp/option/"/>
     <id>http://oomusou.io/fsharp/option/</id>
     <published>2018-03-25T12:23:43.000Z</published>
-    <updated>2018-03-25T05:34:09.559Z</updated>
-    <content type="html"><![CDATA[<p>當我們要根據使用者輸入的 <code>OrderId</code> 到資料庫搜尋 <code>訂單資料</code>，若找的到就回傳該筆訂單，若搜尋不到呢？一般而言有兩種處理方式，傳回 <code>null</code> 或拋出 exception，但實務上仍然會因為忘記處理 <code>null</code> 或 exception，而在 run-time 得到 <code>NullReferenceException</code>，這種常見的錯誤，是否能在 compile-time 獲得解決呢？</p>
+    <updated>2018-03-25T05:43:26.507Z</updated>
+    <content type="html"><![CDATA[<p>當我們要根據使用者輸入的 <code>OrderId</code> 到資料庫搜尋 <code>訂單資料</code>，若找的到就回傳該筆訂單，若搜尋不到呢？一般而言有兩種處理方式，傳回 <code>null</code> 或拋出 exception，但實務上常會因為忘記處理 <code>null</code> 或 exception，而在 run-time 得到 <code>NullReferenceException</code>，這種常見的錯誤，是否能在 compile-time 獲得解決呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>C# 7.2<br>F# 4.1</p>
@@ -32,7 +32,7 @@
 <p>Q：若找不到訂單資料而回傳 <code>null</code> 該怎麼辦？</p>
 </blockquote>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> order = Order.GetById(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">if</span> (order == <span class="keyword">null</span>) </span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"No orders found."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, order.Name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Junior 會乖乖的補上  <code>null</code> 判斷，如此才不會在 run-time 得到 <code>NullReferenceException</code>。</p>
+<p>Junior 會乖乖的補上 <code>null</code> 判斷，如此才不會在 run-time 得到 <code>NullReferenceException</code>。</p>
 <p>若使用 <code>null</code> 代表 <code>找不到資料</code>，會有幾個問題：</p>
 <ol>
 <li>必須額外加上 <code>null</code> 判斷，否則在 run-time 會得到 <code>NullReferenceException</code></li>
@@ -41,7 +41,7 @@
 </ol>
 <h2 id="Exception">Exception</h2><hr>
 <blockquote>
-<p>Ａ：<code>null</code> 的確不好，所以若找不到訂單資料就拋 exception</p>
+<p>Q：<code>null</code> 的確不好，所以若找不到訂單資料就拋 exception 不就好了？</p>
 </blockquote>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> order = Order.GetById(<span class="number">10</span>);</span><br><span class="line">    Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, order.Name));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (OrderNotFoundException e)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"No orders found."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Exception 雖然比 <code>null</code> 好，但依然有些問題：</p>
