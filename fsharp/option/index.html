@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="比 null 與 exception 更優雅的處理方式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-25T05:51:13.432Z">
+<meta property="og:updated_time" content="2018-03-25T10:54:16.218Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="F# 之 Option 型別簡介">
 <meta name="twitter:description" content="比 null 與 exception 更優雅的處理方式">
@@ -138,7 +138,7 @@
 <li>每個 function 都可能傳回 exception，是否每個 function 都必須處理 exception？<code>try catch</code> 寫法其實也好不到哪裡，一樣會把 code 弄髒</li>
 </ol>
 <h2 id="Option">Option</h2><hr>
-<p>FP 語言對 <code>null</code> 與 exception 提出了另外一種解決方案，在 OCaml 與 F# 有 <code>Option</code> 型別，在 Haskell 有 <code>Maybe</code> 型別，讓我們可以在 compiler-time 就能處理，也不會把 code 弄髒。</p>
+<p>FP 語言對 <code>null</code> 與 exception 提出了另外一種解決方案，在 OCaml 與 F# 有 <code>Option</code> 型別，在 Haskell 有 <code>Maybe</code> 型別，讓我們可以在 compile-time 就能處理，也不會把 code 弄髒。</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Order</span> </span>= &#123;</span><br><span class="line">    Id: int</span><br><span class="line">    Name: string</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> getById id = Some &#123; Id = <span class="number">10</span>; Name = <span class="string">"Sam"</span> &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> order = getById <span class="number">10</span></span><br><span class="line">    <span class="keyword">match</span> order <span class="keyword">with</span></span><br><span class="line">    | Some order -&gt; printfn <span class="string">"%s"</span> order.Name</span><br><span class="line">    | None       -&gt; printfn <span class="string">"No orders found."</span>    </span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
 <p>由於 <code>getById()</code> 可能傳回 <code>訂單資料</code>，也可能找不到資料，因此回傳的就不是 <code>Order</code> 型別，也不是 <code>null</code>，而是另外一個 <code>Order option</code> 型別，也就是 <code>Option&lt;Order&gt;</code>。</p>
 <p>再搭配 Pattern Matching 對 <code>Option</code> 做處理，即可同時對 <code>找到訂單資料</code> 與 <code>找不到訂單資料</code> 進行處理。</p>
