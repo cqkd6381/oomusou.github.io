@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-25T05:43:26.507Z</updated>
+  <updated>2018-03-25T05:49:16.550Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/option/"/>
     <id>http://oomusou.io/fsharp/option/</id>
     <published>2018-03-25T12:23:43.000Z</published>
-    <updated>2018-03-25T05:43:26.507Z</updated>
+    <updated>2018-03-25T05:49:16.550Z</updated>
     <content type="html"><![CDATA[<p>當我們要根據使用者輸入的 <code>OrderId</code> 到資料庫搜尋 <code>訂單資料</code>，若找的到就回傳該筆訂單，若搜尋不到呢？一般而言有兩種處理方式，傳回 <code>null</code> 或拋出 exception，但實務上常會因為忘記處理 <code>null</code> 或 exception，而在 run-time 得到 <code>NullReferenceException</code>，這種常見的錯誤，是否能在 compile-time 獲得解決呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -53,7 +53,7 @@
 <h2 id="Option">Option</h2><hr>
 <p>FP 語言對 <code>null</code> 與 exception 提出了另外一種解決方案，在 OCaml 與 F# 有 <code>Option</code> 型別，在 Haskell 有 <code>Maybe</code> 型別，讓我們可以在 compiler-time 就能處理，也不會把 code 弄髒。</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Order</span> </span>= &#123;</span><br><span class="line">    Id: int</span><br><span class="line">    Name: string</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> getById id = Some &#123; Id = <span class="number">10</span>; Name = <span class="string">"Sam"</span> &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> order = getById <span class="number">10</span></span><br><span class="line">    <span class="keyword">match</span> order <span class="keyword">with</span></span><br><span class="line">    | Some order -&gt; printfn <span class="string">"%s"</span> order.Name</span><br><span class="line">    | None       -&gt; printfn <span class="string">"No orders found."</span>    </span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
-<p>由於 <code>getById()</code> 可能傳回 <code>訂單資料</code>，也可能找不到資料，因此回傳的就不是 <code>Order</code> 型別，也不是 <code>null</code>，而是另外一個型別 <code>Order option</code> 型別，也就是 <code>Option&lt;Order&gt;</code>。</p>
+<p>由於 <code>getById()</code> 可能傳回 <code>訂單資料</code>，也可能找不到資料，因此回傳的就不是 <code>Order</code> 型別，也不是 <code>null</code>，而是另外一個 <code>Order option</code> 型別，也就是 <code>Option&lt;Order&gt;</code>。</p>
 <p>再搭配 Pattern Matching 對 <code>Option</code> 做處理，即可同時對 <code>找到訂單資料</code> 與 <code>找不到訂單資料</code> 進行處理。</p>
 <p><img src="/images/fsharp/option/option000.png" alt="ption00"></p>
 <p><code>getById()</code> 回傳的型別不再是 <code>Order</code> 型別 ，而是 <code>Order option</code> 型別，這是個 <code>Option</code> 型別。</p>
@@ -64,7 +64,7 @@
 <p><code>Option</code> 事實上就是 <code>Union</code> 型別，只是已經是先定義好  <code>Some</code> 與 <code>None</code> 兩個 case。</p>
 <p>重點是 <code>null</code> 是 <code>Order</code> 型別，但 <code>None</code> 不是 <code>Order</code> 型別，而是 <code>Option</code> 型別。</p>
 <blockquote>
-<p>Q : <code>Option</code> 型別對於寫程式有什麼用處？</p>
+<p>Q : <code>Option</code> 型別對於寫程式有什麼幫助？</p>
 </blockquote>
 <p>之前因為 <code>null</code> 屬於 <code>Order</code> 型別，也無法確定 <code>getById()</code> 是否拋出 exception 而造成困擾，但若確認 <code>getById()</code> 回傳的是 <code>Option</code> 而不是  <code>Order</code> 型別，則 client 就有心理準備，知道要怎麼處理 <code>Option</code>，不需靠文件也不需靠團隊共識。</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order = Order.getById <span class="number">10</span></span><br><span class="line">printfn <span class="string">"%s"</span> order.Name</span><br></pre></td></tr></table></figure>
@@ -86,7 +86,7 @@
 </ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>好的程式語言就是在 compile-time 就幫我們找到錯誤，而不是要自己寫程式在 run-time 處理</li>
+<li>好的程式語言是在 compile-time 就幫我們找到錯誤，而不是要自己寫程式在 run-time 處理</li>
 <li><code>null</code> 與 exception 除了常常忘記處理而造成 <code>NullReferenceException</code>， 也很容易將 code 弄髒；但 <code>Option</code> + Pattern Matching 則可透過 compiler 幫我們檢查，code 也比較優雅</li>
 <li>JavaScript 已經有 <code>Option</code> 型別草案，希望能儘早成為 JavaScript 標準</li>
 </ul>
