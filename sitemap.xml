@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/porting/</loc>
+    <lastmod>2018-03-26T02:32:11.718Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/option/</loc>
     <lastmod>2018-03-25T10:54:16.218Z</lastmod>
   </url>
