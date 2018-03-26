@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-26T03:16:54.607Z</updated>
+  <updated>2018-03-26T03:28:44.522Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/porting/"/>
     <id>http://oomusou.io/netcore/porting/</id>
     <published>2018-03-26T12:23:43.000Z</published>
-    <updated>2018-03-26T03:16:54.607Z</updated>
+    <updated>2018-03-26T03:28:44.522Z</updated>
     <content type="html"><![CDATA[<p>在實務上可能遇到有些自己寫的 class library，或在 GitHub 上 class library，原本跑在 .NET Framework 上，需要自己 porting 到 .NET Core。本文實際以一個 GitHub 上的 class library 為例，一步一步從 .NET Framework 移植到 .NET Core。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -131,6 +131,7 @@
 <p><code>MyTest</code> 要測試 <code>MyClassLib</code>，但目前尚未對  <code>MyClassLib</code> 加入 project reference</p>
 </blockquote>
 <h3 id="加入_Project_Reference">加入 Project Reference</h3><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyTest $ dotnet <span class="keyword">add</span> <span class="keyword">reference</span> ../MyClassLib/MyClassLib.csproj</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet add reference</code> 將 <code>MyClassLib</code> 加入 project reference。</p>
 <p><img src="/images/netcore/porting/porting016.png" alt="orting01"></p>
 <ol>
 <li>輸入 <code>dotnet add reference ../MyClassLib/MyClassLib.csproj</code> 對 <code>MyClassLib</code> 加入 project reference</li>

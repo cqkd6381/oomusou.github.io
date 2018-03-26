@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="讓原本的 Class Library 也能跨平台">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-26T03:16:54.607Z">
+<meta property="og:updated_time" content="2018-03-26T03:28:44.522Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何將 Class Library 從 .NET Framework 移植到 .NET Core ?">
 <meta name="twitter:description" content="讓原本的 Class Library 也能跨平台">
@@ -218,6 +218,7 @@
 <p><code>MyTest</code> 要測試 <code>MyClassLib</code>，但目前尚未對  <code>MyClassLib</code> 加入 project reference</p>
 </blockquote>
 <h3 id="加入_Project_Reference">加入 Project Reference</h3><figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyTest $ dotnet <span class="keyword">add</span> <span class="keyword">reference</span> ../MyClassLib/MyClassLib.csproj</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet add reference</code> 將 <code>MyClassLib</code> 加入 project reference。</p>
 <p><img src="/images/netcore/porting/porting016.png" alt="orting01"></p>
 <ol>
 <li>輸入 <code>dotnet add reference ../MyClassLib/MyClassLib.csproj</code> 對 <code>MyClassLib</code> 加入 project reference</li>
