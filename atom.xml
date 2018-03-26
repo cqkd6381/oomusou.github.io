@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-26T02:59:22.936Z</updated>
+  <updated>2018-03-26T03:05:25.513Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/porting/"/>
     <id>http://oomusou.io/netcore/porting/</id>
     <published>2018-03-26T12:23:43.000Z</published>
-    <updated>2018-03-26T02:59:22.936Z</updated>
+    <updated>2018-03-26T03:05:25.513Z</updated>
     <content type="html"><![CDATA[<p>在實務上可能遇到有些自己寫的 class library，或在 GitHub 上 class library，原本跑在 .NET Framework 上，需要自己 porting 到 .NET Core。本文實際以一個 GitHub 上的 class library 為例，一步一步從 .NET Framework 移植到 .NET Core。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -68,7 +68,7 @@
 <li>出現 <code>Duplicate attribute</code> 錯誤</li>
 </ol>
 <blockquote>
-<p>原本 <code>Properties/Assembly.Info</code> 的一些 arribute 設定，目前已經由 .NET Core 自行設定，因此才會出現 duplicate</p>
+<p>原本 <code>Properties/Assembly.Info</code> 的一些 attribute 設定，目前已經由 .NET Core 自行設定，因此才會出現 duplicate</p>
 </blockquote>
 <p><strong>Properties/AssemblyInfo.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Reflection;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.CompilerServices;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line">[assembly: InternalsVisibleTo(<span class="string">"MyTest"</span>)]</span><br></pre></td></tr></table></figure>

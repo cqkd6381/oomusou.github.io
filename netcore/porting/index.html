@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="讓原本的 Class Library 也能跨平台">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-26T02:59:22.936Z">
+<meta property="og:updated_time" content="2018-03-26T03:05:25.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何將 Class Library 從 .NET Framework 移植到 .NET Core ?">
 <meta name="twitter:description" content="讓原本的 Class Library 也能跨平台">
@@ -155,7 +155,7 @@
 <li>出現 <code>Duplicate attribute</code> 錯誤</li>
 </ol>
 <blockquote>
-<p>原本 <code>Properties/Assembly.Info</code> 的一些 arribute 設定，目前已經由 .NET Core 自行設定，因此才會出現 duplicate</p>
+<p>原本 <code>Properties/Assembly.Info</code> 的一些 attribute 設定，目前已經由 .NET Core 自行設定，因此才會出現 duplicate</p>
 </blockquote>
 <p><strong>Properties/AssemblyInfo.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Reflection;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.CompilerServices;</span><br><span class="line"><span class="keyword">using</span> System.Runtime.InteropServices;</span><br><span class="line"></span><br><span class="line">[assembly: InternalsVisibleTo(<span class="string">"MyTest"</span>)]</span><br></pre></td></tr></table></figure>
