@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-26T02:32:11.718Z</updated>
+  <updated>2018-03-26T02:59:22.936Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,14 +19,14 @@
     <link href="http://oomusou.io/netcore/porting/"/>
     <id>http://oomusou.io/netcore/porting/</id>
     <published>2018-03-26T12:23:43.000Z</published>
-    <updated>2018-03-26T02:32:11.718Z</updated>
-    <content type="html"><![CDATA[<p>在實務上可能遇到有些自己寫的 class library，或在 GitHub 上 class library，原本跑在 .NET Framework 上，需要自己 porting 到 .NET Core。本文實際以一個 GitHub 上的 class library，一步一步從 .NET Framework 移植到 .NET Core。</p>
+    <updated>2018-03-26T02:59:22.936Z</updated>
+    <content type="html"><![CDATA[<p>在實務上可能遇到有些自己寫的 class library，或在 GitHub 上 class library，原本跑在 .NET Framework 上，需要自己 porting 到 .NET Core。本文實際以一個 GitHub 上的 class library 為例，一步一步從 .NET Framework 移植到 .NET Core。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>VS Code 1.21.1</p>
 <h2 id="User_Story">User Story</h2><hr>
 <p><img src="/images/netcore/porting/porting000.png" alt="orting00"></p>
-<p><a href="https://github.com/NMZivkovic" target="_blank" rel="external">Nikola Zivkovic</a> 提供一個類神經網路的 class library：<a href="https://github.com/NMZivkovic/SimpleNeuralNetworkInCSharp" target="_blank" rel="external">Simple Neural Network in C#</a>。</p>
+<p><a href="https://github.com/NMZivkovic" target="_blank" rel="external">Nikola Zivkovic</a> 提供一個類神經網路的 class library：<a href="https://github.com/NMZivkovic/SimpleNeuralNetworkInCSharp" target="_blank" rel="external">Simple Neural Network in C#</a>，但只能跑在 .NET Framework 4.6.1。</p>
 <h2 id="Task">Task</h2><hr>
 <p>該 class library 原本只能跑在 .NET Framework，現在我們即將以此 repository 為練習，一步一步從 .NET Framework 移植到 .NET Core。</p>
 <h2 id="下載_Repository">下載 Repository</h2><hr>
