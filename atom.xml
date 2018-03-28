@@ -272,7 +272,7 @@
     <link href="http://oomusou.io/fsharp/strategy/"/>
     <id>http://oomusou.io/fsharp/strategy/</id>
     <published>2018-03-23T12:23:43.000Z</published>
-    <updated>2018-03-23T07:25:13.839Z</updated>
+    <updated>2018-03-28T13:06:49.752Z</updated>
     <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中 『解耦合』最經典的應用，F# 既然是 Function First Language，就讓我們以 function 的角度重新思考什麼是 『解耦合』。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -331,7 +331,7 @@
 <p><strong>Program.fs</strong></p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line"></span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
 <p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
-<h2 id="Retrospective">Retrospective</h2><hr>
+<h2 id="Summary">Summary</h2><hr>
 <p>回想 Strategy Pattern 的本質：</p>
 <ol>
 <li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
@@ -625,7 +625,7 @@
     <link href="http://oomusou.io/design-pattern/strategy/"/>
     <id>http://oomusou.io/design-pattern/strategy/</id>
     <published>2018-03-20T12:23:43.000Z</published>
-    <updated>2018-03-28T03:38:24.311Z</updated>
+    <updated>2018-03-28T06:22:30.832Z</updated>
     <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中使用 <code>interface</code> 最經典的應用，隨著 FP 逐漸受到重視，Strategy Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -637,7 +637,7 @@
 <li>超過 1000 元，則 <code>滿千送百</code></li>
 </ul>
 <h2 id="Task">Task</h2><hr>
-<p>先使用一般  <code>if else</code> 寫法完全需求，最後再分別以 OOP 與 FP 手法重構 Strategy Pattern。</p>
+<p>先使用一般  <code>if else</code> 寫法完全需求，最後再分別以 OOP 與 FP 手法重構成 Strategy Pattern。</p>
 <h2 id="Definition">Definition</h2><hr>
 <blockquote>
 <p>Strategy Pattern</p>
