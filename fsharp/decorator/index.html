@@ -1,0 +1,276 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 F# 實現 Decorator Pattern？ | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以 FP 重新思考 Decorator Pattern">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以 FP 重新思考 Decorator Pattern">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 F# 實現 Decorator Pattern？">
+<meta property="og:url" content="http://oomusou.io/fsharp/decorator/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以 FP 重新思考 Decorator Pattern">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-29T16:06:11.549Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 F# 實現 Decorator Pattern？">
+<meta name="twitter:description" content="以 FP 重新思考 Decorator Pattern">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 F# 實現 Decorator Pattern？</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以 FP 重新思考 Decorator Pattern			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#OOP_思考方式"><span class="toc-article-text">OOP 思考方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FP_思考方式"><span class="toc-article-text">FP 思考方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Implementation"><span class="toc-article-text">Implementation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Decorator Pattern。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
+<ul>
+<li>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></li>
+<li>不到 1000 元，則 <code>全館八折</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>直接使用 FP 的思維完成需求。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Decorator Pattern</p>
+<p>在不改變原有 interface 的前提下，動態增加原有的功能</p>
+</blockquote>
+<p><img src="/images/fsharp/decorator/decorator000.svg" alt="ecorator00"></p>
+<p>首先思考 Decorator Pattern 的本質：</p>
+<ol>
+<li>Component 與 decorator 之間的 interface 必須相同</li>
+<li>Component 可自由組合 decorator</li>
+</ol>
+<p>只要能達到這兩個目標，就算完成了 Decorator Pattern。</p>
+<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
+<ul>
+<li>為了讓 component 與 decorator 的 interface 要相同，所以必須訂出共同的 interface</li>
+<li>由於 decorator 必須包含原本 component 功能，因此 decorator 必須以 state 方式保存原本 component</li>
+<li>由於各 decorator 都必須透過 constructor 保存原本 component，因此將共用 constructor 抽出來由 <code>AbstractDecorator</code> 實作</li>
+</ul>
+<h2 id="FP_思考方式">FP 思考方式</h2><hr>
+<ul>
+<li>Component 與 decorator 都是 function，不用事先定義 interface，反正只要 interface 不同，在 Pattern Matching 一定會編譯錯誤</li>
+<li>Component 與 decorator 都是 function，既然 interface 都相同，只要是用 Function Composition 產生新的 function 即可</li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><strong>PriceDecorator.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceDecorator =  </span><br><span class="line">    <span class="keyword">let</span> discountPrice price = price * <span class="number">0.8</span></span><br><span class="line">    <span class="keyword">let</span> rebatePrice price = price - <span class="number">100.0</span></span><br></pre></td></tr></table></figure>
+<p>以 <code>discountPrice()</code> 表示 <code>全館八折</code>。</p>
+<p>以 <code>rebatePrice()</code> 表示 <code>滿千送百</code>。</p>
+<p>由於 component 與 decorator 基本上都是 <code>double -&gt; double</code> 的型別，可以廣義視為 decorator。</p>
+<p><strong>OrderService.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> PriceDecorator</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> getPrice price = </span><br><span class="line">        <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span> -&gt; (discountPrice &gt;&gt; rebatePrice) price</span><br><span class="line">        | <span class="keyword">false</span> -&gt; discountPrice price</span><br></pre></td></tr></table></figure>
+<p>根據商業邏輯：</p>
+<blockquote>
+<p>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></p>
+</blockquote>
+<p>因此將 <code>discountPrice()</code> 與 <code>rebatePrice()</code> 以 <code>&gt;&gt;</code> compose 成一個新的 function，就相當於 <code>全館八折</code> 再 <code>滿千送百</code></p>
+<blockquote>
+<p>在 FP 只要使用 Compose Function，就相當於 OOP 的 Decorator Pattern，在 F# 只需 <code>&gt;&gt;</code>，但 C# 卻要 interface 與 abstract class 的搭配才能實現</p>
+</blockquote>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">        </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
+<p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
+<h2 id="Summary">Summary</h2><hr>
+<p>回想 Decorator Pattern 的本質：</p>
+<ol>
+<li>Component 與 decorator 之間的 interface 必須相同</li>
+<li>Component 可自由組合 decorator</li>
+</ol>
+<p>由於 component 與 decorator 的 interface 相同，可以廣義視為 decorator，雖然沒有特別定義 interface，但 <code>discountPrice()</code> 與 <code>rebatePrice()</code> 的 signature 都是 <code>double -&gt; double</code>，若 function 的 signature 不同，在 Pattern Matching 就會編譯錯誤，與原本 Decorator Pattern 定義 interface 的本質相同。</p>
+<p>原本 OOP 的 Decorator Pattern 可以透過 <code>new</code> 自由組合 decorator object，但 FP 可透過 <code>&gt;&gt;</code> 自由組合 decorator function，與原本 Decorator Pattern 的自由組合 decorator 本質相同。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Decorator Pattern 本質就是 object 的組合，但 object 的組合沒 function 簡單直覺，所以才需要搭配 interface 與 abstract class，但若純 function，只要使用 Function Composition 即可簡單完成</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderDecorator" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/sonarqube/docker/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-30 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>10</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

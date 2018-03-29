@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-29T14:14:33.325Z</updated>
+  <updated>2018-03-29T16:06:11.549Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,90 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 F# 實現 Decorator Pattern？]]></title>
+    <link href="http://oomusou.io/fsharp/decorator/"/>
+    <id>http://oomusou.io/fsharp/decorator/</id>
+    <published>2018-03-30T12:23:43.000Z</published>
+    <updated>2018-03-29T16:06:11.549Z</updated>
+    <content type="html"><![CDATA[<p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Decorator Pattern。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
+<ul>
+<li>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></li>
+<li>不到 1000 元，則 <code>全館八折</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>直接使用 FP 的思維完成需求。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Decorator Pattern</p>
+<p>在不改變原有 interface 的前提下，動態增加原有的功能</p>
+</blockquote>
+<p><img src="/images/fsharp/decorator/decorator000.svg" alt="ecorator00"></p>
+<p>首先思考 Decorator Pattern 的本質：</p>
+<ol>
+<li>Component 與 decorator 之間的 interface 必須相同</li>
+<li>Component 可自由組合 decorator</li>
+</ol>
+<p>只要能達到這兩個目標，就算完成了 Decorator Pattern。</p>
+<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
+<ul>
+<li>為了讓 component 與 decorator 的 interface 要相同，所以必須訂出共同的 interface</li>
+<li>由於 decorator 必須包含原本 component 功能，因此 decorator 必須以 state 方式保存原本 component</li>
+<li>由於各 decorator 都必須透過 constructor 保存原本 component，因此將共用 constructor 抽出來由 <code>AbstractDecorator</code> 實作</li>
+</ul>
+<h2 id="FP_思考方式">FP 思考方式</h2><hr>
+<ul>
+<li>Component 與 decorator 都是 function，不用事先定義 interface，反正只要 interface 不同，在 Pattern Matching 一定會編譯錯誤</li>
+<li>Component 與 decorator 都是 function，既然 interface 都相同，只要是用 Function Composition 產生新的 function 即可</li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><strong>PriceDecorator.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceDecorator =  </span><br><span class="line">    <span class="keyword">let</span> discountPrice price = price * <span class="number">0.8</span></span><br><span class="line">    <span class="keyword">let</span> rebatePrice price = price - <span class="number">100.0</span></span><br></pre></td></tr></table></figure>
+<p>以 <code>discountPrice()</code> 表示 <code>全館八折</code>。</p>
+<p>以 <code>rebatePrice()</code> 表示 <code>滿千送百</code>。</p>
+<p>由於 component 與 decorator 基本上都是 <code>double -&gt; double</code> 的型別，可以廣義視為 decorator。</p>
+<p><strong>OrderService.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> PriceDecorator</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> getPrice price = </span><br><span class="line">        <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span> -&gt; (discountPrice &gt;&gt; rebatePrice) price</span><br><span class="line">        | <span class="keyword">false</span> -&gt; discountPrice price</span><br></pre></td></tr></table></figure>
+<p>根據商業邏輯：</p>
+<blockquote>
+<p>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></p>
+</blockquote>
+<p>因此將 <code>discountPrice()</code> 與 <code>rebatePrice()</code> 以 <code>&gt;&gt;</code> compose 成一個新的 function，就相當於 <code>全館八折</code> 再 <code>滿千送百</code></p>
+<blockquote>
+<p>在 FP 只要使用 Compose Function，就相當於 OOP 的 Decorator Pattern，在 F# 只需 <code>&gt;&gt;</code>，但 C# 卻要 interface 與 abstract class 的搭配才能實現</p>
+</blockquote>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">        </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
+<p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
+<h2 id="Summary">Summary</h2><hr>
+<p>回想 Decorator Pattern 的本質：</p>
+<ol>
+<li>Component 與 decorator 之間的 interface 必須相同</li>
+<li>Component 可自由組合 decorator</li>
+</ol>
+<p>由於 component 與 decorator 的 interface 相同，可以廣義視為 decorator，雖然沒有特別定義 interface，但 <code>discountPrice()</code> 與 <code>rebatePrice()</code> 的 signature 都是 <code>double -&gt; double</code>，若 function 的 signature 不同，在 Pattern Matching 就會編譯錯誤，與原本 Decorator Pattern 定義 interface 的本質相同。</p>
+<p>原本 OOP 的 Decorator Pattern 可以透過 <code>new</code> 自由組合 decorator object，但 FP 可透過 <code>&gt;&gt;</code> 自由組合 decorator function，與原本 Decorator Pattern 的自由組合 decorator 本質相同。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Decorator Pattern 本質就是 object 的組合，但 object 的組合沒 function 簡單直覺，所以才需要搭配 interface 與 abstract class，但若純 function，只要使用 Function Composition 即可簡單完成</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderDecorator" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[以 FP 重新思考 Decorator Pattern]]>
+    
+    </summary>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 Docker 安裝 SonarQube？]]></title>
@@ -2343,155 +2427,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[NuGet 特有的管理機制]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[.NET Core SDK 基本指令練習]]></title>
-    <link href="http://oomusou.io/netcore/basic-sdk/"/>
-    <id>http://oomusou.io/netcore/basic-sdk/</id>
-    <published>2018-03-16T13:23:43.000Z</published>
-    <updated>2018-03-19T02:07:33.283Z</updated>
-    <content type="html"><![CDATA[<p>Console app 是最基本的 .NET Core 專案類型，常用在測試 class library、提供 class library 範例程式，或者開發跨平台的 CLI 工具，我們可以使用 <code>ng new console</code> 建立 console app 型態專案。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet new</code> 建立專案。</p>
-<ul>
-<li><strong>console</strong> : 建立 console 類型專案</li>
-<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
-</ul>
-<p><img src="/images/netcore/basic-sdk/sdk009.png" alt="sdk009"></p>
-<ol>
-<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
-<li>.NET Core SDK 開始建立專案所需的檔案</li>
-<li>自動 restore dependency</li>
-</ol>
-<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
-<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
-<p><img src="/images/netcore/basic-sdk/sdk010.png" alt="sdk010"></p>
-<ol>
-<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/basic-sdk/sdk011.png" alt="sdk011"></p>
-<ol>
-<li><code>.vscode</code> 被 VS Code 自動建立</li>
-</ol>
-<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
-<p><img src="/images/netcore/basic-sdk/sdk012.png" alt="sdk012"></p>
-<ol>
-<li>開啟 <code>Program.cs</code></li>
-<li>將 <code>World</code> 改成 <code>Sam</code> 存檔</li>
-</ol>
-<h2 id="觀察_MyConsole-csproj">觀察 MyConsole.csproj</h2><hr>
-<p><img src="/images/netcore/basic-sdk/sdk013.png" alt="sdk013"></p>
-<ol>
-<li>開啟 <code>MyConsole.csproj</code></li>
-</ol>
-<blockquote>
-<p><code>csproj</code> 負責紀錄 project 的 project 與 package 的 reference ，以及其他與 project 相關資訊，使用 Visual Studio 配合 .NET Framework 時，我們不會去維護 <code>csproj</code> 檔案，而是靠 Visual Studio 幫我們維護，但若使用 VS Code + .NET Core CLI 的組合時，將來會有很多機會要自己維護 <code>csproj</code></p>
-</blockquote>
-<h2 id="還原_Dependency">還原 Dependency</h2><hr>
-<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="built_in">restore</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet restore</code> 根據 <code>csproj</code> 建立 package 與實際位置的 mapping 檔案。</p>
-<p><img src="/images/netcore/basic-sdk/sdk014.png" alt="sdk014"></p>
-<ol>
-<li>按熱鍵 Ctrl + ` 開啟內建的 terminal</li>
-<li>輸入 <code>dotnet restore</code> 還原 dependency</li>
-</ol>
-<h2 id="編譯_Console_App">編譯 Console App</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet build</code> 編譯專案。</p>
-<ul>
-<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要配合 <code>-c</code> 參數</li>
-</ul>
-<p><img src="/images/netcore/basic-sdk/sdk000.png" alt="dk00"></p>
-<ol>
-<li>輸入 <code>dotnet build -c Release</code> 以 <code>Release</code> 模式編譯</li>
-<li>自動執行 <code>dotnet restore</code></li>
-<li>最後 build 出 <code>MyConsole.dll</code></li>
-</ol>
-<blockquote>
-<p>注意是 build 到 <code>Release</code> 目錄</p>
-</blockquote>
-<h2 id="執行_Console_App">執行 Console App</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet run</code> 執行專案。</p>
-<blockquote>
-<p><code>dotnet run</code> 明顯感覺比較慢，因為 C# 不是 script，<code>dotnet run</code> 事實上做了幾件事情 :</p>
-<ol>
-<li><code>dotnet restore</code></li>
-<li><code>dotnet build</code></li>
-<li>最後才是執行程式</li>
-</ol>
-<p>所以才會感覺比較慢</p>
-</blockquote>
-<p><img src="/images/netcore/basic-sdk/sdk001.png" alt="dk00"></p>
-<ol>
-<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
-</ol>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">~/MyConsole $ dotnet /</span>Users<span class="regexp">/oomusou/</span>Code<span class="regexp">/CSharp/</span>MyConsole<span class="regexp">/bin/</span>Release/netcoreapp2.</span><br><span class="line"><span class="number">0</span>/MyConsole.dll</span><br></pre></td></tr></table></figure>
-<p>直接使用 <code>dontet</code> 執行 dll，由於使用 <code>Release</code> 模式編譯，速度非常快。</p>
-<p><img src="/images/netcore/basic-sdk/sdk002.png" alt="dk00"></p>
-<ol>
-<li>輸入 <code>dotnet</code> 直接執行編譯過 <code>Release</code> 模式的 <code>MyConsole.dll</code></li>
-<li>馬上出現 <code>Hello Sam!</code> ，不用等待</li>
-</ol>
-<blockquote>
-<p>實務上不建議直接使用 <code>dotnet run</code>，因為速度很慢，要用 <code>dotnet</code> 執行編譯過且最佳化的 dll</p>
-</blockquote>
-<h2 id="清除_Assembly">清除 Assembly</h2><hr>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyConsole</span> $ <span class="keyword">dotnet</span> clean -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet clean</code> 清除所編譯的 dll。</p>
-<ul>
-<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet clean</code> 是清除 <code>Debug</code> 模式的 dll，若要清除 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
-</ul>
-<p><img src="/images/netcore/basic-sdk/sdk003.png" alt="dk00"></p>
-<ol>
-<li>輸入 <code>dotnet clean -c Release</code> 清除以 <code>Release</code> 模式 build 的 <code>MyConsole.dll</code></li>
-<li>查看 <code>bin/Release/netcoreapp2.0</code> 目錄，確認所有檔案已經清除</li>
-</ol>
-<h2 id="發佈_Console_App">發佈 Console App</h2><hr>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyConsole</span> $ <span class="keyword">dotnet</span> publish -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet publish</code> 將編譯後的 dll 與其 dependency 整理到 <code>publish</code> 目錄，將來只要將此目錄 deploy 到 server 即可。</p>
-<ul>
-<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet publish</code> 是將 <code>Debug</code> 模式的 dll 整理至 <code>publish</code> 目錄，若要整理 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
-</ul>
-<p><img src="/images/netcore/basic-sdk/sdk004.png" alt="dk00"></p>
-<ol>
-<li>輸入 <code>dotnet publish -c Release</code> 將欲 deploy 的檔案整理到 <code>bin/Release/netcoreapp2.0/publish</code> 目錄</li>
-<li>在 <code>publish</code> 目錄下，我們總共發現有 4 個檔案<ul>
-<li><code>MyConsole.dll</code> : 以 IL 為內容的 assembly</li>
-<li><code>MyConsole.deps.json</code> : 描述執行 dll 所需要的 dependency</li>
-<li><code>MyConsole.runtimeconfig.json</code> : 描述 dll 所需要的 .NET Core runtime 版本，以及其他 runtime 設定 (Ex. Garbage Collection 方式)</li>
-<li><code>MyConsole.pdb</code> : 在 production 環境啟動 debug 時使用</li>
-</ul>
-</li>
-</ol>
-<h2 id="執行_Console_App-1">執行 Console App</h2><hr>
-<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyProject $ dotnet bin/</span>Release<span class="regexp">/netcoreapp2.0/</span>publish<span class="regexp">/MyConsole.dll</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet</code> 執行 publish 後的 dll。</p>
-<p><img src="/images/netcore/basic-sdk/sdk005.png" alt="dk00"></p>
-<ol>
-<li>輸入 <code>dotnet</code> 直接執行  publish 過的 <code>MyConsole.dll</code></li>
-<li>馬上出現 <code>Hello Sam!</code> ，不用等待</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>藉由 <code>Hello World</code> 練習最基本的 .NET Core SDK 指令</li>
-<li><code>dotnet run</code> 因為要執行 <code>dotnet restore</code> 、<code>dotnet build</code> ，所以執行速度較慢</li>
-<li><code>dotnet publish</code> 會幫我們將 dependency 加以整理，方便 deployment</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[天天都會用到的 .NET Core 指令]]>
     
     </summary>
     
