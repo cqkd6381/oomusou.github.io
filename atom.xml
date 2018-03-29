@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-29T05:16:36.121Z</updated>
+  <updated>2018-03-29T10:07:13.930Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,58 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 macOS 安裝 SonarQube ?]]></title>
+    <link href="http://oomusou.io/sonarqube/macos-setup/"/>
+    <id>http://oomusou.io/sonarqube/macos-setup/</id>
+    <published>2018-03-29T12:23:43.000Z</published>
+    <updated>2018-03-29T10:07:13.930Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。它是一套以 Java 開發的工具，在 macOS 安裝很簡單，不使用 <code>pkg</code> 格式，所以不用擔心移除問題，只需解壓縮即可執行。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Java SE 1.8.0_112<br>SonarQube 6.7.2 LTS</p>
+<h2 id="Download">Download</h2><hr>
+<p><img src="/images/sonarqube/macos-setup/mac000.png" alt="ac00"></p>
+<p>到  <a href="https://www.sonarqube.org/downloads/" target="_blank" rel="external">SonarQube 官網</a> 下載，因為由 Java 開發，所以不分系統版本。</p>
+<p><img src="/images/sonarqube/macos-setup/mac001.png" alt="ac00"></p>
+<p>下載後為一 <code>zip</code> 格式檔案。</p>
+<h2 id="Installation">Installation</h2><hr>
+<p><img src="/images/sonarqube/macos-setup/mac002.png" alt="ac00"></p>
+<p>將下載的 <code>zip</code> 檔案解開，可安裝在任意目錄，目前安裝在 home directory 的 <code>sonarqube-6.7.2</code>。</p>
+<h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> start</span><br></pre></td></tr></table></figure>
+<p>使用 <code>sonar.sh start</code> 啟動 SonarQube。</p>
+<p><img src="/images/sonarqube/macos-setup/mac003.png" alt="ac00"></p>
+<ol>
+<li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
+<li>輸入  <code>./sonar.sh start</code> 啟動 SonarQube</li>
+</ol>
+<p><img src="/images/sonarqube/macos-setup/mac004.png" alt="ac00"></p>
+<p>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功。</p>
+<h2 id="結束_SonarQube">結束 SonarQube</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> stop</span><br></pre></td></tr></table></figure>
+<p>使用 <code>sonar.sh stop</code> 結束 SonarQube。</p>
+<p><img src="/images/sonarqube/macos-setup/mac005.png" alt="ac00"></p>
+<ol>
+<li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
+<li>輸入  <code>./sonar.sh stop</code> 結束 SonarQube</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>雖然 SonarQube 主要是安裝在 Linux server 上，但透過安裝在 macOS，我們也可以在本機測試 SonarQube</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[直接在 macOS 執行 SonarQube]]>
+    
+    </summary>
+    
+      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
+    
+      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 C# 實現 Decorator Pattern ?]]></title>
@@ -2415,67 +2467,6 @@
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[.NET Core SDK 簡介]]></title>
-    <link href="http://oomusou.io/netcore/sdk/"/>
-    <id>http://oomusou.io/netcore/sdk/</id>
-    <published>2018-03-16T12:23:43.000Z</published>
-    <updated>2018-03-19T02:12:51.294Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core 為了要跨平台，在 .NET Core SDK 提供了全套的 CLI，讓我們可以完全用 command 方式管理專案。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="為什麼要用_Command_?">為什麼要用 Command ?</h2><hr>
-<p>傳統 .NET Framework 都是在 Visual Studio 以 GUI 方式操作，GUI 對 End User 是友善的，但對 Developer 與 DevOps 而言卻不見得友善 :</p>
-<ol>
-<li>GUI 很難自動化，但 command 很適合寫 script 自動化，而且可以 git 版控</li>
-<li>若要遠端管理 server，GUI 只能透過 Remote Desktop，但 command 只要 SSH 就可執行</li>
-<li>Command 可以寫在 Dockerfile 內，但 GUI 無法</li>
-<li>.NET Core 最新功能會先在 SDK 支援，Visual Studio 支援稍慢於 SDK</li>
-<li>Command 適合在 macOS 與 Linux 執行</li>
-</ol>
-<p>這也是為什麼目前潮流是 End User 與 Designer 使用 GUI，但 Developer 與 DevOps 使用 command。</p>
-<p>.NET Core 全部的動作都可以使用 command 執行。</p>
-<blockquote>
-<p>就類似學 Git 要從 command 開始學，只要原理懂，自然會使用 Visual Studio / Rider 的 GUI </p>
-</blockquote>
-<h2 id="-NET_Core_SDK_Command">.NET Core SDK Command</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-<p>列出全部 .NET Core SDK 指令的說明。</p>
-<p><img src="/images/netcore/sdk/sdk000.png" alt="sdk000"></p>
-<ul>
-<li><strong>dotnet help</strong> : 顯示所有 command 與 option 的文件</li>
-<li><strong>dotnet new</strong> : 根據指定 template 建立 project</li>
-<li><strong>dotnet restore</strong> : 根據  <code>*.csproj</code> 的資訊 restore dependency</li>
-<li><strong>dotnet run</strong> : 執行 .NET Core 應用程式</li>
-<li><strong>dotnet build</strong> : 編譯 .NET Core 應用程式為 assembly (dll)</li>
-<li><strong>dotnet publish</strong> : 發布 .NET Core 應用程式</li>
-<li><strong>dotnet test</strong> : 執行 .NET Core 單元測試</li>
-<li><strong>dotnet pack</strong> : 建立 NuGet package</li>
-<li><strong>dotnet migrate</strong> : 將 project.json 專案升級到 msbuild 專案</li>
-<li><strong>dotnet clean</strong> : 將之前編譯的 assembly (dll) 刪除</li>
-<li><strong>dotnet sln</strong> : 管理 solution 檔</li>
-<li><strong>dotnet add</strong> : 新增 project reference 或 package reference</li>
-<li><strong>dotnet remove</strong> : 移除 project reference 與 package reference</li>
-<li><strong>dotnet list</strong> : 列出 project 所有的 reference</li>
-<li><strong>dotnet nuget</strong> : 執行 NuGet command</li>
-<li><strong>dotnet msbuild</strong> : 執行 MSBuild</li>
-<li><strong>dotnet vstest</strong> : 對 assembly 執行單元測試</li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>透過 .NET Core SDK，我們可以完全使用 command 的方式管理專案，完全不需要 GUI</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全以 command 方式管理 .NET Core]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
   </entry>
   

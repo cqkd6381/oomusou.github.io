@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/sonarqube/macos-setup/</loc>
+    <lastmod>2018-03-29T10:07:13.930Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/design-pattern/decorator/</loc>
     <lastmod>2018-03-29T05:16:36.121Z</lastmod>
   </url>
