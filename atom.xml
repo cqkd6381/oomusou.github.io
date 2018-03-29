@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-29T16:06:11.549Z</updated>
+  <updated>2018-03-29T16:07:12.290Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/decorator/"/>
     <id>http://oomusou.io/fsharp/decorator/</id>
     <published>2018-03-30T12:23:43.000Z</published>
-    <updated>2018-03-29T16:06:11.549Z</updated>
+    <updated>2018-03-29T16:07:12.290Z</updated>
     <content type="html"><![CDATA[<p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Decorator Pattern。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
