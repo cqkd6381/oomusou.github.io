@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-28T15:29:33.328Z</updated>
+  <updated>2018-03-29T01:11:07.188Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/decorator/"/>
     <id>http://oomusou.io/design-pattern/decorator/</id>
     <published>2018-03-28T12:23:43.000Z</published>
-    <updated>2018-03-28T15:29:33.328Z</updated>
+    <updated>2018-03-29T01:11:07.188Z</updated>
     <content type="html"><![CDATA[<p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，隨著 FP 逐漸受到重視，Decorator Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -66,7 +66,7 @@
 <li><code>PriceInterface</code> 相當於 <code>ComponentInterface</code>，定義 <code>DiscountComponent</code> 與 <code>RebateDecorator</code> 的共同 interface</li>
 <li><code>DiscountComponent</code> 相當於 <code>ConcreteComponent</code>，實作 <code>全館八折</code> 功能</li>
 <li><code>AbstractDecorator</code> 實作 <code>ConcreteComponent</code> 間共用的 constructor</li>
-<li><code>RebateDecorator</code> 相當於 <code>ConcreteDecorator</code>，實作 <code>買千送百</code> 功能</li>
+<li><code>RebateDecorator</code> 相當於 <code>ConcreteDecorator</code>，實作 <code>滿千送百</code> 功能</li>
 </ul>
 <h2 id="Implementation">Implementation</h2><hr>
 <p><img src="/images/design-pattern/decorator/decorator003.svg" alt="ecorator00"></p>
@@ -84,8 +84,8 @@
 <li>無論任何價錢都是 <code>全館八折</code>，所以 <code>price * 0.8</code> 已經重複</li>
 <li><code>- 100</code> 只有發生在 <code>超過 1000</code></li>
 </ul>
-<p>事實上在電子商務領域，所有的促銷折扣都可能根據需求而排列組合動態調整，目前看起來 <code>全館八折</code> 算是基本，但 <code>買千送百</code> 算是附加上去的促銷折扣，且隨時可能調整。</p>
-<p>對於 <code>買千送百</code>來說，算是由 <code>全館八折</code> 附加上去的，因此我們可以將 <code>買千送百</code> 看成是 <code>全館八折</code> 的 decorator，也就是在原有的 <code>全館八折</code> 的基礎下，附加 <code>買千送百</code> 的功能，這就是 Decorator Pattern。</p>
+<p>事實上在電子商務領域，所有的促銷折扣都可能根據需求而排列組合動態調整，目前看起來 <code>全館八折</code> 算是基本，但 <code>滿千送百</code> 算是附加上去的促銷折扣，且隨時可能調整。</p>
+<p>對於 <code>滿千送百</code>來說，算是由 <code>全館八折</code> 附加上去的，因此我們可以將 <code>滿千送百</code> 看成是 <code>全館八折</code> 的 decorator，也就是在原有的 <code>全館八折</code> 的基礎下，附加 <code>滿千送百</code> 的功能，這就是 Decorator Pattern。</p>
 <h3 id="Unit_Test">Unit Test</h3><p>在重構之前，必須要有測試保護，才能確保沒把原本的商業邏輯重構壞，因此我們先準備好 <code>OrderService</code> 的 Unit Test，確保每個 <code>if else</code> 的 path 都有測到。</p>
 <p><strong>UnitTest1.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.VisualStudio.TestTools.UnitTesting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary.Tests</span></span><br><span class="line">&#123;</span><br><span class="line">    [TestClass]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">    &#123;</span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> 當價錢為<span class="number">1200</span>打八折再送百後為<span class="number">860</span>()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> OrderService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.GetPrice(<span class="number">1200</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">860</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> 當價錢為<span class="number">800</span>送百後為<span class="number">640</span>()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> OrderService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.GetPrice(<span class="number">800</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">640</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -268,7 +268,7 @@
 </ul>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>Decorator 本質就是 object 的組合，但 object 的組合沒 function 簡單直覺，所以需要搭配 interface 與 abstract class 配合，但若純 function，只要使用 Higher Order Function 即可簡單完成</li>
+<li>Decorator 本質就是 object 的組合，但 object 的組合沒 function 簡單直覺，所以需要搭配 interface 與 abstract class，但若純 function，只要使用 Higher Order Function 即可簡單完成</li>
 <li>FP 的出現，讓 Design Pattern 的實踐方式，不再只有 OOP 一途，可視實際需求決定該使用 OOP 或 FP</li>
 <li>OOP 讓我們以 <code>抽象設計</code> 的角度看系統，但 FP 讓我們以 <code>簡化設計</code> 的角度看系統，實務上建議以 OOP 做第一階段的重構，再輔以 FP 做第二階段的重構，可解決 OOP 容易 Over Design 的問題</li>
 </ul>
