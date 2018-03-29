@@ -6,21 +6,21 @@
   <title>如何使用 Docker 安裝 SonarQube？ | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
-  <meta name="description" content="使用 Docker 更簡單">
+  <meta name="description" content="使用 Docker 安裝 SonarQube 更簡單">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
- <meta name="description" content="使用 Docker 更簡單">
+ <meta name="description" content="使用 Docker 安裝 SonarQube 更簡單">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何使用 Docker 安裝 SonarQube？">
 <meta property="og:url" content="http://oomusou.io/sonarqube/docker/index.html">
 <meta property="og:site_name" content="點燈坊">
-<meta property="og:description" content="使用 Docker 更簡單">
+<meta property="og:description" content="使用 Docker 安裝 SonarQube 更簡單">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-29T14:10:04.016Z">
+<meta property="og:updated_time" content="2018-03-29T14:14:33.325Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 安裝 SonarQube？">
-<meta name="twitter:description" content="使用 Docker 更簡單">
+<meta name="twitter:description" content="使用 Docker 安裝 SonarQube 更簡單">
  
 
   
@@ -95,7 +95,7 @@
 
 	
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 使用 Docker 更簡單			
+			<i class="fa fa-info-circle"></i> 使用 Docker 安裝 SonarQube 更簡單			
 		</div> <!-- alert -->
 		
 
@@ -110,7 +110,7 @@
 	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環，亦可使用 Docker 安裝，將來管理會更加容易。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>Docker for Mac 18.03.0-ce-mac59 (23608)<br>SonarQube 6.7.2 (build 37468)</p>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac59 (23608)<br>SonarQube 6.7.2 (build 37468)</p>
 <h2 id="下載_Docker_Image">下載 Docker Image</h2><hr>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name sonarqube -p <span class="number">9000</span>:<span class="number">9000</span> -p <span class="number">9092</span>:<span class="number">9092</span> sonarqube:lts</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 下載 image 並建立 container 並執行之。</p>
