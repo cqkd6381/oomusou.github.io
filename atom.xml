@@ -508,7 +508,7 @@
     <link href="http://oomusou.io/fsharp/option/"/>
     <id>http://oomusou.io/fsharp/option/</id>
     <published>2018-03-25T12:23:43.000Z</published>
-    <updated>2018-03-25T10:54:16.218Z</updated>
+    <updated>2018-03-29T13:06:27.660Z</updated>
     <content type="html"><![CDATA[<p>當我們要根據使用者輸入的 <code>OrderId</code> 到資料庫搜尋 <code>訂單資料</code>，若找的到就回傳該筆訂單，若搜尋不到呢？一般而言有兩種處理方式，傳回 <code>null</code> 或拋出 exception，但實務上常會因為忘記處理 <code>null</code> 或 exception，而在 run-time 得到 <code>NullReferenceException</code>，這種常見的錯誤，是否能在 compile-time 獲得解決呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -585,8 +585,6 @@
     <![CDATA[比 null 與 exception 更優雅的處理方式]]>
     
     </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
@@ -1476,7 +1474,7 @@
     <link href="http://oomusou.io/fsharp/union/"/>
     <id>http://oomusou.io/fsharp/union/</id>
     <published>2018-03-17T02:23:43.000Z</published>
-    <updated>2018-03-17T13:56:20.372Z</updated>
+    <updated>2018-03-29T13:06:55.187Z</updated>
     <content type="html"><![CDATA[<p>將實質上不同的型別，在邏輯上看成相同的型別。如 function 可能回傳 <code>int</code> 或 <code>bool</code> 兩種型別，可為此 function 特別建立 <code>IntOrBool</code> 型別，同時包含 <code>int</code> 與 <code>bool</code>，這就是 Discriminated Union，簡稱 <code>union</code>。</p>
 <p>若說 <code>tuple</code> 是將不同型別加以 AND，則 <code>union</code> 是將不同型別加以 OR。</p>
 <a id="more"></a>
@@ -1636,8 +1634,6 @@
     <![CDATA[將不同型別 OR 起來]]>
     
     </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
@@ -2449,7 +2445,7 @@
     <link href="http://oomusou.io/fsharp/syntax-all/"/>
     <id>http://oomusou.io/fsharp/syntax-all/</id>
     <published>2018-03-16T12:23:43.000Z</published>
-    <updated>2018-03-14T07:57:49.606Z</updated>
+    <updated>2018-03-29T13:06:49.836Z</updated>
     <content type="html"><![CDATA[<p>F# 的語法雖然很精簡，但還是得稍微花時間學習，Scott Wlaschin 所寫的這份 code，幾乎包含 F# 的所有語法，若都看得懂，F# 語法部分就算過關了。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -2463,8 +2459,6 @@
     <![CDATA[一段 code 幾乎包含 F# 所有語法]]>
     
     </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
