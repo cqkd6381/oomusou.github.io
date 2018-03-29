@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-29T01:11:07.188Z</updated>
+  <updated>2018-03-29T01:52:06.293Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/decorator/"/>
     <id>http://oomusou.io/design-pattern/decorator/</id>
     <published>2018-03-28T12:23:43.000Z</published>
-    <updated>2018-03-29T01:11:07.188Z</updated>
+    <updated>2018-03-29T01:52:06.293Z</updated>
     <content type="html"><![CDATA[<p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，隨著 FP 逐漸受到重視，Decorator Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -197,6 +197,7 @@
 <h3 id="Delegate">Delegate</h3><p>從 Decorator Pattern，我們看到了 OOP 幾個缺點：</p>
 <ul>
 <li>原本簡單的 <code>if ... else</code> 被拆成很多檔案，導致 class 爆炸</li>
+<li><code>ComponentInterface</code>、<code>DecoratorInterface</code>、<code>AbstractDecorator</code> 等新增的 class 與需求無關，算是因為使用 Decorator Pattern 所產生的額外 class</li>
 <li><code>interface</code> 雖然有制定 spec 與 compiler 編譯檢查的優點，但是只有一個 method 的 interface，是否有有開 <code>interface</code> 的需要？</li>
 </ul>
 <p>雖然 <code>PriceInterface</code> 定義了 <code>CalculatePrice()</code>，但整個 <code>interface</code> 只有一個 method，顯然使用 <code>interface</code> 有殺雞用牛刀之嫌，此時可將 <code>interface</code> 退化成 <code>delegate</code>。</p>
