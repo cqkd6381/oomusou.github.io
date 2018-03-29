@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-29T10:07:13.930Z</updated>
+  <updated>2018-03-29T10:23:45.199Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/sonarqube/macos-setup/"/>
     <id>http://oomusou.io/sonarqube/macos-setup/</id>
     <published>2018-03-29T12:23:43.000Z</published>
-    <updated>2018-03-29T10:07:13.930Z</updated>
+    <updated>2018-03-29T10:23:45.199Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。它是一套以 Java 開發的工具，在 macOS 安裝很簡單，不使用 <code>pkg</code> 格式，所以不用擔心移除問題，只需解壓縮即可執行。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -35,12 +35,12 @@
 <h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> start</span><br></pre></td></tr></table></figure>
 <p>使用 <code>sonar.sh start</code> 啟動 SonarQube。</p>
-<p><img src="/images/sonarqube/macos-setup/mac003.png" alt="ac00"></p>
+<p><img src="/images/sonarqube/macos-setup/mac004.png" alt="ac00"></p>
 <ol>
 <li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
 <li>輸入  <code>./sonar.sh start</code> 啟動 SonarQube</li>
 </ol>
-<p><img src="/images/sonarqube/macos-setup/mac004.png" alt="ac00"></p>
+<p><img src="/images/sonarqube/macos-setup/mac003.png" alt="ac00"></p>
 <p>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功。</p>
 <h2 id="結束_SonarQube">結束 SonarQube</h2><hr>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> stop</span><br></pre></td></tr></table></figure>
