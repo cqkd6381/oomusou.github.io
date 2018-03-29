@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/typescript/module/</loc>
+    <lastmod>2018-03-29T10:26:11.329Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/sonarqube/macos-setup/</loc>
     <lastmod>2018-03-29T10:23:45.199Z</lastmod>
   </url>
@@ -329,11 +334,6 @@
   <url>
     <loc>http://oomusou.io/typescript/type-assertion/</loc>
     <lastmod>2018-02-19T14:04:01.056Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/typescript/module/</loc>
-    <lastmod>2018-02-19T14:03:32.999Z</lastmod>
   </url>
   
   <url>
