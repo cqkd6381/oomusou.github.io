@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="SonarQube 現在也能用在 PHP">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-03-31T15:33:20.291Z">
+<meta property="og:updated_time" content="2018-03-31T23:29:22.643Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 SonarQube 檢查 PHP 專案？">
 <meta name="twitter:description" content="SonarQube 現在也能用在 PHP">
@@ -102,12 +102,12 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GitHub"><span class="toc-article-text">GitHub</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube"><span class="toc-article-text">SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner"><span class="toc-article-text">SonarQube Scanner</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Jenkins"><span class="toc-article-text">Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner_for_Jenkins"><span class="toc-article-text">SonarQube Scanner for Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定_Jenkins_Job"><span class="toc-article-text">設定 Jenkins Job</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GitHub"><span class="toc-article-text">GitHub</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube"><span class="toc-article-text">SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner"><span class="toc-article-text">SonarQube Scanner</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Jenkins"><span class="toc-article-text">Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner_for_Jenkins"><span class="toc-article-text">SonarQube Scanner for Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Jenkins_Job"><span class="toc-article-text">Jenkins Job</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
     </div>
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>SonarQube 6.7.2 LTS 已經內建 SonarPHP，可以直接對 PHP 專案進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
+	    <p>SonarQube 已經內建 SonarPHP，可以直接對 PHP 專案進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarPHP 2.1.3<br>SonarQube Scanner 3.1<br>Jenkins 2.107.1<br>SonarQube Scanner for Jenkins 2.6.1<br>PHP 7.1.14<br>Laravel 5.6.14</p>
@@ -251,7 +251,7 @@
 <li>設定 SonarQube Scanner 名稱</li>
 </ol>
 <p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
-<h2 id="設定_Jenkins_Job">設定 Jenkins Job</h2><hr>
+<h2 id="Jenkins_Job">Jenkins Job</h2><hr>
 <p><strong>Source Code Management</strong></p>
 <p><img src="/images/sonarqube/php/php007.png" alt="hp00"></p>
 <ol>

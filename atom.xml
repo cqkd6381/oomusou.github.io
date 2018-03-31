@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-31T15:33:20.291Z</updated>
+  <updated>2018-03-31T23:29:22.643Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://oomusou.io/sonarqube/php/"/>
     <id>http://oomusou.io/sonarqube/php/</id>
     <published>2018-03-31T12:23:43.000Z</published>
-    <updated>2018-03-31T15:33:20.291Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 6.7.2 LTS 已經內建 SonarPHP，可以直接對 PHP 專案進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
+    <updated>2018-03-31T23:29:22.643Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 已經內建 SonarPHP，可以直接對 PHP 專案進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarPHP 2.1.3<br>SonarQube Scanner 3.1<br>Jenkins 2.107.1<br>SonarQube Scanner for Jenkins 2.6.1<br>PHP 7.1.14<br>Laravel 5.6.14</p>
@@ -164,7 +164,7 @@
 <li>設定 SonarQube Scanner 名稱</li>
 </ol>
 <p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
-<h2 id="設定_Jenkins_Job">設定 Jenkins Job</h2><hr>
+<h2 id="Jenkins_Job">Jenkins Job</h2><hr>
 <p><strong>Source Code Management</strong></p>
 <p><img src="/images/sonarqube/php/php007.png" alt="hp00"></p>
 <ol>
