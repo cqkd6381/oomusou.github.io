@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="直接以 Docker 使用 Jenkins">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-02-26T10:25:35.310Z">
+<meta property="og:updated_time" content="2018-03-31T06:04:03.582Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 安裝 Jenkins ?">
 <meta name="twitter:description" content="直接以 Docker 使用 Jenkins">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載_Jenkins_Image"><span class="toc-article-text">下載 Jenkins Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Container"><span class="toc-article-text">建立 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Unlock_Jenkins"><span class="toc-article-text">Unlock Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Customize_Jenkins"><span class="toc-article-text">Customize Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Getting_Started"><span class="toc-article-text">Getting Started</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Create_Admin_User"><span class="toc-article-text">Create Admin User</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Start_Using_Jenkins"><span class="toc-article-text">Start Using Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Welcome_to_Jenkins"><span class="toc-article-text">Welcome to Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_Container_儲存成_Image"><span class="toc-article-text">將 Container 儲存成 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_Image_匯出成_Tar"><span class="toc-article-text">將 Image 匯出成 Tar</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#從_Tar_匯入成_Image"><span class="toc-article-text">從 Tar 匯入成 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立新的_Container"><span class="toc-article-text">建立新的 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載_Docker_Image"><span class="toc-article-text">下載 Docker Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Unlock_Jenkins"><span class="toc-article-text">Unlock Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Customize_Jenkins"><span class="toc-article-text">Customize Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Getting_Started"><span class="toc-article-text">Getting Started</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Create_Admin_User"><span class="toc-article-text">Create Admin User</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Start_Using_Jenkins"><span class="toc-article-text">Start Using Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Welcome_to_Jenkins"><span class="toc-article-text">Welcome to Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_Container_儲存成_Image"><span class="toc-article-text">將 Container 儲存成 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_Image_匯出成_Tar"><span class="toc-article-text">將 Image 匯出成 Tar</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#從_Tar_匯入成_Image"><span class="toc-article-text">從 Tar 匯入成 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立新的_Container"><span class="toc-article-text">建立新的 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -111,17 +111,11 @@
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>Jenkins 2.89.4</p>
-<h2 id="下載_Jenkins_Image">下載 Jenkins Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker pull jenkins/<span class="symbol">jenkins:</span>lts</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker pull</code> 下載 image 到本機。</p>
-<blockquote>
-<p>lts : 表示 Long time support 版本，通常較為穩定</p>
-</blockquote>
-<p><img src="/images/docker/jenkins/docker000.png" alt="docker000"></p>
-<h2 id="建立_Container">建立 Container</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyJenkins -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
+<h2 id="下載_Docker_Image">下載 Docker Image</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name MyJenkins -p <span class="number">8080</span>:<span class="number">8080</span> -p <span class="number">50000</span>:<span class="number">50000</span> -v jenkins_home:/var/jenkins_home jenkins/jenkins:lts</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 由 image 建立 container 並執行之。</p>
 <ul>
+<li><strong>-d</strong>：<code>d</code> etach，建立 container 後，就脫離目前 process</li>
 <li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyJenkins</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
 <li><strong>-p</strong> : Docker 外部與 Jenkins 內部所對應的 port，其中左邊為外部 Docker 的 port，右邊為 Jenkins 內部的 port</li>
 <li><strong>-v</strong> : 建立 <code>JENKINS_HOME</code> 環境變數，其目錄在 <code>/var/jenkins_home</code>，為 Jenkins 的工作目錄</li>
