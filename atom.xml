@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-03-31T23:31:16.938Z</updated>
+  <updated>2018-04-01T00:17:01.421Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/sonarqube/php/"/>
     <id>http://oomusou.io/sonarqube/php/</id>
     <published>2018-03-31T12:23:43.000Z</published>
-    <updated>2018-03-31T23:31:16.938Z</updated>
+    <updated>2018-04-01T00:17:01.421Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 已經內建 SonarPHP，可以直接對 PHP 專案進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -50,6 +50,7 @@
 <ol>
 <li>輸入 <code>sonar console</code> 自行啟動 SonarQube</li>
 </ol>
+<p><strong>測試 SonarQube</strong></p>
 <p><img src="/images/sonarqube/php/php017.png" alt="hp01"></p>
 <ol>
 <li>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功</li>
@@ -121,6 +122,35 @@
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>jenkins-lts</span><br></pre></td></tr></table></figure>
 <p>使用 <code>jenkins-lts</code> 自行啟動 Jenkins。</p>
 <p><img src="/images/sonarqube/php/php026.png" alt="hp02"></p>
+<p><strong>Unlock Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php028.png" alt="hp02"></p>
+<ol>
+<li>輸入 <code>localhost:8080</code>，看到 Unlock Jenkins，開始設定 Jenkins</li>
+<li>預設密碼放在 <code>./jenkins/secrets/initialAdminPassword</code></li>
+</ol>
+<p><strong>Customize Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php029.png" alt="hp02"></p>
+<ol>
+<li>選擇 <code>Install suggested plugins</code> 即可</li>
+</ol>
+<p><strong>Getting Started</strong></p>
+<p><img src="/images/sonarqube/php/php030.png" alt="hp03"></p>
+<p>安裝 default plugin 中。</p>
+<p><strong>Create Admin User</strong></p>
+<p><img src="/images/sonarqube/php/php031.png" alt="hp03"></p>
+<ol>
+<li>建立管理者帳號。</li>
+</ol>
+<p><strong>Jenkins is Ready</strong></p>
+<p><img src="/images/sonarqube/php/php032.png" alt="hp03"></p>
+<ol>
+<li>Jenkins 安裝完成，按 <code>Start using jenkins</code> 開始使用 Jenkins</li>
+</ol>
+<p><strong>Welcome to Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php033.png" alt="hp03"></p>
+<ol>
+<li>Jenkins 安裝完成，按 <code>Start using jenkins</code> 開始使用 Jenkins</li>
+</ol>
 <h2 id="SonarQube_Scanner_for_Jenkins">SonarQube Scanner for Jenkins</h2><hr>
 <p>要讓 Jenkis 能自動執行 SonarQube Scanner，必須另外安裝 plugin。</p>
 <p><strong>安裝 SonarQube Scanner for Jenkins</strong></p>
