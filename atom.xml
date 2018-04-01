@@ -250,7 +250,7 @@
     <link href="http://oomusou.io/fsharp/decorator/"/>
     <id>http://oomusou.io/fsharp/decorator/</id>
     <published>2018-03-30T12:23:43.000Z</published>
-    <updated>2018-04-01T11:40:22.447Z</updated>
+    <updated>2018-04-01T11:41:44.110Z</updated>
     <content type="html"><![CDATA[<p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Decorator Pattern。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -291,7 +291,7 @@
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceDecorator =  </span><br><span class="line">    <span class="keyword">let</span> discountPrice price = price * <span class="number">0.8</span></span><br><span class="line">    <span class="keyword">let</span> rebatePrice price = price - <span class="number">100.0</span></span><br></pre></td></tr></table></figure>
 <p>以 <code>discountPrice()</code> 表示 <code>全館八折</code>。</p>
 <p>以 <code>rebatePrice()</code> 表示 <code>滿千送百</code>。</p>
-<p>由於 component 與 decorator 基本上都是 <code>double -&gt; double</code> 的型別，可以廣義視為 decorator 可以廣義視為 decorator 放在同一 module。</p>
+<p>由於 component 與 decorator 基本上都是 <code>double -&gt; double</code> 的型別，可以廣義視為 decorator 放在同一 module。</p>
 <p><strong>OrderService.fs</strong></p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> PriceDecorator</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> getPrice price = </span><br><span class="line">        <span class="keyword">match</span> price &gt; <span class="number">1000.0</span> <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span> -&gt; (discountPrice &gt;&gt; rebatePrice) price</span><br><span class="line">        | <span class="keyword">false</span> -&gt; discountPrice price</span><br></pre></td></tr></table></figure>
 <p>根據商業邏輯：</p>
