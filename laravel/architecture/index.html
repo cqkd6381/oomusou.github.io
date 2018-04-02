@@ -13,11 +13,11 @@
  <meta name="description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Laravel 的中大型專案架構">
-<meta property="og:url" content="http://oomusou.io/laravel/laravel-architecture/index.html">
+<meta property="og:url" content="http://oomusou.io/laravel/architecture/index.html">
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2016-10-18T06:13:35.000Z">
+<meta property="og:updated_time" content="2018-04-02T05:11:41.233Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Laravel 的中大型專案架構">
 <meta name="twitter:description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
@@ -154,9 +154,9 @@
 <h3 id="建立目錄">建立目錄</h3><p>在 <code>app</code> 目錄下建立 <code>Repositories</code>，<code>Services</code> 與 <code>Presenters</code> 目錄。<br><img src="/images/laravel/laravel-architecture/arch001.png" alt=""></p>
 <div class="alert alert-info"><i class="fa fa-info"></i>  別害怕建立目錄！！</div>
 <p>別害怕在 Laravel 預設目錄以外建立的<strong>其他目錄</strong>，根據 <strong>SOLID</strong> 的<strong>單一職責</strong>原則，class  功能越多，責任也越多，因此越違反<strong>單一職責</strong>原則，所以你應該將你的程式分割成更小的部分，每個部分都有它專屬的功能，而不是一個 class 功能包山包海，也就是所謂的<strong>萬能類別</strong>，所以整個專案不應該只有 MVC 三個部分，放手根據你的需求建立適當的目錄，並將適當的 class 放到該目錄下，只要我們的 class 有 namespace 幫我們分類即可。</p>
-<h3 id="Repository">Repository</h3><p>由於篇幅的關係，將 repository 獨立成專文討論，請參考<a href="/laravel/laravel-repository/">如何使用 Repository 模式?</a></p>
-<h3 id="Service">Service</h3><p>由於篇幅的關係，將 service 獨立成專文討論，請參考<a href="/laravel/laravel-service/">如何使用 Service 模式?</a></p>
-<h3 id="Presenter">Presenter</h3><p>由於篇幅的關係，將 presenter 獨立成專文討論，請參考<a href="/laravel/laravel-presenter/">如何使用 Presenter 模式?</a></p>
+<h3 id="Repository">Repository</h3><p>由於篇幅的關係，將 repository 獨立成專文討論，請參考<a href="/laravel/repository/">如何使用 Repository 模式?</a></p>
+<h3 id="Service">Service</h3><p>由於篇幅的關係，將 service 獨立成專文討論，請參考<a href="/laravel/service/">如何使用 Service 模式?</a></p>
+<h3 id="Presenter">Presenter</h3><p>由於篇幅的關係，將 presenter 獨立成專文討論，請參考<a href="/laravel/presenter/">如何使用 Presenter 模式?</a></p>
 <h2 id="單元測試">單元測試</h2><hr>
 <p>由於現在 model、view、controller 的相依物件都已經拆開，也都使用依賴注入，因此每個部分都可以單獨的做單元測試，如要測試 service，就將 repository 加以 mock，也可以將其他 service 加以 mock。</p>
 <p>Presenter 也可以單獨跑單元測試，將其他 service 加以 mock，不一定要跑驗收測試才能測顯示邏輯。</p>
@@ -182,7 +182,7 @@
 <ul class="pagination">
 	 
 				
-    	<li class="prev"><a href="/laravel/laravel-repository/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+    	<li class="prev"><a href="/laravel/repository/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
   		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
