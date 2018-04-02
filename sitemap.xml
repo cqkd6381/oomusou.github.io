@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/sonarqube/slack/</loc>
+    <lastmod>2018-04-02T12:59:32.829Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/sonarqube/php/</loc>
+    <lastmod>2018-04-02T09:50:45.690Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/slack/jenkins/</loc>
+    <lastmod>2018-04-02T08:01:50.440Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/laravel/presenter/</loc>
     <lastmod>2018-04-02T05:16:28.618Z</lastmod>
   </url>
@@ -34,11 +49,6 @@
   <url>
     <loc>http://oomusou.io/fsharp/decorator/</loc>
     <lastmod>2018-04-01T11:41:44.110Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/sonarqube/php/</loc>
-    <lastmod>2018-04-01T00:17:01.421Z</lastmod>
   </url>
   
   <url>
@@ -304,11 +314,6 @@
   <url>
     <loc>http://oomusou.io/docker/mount-host-dir/</loc>
     <lastmod>2018-03-03T15:32:27.666Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/slack/jenkins/</loc>
-    <lastmod>2018-03-03T15:13:19.299Z</lastmod>
   </url>
   
   <url>
