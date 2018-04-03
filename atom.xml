@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-03T08:14:49.025Z</updated>
+  <updated>2018-04-03T08:39:12.529Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/sonarqube/angular/"/>
     <id>http://oomusou.io/sonarqube/angular/</id>
     <published>2018-04-03T13:23:43.000Z</published>
-    <updated>2018-04-03T08:14:49.025Z</updated>
+    <updated>2018-04-03T08:39:12.529Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
 <p>SonarQube 已經內建 SonarTS，可以直接對 TypeScript 進行檢查，本文將以 Angular 為例，並搭配 Jenkins 自動執行 SonarQube，將結果通知 Slack。</p>
 <a id="more"></a>
@@ -348,6 +348,10 @@
     </summary>
     
       <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
+    
+      <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
+    
+      <category term="Slack" scheme="http://oomusou.io/tags/Slack/"/>
     
       <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
     
