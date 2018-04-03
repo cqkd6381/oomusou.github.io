@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-02T13:16:02.717Z</updated>
+  <updated>2018-04-03T01:28:46.039Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/sonarqube/slack/"/>
     <id>http://oomusou.io/sonarqube/slack/</id>
     <published>2018-04-02T12:23:43.000Z</published>
-    <updated>2018-04-02T13:16:02.717Z</updated>
+    <updated>2018-04-03T01:28:46.039Z</updated>
     <content type="html"><![CDATA[<p>當 Jenkins 自動對 SonarQube 執行 <code>程式碼品質檢查</code>，發現任何 bugs、vulnerablity、code smell 或 duplication 時，希望能即時通知 Slack，及早發現錯誤並修正。</p>
 <p>本文以 C# 與 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube。<br><a id="more"></a></p>
 <h2 id="Version">Version</h2><hr>
@@ -293,7 +293,7 @@
 <p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
 <h2 id="Jenkins_Job">Jenkins Job</h2><hr>
 <p><strong>Source Code Management</strong></p>
-<p><img src="/images/sonarqube/slack/lack043.png" alt="lack04"></p>
+<p><img src="/images/sonarqube/slack/slack043.png" alt="lack04"></p>
 <ol>
 <li>選擇 Job，按左側 <code>Configure</code></li>
 </ol>
