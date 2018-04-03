@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/fsharp/unit-ignore/</loc>
+    <lastmod>2018-04-03T02:57:31.197Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/option/</loc>
+    <lastmod>2018-04-03T02:57:17.870Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/partial-function-application/</loc>
+    <lastmod>2018-04-03T02:55:22.082Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/sonarqube/slack/</loc>
     <lastmod>2018-04-03T01:28:46.039Z</lastmod>
   </url>
@@ -24,16 +39,6 @@
   <url>
     <loc>http://oomusou.io/laravel/architecture/</loc>
     <lastmod>2018-04-02T05:11:41.233Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/unit-ignore/</loc>
-    <lastmod>2018-04-01T23:42:11.996Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/option/</loc>
-    <lastmod>2018-04-01T23:39:01.283Z</lastmod>
   </url>
   
   <url>
@@ -837,7 +842,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-xdebug-on-demand/</loc>
+    <loc>http://oomusou.io/laravel/homestead/homestead-per-project/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -872,7 +877,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/homestead/homestead-per-project/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-xdebug-on-demand/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
