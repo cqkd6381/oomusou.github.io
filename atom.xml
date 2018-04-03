@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-03T02:55:22.082Z</updated>
+  <updated>2018-04-03T08:00:20.895Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,347 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 SonarQube 檢查 Angular 專案？]]></title>
+    <link href="http://oomusou.io/sonarqube/angular/"/>
+    <id>http://oomusou.io/sonarqube/angular/</id>
+    <published>2018-04-03T13:23:43.000Z</published>
+    <updated>2018-04-03T08:00:20.895Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>SonarQube 已經內建 SonarTS，可以直接對 TypeScript 進行檢查，本文將以 Angular 為例，並搭配 Jenkins 自動執行 SonarQube，將結果通知 Slack。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>Jenkins 2.107.1<br>Slack 3.0.5<br>.NET Core 2.0.6</p>
+<h2 id="GitHub">GitHub</h2><hr>
+<p>將 Angular 專案放到 GitHub。</p>
+<p><img src="/images/sonarqube/angular/slack000.png" alt="lack00"></p>
+<ol>
+<li>本文將 Angular 專案放在 <code>https://github.com/oomusou/NG52JenkinsSonarQubeSlack</code></li>
+</ol>
+<blockquote>
+<p>當然也可以將 git repository 放在不同的 git server，如 Bitbucket</p>
+</blockquote>
+<h2 id="SonarQube">SonarQube</h2><hr>
+<p><strong>安裝 SonarQube</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>update</span><br><span class="line">$ <span class="keyword">brew </span>install sonarqube</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew 安裝 SonarQube。</p>
+<p><img src="/images/sonarqube/angular/slack001.png" alt="lack00"></p>
+<ol>
+<li>輸入 <code>brew install sonarqube</code> 安裝</li>
+<li>若想在每次 Mac 重開機就自動執行 SonarQube，輸入 <code>brew services start sonarqube</code></li>
+<li>若想自行啟動 SonarQube，輸入 <code>sonar console</code></li>
+</ol>
+<p><strong>啟動 SonarConsole</strong><br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sonar <span class="built_in">console</span></span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>sonar console</code> 自行啟動 SonarQube。</p>
+<p><img src="/images/sonarqube/angular/slack002.png" alt="lack00"></p>
+<ol>
+<li>輸入 <code>sonar console</code> 自行啟動 SonarQube</li>
+</ol>
+<p><strong>測試 SonarQube</strong></p>
+<p><img src="/images/sonarqube/angular/slack003.png" alt="lack00"></p>
+<ol>
+<li>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功</li>
+<li>右上角 <code>Log in</code> 可登入管理設定 SonarQube，預設為 <code>admin/admin</code></li>
+</ol>
+<h2 id="SonarQube_Scanner">SonarQube Scanner</h2><hr>
+<p>SonarQube 雖然已經包含 SonarC#，但必須靠 SonarQube Scanner 才能執行，預設 SonarQube 並沒有包含 Scanner，必須自行安裝。</p>
+<p><strong>下載 Scanner</strong></p>
+<p><img src="/images/sonarqube/angular/slack004.png" alt="hp00"></p>
+<p>到 <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner" target="_blank" rel="external">Analyzing with SonarQube Scanner</a> 下載 Scanner，選擇 <code>Mac OS X 64 bit</code> 下載。</p>
+<p><img src="/images/sonarqube/angular/slack005.png" alt="lack00"></p>
+<p>下載後為一 <code>zip</code> 壓縮檔，解壓縮後可安裝在任何目錄。</p>
+<p><img src="/images/sonarqube/angular/slack006.png" alt="lack00"></p>
+<ol>
+<li>選擇 home directory</li>
+<li>將 <code>sonar-scanner-3.1.0.1141-macosx</code> 放在 home directory 下</li>
+</ol>
+<p><strong>設定 Server</strong></p>
+<p><strong>sonar-scanner.properties</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#----- Default SonarQube server</span><br><span class="line">sonar<span class="class">.host</span><span class="class">.url</span>=http:<span class="comment">//localhost:9000</span></span><br></pre></td></tr></table></figure>
+<p>設定 SonarQube server 位址，並將 <code>#</code> 註解拿掉。</p>
+<p><img src="/images/sonarqube/angular/slack007.png" alt="lack00"></p>
+<ol>
+<li><code>sonar-scanner.properties</code> 位於 <code>sonar-scanner-3.1.0.1141-macosx/conf/</code> 目錄下</li>
+</ol>
+<p><strong>測試 Scanner</strong></p>
+<p>將 SonarQube Scanner 加到 system path。</p>
+<p><strong>.zshrc</strong><br><img src="/images/sonarqube/angular/slack008.png" alt="lack00"></p>
+<ol>
+<li>將 <code>~/sonar-scanner-3.1.0.1141-macosx/bin</code> 目錄加到 system path</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ sonar-scanner -Dsonar.projectKey=Angular52 -Dsonar.sources=. -Dsonar.projectName=Angular52 -Dsonar.projectVersion=<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>sonar-scanner</code> 對 Laravel 專案進行檢查。</p>
+<ul>
+<li><strong>-D</strong> : 對 SonarQube 的 property 進行設定</li>
+<li><strong>sonar.projectKey</strong>：SonarQube 對專案的 key，內部將以此 key 作為辨別，必須唯一</li>
+<li><strong>sonar.sources</strong>：SonarQube 要檢查的目錄，因為已經在專案目錄下，<code>.</code> 即為 <code>目前目錄</code></li>
+<li><strong>sonar.projectName</strong>：在 SonarQube 網頁上顯示的名稱</li>
+<li><strong>sonar.projectVersion</strong>：在 SonarQube 網頁上顯示的版本編號</li>
+</ul>
+<p><img src="/images/sonarqube/angular/slack009.png" alt="lack00"></p>
+<ol>
+<li>在專案目錄下輸入 <code>sonar-scanner</code> 檢查 TypeScript</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack010.png" alt="lack01"></p>
+<ol>
+<li>若能看到 <code>EXECUTION SUCCESS</code>，則表示 SonarQube Scanner 安裝成功</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack011.png" alt="lack01"></p>
+<p>進入 SonarQube 網頁，就可看到 <code>Angular52</code> 專案已經出現 SonarQube。</p>
+<p>到目前為止，SonarQube 對 TypeScript 的檢查已經完成，就算只將 SonarQube 裝在本機，也對 TypeScript 程式碼品質的檢查有很大的幫助。</p>
+<p>若每次 SonarQube 檢查完，都能將結果送到 Slack，讓 Slack 成為實質的 <code>持續整合</code> 中心，那就太好了。</p>
+<blockquote>
+<p>Q：Angular 專案有 <code>node_modules</code> 目錄，不需如 Lavavel 專案去排除 <code>vendor</code> 目錄嗎？</p>
+</blockquote>
+<p><img src="/images/sonarqube/angular/slack050.png" alt="lack05"></p>
+<p><strong><em>Administration -&gt; TypeScript</em></strong></p>
+<p>預設已經排除了 <code>node_modules</code>，所以不須在 <code>sonar-scanner</code> 下特別指定。</p>
+<h2 id="Slack">Slack</h2><hr>
+<p><strong>新增 Channel</strong></p>
+<p><img src="/images/sonarqube/angular/slack012.png" alt="lack01"></p>
+<ol>
+<li>按下 <code>Channels</code> 右側的 <code>+</code> 新增 channel</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack013.png" alt="lack01"></p>
+<ol>
+<li><strong>Privacy</strong> : 設定為 <code>Public</code> 或 <code>Private</code> channel</li>
+<li><strong>Name</strong> : 設定 channel 名稱</li>
+<li><strong>Purpose</strong> : channel 的功能描述，可以不輸入</li>
+<li><strong>Send invites to</strong> : 設定 channel 成員，可以稍後再設定</li>
+<li>按 <code>Create Channel</code> 開始建立 channel</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack014.png" alt="lack01"></p>
+<ol>
+<li>按 <code>Got It!</code> 進入 channel</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack015.png" alt="lack01"></p>
+<ol>
+<li>正式進入 channel，將來 SonarQube 訊息會傳進此 channel</li>
+</ol>
+<p><strong>新增 Notification</strong></p>
+<p><img src="/images/sonarqube/angular/slack016.png" alt="lack01"></p>
+<ol>
+<li>選擇右上方的 <code>option</code></li>
+<li>選擇 <code>Add an app</code></li>
+</ol>
+<p><strong>新增 Incoming WebHooks</strong></p>
+<p><img src="/images/sonarqube/angular/slack017.png" alt="lack01"></p>
+<p>Slack 將開啟瀏覽器</p>
+<ol>
+<li>稍微往下捲輸入 <code>webhook</code></li>
+<li>選擇 <code>Incoming WebHooks</code></li>
+</ol>
+<p><strong>新增 Configuration</strong></p>
+<p><img src="/images/sonarqube/angular/slack018.png" alt="lack01"></p>
+<ol>
+<li>按 <code>Add Configuration</code> 加入 Jenkins CI</li>
+</ol>
+<p><strong>新增 Integration</strong></p>
+<p><img src="/images/sonarqube/angular/slack019.png" alt="lack01"></p>
+<ol>
+<li>按 <code>Add Incoming WebHooks Integration</code> 正式加入整合</li>
+</ol>
+<p><strong>Slack 設定完成</strong></p>
+<p><img src="/images/sonarqube/angular/slack020.png" alt="lack02"></p>
+<ol>
+<li>介紹 SonarQube 設定流程</li>
+</ol>
+<blockquote>
+<p>Slack 部分已經設定完成，接下來是 SonarQube 的設定</p>
+<p>Slack 網頁先不要關閉，稍後會用到</p>
+</blockquote>
+<h2 id="SonarQube_Slack_Notifier">SonarQube Slack Notifier</h2><hr>
+<p>SonarQube 預設並沒有辦法直接對 Slack 發出 notification，必須另外安裝 <a href="https://github.com/kogitant/sonar-slack-notifier-plugin" target="_blank" rel="external">CKS Sonar Slack Notifier Plugin</a>。</p>
+<p><strong>下載 Plugin</strong></p>
+<p><img src="/images/sonarqube/angular/slack021.png" alt="lack02"></p>
+<p><strong>安裝 Plugin</strong></p>
+<p><img src="/images/sonarqube/angular/slack022.png" alt="lack02"></p>
+<p>將 <code>cks-slack-notifier-2.1.2.jar</code> 複製到 <code>/usr/local/Cellar/sonarqube/7.0/libexec/extensions/plugins</code> 目錄下。</p>
+<blockquote>
+<p>因為 Homebrew 會將 app 安裝在 <code>/usr/local/Cellar/</code> 目錄下</p>
+</blockquote>
+<p><strong>設定 Plugin</strong></p>
+<p><img src="/images/sonarqube/angular/slack023.png" alt="lack02"></p>
+<p>重新啟動 SonarQube：</p>
+<p><strong><em>Administration -&gt; Slack</em></strong></p>
+<ol>
+<li>在 <code>Administration</code> 下會發現多了 <code>Slack</code></li>
+<li>選擇 <code>Slack</code></li>
+<li><strong>Slack web integration hook</strong>：設定 <code>Slack web integration hook</code></li>
+<li><strong>Plugin enabled</strong>：<code>enable</code></li>
+</ol>
+<blockquote>
+<p>Q： <code>Slack web integration hook</code> 該填什麼呢？</p>
+</blockquote>
+<p><img src="/images/sonarqube/angular/slack024.png" alt="lack02"></p>
+<p>回到 Slack 最後的網頁往下捲到 <code>Webhook URL</code></p>
+<ol>
+<li>將 <code>Webhook URL</code> 的一長串 URL 複製，貼到 SonarQube 的 <code>Slack web integration hook</code></li>
+</ol>
+<p>最後按 <code>Save</code> 存檔。</p>
+<p><strong>設定 Project 與 Channel</strong></p>
+<p>雖然已經設定了 SonarQube 的 Webhook URL，但還要繼續設定 project 與所對應的 Slack channel，才會正式開啟 notification。</p>
+<p><img src="/images/sonarqube/angular/slack025.png" alt="lack02"></p>
+<ol>
+<li><strong>Project Key</strong>： 設定 SonarQube 的 project key</li>
+<li><strong>Slack channel</strong>：設定所要通知 Slack channel</li>
+</ol>
+<p>最後按 <code>Save</code> 存檔。</p>
+<p><strong>測試 Plugin</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ sonar-scanner -Dsonar.projectKey=Angular52 -Dsonar.sources=. -Dsonar.projectName=Angular52 -Dsonar.projectVersion=<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>重新執行 <code>sonar-scanner</code>。</p>
+<p><img src="/images/sonarqube/angular/slack027.png" alt="lack02"></p>
+<ol>
+<li>重新在專案目錄下輸入 <code>sonar-scanner</code> 檢查 TypeScript</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack026.png" alt="lack02"></p>
+<ol>
+<li>Slack 會收到 SonarQube 檢查的結果</li>
+</ol>
+<p>實務上 SonarQube 還會與其他 CI server 合作，接下來將以 Jenkins 為例，介紹如何以 Jenkins 自動化 SonarQube。</p>
+<h2 id="Jenkins">Jenkins</h2><hr>
+<p><strong>安裝 Jenkins</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install jenkins-lts</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew 安裝 Jenkins。</p>
+<p><img src="/images/sonarqube/angular/slack028.png" alt="lack02"></p>
+<ol>
+<li>輸入 <code>brew install jenkins-lts</code> 安裝</li>
+<li>若想在每次 Mac 重開機就自動執行 Jenkins，輸入 <code>brew services start jenkins-lts</code></li>
+<li>若想自行啟動 Jenkins，輸入 <code>jenkins-lts</code></li>
+</ol>
+<p><strong>啟動 Jenkins</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>jenkins-lts</span><br></pre></td></tr></table></figure>
+<p>使用 <code>jenkins-lts</code> 自行啟動 Jenkins。</p>
+<p><img src="/images/sonarqube/angular/slack029.png" alt="lack02"></p>
+<p><strong>Unlock Jenkins</strong></p>
+<p><img src="/images/sonarqube/angular/slack030.png" alt="lack03"></p>
+<ol>
+<li>輸入 <code>localhost:8080</code>，看到 Unlock Jenkins，開始設定 Jenkins</li>
+<li>預設密碼放在 <code>./jenkins/secrets/initialAdminPassword</code></li>
+</ol>
+<p><strong>Customize Jenkins</strong></p>
+<p><img src="/images/sonarqube/angular/slack031.png" alt="lack03"></p>
+<ol>
+<li>選擇 <code>Install suggested plugins</code> 即可</li>
+</ol>
+<p><strong>Getting Started</strong><br><img src="/images/sonarqube/angular/slack032.png" alt="lack03"></p>
+<p>安裝 default plugin 中。</p>
+<p><strong>Create Admin User</strong></p>
+<p><img src="/images/sonarqube/angular/slack033.png" alt="lack03"></p>
+<ol>
+<li>建立管理者帳號</li>
+</ol>
+<p><strong>Jenkins is Ready</strong></p>
+<p><img src="/images/sonarqube/angular/slack034.png" alt="lack03"></p>
+<ol>
+<li>Jenkins 安裝完成，按 <code>Start using jenkins</code> 開始使用 Jenkins</li>
+</ol>
+<p><strong>Welcome to Jenkins</strong></p>
+<p><img src="/images/sonarqube/angular/slack035.png" alt="lack03"></p>
+<ol>
+<li>進入 Jenkins 管理介面，如此 Jenkins 已經設定成功</li>
+</ol>
+<h2 id="SonarQube_Scanner_for_Jenkins">SonarQube Scanner for Jenkins</h2><hr>
+<p>要讓 Jenkins 能自動執行 SonarQube Scanner，必須另外安裝 plugin。</p>
+<p><strong>安裝 SonarQube Scanner for Jenkins</strong></p>
+<p><img src="/images/sonarqube/angular/slack036.png" alt="lack03"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Manage Plugins</code></li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack037.png" alt="lack03"></p>
+<ol>
+<li>選擇 <code>SonarQube Scanner</code></li>
+<li>按 <code>Download now and install after restart</code></li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack038.png" alt="lack03"></p>
+<p>安裝 plugin 中。</p>
+<ol>
+<li>將 <code>Restart Jenkins when installation is complete and no jobs are running</code> 打勾</li>
+</ol>
+<p><strong>設定 SonarQube 環境變數</strong></p>
+<p><img src="/images/sonarqube/angular/slack039.png" alt="lack03"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Configure System</code></li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack040.png" alt="lack04"></p>
+<ol>
+<li>找到 <code>SonarQube servers</code> 區段</li>
+<li>將 <code>Enable injection of SonarQube server configuration as build environment variables</code> 打勾</li>
+<li>設定 SonarQube server 名稱與網址</li>
+</ol>
+<p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
+<p><strong>設定 SonarQube Scanner 環境變數</strong></p>
+<p><img src="/images/sonarqube/angular/slack041.png" alt="lack04"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Global Tool Configuration</code></li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack042.png" alt="lack04"></p>
+<ol>
+<li>找到 <code>SonarQube Scanner</code> 區段</li>
+<li>設定 SonarQube Scanner 名稱</li>
+</ol>
+<p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
+<h2 id="Jenkins_Job">Jenkins Job</h2><hr>
+<p><strong>Source Code Management</strong></p>
+<p><img src="/images/sonarqube/angular/slack043.png" alt="lack04"></p>
+<ol>
+<li>選擇 Job，按左側 <code>Configure</code></li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack044.png" alt="lack04"></p>
+<ol>
+<li>找到 <code>Source Code Management</code> 區段</li>
+<li>將 Git 的 <code>Repository URL</code> 設定到 <code>https://github.com/oomusou/NG52JenkinsSonarQubeSlack</code></li>
+</ol>
+<p><strong>Build</strong></p>
+<p><img src="/images/sonarqube/angular/slack045.png" alt="lack04"></p>
+<ol>
+<li>找到 <code>Build</code> 區段</li>
+<li>在 <code>Add build step</code> 選擇 <code>Execute SonarQube Scanner</code></li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack046.png" alt="lack04"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sonar.projectKey=Angular52</span><br><span class="line">sonar.sources=. </span><br><span class="line">sonar.projectName=Angular52 </span><br><span class="line">sonar.projectVersion=<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>Analysis properties</code> 加上以上設定。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ sonar-scanner -Dsonar.projectKey=Angular52 -Dsonar.sources=. -Dsonar.projectName=Angular52 -Dsonar.projectVersion=<span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>還記得之前曾經下過以上指令嗎？就是將這些 SonarQube property 設定在 Jenkins，改由 Jenkins 幫我們傳。</p>
+<p><img src="/images/sonarqube/angular/slack047.png" alt="lack04"></p>
+<ol>
+<li>按左側 <code>Build Now</code> 執行 Job</li>
+<li>執行成功後會出現 <code>OK</code> 與 <code>Success</code>。</li>
+</ol>
+<p><img src="/images/sonarqube/angular/slack048.png" alt="lack04"></p>
+<p>剛剛 Jenkins 執行的 Project 出現在 SonarQube 上。</p>
+<p><img src="/images/sonarqube/angular/slack049.png" alt="lack04"></p>
+<ol>
+<li>Slack 也再次收到 SonarQube 檢查的結果</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>SonarQube 已經內建 SonarTS，也可以用來檢查 TypeScript 與 Angular</li>
+<li>就算不將 SonarQube 安裝在 server，安裝在本機也能有效的檢查 TypeScript 程式碼品質</li>
+<li>SonarQube 也能將檢查結果推送到 Slack</li>
+<li>藉由 Jenkins 幫忙，我們就可以自動化執行 SonarQube</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52JenkinsSonarQubeSlack" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://www.sonarqube.org" target="_blank" rel="external">SonarQube</a>, <a href="https://www.sonarqube.org/downloads/" target="_blank" rel="external">SonarQube Downloads</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner" target="_blank" rel="external">Analyzing with SonarQube Scanner</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Jenkins" target="_blank" rel="external">Analying with SonarQube Scanner for Jenkins</a><br><a href="https://jenkins.io/" target="_blank" rel="external">Jenkins</a>, <a href="https://plugins.jenkins.io/sonar" target="_blank" rel="external">SonarQube Scanner</a><br><a href="https://github.com/kogitant" target="_blank" rel="external">Antti Koivisto</a>, <a href="https://github.com/kogitant/sonar-slack-notifier-plugin" target="_blank" rel="external">CKS Sonar Slack Notifier Plugin</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[持續檢查 TypeScript 程式碼品質]]>
+    
+    </summary>
+    
+      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
+    
+      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
+    
+      <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入淺出 F# 之 Partial Function Application]]></title>
@@ -2625,89 +2966,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[使用 .NET Core SDK 建立 Solution]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何建立 Unit Test ?]]></title>
-    <link href="http://oomusou.io/netcore/unit-test/"/>
-    <id>http://oomusou.io/netcore/unit-test/</id>
-    <published>2018-03-16T23:23:43.000Z</published>
-    <updated>2018-03-19T02:13:03.167Z</updated>
-    <content type="html"><![CDATA[<p>雖然我們可以使用 console app 來測試 class library，但比較好的方式是建立 unit test，搭配各種測試案例測試 class library 的結果。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="建立_Unit_Test_專案">建立 Unit Test 專案</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> mstest -o MyClassLib.Tests</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet new</code> 建立 project。</p>
-<ul>
-<li><strong>mstest</strong> : 建立  MSTest 類型專案</li>
-<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyClassLib.Tests</code> 目錄下</li>
-</ul>
-<p><img src="/images/netcore/unit-test/ut000.png" alt="t00"></p>
-<ol>
-<li>輸入 <code>dotnet new mstest -o MyClasLib.Tests</code> 將 MSTest 類型專案建立在 <code>MyClassLib.Tests</code> 目錄下</li>
-<li>.NET Core SDK 開始建立專案所需的檔案</li>
-<li>自動 restore dependency</li>
-</ol>
-<blockquote>
-<p>除了 MSTest，.NET Core SDK 預設還支援 xUnit，若想使用 NUnit，可到 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 下載 NUnit project template</p>
-</blockquote>
-<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyClassLib.Tests</span><br></pre></td></tr></table></figure>
-<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。 </p>
-<p><img src="/images/netcore/unit-test/ut001.png" alt="t00"></p>
-<ul>
-<li>使用 VS Code 開啟 <code>MyClassLib.Tests</code></li>
-</ul>
-<h2 id="新增_Project_Reference">新增 Project Reference</h2><hr>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="keyword">add</span> <span class="keyword">reference</span> ../MyClassLib/MyClassLib.csproj</span><br></pre></td></tr></table></figure>
-<p>因為 <code>MyClassLib.Tests</code> 需要使用 <code>MyClassLib</code>，所以使用 <code>dotnet add reference</code> 新增 project reference。</p>
-<p><img src="/images/netcore/unit-test/ut002.png" alt="t00"></p>
-<ol>
-<li>輸入 <code>dotnet add reference ../MyClassLib/MyClassLib.csproj</code> 將 <code>MyClassLib</code> project 加入 reference</li>
-<li>觀察 <code>MyConsole.csproj</code></li>
-<li><code>MyClassLib.csproj</code>  被加入在  <code>&lt;ItemGroup&gt;</code> 下的 <code>&lt;ProjectReference&gt;</code> </li>
-<li>其他 package 被加入在 <code>&lt;ItemGroup&gt;</code> 下的 <code>&lt;PackageReference&gt;</code></li>
-</ol>
-<blockquote>
-<p>Project reference 與 package reference 都被記錄在 <code>csproj</code> 中，其中 <code>&lt;ProjectReference&gt;</code> 紀錄 project reference，而 <code>&lt;PackageReference&gt;</code> 記錄 package reference</p>
-</blockquote>
-<h2 id="編輯_UnitTest1-cs">編輯 UnitTest1.cs</h2><hr>
-<p><strong>UnitTest1.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.VisualStudio.TestTools.UnitTesting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyClassLib.Tests</span></span><br><span class="line">&#123;</span><br><span class="line">    [TestClass]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">    &#123;</span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">TestMethod1</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> CalculatorService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.Sum(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">2</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根據 <code>3A原則</code> 建立 <code>CalculatorService</code> 的 Unit Test。</p>
-<p><img src="/images/netcore/unit-test/ut003.png" alt="t00"></p>
-<ol>
-<li>開啟 <code>UnitTest1.cs</code></li>
-<li>建立 <code>CalculatorService</code> 的 Unit Test</li>
-</ol>
-<h2 id="執行_Unit_Test">執行 Unit Test</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProjet $ dotnet <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet test</code> 執行單元測試。</p>
-<p><img src="/images/netcore/unit-test/ut004.png" alt="t00"></p>
-<ol>
-<li>輸入 <code>dotnet test</code> 執行單元測試</li>
-<li>測試通過，得到 <code>綠燈</code></li>
-</ol>
-<h2 id="其他相關指令">其他相關指令</h2><hr>
-<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">remove</span> <span class="keyword">reference</span> *.csproj</span><br></pre></td></tr></table></figure>
-<p>移除 project reference。</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="type">list</span> <span class="keyword">reference</span></span><br></pre></td></tr></table></figure>
-<p>列出所有 project reference。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>.NET Core SDK 支援各種 Unit Test，包括 MSTest、xUnit 與 NUnit</li>
-<li>使用 <code>dotnet add reference</code> 新增 project reference</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 .NET Core SDK 建立 Unit Test]]>
     
     </summary>
     
