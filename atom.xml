@@ -68,7 +68,7 @@
     <link href="http://oomusou.io/sonarqube/netcore/"/>
     <id>http://oomusou.io/sonarqube/netcore/</id>
     <published>2018-04-02T12:23:43.000Z</published>
-    <updated>2018-04-03T05:48:55.412Z</updated>
+    <updated>2018-04-03T05:54:52.815Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
 <p>SonarQube 已經內建 SonarC#，可以直接對 C# 進行檢查，本文將以 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube，並結結果通知 Slack。</p>
 <a id="more"></a>
@@ -385,7 +385,7 @@
 <p><a href="https://www.sonarqube.org" target="_blank" rel="external">SonarQube</a>, <a href="https://www.sonarqube.org/downloads/" target="_blank" rel="external">SonarQube Downloads</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner" target="_blank" rel="external">Analyzing with SonarQube Scanner</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Jenkins" target="_blank" rel="external">Analying with SonarQube Scanner for Jenkins</a><br><a href="https://jenkins.io/" target="_blank" rel="external">Jenkins</a>, <a href="https://plugins.jenkins.io/sonar" target="_blank" rel="external">SonarQube Scanner</a><br><a href="https://github.com/kogitant" target="_blank" rel="external">Antti Koivisto</a>, <a href="https://github.com/kogitant/sonar-slack-notifier-plugin" target="_blank" rel="external">CKS Sonar Slack Notifier Plugin</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[讓 Slack 成為 CI 的訊息中心]]>
+    <![CDATA[為 C# 持續檢查程式碼品質]]>
     
     </summary>
     
