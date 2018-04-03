@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>如何為 Slack 設定 SonarQube 通知？ | 點燈坊</title>
+  <title>如何使用 SonarQube 檢查 .NET Core 專案？ | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
   <meta name="description" content="讓 Slack 成為 CI 的訊息中心">
@@ -12,14 +12,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
  <meta name="description" content="讓 Slack 成為 CI 的訊息中心">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何為 Slack 設定 SonarQube 通知？">
-<meta property="og:url" content="http://oomusou.io/sonarqube/slack/index.html">
+<meta property="og:title" content="如何使用 SonarQube 檢查 .NET Core 專案？">
+<meta property="og:url" content="http://oomusou.io/sonarqube/netcore/index.html">
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="讓 Slack 成為 CI 的訊息中心">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-03T03:13:59.876Z">
+<meta property="og:updated_time" content="2018-04-03T05:48:55.412Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何為 Slack 設定 SonarQube 通知？">
+<meta name="twitter:title" content="如何使用 SonarQube 檢查 .NET Core 專案？">
 <meta name="twitter:description" content="讓 Slack 成為 CI 的訊息中心">
  
 
@@ -81,7 +81,7 @@
     	 
 	
 		<div class="page-header">		
-			<h1> 如何為 Slack 設定 SonarQube 通知？</h1>
+			<h1> 如何使用 SonarQube 檢查 .NET Core 專案？</h1>
 		</div>		
 	
 
@@ -107,8 +107,9 @@
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>當 Jenkins 自動對 SonarQube 執行 <code>程式碼品質檢查</code>，發現任何 bugs、vulnerablity、code smell 或 duplication 時，希望能即時通知 Slack，及早發現錯誤並修正。</p>
-<p>本文以 C# 與 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube。<br><a id="more"></a></p>
+	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>SonarQube 已經內建 SonarC#，可以直接對 C# 進行檢查，本文將以 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube，並結結果通知 Slack。</p>
+<a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>Jenkins 2.107.1<br>Slack 3.0.5<br>.NET Core 2.0.6</p>
 <h2 id="GitHub">GitHub</h2><hr>

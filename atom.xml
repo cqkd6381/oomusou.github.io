@@ -64,13 +64,14 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何為 Slack 設定 SonarQube 通知？]]></title>
-    <link href="http://oomusou.io/sonarqube/slack/"/>
-    <id>http://oomusou.io/sonarqube/slack/</id>
+    <title><![CDATA[如何使用 SonarQube 檢查 .NET Core 專案？]]></title>
+    <link href="http://oomusou.io/sonarqube/netcore/"/>
+    <id>http://oomusou.io/sonarqube/netcore/</id>
     <published>2018-04-02T12:23:43.000Z</published>
-    <updated>2018-04-03T03:13:59.876Z</updated>
-    <content type="html"><![CDATA[<p>當 Jenkins 自動對 SonarQube 執行 <code>程式碼品質檢查</code>，發現任何 bugs、vulnerablity、code smell 或 duplication 時，希望能即時通知 Slack，及早發現錯誤並修正。</p>
-<p>本文以 C# 與 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube。<br><a id="more"></a></p>
+    <updated>2018-04-03T05:48:55.412Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>SonarQube 已經內建 SonarC#，可以直接對 C# 進行檢查，本文將以 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube，並結結果通知 Slack。</p>
+<a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>Jenkins 2.107.1<br>Slack 3.0.5<br>.NET Core 2.0.6</p>
 <h2 id="GitHub">GitHub</h2><hr>
@@ -469,8 +470,9 @@
     <link href="http://oomusou.io/sonarqube/php/"/>
     <id>http://oomusou.io/sonarqube/php/</id>
     <published>2018-03-31T12:23:43.000Z</published>
-    <updated>2018-04-02T09:50:45.690Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 已經內建 SonarPHP，可以直接對 PHP 專案進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
+    <updated>2018-04-03T05:46:26.569Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>SonarQube 已經內建 SonarPHP，可以直接對 PHP 進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarPHP 2.1.3<br>SonarQube Scanner 3.1<br>Jenkins 2.107.1<br>SonarQube Scanner for Jenkins 2.6.1<br>PHP 7.1.14<br>Laravel 5.6.14</p>
