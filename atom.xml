@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-03T08:39:12.529Z</updated>
+  <updated>2018-04-04T06:25:13.674Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,114 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[深入探討 F# 之 Tuple]]></title>
+    <link href="http://oomusou.io/fsharp/tuple/"/>
+    <id>http://oomusou.io/fsharp/tuple/</id>
+    <published>2018-04-04T12:23:43.000Z</published>
+    <updated>2018-04-04T06:25:13.674Z</updated>
+    <content type="html"><![CDATA[<p><code>Tuple</code> 是 FP 語言常見的型別，且 C# 7.0 也開始有 <code>Tuple</code>，讓我們藉由 F# 學習該如何活用 <code>Tuple</code>。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Tuple</p>
+<p>將不同型別的 value 整合成單一 value</p>
+</blockquote>
+<p>在將不同型別整合成單一型別，F# 提供了 3 種方式：</p>
+<ol>
+<li><p>Tuple</p>
+</li>
+<li><p>Record</p>
+</li>
+<li><p>Union</p>
+</li>
+</ol>
+<p>其中 <code>Tuple</code> 與 <code>Record</code> 提供類似 AND 的方式將不同型別加以整合，而 <code>Union</code> 則提供類似 OR 的方式將不同型別加以整合。</p>
+<p><code>Record</code> 與 <code>Tuple</code> 的差異在於 <code>Record</code> 為 named type，須事先定義型別，而 <code>Tuple</code> 則為  unmamed type，可直接使用，Type Inference 會幫我們推導出 <code>Tuple</code> 型別。</p>
+<h2 id="建立_Tuple">建立 Tuple</h2><hr>
+<h3 id="相同型別">相同型別</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> dinner = (<span class="string">"green eggs"</span>, <span class="string">"ham"</span>)</span><br></pre></td></tr></table></figure>
+<p>將 <code>green eggs</code> 與 <code>ham</code> 兩個 string 整合成一個 <code>dinner</code> tuple。</p>
+<p><img src="/images/fsharp/tuple/tuple000.png" alt="uple00"></p>
+<p>Type Inference 自動推導出 <code>dinner</code> tuple 為 <code>string * string</code>。</p>
+<p><code>Tuple</code> 型別表示法，是以 <code>*</code> 串接各型別，因為 <code>Tuple</code> 概念是 AND，所以使用 <code>*</code>。</p>
+<h3 id="不同型別">不同型別</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> dinner = (<span class="string">"green eggs"</span>, <span class="number">16</span>);</span><br></pre></td></tr></table></figure>
+<p>若只是將  tuple 用在相同型別，則顯示不出  tuple 的威力，相同型別大可使用 <code>Array</code> 或 <code>List</code> ，tuple  讓我們可以將 <code>不同型別</code> 包在同一個  tuple。</p>
+<p><img src="/images/fsharp/tuple/tuple001.png" alt="uple00"></p>
+<p>Type Inference 自動推導出 <code>dinner</code> tuple 為 <code>string * int</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> nested = (<span class="number">1</span>, (<span class="number">2.0</span>, <span class="number">3</span>M), (<span class="number">4</span>L, <span class="string">"5"</span>, '<span class="number">6</span>'))</span><br></pre></td></tr></table></figure>
+<p>甚至也可以巢狀的方式使用 tuple。</p>
+<h2 id="分解_Tuple">分解 Tuple</h2><hr>
+<p>Tuple 將不同 value 整合單一 tuple 後，馬上會遇到另外一個問題：</p>
+<blockquote>
+<p>Q：如何將單一 tuple 分解成 value？</p>
+</blockquote>
+<p>F# 提供 3 種方式：</p>
+<ul>
+<li><code>fst()</code> 與 <code>snd()</code></li>
+<li>Let Binding</li>
+<li>Pattern Matching</li>
+</ul>
+<h3 id="fst()_與_snd()">fst() 與 snd()</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> students = (<span class="string">"John"</span>, <span class="string">"Smith"</span>)</span><br><span class="line"></span><br><span class="line">printfn <span class="string">"%s"</span> (fst students)</span><br><span class="line">printfn <span class="string">"%s"</span> (snd students)</span><br></pre></td></tr></table></figure>
+<p>若只是兩個 element 的 tuple，可使用 <code>fst()</code> 與 <code>snd()</code> function 分解 tuple。</p>
+<blockquote>
+<p>沒有 <code>trd()</code>，但可自行建立 <code>let trd (_, _, z) = z</code></p>
+</blockquote>
+<h3 id="Let_Binding">Let Binding</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> students = (<span class="string">"John"</span>, <span class="string">"Smith"</span>, <span class="string">"Jessie"</span>)</span><br><span class="line"><span class="keyword">let</span> student1, student2, student3 = students</span><br><span class="line"></span><br><span class="line">printfn <span class="string">"%s, %s, %s"</span> student1 student2 student3</span><br></pre></td></tr></table></figure>
+<p>直接使用 <code>let</code>，會自動將 tuple 分解到各別 value，也沒 element 數限制。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> students = (<span class="string">"John"</span>, <span class="string">"Smith"</span>, <span class="string">"Jessie"</span>)</span><br><span class="line"><span class="keyword">let</span> student1, student2, _ = students</span><br><span class="line"></span><br><span class="line">printfn <span class="string">"%s, %s"</span> student1 student2</span><br></pre></td></tr></table></figure>
+<p>若只需部分 element，可使用 <code>_</code> 忽略之。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> students = (<span class="string">"John"</span>, <span class="string">"Smith"</span>, <span class="string">"Jessie"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> print (student1, student2, student3) = </span><br><span class="line">    printfn <span class="string">"%s %s %s"</span> student1 student2 student3</span><br><span class="line">    </span><br><span class="line">students</span><br><span class="line">|&gt; print</span><br></pre></td></tr></table></figure>
+<p>當 tuple 傳進 function 參數時，可直接分解成 value。</p>
+<h3 id="Pattern_Matching">Pattern Matching</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> students = (<span class="string">"John"</span>, <span class="string">"Smith"</span>, <span class="string">"Jessie"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> print students = </span><br><span class="line">    <span class="keyword">match</span> students <span class="keyword">with</span></span><br><span class="line">    | (student1, student2, student3) -&gt; printfn <span class="string">"%s %s %s"</span> student1 student2 student3</span><br><span class="line">    </span><br><span class="line">students</span><br><span class="line">|&gt; print</span><br></pre></td></tr></table></figure>
+<p>亦可使用 Pattern Matching 對 tuple 加以分解。</p>
+<h2 id="活用_Tuple">活用 Tuple</h2><hr>
+<h3 id="將_Tuple_當成參數">將 Tuple 當成參數</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> values = (<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> add (x, y, z) = x + y + z</span><br><span class="line">    </span><br><span class="line">values</span><br><span class="line">|&gt; add</span><br><span class="line">|&gt; printfn <span class="string">"%d"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<p><code>values</code> 為 tuple，而 <code>add()</code> 為 <code>int * int * int -&gt; int</code>。</p>
+<p>當 <code>values</code> 傳進 <code>add()</code> 時，會自動分解成 <code>x</code> 、 <code>y</code> 與 <code>z</code>。</p>
+<blockquote>
+<p>Tuple vs. Partial Function Application</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> add1 x y z = x + y + z</span><br><span class="line"><span class="keyword">let</span> add2 (x, y, z) = x + y + z</span><br></pre></td></tr></table></figure>
+<p>雖然都是 <code>x + y + z</code>，但 <code>add1()</code> 與 <code>add2()</code> 意義完全不同。</p>
+<p><code>add1()</code> 為 <code>int -&gt; int -&gt; int -&gt; int</code>。</p>
+<p><code>add2()</code> 為 <code>int * int * int -&gt; int</code>。</p>
+<p><code>add1()</code> 可使用 Partial Function Application 方式使用，也就是若只傳一個參數 <code>int</code>，將回傳 <code>int -&gt; int -&gt; int</code> function，若傳入兩個參數 <code>int</code>，將回傳 <code>init -&gt; int</code> function。</p>
+<p><code>add2()</code> 則必須一次傳入整個 tuple，不能只傳 <code>部分參數</code>。</p>
+<blockquote>
+<p>Ｑ：我該使用 Tuple 或  Partial Function Application 呢？</p>
+</blockquote>
+<ul>
+<li>完全視 <code>設計考量</code> 與 <code>語意</code></li>
+<li>Partial Function Application 使用上會比 Tuple 靈活</li>
+<li>若你不希望被當成 Partial Function Application 使用，則使用 Tuple。</li>
+</ul>
+<h3 id="將_Tuple_當成回傳值">將 Tuple 當成回傳值</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> divRem a b =</span><br><span class="line">   <span class="keyword">let</span> x = a / b</span><br><span class="line">   <span class="keyword">let</span> y = a % b</span><br><span class="line">   (x, y)</span><br></pre></td></tr></table></figure>
+<p>有些 function 會希望一次回傳多個值，如 <code>兩數相除</code>，會希望同時傳回 <code>商數</code> 與 <code>餘數</code>。</p>
+<p>傳統程式語言我們會回傳 <code>Array</code> 或 <code>List</code>，但有相同型別的限制；在 OOP 我們會回傳 <code>Object</code>，但必須事先建立 class；但在 FP 我們可回傳 <code>Tuple</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Tuple 不用事先定義型別，可以直接使用，特別適合 function 只使用一次的 <code>參數</code> 或 <code>回傳值</code> 型別</li>
+<li>在 OOP，若我們想將 <code>多個參數</code> 合併成 <code>單一參數</code>，或將 <code>多回傳值</code> 合併成 <code>單一回傳值</code>，我們必須使用 <code>Object</code>，但常常糾結是否該特別開一個 class 型別；但在 FP，我們可以隨時使用 tuple，也能享受 compile 強型別的檢查</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/tuples" target="_blank" rel="external">Tuples</a><br><a href="https://fsharpforfunandprofit.com/" target="_blank" rel="external">F# for fun and profit</a>, <a href="https://fsharpforfunandprofit.com/posts/tuples/" target="_blank" rel="external">Tuples</a><br><a href="http://www.oreilly.com/pub/au/3667" target="_blank" rel="external">Chris Smith</a>, <a href="http://shop.oreilly.com/product/0636920024033.do" target="_blank" rel="external">Pramming F# 3.0 2nd</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[學習 FP 如何使用 Tuple]]>
+    
+    </summary>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何使用 SonarQube 檢查 Angular 專案？]]></title>
     <link href="http://oomusou.io/sonarqube/angular/"/>
     <id>http://oomusou.io/sonarqube/angular/</id>
     <published>2018-04-03T13:23:43.000Z</published>
-    <updated>2018-04-03T08:39:12.529Z</updated>
+    <updated>2018-04-04T06:08:51.900Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
 <p>SonarQube 已經內建 SonarTS，可以直接對 TypeScript 進行檢查，本文將以 Angular 為例，並搭配 Jenkins 自動執行 SonarQube，將結果通知 Slack。</p>
 <a id="more"></a>
@@ -57,7 +160,7 @@
 <li>右上角 <code>Log in</code> 可登入管理設定 SonarQube，預設為 <code>admin/admin</code></li>
 </ol>
 <h2 id="SonarQube_Scanner">SonarQube Scanner</h2><hr>
-<p>SonarQube 雖然已經包含 SonarC#，但必須靠 SonarQube Scanner 才能執行，預設 SonarQube 並沒有包含 Scanner，必須自行安裝。</p>
+<p>SonarQube 雖然已經包含 SonarTS，但必須靠 SonarQube Scanner 才能執行，預設 SonarQube 並沒有包含 Scanner，必須自行安裝。</p>
 <p><strong>下載 Scanner</strong></p>
 <p><img src="/images/sonarqube/angular/slack004.png" alt="hp00"></p>
 <p>到 <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner" target="_blank" rel="external">Analyzing with SonarQube Scanner</a> 下載 Scanner，選擇 <code>Mac OS X 64 bit</code> 下載。</p>
@@ -2878,98 +2981,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[使用 .NET Core SDK 管理 Package Reference]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何建立 Solution ?]]></title>
-    <link href="http://oomusou.io/netcore/solution/"/>
-    <id>http://oomusou.io/netcore/solution/</id>
-    <published>2018-03-17T00:23:43.000Z</published>
-    <updated>2018-03-19T02:12:57.838Z</updated>
-    <content type="html"><![CDATA[<p>對於大型專案，我們可以建立 solution 管理眾多 project，只要對 solution 下 <code>dotnet build</code> ，就可以全部 project 都一起 build。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="建立_Solution">建立 Solution</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> sln -n MySolution</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet new sln</code> 建立 solution。</p>
-<ul>
-<li><strong>-n</strong> : 建立 <code>.sln</code> 檔案即可，不用建立目錄</li>
-</ul>
-<blockquote>
-<p>Solution 是 Microsoft 技術特別的觀念，算 project 的集合，一個 solution 可以有多個 project</p>
-</blockquote>
-<p><img src="/images/netcore/solution/sln000.png" alt="sln00"></p>
-<ol>
-<li>輸入 <code>dotnet new sln -n MySolution</code> 在目前目錄建立 <code>MySolution.sln</code></li>
-<li>已建立 <code>MySolution.sln</code> 在目前目錄下</li>
-</ol>
-<h2 id="將_Project_加入_Solution">將 Project 加入 Solution</h2><hr>
-<p><strong>macOS/Linux</strong></p>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln MySolution.sln add <span class="keyword">*</span><span class="keyword">*</span>/<span class="keyword">*</span>.csproj</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet sln … add</code> 將 project 加入 solution</p>
-<blockquote>
-<p><code>**/*.csproj</code> 表示目前目錄下 <code>所有子目錄</code> 的 <code>cspoj</code></p>
-</blockquote>
-<p><img src="/images/netcore/solution/sln001.png" alt="ln00"></p>
-<ol>
-<li>輸入 <code>dotnet sln MySolution.sln add **/*.csproj</code> 將目前目錄下的所有 project 都加入 <code>MySolution.sln</code></li>
-</ol>
-<p><strong>Windows</strong></p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln MySolution<span class="class">.sln</span> add MyConsole/MyConsole<span class="class">.csproj</span></span><br><span class="line">$ dotnet sln MySolution<span class="class">.sln</span> add MyClassLib/MyClassLib<span class="class">.csproj</span></span><br><span class="line">$ dotnet sln MySolution<span class="class">.sln</span> add MyClassLib.Tests/MyClassLib<span class="class">.Tests</span><span class="class">.csproj</span></span><br></pre></td></tr></table></figure>
-<p>Windows 只能乖乖地用 <code>3</code> 次 <code>dotnet sln … add</code> 。</p>
-<p><img src="/images/netcore/solution/sln002.png" alt="ln00"></p>
-<ol>
-<li>一個一個 project 加入 <code>MySolution.sln</code></li>
-</ol>
-<h2 id="編譯整個_Solution">編譯整個 Solution</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">build </span>MySolution.sln</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet build</code> 將 solution 下所有 project 一起編譯。</p>
-<p><img src="/images/netcore/solution/sln003.png" alt="ln00"></p>
-<ol>
-<li>輸入 <code>dotnet build MySolution.sln</code> 編譯整個 <code>MySolution</code></li>
-<li><code>MySolution</code> 下所有 project 都執行 <code>dotnet restore</code></li>
-<li><code>MySoluton</code> 下所有 project 都執行 <code>dotnet build</code> 編譯新的 dll</li>
-</ol>
-<h2 id="將整個_Solution_建立_Package">將整個 Solution 建立 Package</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>dotnet pack <span class="constant">MySolution.</span>sln</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet pack</code> 將 solution 下所有 project 建立 NuGet package。</p>
-<p><img src="/images/netcore/solution/sln004.png" alt="ln00"></p>
-<ol>
-<li>輸入 <code>dotnet pack MySolution.sln</code> 將整個 <code>MySolution</code> 建立 package</li>
-<li><code>MySolution</code> 下所有 project 都執行 <code>dotnet restore</code></li>
-<li><code>MySoluton</code> 下所有 project 都執行 <code>dotnet pack</code> </li>
-</ol>
-<blockquote>
-<p>只有 <code>MyConsole</code> 與 <code>MyClassLib</code> 會建立 package，<code>MyClassLib.Tests</code> 因為是 Unit Test，所以不會建立 package</p>
-</blockquote>
-<h2 id="發佈整個_Solution">發佈整個 Solution</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>dotnet publish <span class="constant">MySolution.</span>sln</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet publish</code> 將 solution 下所有 project 都加以 publish。</p>
-<p><img src="/images/netcore/solution/sln005.png" alt="ln00"></p>
-<ol>
-<li>輸入 <code>dotnet publish MySolution.sln</code> 將整個 <code>MySolution</code> 下的所有 project 都加以 publish</li>
-<li><code>MySolution</code> 下所有 project 都執行 <code>dotnet restore</code></li>
-<li><code>MySoluton</code> 下所有 project 都執行 <code>dotnet publish</code> </li>
-</ol>
-<h2 id="其他相關指令">其他相關指令</h2><hr>
-<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln <span class="keyword">*</span>.sln remove <span class="keyword">*</span>.csproj</span><br></pre></td></tr></table></figure>
-<p>將 project 從 solution 移除。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet sln *<span class="class">.sln</span> list</span><br></pre></td></tr></table></figure>
-<p>列出 solution 共有哪些 project。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Solution 在 .NET Core SDK 中，重要性已經不如 Visual Studio，但對於大型專案，卻可透過 solution 對所有 project 下指令，還是非常好用</li>
-<li>VS Code 不一定要使用 solution，但若專案也需要被 Visual Studio 或 Rider 開啟，則建議建立 solution</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 .NET Core SDK 建立 Solution]]>
     
     </summary>
     
