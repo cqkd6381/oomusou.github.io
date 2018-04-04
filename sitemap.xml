@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/angular/multi-provider/</loc>
+    <lastmod>2018-04-04T13:27:38.707Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/tuple/</loc>
-    <lastmod>2018-04-04T06:25:13.674Z</lastmod>
+    <lastmod>2018-04-04T06:32:07.242Z</lastmod>
   </url>
   
   <url>

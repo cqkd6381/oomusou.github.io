@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-04T06:25:13.674Z</updated>
+  <updated>2018-04-04T13:27:38.707Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,111 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何動態切換 Service？]]></title>
+    <link href="http://oomusou.io/angular/multi-provider/"/>
+    <id>http://oomusou.io/angular/multi-provider/</id>
+    <published>2018-04-04T13:23:43.000Z</published>
+    <updated>2018-04-04T13:27:38.707Z</updated>
+    <content type="html"><![CDATA[<p>Angular 提供 DI，讓我們能以依賴注入的方式將 servie 注入，若我們無法在 compile-time 就決定要注入的 service，一直要到 run-time 才能決定，我們該如何在 run-time 動態切換 service 呢？</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>WebStorm 2018.1<br>Node.js 8.9.4<br>Angular CLI 1.7.3<br>Angular 5.2.8</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p><img src="/images/angular/multi-provider/di001.png" alt="di001"></p>
+<p>User 使用下拉選單選擇 service。</p>
+<p><img src="/images/angular/multi-provider/di000.png" alt="di000"></p>
+<p>共有 <code>AWS</code>、<code>Azure</code> 與 <code>GCP</code> 三個雲端服務可供選擇，但無論選擇哪個 service，都只能在 run-time 決定，而無法在 compile-time 決定，此時 DI 該注入哪一個 service 呢？</p>
+<h2 id="Task">Task</h2><hr>
+<p>根據 user 的需求，動態切換 service。</p>
+<h2 id="Architecture">Architecture</h2><hr>
+<p><img src="/images/angular/multi-provider/di002.svg" alt="di002"></p>
+<ul>
+<li><strong>AppComponent</strong>：Angular 的 component</li>
+<li><strong>ServiceFactory</strong>：負責將 user 選擇的 service 傳回，使用 DI 注入進 component</li>
+<li><strong>ServiceInterface</strong>：所有 service 共同的 interface</li>
+<li><strong>AWSService</strong>：負責 <code>AWS</code> 功能的 service</li>
+<li><strong>AzureService</strong>：負責 <code>Azure</code> 功能的 service</li>
+<li><strong>GCPService</strong>：負責 <code>GCP</code> 功能的 service</li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><strong>app.component.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">select</span> (<span class="attribute">change</span>)=<span class="value">"onChange()"</span> #<span class="attribute">mySelect</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">option</span> *<span class="attribute">ngFor</span>=<span class="value">"let service of services"</span> [<span class="attribute">value</span>]=<span class="value">"service.name"</span>&gt;</span>&#123;&#123; service.name &#125;&#125;<span class="tag">&lt;/<span class="title">option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">p</span>&gt;</span>&#123;&#123; message &#125;&#125;<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 HTML 提供 <code>&lt;select&gt;</code> 選擇 service，結果會顯示在 <code>message</code>。</p>
+<h3 id="AppComponent">AppComponent</h3><p><img src="/images/angular/multi-provider/di003.svg" alt="di003"></p>
+<p><strong>app.component.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Component, ElementRef, ViewChild &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Service &#125; from <span class="string">'./models/service.model'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceInterface &#125; from <span class="string">'./interfaces/service.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceFactory &#125; from <span class="string">'./services/service.factory'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceEnum &#125; from <span class="string">'./enums/service.enum'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="string">'app-root'</span>,</span><br><span class="line">  templateUrl: <span class="string">'./app.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="string">'./app.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppComponent &#123;</span><br><span class="line">  services: Service[] = [</span><br><span class="line">    &#123; name: ServiceEnum.NULL &#125;,</span><br><span class="line">    &#123; name: ServiceEnum.AWS &#125;,</span><br><span class="line">    &#123; name: ServiceEnum.Azure &#125;,</span><br><span class="line">    &#123; name: ServiceEnum.GCP &#125;</span><br><span class="line">  ];</span><br><span class="line"></span><br><span class="line">  message = <span class="string">'Please select service'</span>;</span><br><span class="line"></span><br><span class="line">  @ViewChild(<span class="string">'mySelect'</span>)</span><br><span class="line">  <span class="keyword">private</span> mySelect: ElementRef;</span><br><span class="line">  <span class="keyword">private</span> service: ServiceInterface;</span><br><span class="line"></span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private serviceFactory: ServiceFactory) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">  onChange() &#123;</span><br><span class="line">    <span class="keyword">const</span> serviceName = <span class="keyword">this</span>.mySelect.nativeElement.value;</span><br><span class="line">    <span class="keyword">this</span>.service = <span class="keyword">this</span>.serviceFactory.createService(serviceName);</span><br><span class="line">    <span class="keyword">this</span>.message = <span class="keyword">this</span>.service.getMessage();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>24 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> service: ServiceInterface;</span><br></pre></td></tr></table></figure>
+<p>重點在 <code>service</code> 無法由 compile-time 決定，要由 user 在 run-time 選擇，因此 constructor 要 DI 注入什麼則面臨挑戰。</p>
+<p>26 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>(private serviceFactory: ServiceFactory) </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>既然無法在 compile-time 決定要注入什麼 service，那就改注入 <code>ServiceFactory</code>，由 <code>不變</code> 的 <code>ServiceFactory</code> 幫我們決定 <code>變動</code> 的 service。</p>
+<p>30 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.service = <span class="keyword">this</span>.serviceFactory.createService(serviceName);</span><br><span class="line"><span class="keyword">this</span>.message = <span class="keyword">this</span>.service.getMessage();</span><br></pre></td></tr></table></figure>
+<p>由 <code>ServiceFactory.createService()</code> 根據 user 在 run-time 所選擇的 service 名稱，回傳正確的 service。</p>
+<blockquote>
+<p><code>AppComponent</code> 改注入 <code>ServiceFactory</code> 後，最少 <code>AppComponent</code> 已經符合 <code>開放封閉原則</code>，將來無論新增任何 service，<code>AppComponent</code>都不用再做任何修改</p>
+</blockquote>
+<h3 id="ServiceFactory">ServiceFactory</h3><p><img src="/images/angular/multi-provider/di004.svg" alt="di004"></p>
+<p><strong>service.factory.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ServiceInterface &#125; from <span class="string">'../interfaces/service.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceToken &#125; from <span class="string">'../tokens/service.token'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Inject, Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceEnum &#125; from <span class="string">'../enums/service.enum'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> ServiceFactory &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(@Inject(ServiceToken) private services: ServiceInterface[]) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  createService(name: ServiceEnum): ServiceInterface &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.services</span><br><span class="line">               .filter(item =&gt; item.getName() === name)[<span class="number">0</span>];</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 8 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="constructor"><span class="keyword">constructor</span>(@Inject(ServiceToken) private services: ServiceInterface[]) </span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將符合 <code>ServiceInterface</code> 的所有物件都注入，注意 <code>services</code> 的型別是  <code>ServiceInterface[]</code>。</p>
+<p>該如何一次注入所有實現 <code>ServiceInterface</code> 的 service 呢？會在 <code>AppModule</code> 動手腳，稍後會說明。</p>
+<p>11 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">createService(name: ServiceEnum): ServiceInterface &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.services</span><br><span class="line">               .filter(item =&gt; item.getName() === name)[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因為 <code>services</code> 包含所有的 service，使用 <code>filter()</code> 找到符合 user 選擇的 service 並回傳。</p>
+<h3 id="ServiceInterface">ServiceInterface</h3><p><img src="/images/angular/multi-provider/di005.svg" alt="di005"></p>
+<p><strong>service.interface.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ServiceEnum &#125; from <span class="string">'../enums/service.enum'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="interface"><span class="keyword">interface</span> ServiceInterface </span>&#123;</span><br><span class="line">  getName(): ServiceEnum;</span><br><span class="line">  getMessage(): <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所有 service 共同遵守的 interface，共有 <code>getName()</code> 與 <code>getMessage()</code> 兩個 method。</p>
+<h3 id="AWSService">AWSService</h3><p><img src="/images/angular/multi-provider/di006.svg" alt="di006"></p>
+<p><strong>aws.service.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceInterface &#125; from <span class="string">'../interfaces/service.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceEnum &#125; from <span class="string">'../enums/service.enum'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AWSService <span class="keyword">implements</span> ServiceInterface &#123;</span><br><span class="line">  getName(): ServiceEnum &#123;</span><br><span class="line">    <span class="keyword">return</span> ServiceEnum.AWS;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getMessage(): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'You have selected AWS service'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>AWSService</code> 實現 <code>ServiceInterface</code> 所定義的 method。</p>
+<h3 id="AzureService">AzureService</h3><p><img src="/images/angular/multi-provider/di007.svg" alt="di007"></p>
+<p><strong>azure.service.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceInterface &#125; from <span class="string">'../interfaces/service.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceEnum &#125; from <span class="string">'../enums/service.enum'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AzureService <span class="keyword">implements</span> ServiceInterface &#123;</span><br><span class="line">  getName(): ServiceEnum &#123;</span><br><span class="line">    <span class="keyword">return</span> ServiceEnum.Azure;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getMessage(): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'You have selected Azure service'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>AzureService</code> 實現 <code>ServiceInterface</code> 所定義的 method。</p>
+<h3 id="GCPService">GCPService</h3><p><img src="/images/angular/multi-provider/di008.svg" alt="di008"></p>
+<p><strong>gcp.service.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Injectable &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceInterface &#125; from <span class="string">'../interfaces/service.interface'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceEnum &#125; from <span class="string">'../enums/service.enum'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> GcpService <span class="keyword">implements</span> ServiceInterface &#123;</span><br><span class="line">  getName(): ServiceEnum &#123;</span><br><span class="line">    <span class="keyword">return</span> ServiceEnum.GCP;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getMessage(): <span class="built_in">string</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">'You have selected GCP service'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>GcpService</code> 實現 <code>ServiceInterface</code> 所定義的 method。</p>
+<h3 id="AppModule">AppModule</h3><p><strong>app.module.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; BrowserModule &#125; from <span class="string">'@angular/platform-browser'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; NgModule &#125; from <span class="string">'@angular/core'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AppComponent &#125; from <span class="string">'./app.component'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AWSService &#125; from <span class="string">'./services/aws.service'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceToken &#125; from <span class="string">'./tokens/service.token'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; AzureService &#125; from <span class="string">'./services/azure.service'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; GcpService &#125; from <span class="string">'./services/gcp.service'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; ServiceFactory &#125; from <span class="string">'./services/service.factory'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; NullService &#125; from <span class="string">'./services/null.service'</span>;</span><br><span class="line"></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [</span><br><span class="line">    ServiceFactory,</span><br><span class="line">    &#123; provide: ServiceToken, useClass: NullService, multi: <span class="literal">true</span>&#125;,</span><br><span class="line">    &#123; provide: ServiceToken, useClass: AWSService, multi: <span class="literal">true</span>&#125;,</span><br><span class="line">    &#123; provide: ServiceToken, useClass: AzureService, multi: <span class="literal">true</span>&#125;,</span><br><span class="line">    &#123; provide: ServiceToken, useClass: GcpService, multi: <span class="literal">true</span>&#125;</span><br><span class="line">  ],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
+<p>20 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; provide: ServiceToken, useClass: NullService, multi: <span class="literal">true</span>&#125;,</span><br><span class="line">&#123; provide: ServiceToken, useClass: AWSService, multi: <span class="literal">true</span>&#125;,</span><br><span class="line">&#123; provide: ServiceToken, useClass: AzureService, multi: <span class="literal">true</span>&#125;,</span><br><span class="line">&#123; provide: ServiceToken, useClass: GcpService, multi: <span class="literal">true</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>該如何讓符合 <code>ServiceInterface</code> 的 service 在 <code>ServiceFactory</code> 一次全部注入呢 ? 關鍵就在 <code>AppModule</code> 的 provider 加上 <code>multi: true</code>，則所有相同 interface 的 service 將以 array 的方式一次全部注入。</p>
+<h2 id="Summary">Summary</h2><hr>
+<ul>
+<li><code>AppComponent</code> 由原本注入 service 改注入 <code>ServiceFactory</code></li>
+<li>由 <code>ServiceFactory</code> 將所有相同 interface 的 service 全部注入</li>
+<li>由 <code>ServiceFactory.CreateService()</code> 決定要 <code>filter()</code> 哪個 service 給 client</li>
+<li>將來若有新的 service 新增，只需繼續根據 <code>ServiceInterface</code> 新增 service，並在 <code>AppModule</code> 補上 provider，其他程式碼都不必修改，符合 <code>開放封閉原則</code> 的要求</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>本文的做法，與原本動態 DI 注入的理想還有段距離，但藉由在相同 token 的 multi provider，讓相同 interface 的所有 service 都能一起注入在 <code>ServiceFactory</code>，這樣最少 component 符合 <code>開放封閉原則</code>，將來維護也方便</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NG52DynamicDI" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 Multi Provider]]>
+    
+    </summary>
+    
+      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[深入探討 F# 之 Tuple]]></title>
     <link href="http://oomusou.io/fsharp/tuple/"/>
     <id>http://oomusou.io/fsharp/tuple/</id>
     <published>2018-04-04T12:23:43.000Z</published>
-    <updated>2018-04-04T06:25:13.674Z</updated>
+    <updated>2018-04-04T06:32:07.242Z</updated>
     <content type="html"><![CDATA[<p><code>Tuple</code> 是 FP 語言常見的型別，且 C# 7.0 也開始有 <code>Tuple</code>，讓我們藉由 F# 學習該如何活用 <code>Tuple</code>。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -38,7 +138,7 @@
 <li><p>Union</p>
 </li>
 </ol>
-<p>其中 <code>Tuple</code> 與 <code>Record</code> 提供類似 AND 的方式將不同型別加以整合，而 <code>Union</code> 則提供類似 OR 的方式將不同型別加以整合。</p>
+<p>其中 <code>Tuple</code> 與 <code>Record</code> 提供類似 AND 的方式將不同型別加以整合，而 <code>Union</code> 則提供類似 OR 的方式將不同型別加以整合。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於 F# 的 Union，詳細請參考 <a href="http://0.0.0.0:4000/fsharp/union/" target="_blank" rel="external">深入探討 F# 之 Discriminated Union</a></span></span></span></p>
 <p><code>Record</code> 與 <code>Tuple</code> 的差異在於 <code>Record</code> 為 named type，須事先定義型別，而 <code>Tuple</code> 則為  unmamed type，可直接使用，Type Inference 會幫我們推導出 <code>Tuple</code> 型別。</p>
 <h2 id="建立_Tuple">建立 Tuple</h2><hr>
 <h3 id="相同型別">相同型別</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> dinner = (<span class="string">"green eggs"</span>, <span class="string">"ham"</span>)</span><br></pre></td></tr></table></figure>
@@ -2916,75 +3016,6 @@
     </summary>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何管理 Package Reference ?]]></title>
-    <link href="http://oomusou.io/netcore/package-reference/"/>
-    <id>http://oomusou.io/netcore/package-reference/</id>
-    <published>2018-03-17T01:23:43.000Z</published>
-    <updated>2018-03-19T02:12:29.063Z</updated>
-    <content type="html"><![CDATA[<p>實務上我們一定會用到別人寫的 NuGet package，我們該如何使用 .NET Core SDK 加入 package reference 呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
-<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet new</code> 建立 project。</p>
-<ul>
-<li><strong>console</strong> : 建立 console 類型專案</li>
-<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
-</ul>
-<p><img src="/images/netcore/package-reference/pkg000.png" alt="kg00"></p>
-<ol>
-<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
-<li>.NET Core SDK 開始建立專案所需的檔案</li>
-<li>自動 restore dependency</li>
-</ol>
-<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
-<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
-<p><img src="/images/netcore/package-reference/pkg001.png" alt="onsole00"></p>
-<ol>
-<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/package-reference/pkg002.png" alt="onsole01"></p>
-<ol>
-<li><code>.vscode</code> 被 VS Code 自動建立</li>
-</ol>
-<h2 id="新增_Package_Reference">新增 Package Reference</h2><hr>
-<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="built_in">add</span> <span class="keyword">package</span> Newtonsoft.Json</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet add package</code> 加入 NuGet package。</p>
-<p><img src="/images/netcore/package-reference/pkg003.png" alt="kg00"></p>
-<ol>
-<li>輸入 <code>dotnet add package Newtonsoft.Json</code> 新增 <code>Newtonsoft.Json</code> package</li>
-</ol>
-<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
-<p><strong>program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> Newtonsoft.Json;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyConsole</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> students = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Sam"</span>,</span><br><span class="line">                <span class="string">"Kevin"</span>,</span><br><span class="line">                <span class="string">"Jessie"</span></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> json = JsonConvert.SerializeObject(students);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(json);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>JsonConvert.SerializeObject()</code> 將 <code>List</code> 轉成 JSON string。</p>
-<h2 id="執行_Console_App">執行 Console App</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet run</code> 執行專案。</p>
-<p><img src="/images/netcore/package-reference/pkg004.png" alt="kg00"></p>
-<ol>
-<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
-</ol>
-<h2 id="其他相關指令">其他相關指令</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet remove <span class="package"><span class="keyword">package</span> <span class="title">Newtonsoft</span>.<span class="title">Json</span></span></span><br></pre></td></tr></table></figure>
-<p>移除 package reference。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>使用 <code>dotnet add package</code> 與 <code>dotnet remove package</code>，我們就可在 project 中新增與移除 NuGet package</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 .NET Core SDK 管理 Package Reference]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
     
   </entry>
   
