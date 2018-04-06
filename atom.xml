@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-06T05:21:52.204Z</updated>
+  <updated>2018-04-06T15:32:27.577Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,293 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[深入探討 List Module 所提供的 Function Part I (A ~ F)]]></title>
+    <link href="http://oomusou.io/fsharp/list-module-function-part1/"/>
+    <id>http://oomusou.io/fsharp/list-module-function-part1/</id>
+    <published>2018-04-06T12:23:43.000Z</published>
+    <updated>2018-04-06T15:32:27.577Z</updated>
+    <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 list 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用 List module 所提供的眾多 function。</p>
+<p>本文先探討英文字母 A ~ F 開頭的 function。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="List-allPairs">List.allPairs</h2><hr>
+<blockquote>
+<p>將兩個 list 的 element 取 cartesian product 為 tuple，回傳新的 list</p>
+<p><code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; (&#39;T1 * &#39;T2) list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.allPairs [ <span class="number">4</span> .. <span class="number">6</span> ]</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(4, 1); (4, 2); (4, 3); (5, 1); (5, 2); (5, 3); (6, 1); (6, 2); (6, 3)]</span></span><br></pre></td></tr></table></figure>
+<p>兩個 list 可以不同型別，反正最後會以 tuple 形式呈現。</p>
+<h2 id="List-append">List.append</h2><hr>
+<blockquote>
+<p>傳入兩個 list，第 2 個 list 會 append 到第 1 個 list 之後，相當於 <code>list1@list2</code></p>
+<p><code>list1 : &#39;T list -&gt; list2 : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.append [ <span class="number">4</span> .. <span class="number">6</span>]</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [4; 5; 6; 1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-average">List.average</h2><hr>
+<blockquote>
+<p>計算 list 中所有 element 的平均值</p>
+<p><code>list : &#39;T list -&gt; T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1.0</span> .. <span class="number">10.0</span> ]</span><br><span class="line">|&gt; List.average</span><br><span class="line">|&gt; printf <span class="string">"%f"</span></span><br><span class="line"><span class="comment">// 5.500000</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-averageBy">List.averageBy</h2><hr>
+<blockquote>
+<p>將 list 所有 element 先經過 project funtion 計算後，再取平均值</p>
+<p><code>project : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;U</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.averageBy (<span class="keyword">fun</span> elem -&gt; float elem)</span><br><span class="line">|&gt; printf <span class="string">"%f"</span></span><br></pre></td></tr></table></figure>
+<p><code>[ 1..3 ]</code> 無法透過 <code>List.average()</code> 取平均值，先透過 <code>List.averageBy()</code> 轉成 float，再取平均值。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1.0</span> .. <span class="number">3.0</span> ]</span><br><span class="line">|&gt; List.averageBy (<span class="keyword">fun</span> elem -&gt; elem * elem)</span><br><span class="line">|&gt; printf <span class="string">"%f"</span></span><br><span class="line"><span class="comment">// 4.666667</span></span><br></pre></td></tr></table></figure>
+<p>先將 <code>[1.0; 2.0; 3.0]</code> project 成 <code>[1.0; 4.0; 9.0]</code> 之後，再取平均值。</p>
+<h2 id="List-choose">List.choose</h2><hr>
+<blockquote>
+<p>將 list 經過 chooser function 塞選過，傳回 option 型別的 list，其中 chooser function 必須回傳 option</p>
+<p><code>chooser : (&#39;T -&gt; &#39;U option) -&gt; list : &#39;T list -&gt; &#39;U list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line">|&gt; List.filter (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elem -&gt; elem + <span class="number">1</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 5; 7; 9; 11]</span></span><br></pre></td></tr></table></figure>
+<p>先找出偶數，在每個 element + 1。</p>
+<p>傳統須先使用 <code>List.filter()</code> 找出 <code>偶數</code>，在用 <code>List.map()</code> 計算 <code>+1</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> chooser elem = </span><br><span class="line">    <span class="keyword">match</span> elem % <span class="number">2</span> <span class="keyword">with</span></span><br><span class="line">    | <span class="number">0</span> -&gt; Some (elem + <span class="number">1</span>)</span><br><span class="line">    | _ -&gt; None</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line">|&gt; List.choose chooser</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 5; 7; 9; 11]</span></span><br></pre></td></tr></table></figure>
+<p>若使用 <code>List.choose()</code>，則可在 chooser function 使用 Pattern Matching：</p>
+<ul>
+<li>在 pattern 與 when 完成 <code>List.filter()</code> 該做的事情</li>
+<li>在 <code>-&gt;</code> 之後完成 <code>List.map()</code> 該做的事情</li>
+</ul>
+<p>也就是 <code>List.choose()</code> = <code>List.filter()</code> + <code>List.map()</code>。</p>
+<h2 id="List-chunkBySize">List.chunkBySize</h2><hr>
+<blockquote>
+<p>將 list 根據 size 切成小 list，並包在一個 list 內</p>
+<p><code>chunkSize : int -&gt; list : &#39;T list -&gt; &#39;T list list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line">|&gt; List.chunkBySize <span class="number">3</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3]; [4; 5; 6]; [7; 8; 9]; [10]]</span></span><br></pre></td></tr></table></figure>
+<p>注意 <code>List.chunkBySize()</code> 的回傳型態為 <code>&#39;T list list</code>，表示回傳為 list，其 element 型態為 <code>&#39;T list</code>。</p>
+<h2 id="List-collect">List.collect</h2><hr>
+<blockquote>
+<p>將 list 所有 element 經過 mapping function 轉換，其中 mapping function 會回傳新的 list，最後再將所有 list 攤平成新的 list</p>
+<p><code>mapping : (&#39;T -&gt; &#39;U list) -&gt; list : &#39;T list -&gt; &#39;U list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mapping elem = [</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> .. <span class="number">3</span> -&gt; elem * i</span><br><span class="line">]     </span><br><span class="line">    </span><br><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.collect mapping</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 2; 4; 6; 3; 6; 9]</span></span><br></pre></td></tr></table></figure>
+<p><code>mapping()</code> 會為每個 element 產生新的 list，最後再打平成單一 list。</p>
+<blockquote>
+<p>Q : <code>List.collect()</code> 與 <code>List.map()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都需使用 mapping function</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.map()</code> 的 mapping function 傳回 value；但  <code>List.collect()</code> 的 mapping function 傳回新 list</li>
+<li><code>List.map()</code> 產生的 list ，其 element 個數與原本 list 一樣大；但 <code>List.collect()</code> 產生的 list，其 element 個數大於等於原本 list</li>
+</ul>
+<h2 id="List-compareWith">List.compareWith</h2><hr>
+<blockquote>
+<p>自行定義 comparer function 比較兩個 list</p>
+<p><code>comparer : (&#39;T -&gt; &#39;T -&gt; int) -&gt; list1 : &#39;T list -&gt; list2 : &#39;T list -&gt; int</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">4</span> .. <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> comparer elem1 elem2 = elem1 - elem2</span><br><span class="line">    </span><br><span class="line"><span class="keyword">let</span> compareList list1 list2 =</span><br><span class="line">    <span class="keyword">match</span> (List.compareWith comparer list1 list2) <span class="keyword">with</span> </span><br><span class="line">    | x <span class="keyword">when</span> x &gt; <span class="number">0</span> -&gt; printfn <span class="string">"list1 is larget than list2"</span></span><br><span class="line">    | x <span class="keyword">when</span> x &lt; <span class="number">0</span> -&gt; printfn <span class="string">"list2 is larger than list1"</span></span><br><span class="line">    | _            -&gt; printfn <span class="string">"list1 and list2 are equal"</span>    </span><br><span class="line">    </span><br><span class="line">compareList list1 list2</span><br><span class="line"><span class="comment">// list1 is larger than list2</span></span><br></pre></td></tr></table></figure>
+<p><code>comparer()</code> 定義 element 間的比較方式：</p>
+<ul>
+<li>若 <code>elem1</code> 大於 <code>elem2</code>，則傳回 <code>正數</code></li>
+<li>若 <code>elem1</code> 等於 <code>elem2</code>，則傳回 <code>0</code></li>
+<li>若 <code>elem1</code> 小於 <code>elem2</code>，則傳回 <code>負數</code></li>
+</ul>
+<blockquote>
+<p>若簡單的比較，可使用數學的 <code>兩數相減</code> 即可</p>
+</blockquote>
+<p><code>List.compareWith()</code> 將回傳第一個 comparer function 所傳回的 <code>非零之數</code>，可使用 Pattern Matching 對回傳值做判斷。</p>
+<h2 id="List-concat">List.concat</h2><hr>
+<blockquote>
+<p>將 n 個 list 合併為 1 個 list</p>
+<p><code>lists : seq&lt;&#39;T list&gt; -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span> .. <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list3 = [ <span class="number">7</span> .. <span class="number">9</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myList = List.concat [list1; list2; list3]</span><br><span class="line"></span><br><span class="line">myList</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4; 5; 6; 7; 8; 9]</span></span><br></pre></td></tr></table></figure>
+<p><code>List.concat()</code> 可合併 n 個 list，但必須將 n 個 list 包在同一個 list 傳入。</p>
+<blockquote>
+<p>Q：<code>List.append()</code> 與 <code>List.map()</code> 有何差異？</p>
+</blockquote>
+<ul>
+<li><code>List.append()</code> 只能合併 2 個 list</li>
+<li><code>List.concat()</code> 能合併 n 個 list</li>
+</ul>
+<h2 id="List-contains">List.contains</h2><hr>
+<blockquote>
+<p>判斷 list 的 element 是否包含某一 value</p>
+<p><code>value : &#39;T -&gt; source : &#39;T list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.contains <span class="number">4</span></span><br><span class="line">|&gt; printfn <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-countBy">List.countBy</h2><hr>
+<blockquote>
+<p>將 list 根據 projection function 分組後，各自計算分組後 element 個數，類似 SQL 的 <code>GROUP BY</code> + <code>count(*)</code></p>
+<p><code>projection : (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; (&#39;Key * int) list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">100</span> ]</span><br><span class="line">|&gt; List.countBy (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">3</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 34); (2, 33); (0, 33)]</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>[ 1 .. 100 ]</code> % 3 分成三組，餘數為 1 有 34 個，餘數為 2 有 33 個，餘數為 0 有 33 個。</p>
+<h2 id="List-distinct">List.distinct</h2><hr>
+<blockquote>
+<p>將重複的 element 去除，回傳新 list</p>
+<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> ; <span class="number">2</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">|&gt; List.distinct</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-distinctBy">List.distinctBy</h2><hr>
+<blockquote>
+<p>將 list 所有 element 經過 projection function 產生新 key 後，將重複 key 的去除，回傳新 list</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">100</span> ]</span><br><span class="line">|&gt; List.distinctBy (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">3</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<p>經過 projection function  <code>fun elem -&gt; elem % 3</code> 之後的  key 為 <code>[ 0; 1; 2; 0; 1; 2 …]</code>，其不重複的 key 為 <code>[ 0; 1; 2 ]</code>，但其對應的 element 為 <code>[ 1; 2; 3]</code>。</p>
+<blockquote>
+<p>Q：<code>List.distinctBy()</code> 與 <code>List.map()</code> 後再 <code>List.distinct()</code> 有什麼不同？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">100</span>]</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">3</span>)</span><br><span class="line">|&gt; List.distinct</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 0]</span></span><br></pre></td></tr></table></figure>
+<p>經過 mapping function <code>fun elem -&gt; elem % 3</code> 之後的 element 為 <code>[ 0; 1; 2; 0; 1; 2 …]</code>，其不重複的 element 為 <code>[ 0; 1; 2 ]</code>。</p>
+<ul>
+<li>Project function 是產生新的 key；mapping function 是產生新的 element</li>
+<li><code>List.distinctBy()</code> 是排除重複的 key；<code>List.map()</code> + <code>List.distinct()</code> 是排除重複的 element</li>
+</ul>
+<h2 id="List-empty">List.empty</h2><hr>
+<blockquote>
+<p>由泛型傳回指定 element 型別的 empty list</p>
+<p><code>empty&lt;&#39;T&gt; : &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List.empty&lt;int&gt;</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : List.Empty 與 List.empty 有何差異？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">myListType</span> </span>= int list</span><br><span class="line"></span><br><span class="line">myListType.Empty</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<p><strong>相同</strong></p>
+<ul>
+<li>均回傳 empty list</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.Empty</code> 為 <code>List</code> type 的 static method；<code>List.empty()</code> 定義在 List module</li>
+<li><code>List.Empty</code> 須先定義 type；<code>List.empty()</code> 可由泛型直接指定 element type</li>
+</ul>
+<h2 id="List-exactlyOne">List.exactlyOne</h2><hr>
+<blockquote>
+<p>從 list 回傳單一 value</p>
+<p><code>list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> ]</span><br><span class="line">|&gt; List.exactlyOne</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>若 list 的 <code>Length</code> 不為 <code>1</code>，將拋出 <code>System.ArgumentException : The input sequence contains more than one element.</code></p>
+<h2 id="List-except">List.except</h2><hr>
+<blockquote>
+<p>從 list 中排出另一個 list 中的 element，並回傳新的 list</p>
+<p><code>seq&lt;&#39;T&gt; -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.except [ <span class="number">1</span> .. <span class="number">2</span> ]</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 4; 5; 6; 7; 8; 9; 10]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-exists">List.exists</h2><hr>
+<blockquote>
+<p>判斷符合 predicate function 條件的 element 是否存在</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.exists (<span class="keyword">fun</span> elem -&gt; elem = <span class="number">2</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-exists2">List.exists2</h2><hr>
+<blockquote>
+<p>判斷兩個 list 是否相等，須自行提供 predicate function 為判斷的依據</p>
+<p><code>predicate : (&#39;T1 -&gt; &#39;T2 -&gt; bool) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">11</span> .. <span class="number">20</span> ]</span><br><span class="line"><span class="keyword">let</span> predicate elem1 elem2 = elem1 = elem2 </span><br><span class="line">    </span><br><span class="line">list1</span><br><span class="line">|&gt; List.exists2 predicate list2</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<p>若 <code>list1</code> 與  <code>list2</code> 的 <code>Length</code> 不同，會拋出 <code>System.ArgumentException : The lists had different lengths.</code> </p>
+<h2 id="List-filter">List.filter</h2><hr>
+<blockquote>
+<p>過濾出符合 predicate function 的 list</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.filter (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [2; 4; 6; 8; 10]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-find">List.find</h2><hr>
+<blockquote>
+<p>找出符合 predicate function 條件的第一個 element</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.find (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>若找不到 element，會拋出 <code>KeyNotFoundException : An index satisfying the predicate was not found in the collection.</code></p>
+<h2 id="List-findBack">List.findBack</h2><hr>
+<blockquote>
+<p>從 list 的尾巴開始找出符合 predicate function 條件的第一個 element</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.findBack (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-findIndex">List.findIndex</h2><hr>
+<blockquote>
+<p>找出符合 predicate function 條件的第一 element 的 index</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.findIndex (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-findIndexBack">List.findIndexBack</h2><hr>
+<blockquote>
+<p>從 list 的尾巴開始找出符合 predicate function 條件的第一 element 的 index</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int</code> </p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.findIndexBack (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-fold">List.fold</h2><hr>
+<blockquote>
+<p><code>List.reduce()</code> 的進階版，將每個 element 的值經過 folder function 加以累加</p>
+<p><code>folder : (&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state : &#39;State -&gt; list : &#39;T list -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[ </span><br><span class="line">    (<span class="string">"Cats"</span>, <span class="number">4</span>)</span><br><span class="line">    (<span class="string">"Dogs"</span>, <span class="number">5</span>)</span><br><span class="line">    (<span class="string">"Mice"</span>, <span class="number">3</span>)</span><br><span class="line">    (<span class="string">"Elephants"</span>, <span class="number">2</span>) </span><br><span class="line">]</span><br><span class="line">|&gt; List.fold (<span class="keyword">fun</span> acc (_, number) -&gt; acc + number) <span class="number">0</span> </span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : <code>List.fold()</code> 與 <code>List.reduce()</code> 有何差異？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">4</span>; <span class="number">5</span>; <span class="number">3</span>; <span class="number">2</span> ]</span><br><span class="line">|&gt; List.reduce (<span class="keyword">fun</span> acc elem -&gt; acc + elem)</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+<p><strong>相同</strong></p>
+<ul>
+<li>都是 <code>累加</code></li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.fold()</code> 可以設定初始值；<code>List.reduce()</code> 不能設定初始值</li>
+<li><code>List.fold()</code> 可以不同型別，如 <code>(string * int) list</code> -&gt; int；<code>List.reduce()</code> 從頭到尾必須相同型別，如 <code>int lint -&gt; int</code></li>
+</ul>
+<h2 id="List-folder2">List.folder2</h2><hr>
+<blockquote>
+<p>將兩個 list 透過 folder function 加以累加</p>
+<p><code>folder : (&#39;State -&gt; &#39;T1 -&gt; &#39;T2 -&gt; &#39;State) -&gt; state : &#39;State -&gt; list1 : &#39;T list -&gt; list2 : &#39;T list -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ </span><br><span class="line">    (<span class="string">"Cats"</span>, <span class="number">1</span>)</span><br><span class="line">    (<span class="string">"Dogs"</span>, <span class="number">2</span>)</span><br><span class="line">    (<span class="string">"Mice"</span>, <span class="number">3</span>)</span><br><span class="line">    (<span class="string">"Elephants"</span>, <span class="number">4</span>) </span><br><span class="line">] </span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> list2 = [ </span><br><span class="line">    (<span class="string">"Cats"</span>, <span class="number">4</span>)</span><br><span class="line">    (<span class="string">"Dogs"</span>, <span class="number">5</span>)</span><br><span class="line">    (<span class="string">"Mice"</span>, <span class="number">3</span>)</span><br><span class="line">    (<span class="string">"Elephants"</span>, <span class="number">2</span>) </span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> folder acc (_, number1) (_, number2) = </span><br><span class="line">    acc + number1 + number2</span><br><span class="line"></span><br><span class="line">list1</span><br><span class="line">|&gt; List.fold2 folder <span class="number">0</span> list2 </span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 24</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-foldBack">List.foldBack</h2><hr>
+<blockquote>
+<p><code>List.reduce()</code> 的進階版，將每個 element 的值從尾部經過 folder function 加以累加</p>
+<p><code>folder : (&#39;T -&gt; &#39;State -&gt; State) -&gt; list : &#39;T list -&gt; state : &#39;State -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line"></span><br><span class="line">List.fold (<span class="keyword">fun</span> acc elem -&gt; elem::acc) [] list1</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line">List.foldBack (<span class="keyword">fun</span> elem acc -&gt; elem::acc) list1 []</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// [5; 4; 3; 2; 1]</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4; 5]</span></span><br></pre></td></tr></table></figure>
+<p>數值累加，從頭加到尾，或尾加到頭都一樣，有有些運算，不同方向累加結果會不一樣，此時就必須使用 <code>List.foldBack()</code> 了。</p>
+<p>注意 signature 也不太一樣。</p>
+<h2 id="List-foldBack2">List.foldBack2</h2><hr>
+<blockquote>
+<p>將兩個 list 透過 folder function 從尾部加以累加</p>
+<p><code>folder : (&#39;T1 -&gt; &#39;T2 -&gt; &#39;State -&gt; &#39;State) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; state : &#39;State -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line"></span><br><span class="line">List.fold2 (<span class="keyword">fun</span> acc elem1 elem2 -&gt; elem1::elem2::acc) [] list1 list2</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line">List.foldBack2 (<span class="keyword">fun</span> elem1 elem2 acc -&gt; elem1::elem2::acc) list1 list2 []</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// [5; 5; 4; 4; 3; 3; 2; 2; 1; 1]</span></span><br><span class="line"><span class="comment">// [1; 1; 2; 2; 3; 3; 4; 4; 5; 5]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-forall">List.forall</h2><hr>
+<blockquote>
+<p>判斷是否 list 的所有 element 都通過 predicate function 條件</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">0</span> .. <span class="number">2</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.forall (<span class="keyword">fun</span> elem -&gt; elem % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-forall2">List.forall2</h2><hr>
+<blockquote>
+<p>判斷是否兩個 list 的所有 element 都通過 predicate function 條件</p>
+<p><code>predicate : (&#39;T1 -&gt; &#39;T2 -&gt; bool) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.forall2 (<span class="keyword">fun</span> elem1 elem2 -&gt; (elem1 + elem2) % <span class="number">2</span> = <span class="number">0</span>) list1 </span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://msdn.microsoft.com/en-us/" target="_blank" rel="external">MSDN</a>, <a href="https://msdn.microsoft.com/en-us/visualfsharpdocs/conceptual/collections.list-module-%5bfsharp%5d" target="_blank" rel="external">Collection.List Module (F#)</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[FP 的基本功]]>
+    
+    </summary>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 F# 之 List]]></title>
@@ -2670,304 +2957,6 @@
       <category term="C#" scheme="http://oomusou.io/tags/C/"/>
     
       <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 TypeScript 之 Generics]]></title>
-    <link href="http://oomusou.io/typescript/generics/"/>
-    <id>http://oomusou.io/typescript/generics/</id>
-    <published>2018-03-18T12:23:43.000Z</published>
-    <updated>2018-03-21T06:17:00.095Z</updated>
-    <content type="html"><![CDATA[<p><code>泛型</code> 是物件導向 <code>多型</code> 的延伸技術，多型是以 interface 為基礎，在 <code>執行時期</code> 決定適當型別；而泛型則是以 type parameter 為基礎，在 <code>編譯時期</code> 決定適當型別。</p>
-<p>泛型也是 TypeScript 的一大特色，預計 ECMAScript 將來也不會採用泛型。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>TypeScript 2.5</p>
-<h2 id="泛型概論">泛型概論</h2><hr>
-<p>OOP 就是 <code>繼承</code>、<code>封裝</code> 與 <code>多型</code>，為了支援更多型別，OOP 教我們使用 <code>多型</code>，白話就是抽 <code>interface</code>，但實務上會發現，有很多物件之間根本扯不上什麼關係，很難抽 interface，此時就必須使用 <code>泛型</code>。</p>
-<p>泛型並不是什麼新觀念，早在 C++ 就有泛型，後來 C# 2.0 也支援泛型，Java 最後也跟進，而 TypeScript 讓 JavaScript 也能使用泛型。</p>
-<blockquote>
-<p>多型 : 以 interface 為基礎，將不同型別的物件，抽象化成 interface 型別的物件，但實際上是 <code>多</code> 種 <code>型</code>別的物件。(C++、C#、Java、PHP)</p>
-<p>泛型 : 不用抽 interface，以 type parameter 為基礎，透過傳遞型別參數，將各物件抽象化成 <code>T</code> 型別物件，但實際上是 <code>泛</code> 指各種 <code>型</code> 別物件。(C++、C#、Java、TypeScript)</p>
-<p>無型 : 因為 <code>無型</code>別，因此可以支援各種型別，但也因為無型別，所以喪失 intellisense 與編譯檢查型別的功能。(JavaScript、PHP)</p>
-</blockquote>
-<h2 id="TypeScript_Generics">TypeScript Generics</h2><hr>
-<p>TypeScript 一共提供 3 種 generics : </p>
-<ul>
-<li>Generic Function</li>
-<li>Generic Interface</li>
-<li>Generic Class</li>
-</ul>
-<h2 id="Generic_Function">Generic Function</h2><hr>
-<h3 id="內建型別">內建型別</h3><p>Identity Function</p>
-<blockquote>
-<p>無論輸入什麼，就輸出什麼</p>
-</blockquote>
-<p>白話 : 輸入數值就會傳數值；輸入物件就回傳物件；輸入函式就回傳函式。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>(<span class="params">arg: <span class="built_in">number</span></span>): <span class="title">number</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>(<span class="params">arg: <span class="built_in">string</span></span>): <span class="title">string</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>很簡單的 identity function，為了 <code>number</code> 與 <code>string</code> 就開了 2 個 function，傳入 <code>物件</code> 與傳入 <code>函式</code> 的部分還沒有實作。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>(<span class="params">arg: <span class="built_in">any</span></span>): <span class="title">any</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>any</code> 就類似 PHP 不使用型別一樣，就表示任何型別都可以當 parameter，return type 也可以是任何型別。</p>
-<p>但這種寫法有 <code>2</code> 個缺點 :</p>
-<ul>
-<li>Parameter 與 return type 都為 <code>any</code>，但不代表是同一個 <code>any</code>，可能 parameter 是 <code>string</code>，而 return type 是 <code>number</code></li>
-<li><code>echo()</code> 回傳後的物件喪失了原本的型別，無法得知原本是 <code>number</code> 還是 <code>string</code></li>
-</ul>
-<blockquote>
-<p><code>any</code> 算是某種 <code>泛型</code> 味道，但算是 <code>無型</code>，並不算是個完美的解決方案，它會喪失原本變數的型別。</p>
-</blockquote>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>echo()</code> 為了支援各種型別，引入泛型觀念，在 function 名稱後加入 <code>&lt;&gt;</code>，此為 type parameter，專門負責傳入 <code>型別參數</code>，有別於 function 的 <code>()</code> ，用來傳遞數值、物件與函式。</p>
-<p>因為把型別當成參數後，<code>echo()</code> 就可以支援各種型別，只要呼叫 <code>echo()</code> 多傳入 <code>型別參數</code> 即可，這樣也可確保 parameter 型別為 <code>T</code>，且 return type 為 <code>T</code>。</p>
-<blockquote>
-<p>並不一定要用 <code>T</code>，因為 <code>T</code>ype，所以慣用 <code>T</code>，第二個泛型常用 <code>U</code>，以此類推。</p>
-</blockquote>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> output = echo&lt;<span class="built_in">string</span>&gt;(<span class="string">'Sam'</span>);</span><br></pre></td></tr></table></figure>
-<p>呼叫 <code>echo()</code> 時多帶 <code>&lt;string&gt;</code>，就能確保 <code>output</code> 也是 <code>string</code> 型別，而 <code>&lt;&gt;</code> 可以傳進任何型別，因此稱為 <code>泛型</code>。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> output = echo(<span class="string">'Sam'</span>);</span><br></pre></td></tr></table></figure>
-<p>因為 <code>arg: T</code>，TypeScript 會自動根據 <code>Sam</code> 推導出 <code>T</code> 應該為 <code>string</code>。</p>
-<p>同理 </p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> output = echo(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
-<p>TypeScript 也會自動根據 <code>1</code> 推導出 <code>T</code> 為 <code>number</code>。</p>
-<blockquote>
-<p>若 <code>T</code> 有在 parameter 裡，TypeScript 會自動根據 argument 推導出 T 的型別，因此使用上不用特別傳入型別參數；若 <code>T</code> 不在 parameter 上，就必須明確在 <code>&lt;&gt;</code> 傳入型別參數。</p>
-<p>Generic function 對於使用上並沒有任何負擔，且不會喪失原本變數的型別資訊，是比 <code>any</code> 更好的 <code>泛型</code> 解決方案。</p>
-</blockquote>
-<h3 id="陣列">陣列</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length); <span class="comment">// error</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>若希望 parameter 為陣列，當然也可以繼續用 <code>T</code>，不過使用 <code>T</code> 之後，TypeScript 將認為此 parameter 可能為任何型別，若你去使用陣列的 property，如 <code>length</code>，將沒有 intellisense 使用，且編譯也會報錯。</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function echo&lt;T&gt;(arg: T[]): T[] &#123;</span><br><span class="line">    console.log(arg.length);</span><br><span class="line">    return arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因為 <code>arg</code> 為 <code>T[]</code>，會視為 <code>Array</code>，因此 intellisense 有 <code>length</code>，且編譯也會通過。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: <span class="built_in">Array</span>&lt;T&gt;</span>): <span class="title">Array</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    consoloe.log(arg.length);</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Array&lt;T&gt;</code> 寫法亦可。</p>
-<h2 id="Generic_Interface">Generic Interface</h2><hr>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myEcho: &lt;T&gt;(arg: T) =&gt; T = echo;</span><br></pre></td></tr></table></figure>
-<p>若要描述 <code>echo&lt;T&gt;()</code> 的型別，使用 <code>&lt;T&gt;(arg: T) =&gt;T</code>，比較特別的是 function 的 return type 改用 <code>=&gt;</code>，而非 <code>:</code>，因為 <code>myEcho</code> 的型別已經用了 <code>:</code>，因此 function 的 return type 改用 arrow function 的 <code>=&gt;</code>。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myEcho: &#123;&lt;T&gt;(arg: T): T&#125; = echo;</span><br></pre></td></tr></table></figure>
-<p>也可使用 object literal 寫法，因為在 <code>{}</code> 內，此時 return type 可用 <code>:</code>。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> IEcho </span>&#123;</span><br><span class="line">    &lt;T&gt;(arg: T): T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myEcho: IEcho = echo;</span><br></pre></td></tr></table></figure>
-<p>也可將 <code>echo&lt;T&gt;()</code> 型別的 object literal 寫法，改用 function interface 表示。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> IEcho&lt;T&gt; </span>&#123;</span><br><span class="line">    (arg: T): T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">echo</span>&lt;<span class="title">T</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myEcho&lt;<span class="built_in">string</span>&gt;: IEcho = echo;</span><br></pre></td></tr></table></figure>
-<p><code>&lt;T&gt;(arg: T): T;</code> 的寫法，<code>T</code> 僅作用於 method，若我們想將 <code>T</code> 作用於整個 interface，會移到 interface 名稱後面。</p>
-<blockquote>
-<p>Q : 使用 generic interface 時，<code>&lt;T&gt;</code> 該使用在 interface 還是 function ?</p>
-</blockquote>
-<ul>
-<li>若你想由 function 來推倒出 interface 的 <code>T</code>，則將 <code>T</code> 放在 function</li>
-<li>若你想由 interface 來決定 <code>T</code>，function 必須遵守，則將 <code>T</code> 放在 interface</li>
-<li>各有各的優點，要依實際狀況決定該用哪種方式</li>
-</ul>
-<h2 id="Generic_Class">Generic Class</h2><hr>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> GenericNumber&lt;T&gt; &#123;</span><br><span class="line">    zeroValue: T;</span><br><span class="line">    add: (x: T, y: T) =&gt; T;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myGenericNumber = <span class="keyword">new</span> GenericNumber&lt;<span class="built_in">number</span>&gt;();</span><br><span class="line">myGenericNumber.zeroValue = <span class="number">0</span>;</span><br><span class="line">myGenericNumber.add = <span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123; <span class="keyword">return</span> x + y; &#125;;</span><br></pre></td></tr></table></figure>
-<p><code>T</code> 定義了 class 內的 property 與 method signature 的型別。</p>
-<blockquote>
-<p>Generic class 的 <code>T</code> 只能用在 object level，不能用在 class level 的 static 部分。<br>只有 generic function，generic interface 與 generic class，並沒有 generic enums。<br>只有 generic function 可以由 parameter 自動推導出 <code>&lt;T&gt;</code>，generic interface 與 generic class 則必須明確傳入 <code>&lt;T&gt;</code>。</p>
-</blockquote>
-<h2 id="Generic_Constraint">Generic Constraint</h2><hr>
-<h3 id="Extends_Interface">Extends Interface</h3><p>在之前的例子，因為我們需要 <code>arg.length</code> ，因而改用 <code>T[]</code>，若我們要得不是陣列的 <code>length</code> property，而是傳入的 parameter 必須要有 <code>length</code> property 呢 ?</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Lengthwise </span>&#123;</span><br><span class="line">    length: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">Lengthwise</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);  <span class="comment">// Now we know it has a .length property, so no more error</span></span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Lengthwise </span>&#123;</span><br><span class="line">    length: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 object interface，定義 <code>length</code> property。</p>
-<p>第 5 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">Lengthwise</span>&gt;(<span class="params">arg: T</span>): <span class="title">T</span></span></span><br></pre></td></tr></table></figure>
-<p>一樣使用 <code>&lt;T&gt;</code>，但必須 <code>T extends Lengthwise</code>，表示 <code>T</code> 不再是任意型別，而必須是有實現 <code>Lengthwise</code> interface 的型別，否則 TypeScript 會編譯錯誤。</p>
-<blockquote>
-<p>Q : <code>Lengthwise</code> 是 interface，<code>T</code> 應該是要 <code>implements</code> interface，怎麼是 <code>extends</code> interface 呢 ?</p>
-</blockquote>
-<p><code>T</code> 是個 type，TypeScript 也允許 interface 繼承 interface，相當於 property 的組合，因此 <code>T extends Lengthwise</code> 後，<code>T</code> 會多了 <code>length</code> property，因此 <code>arg</code> 一定要有 <code>length</code> property 的才會通過 TypeScript 編譯。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loggingIdentity(<span class="number">3</span>);  <span class="comment">// Error, number doesn't have a .length property</span></span><br></pre></td></tr></table></figure>
-<p>用了 generic constraint 之後，傳入 <code>3</code> 會編譯錯誤，因為 <code>number</code> 型別沒有 <code>length</code> property。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loggingIdentity(&#123;length: <span class="number">10</span>, value: <span class="number">3</span>&#125;);</span><br></pre></td></tr></table></figure>
-<p><code>({length: 10, value: 3}</code> 有 <code>lenght</code> property，有符合 <code>Lengthwise</code> 的要求，TypeScript 編譯通過。 </p>
-<blockquote>
-<p>之前講 interface 時，談到 object literal 當  argument 時，會啟動 excess property checks，也就是 strong typing 檢查，但用在 generic constraint 時，TypeScript 卻只採用 duck typing 檢查。</p>
-<p>Q : 為什麼不直接用 interface，卻要用 generic constraint ?</p>
-</blockquote>
-<p>一開始我也覺得 interface 與 generic constraint 是一樣的，但仔細想想還是不同，若用 interface 改寫 :</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Lengthwise </span>&#123;</span><br><span class="line">    length: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">loggingIdentity</span>(<span class="params">arg: Lengthwise</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.length);</span><br><span class="line">    <span class="keyword">return</span> arg;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Parameter 部分沒問題，型別使用 <code>Lengthwise</code> interface 即可。</p>
-<p>但 return type 就尷尬了，無法只傳回 <code>Lengthwise</code> interface。</p>
-<p>所以還是得靠 <code>&lt;T&gt;</code> 搭配 generic constraint 才會功德圓滿。</p>
-<blockquote>
-<p>若 return type 與 <code>T</code> 無關時，的確使用 interface 即可。</p>
-</blockquote>
-<h3 id="Extends_KeyOf">Extends KeyOf</h3><p>Generic constraint 不見的只能根據既有的 interface，還能根據其他 type parameter。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getProperty</span>&lt;<span class="title">T</span>, <span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">obj: T, key: K</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> obj[key];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> x = &#123; a: <span class="number">1</span>, b: <span class="number">2</span>, c: <span class="number">3</span>, d: <span class="number">4</span> &#125;;</span><br><span class="line"></span><br><span class="line">getProperty(x, <span class="string">"a"</span>); <span class="comment">// okay</span></span><br><span class="line">getProperty(x, <span class="string">"m"</span>); <span class="comment">// error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.</span></span><br></pre></td></tr></table></figure>
-<p>實務上我們可能希望 function 的第 1 個參數為 object，第 2 個參數為 object 的 key，希望傳回 object 的 value，但要如何確保輸入的 key 一定是 object 的 key 呢 ?</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getProperty</span>&lt;<span class="title">T</span>, <span class="title">K</span> <span class="title">extends</span> <span class="title">keyof</span> <span class="title">T</span>&gt;(<span class="params">obj: T, key: K</span>)</span></span><br></pre></td></tr></table></figure>
-<p><code>T</code> : 傳入物件的泛型。</p>
-<p><code>keyof T</code> : 物件的 key。</p>
-<p><code>K extends keyof T</code> : <code>K</code> 須為 <code>T</code> 的 key。</p>
-<blockquote>
-<p>藉由 <code>extends keyof</code> 語法，若輸入的值不是 object 的 key，TypeScript  將會編譯錯誤。</p>
-</blockquote>
-<h3 id="new():_T">new(): T</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">function create&lt;T&gt;(c: new() =&gt; T): T &#123;</span><br><span class="line">    return new c();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Factory method / constructor function 目的在於取代 new 建立物件，因此我們會需要 paramter 傳入 constructor，若想要以泛型描述 constructor，可用 <code>new() =&gt;T</code> 加以描述。</p>
-<h2 id="實務上的應用">實務上的應用</h2><hr>
-<p>剛剛介紹了泛型的語法，現在介紹實務上該如何使用泛型。</p>
-<h3 id="Service_處理不同_Model">Service 處理不同 Model</h3><p>實務上常會遇到 service 的不同 method 處理不同 model，事後卻發現其演算法完全相同，因此想抽成同一個 method 實現 DRY，卻發現因為 model 型別不同而無法 extract method。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NotificationService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToSMS</span><span class="params">(SMSMessage <span class="variable">$smsMessage</span>)</span>: <span class="title">SMSMessage</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="variable">$smsMessage</span>-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">        ...    </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$smsMessage</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToLine</span><span class="params">(LineMessage <span class="variable">$lineMessage</span>)</span>: <span class="title">LineMessage</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="variable">$lineMessage</span>-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">        ...  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$lineMessage</span>;  </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 3 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToSMS</span><span class="params">(SMSMessage <span class="variable">$smsMessage</span>)</span>: <span class="title">SMSMessage</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="variable">$smsMessage</span>-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$smsMessage</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>傳入 <code>SMSMessage</code> model 進 <code>addFromToSMS()</code>，主要目的是將 <code>Senao</code> 指定給 <code>$smsMessag-&gt;from</code> 。</p>
-<blockquote>
-<p><code>Senao</code> 也可能是由演算法算出的產物，但最終都要指定給 <code>from</code> property，並回傳 <code>SMSMessage</code> model。</p>
-</blockquote>
-<p>第 10 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToLine</span>(<span class="params">LineMessage $lineMessage</span>): <span class="title">LineMessage</span></span><br><span class="line"></span>&#123;</span><br><span class="line">	...</span><br><span class="line">	$lineMessage-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> $lineMessage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>傳入 <code>LineMessage</code> model 進 <code>addFromToLine()</code> ，主要目的是將 <code>Senao</code> 指定給 <code>$lineMessage</code>。</p>
-<blockquote>
-<p><code>Senao</code> 也可能是由演算法算出的產物，但最終都要指定給 <code>from</code> property，並回傳 <code>LineMessage</code> model。</p>
-</blockquote>
-<p>我們可以發現，<code>addFromToSMS()</code> 與 <code>addFromToLine()</code> 基本上演算法相同，要解決的問題也相同，只因為傳入 parameter 的型別與傳回的 return type 不同，因此被逼要用兩個 method 處理。</p>
-<p>因為演算法相同，我們希望只使用一個 method 就能解決。</p>
-<p>在 PHP，可能有 <code>2</code> 種解法 :</p>
-<ul>
-<li>放棄 Type Hint</li>
-<li>將共用部分抽 Interface</li>
-</ul>
-<p><strong>放棄 Type Hint</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NotificationService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToMessage</span><span class="params">(<span class="variable">$smsMessage</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="variable">$smsMessage</span>-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">        ...</span><br><span class="line">          </span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$smsMessage</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然因為 type hint 而拆成兩個 method，那乾脆回歸 PHP 最原始寫法 : <code>完全放棄 type hint</code>，這樣 <code>SMSMessage</code> 與 <code>LineMessage</code> 兩種型別的物件都可以傳入。</p>
-<blockquote>
-<p>這也是最多人在 PHP 處理的方式。</p>
-</blockquote>
-<p>但這種方式也有幾個缺點 :</p>
-<ul>
-<li>因為 <code>$smsMessage</code> 沒有任何型別描述，因此 <code>$smsMessage</code> 也喪失了 intellisense</li>
-<li>維護程式的人無法得知 <code>$smsMessage</code> 是什麼型別，只能 trace code 根據前後文去得知其型別</li>
-<li>沒有描述 return type，因此接受 <code>addFromToMessage()</code> 的物件也喪失 intellisense</li>
-</ul>
-<p><strong>將共用部分抽 Interface</strong></p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IMessageFrom</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> string*/</span></span><br><span class="line">    <span class="keyword">public</span> from;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SMSMessage</span> <span class="keyword">implements</span> <span class="title">IMessageFrom</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...  </span><br><span class="line">    <span class="keyword">public</span> from;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineMessage</span> <span class="keyword">implements</span> <span class="title">IMessageFrom</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...    </span><br><span class="line">    <span class="keyword">public</span> from;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NotificationService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToMessage</span><span class="params">(IMessageFrom <span class="variable">$smsMessage</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="variable">$smsMessage</span>-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">        ...</span><br><span class="line">          </span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$smsMessage</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IMessageFrom</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> string*/</span></span><br><span class="line">    <span class="keyword">public</span> from;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>既然 <code>from</code> 為 <code>SMSMessage</code> 與  <code>LineMessage</code> 共同的部分，我們可以將 <code>from</code> 抽成 <code>IMessageFrom</code>。</p>
-<p>第 7 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SMSMessage</span> <span class="keyword">implements</span> <span class="title">IMessageFrom</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...  </span><br><span class="line">    <span class="keyword">public</span> from;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>14 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LineMessage</span> <span class="keyword">implements</span> <span class="title">IMessageFrom</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...    </span><br><span class="line">    <span class="keyword">public</span> from;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然後要求 <code>SMSMessage</code> 與 <code>LineMessage</code> 去 implement <code>IMessageFrom</code>。</p>
-<p>23 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">addFromToMessage</span><span class="params">(IMessageFrom <span class="variable">$smsMessage</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="variable">$smsMessage</span>-&gt;from = <span class="string">'Senao'</span>;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$smsMessage</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>這樣 <code>addFromToMessage()</code> 的 parameter 就可以加上 <code>IMessageFrom</code> type hint。</p>
-<p>這種寫法解決了之前的 2 個問題 :</p>
-<ul>
-<li>因為 <code>$smsMessage</code> 有了型別描述，因此 <code>$smsMessage</code> 有 intellisense</li>
-<li>維護程式的人可以得知 <code>$smsMessage</code> 是什麼型別，不需要 trace code</li>
-</ul>
-<p>但仍有 1 個問題沒解決 :</p>
-<ul>
-<li>原本 <code>addFromToSMS()</code> 的回傳型別為 <code>SMSMessage</code>，<code>addFromToLine()</code> 回傳型別為 <code>LineMessage</code>，但現在 return type 仍然無法描述，因此接受 <code>addFromToMessage()</code> 的物件仍然喪失 intellisense</li>
-</ul>
-<blockquote>
-<p>若有了 generics，就可以完美解決這個問題</p>
-</blockquote>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> IMessageFrom </span>&#123;</span><br><span class="line">    from: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> NotificationService &#123;</span><br><span class="line">    addFromToMessage&lt;T extends IMessageFrom&gt;(smsMessage: T): T &#123;</span><br><span class="line">        ...</span><br><span class="line">        smsMessage.from = <span class="string">'Senao'</span>;</span><br><span class="line">        ...</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> smsMessage;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> IMessageFrom </span>&#123;</span><br><span class="line">  from: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>一樣使用 interface 描述要有 <code>from</code> property。</p>
-<p>第 6 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">addFromToMessage&lt;T extends IMessageFrom&gt;(smsMessage: T): T &#123;</span><br><span class="line">    ...</span><br><span class="line">    smsMessage.from = <span class="string">'Senao'</span>;</span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> smsMessage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addFromToMessage&lt;T&gt;(smsMessage: T): T</span><br></pre></td></tr></table></figure>
-<p><code>smsMessage</code> 的型別改用 <code>T</code> 表示，且 return type 也為 <code>T</code>。</p>
-<p>這解決了之前 2 種方式的 <code>addFromToMessage()</code> 無法描述 return type 的問題，目前 return type 為 <code>T</code>，與傳入 parameter 的型別相同。</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">addFromToMessage&lt;T extends IMessageFrom&gt;(smsMessage: T): T</span><br></pre></td></tr></table></figure>
-<p>但 <code>T</code> 為任何型別，並無法保證 <code>from</code> property 一定存在，因此在 type parameter 加上 <code>&lt;T extends IMessageFrom&gt;</code> (Generic Constraint)，確保 <code>T</code> 一定要有 <code>IMessageFrom</code> interface，否則 TypeScript 會編譯失敗。</p>
-<p>如此 return type 與 interface 問題皆可解決。</p>
-<blockquote>
-<p><code>T extends interface</code> 讓我們實現 <code>有限制的泛型</code>，<code>T</code> 不再是任意型別，而是要有實現 interface 的特定型別。</p>
-</blockquote>
-<h3 id="Array_處理不同_Model">Array 處理不同 Model</h3><p>實務上會使用 array 放不同 model，但缺發現 method 回傳後，已經喪失原本 array 內物件的型別。</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NotificationService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">sortMessages</span><span class="params">(array <span class="variable">$messages</span>)</span>: <span class="title">array</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>sortMessages()</code> 負責對 model 陣列做排序，由於 <code>$messages</code> 只宣告為 <code>array</code> 型別，因此使用上</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sortMessages(<span class="variable">$smsMessages</span>);</span><br></pre></td></tr></table></figure>
-<p>或</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sortMessages(<span class="variable">$lineMessages</span>);</span><br></pre></td></tr></table></figure>
-<p>皆可以傳入。</p>
-<p>儘管在 array 內處理不同 model，但最少都在同一個 <code>sortMessages()</code> 裡面，已經有泛型的味道。</p>
-<p>但這樣寫有 <code>2</code> 個問題 :</p>
-<ul>
-<li><code>array</code> 是一個概括性的型別，我們無法得知 array 內放的是 <code>SMSMessage</code> 或是 <code>LineMessage</code> 型別。</li>
-<li>回傳的 <code>array</code> 也是個概括型別，接受 <code>sortMessages()</code> 的回傳物件，只能知道是個 array，但不知道內部是什麼物件，如 <code>foreach()</code> 時，就無法對內部物件做 intellisense。</li>
-</ul>
-<p><code>1</code> 的問題還好，因為 <code>sortMessages()</code> 主要是針對 array 做排序，因此不會使用到 array 內部物件的 intellisense，但 <code>2</code> 的問題比較嚴重。</p>
-<blockquote>
-<p>若有了 generics，就可以完美解決這個問題</p>
-</blockquote>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> NotificationService &#123;</span><br><span class="line">    sortMessages&lt;T&gt;(messages: T[]): T[] &#123;</span><br><span class="line">        ...    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>T</code> 代表任意型別，<code>T[]</code> 為任意型別的陣列，且 return type <code>T[]</code> 亦為任意型別的陣列。</p>
-<p>這種寫法解決了原本的問題 :</p>
-<ul>
-<li><code>messages</code> 不再只是概括性的 <code>array</code> 型別，而是明確的 <code>T[]</code> 型別，其中 <code>T</code> 就是傳入的 model 型別。</li>
-<li>回傳的也不再是概括的 <code>array</code> 型別，而是明確的 <code>T[]</code>，<code>sortMessages()</code> 的接受者可以明確地得知其型別為 <code>T</code>，TypeScript 編譯器會自動將 <code>T</code> 以 model 的型別取代，因此 <code>foreach</code> 可順利抓到物件的型別。</li>
-</ul>
-<blockquote>
-<p>對於 array 這種 container 類型的型別，我們不必只是宣告空洞的 <code>array</code> 型別而已，而是真正以 array 的內容來宣告型別。</p>
-</blockquote>
-<h3 id="Repository_處理不同_Model">Repository 處理不同 Model</h3><p>Repository 負責處理資料庫邏輯，實務上會發現有些 method 在所有的 repository 都會出現，因此會想定義 abstract repository，其他 repository 則繼承此 abstract repository。</p>
-<blockquote>
-<p>這裡的 model 指的是 .NET 的 entity，以 ORM 來描述 table 的一筆資料，而 CodeIgniter 的 model 則類似於 repository。</p>
-</blockquote>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractRepository</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> 注入的model */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$model</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 根據 key 找單一筆資料 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">(int <span class="variable">$id</span>, <span class="variable">$columns</span> = [<span class="string">'*'</span>])</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">/** 回傳全部資料 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">all</span><span class="params">(<span class="variable">$columns</span> = [<span class="string">'*'</span>])</span>: <span class="title">array</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        ... </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 新增資料 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(array <span class="variable">$data</span>)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 修改資料 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(array <span class="variable">$data</span>)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 刪除資料 */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">delete</span><span class="params">(int <span class="variable">$id</span>)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderRepository</span> <span class="keyword">extends</span> <span class="title">AbstractRepository</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> __construct(Order <span class="variable">$order</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">parent</span>::__construct();</span><br><span class="line">        <span class="variable">$this</span>-&gt;order = <span class="variable">$order</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>這種架構 <code>OrderRepository</code> 繼承了 <code>AbstractRepository</code>，因此 <code>OrderRepository</code> 就有了 <code>AbstractRepository</code> 的 <code>find()</code> 、<code>all()</code> 、<code>create()</code> 、<code>update()</code> 與 <code>delete()</code> 功能，這些都是每個 repository 都會有的 method。</p>
-<p>這種架構看似很好，但仔細去看 <code>AbstractRepository</code>，仍有一些問題 :</p>
-<p>第 3 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@var</span> 注入的model */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="variable">$model</span>;</span><br></pre></td></tr></table></figure>
-<p><code>$model</code> 因為可能是各種型別，所以無法宣告型別，不過目前 PHP 還無法對 field 下 type hint。</p>
-<p>第 6 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 根據 key 找單一筆資料 */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">find</span><span class="params">(int <span class="variable">$id</span>, <span class="variable">$columns</span> = [<span class="string">'*'</span>])</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>find()</code> 理論上應該回傳 model 型別，但為了支援各種 model，只好選擇不用 return type，但也因此 <code>find()</code> 的接受物件喪失了 intellisense。</p>
-<p>12 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 回傳全部資料 */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">all</span><span class="params">(<span class="variable">$columns</span> = [<span class="string">'*'</span>])</span>: <span class="title">array</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>all()</code> 會傳回多筆資料，return type 使用了 <code>array</code> 這種概括型別，但 <code>all()</code>  的接受物件將喪失 array 內物件的 intellisense。</p>
-<p>18 行</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 新增資料 */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(array <span class="variable">$data</span>)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 修改資料 */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">update</span><span class="params">(array <span class="variable">$data</span>)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>create()</code> 與 <code>update()</code> 為了讓各種 model 的 repository 都能套用，因而退守改用 <code>array</code> 這種概括型別，理論上應該將 model 型別的 <code>物件</code> 傳入較佳。</p>
-<blockquote>
-<p>Array 的缺點</p>
-<ul>
-<li>Array 是個概括型別，使用了之後，array 內部的物件都會喪失 intellisense</li>
-<li>Array 與 null 很像，只要在底層用了 array 或 null，如 repository，就會逼得 service 與 controller 也繼續用 array 或 null</li>
-</ul>
-<p>若有了 generics，就可以完美解決這個問題</p>
-</blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">abstract class AbstractRepository&lt;T&gt; &#123;</span><br><span class="line">    /** 注入的model */</span><br><span class="line">    protected model: T;</span><br><span class="line"></span><br><span class="line">    /** 根據 key 找單一筆資料 */</span><br><span class="line">    find(id: number, columns = ['*']): T &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    /** 回傳全部資料 */</span><br><span class="line">    function all(columns = ['*']): T[] &#123;</span><br><span class="line">        ... </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /** 新增資料 */</span><br><span class="line">    create(data: T) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* 修改資料 */</span><br><span class="line">    update(data: T) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /* 刪除資料 */</span><br><span class="line">    delete(id: number) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class OrderRepository extends AbstractRepository&lt;Order&gt; &#123;</span><br><span class="line">    constructor(protected order: Order) &#123;</span><br><span class="line">        super();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 3 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 注入的model */</span></span><br><span class="line"><span class="keyword">protected</span> model: T;</span><br></pre></td></tr></table></figure>
-<p>宣告 <code>model</code> 為泛型 <code>T</code>。</p>
-<p>第 5 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 根據 key 找單一筆資料 */</span></span><br><span class="line">find(id: <span class="built_in">number</span>, columns = [<span class="string">'*'</span>]): T &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>find()</code> 的 return type 也有了 model 的明確型別，為泛型 <code>T</code>。</p>
-<p>10 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 回傳全部資料 */</span></span><br><span class="line">all(columns = [<span class="string">'*'</span>]): T[] &#123;</span><br><span class="line">    ...     </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>all()</code> 的 return type 由 <code>T[]</code> 取代 <code>array</code>，有了 model 的明確的型別。 </p>
-<p>16 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** 新增資料 */</span></span><br><span class="line">create(data: T) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 修改資料 */</span></span><br><span class="line">update(data: T) &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>create()</code> 與 <code>update()</code> 的 parameter 由 <code>array</code> 改成 <code>T</code>，有了 model 的明確型別。</p>
-<p>31 行</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> OrderRepository extends AbstractRepository&lt;Order&gt; &#123;</span><br><span class="line">    <span class="constructor"><span class="keyword">constructor</span>(protected order: Order) </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在繼承 <code>AbstractRepository</code> 時，把 <code>Order</code> 的 type parameter 明確帶入，因此 <code>AbstractRepository</code> 的 <code>T</code> 都是 <code>Order</code> model。</p>
-<blockquote>
-<p>改用泛型後，Repository 的型別可由 type parameter 指定，不再為了支援各種 model 而放棄 type hint 或改用 array。</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>C# 也有 generics，因此學習 TypeScript 的 generics 觀念，完全可用在 C#。</li>
-<li>因為 interface 是在執行階段切換，所以又稱為 <code>動態多型</code>，而 generics 是在編譯階段切換，又稱為 <code>靜態多型</code>。</li>
-<li>因為 generics 是在編譯階段處理，所以執行效率會比 interface 高。</li>
-<li><code>&lt;T&gt;</code> 要放在 function 還是要放在 class 或 interface 都有它的優缺點，要看實際狀況決定。</li>
-<li>泛型讓我們在寫程式時，能以支援各種型別來思考，但使用上又能享受強型別的 intellisense 與編譯時期檢查，非常好用。</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a>, <a href="https://www.typescriptlang.org/docs/handbook/generics.html" target="_blank" rel="external">Handbook : Generics</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[Generics 是 TypeScript 一大特色]]>
-    
-    </summary>
-    
-      <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
     
   </entry>
   
