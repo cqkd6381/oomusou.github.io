@@ -307,7 +307,7 @@
     <link href="http://oomusou.io/fsharp/list/"/>
     <id>http://oomusou.io/fsharp/list/</id>
     <published>2018-04-05T12:23:43.000Z</published>
-    <updated>2018-04-06T05:21:52.204Z</updated>
+    <updated>2018-04-07T07:21:04.778Z</updated>
     <content type="html"><![CDATA[<p>F# 除了使用 .NET Framework 所提供的型別外，自己還定義了不少適合 FP 的型別，其中最常用的就是 <code>List</code>，但這與 C# 的 <code>List&lt;T&gt;</code> 不同，反而類似 C# 的 <code>ImmutableList&lt;T&gt;</code>。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -346,6 +346,8 @@
 <blockquote>
 <p>對於簡單的 expression，建議使用 <code>for ... in ... -&gt;</code> 語法較精簡，若還需更複雜的描述，則必須使用 <code>for ... in ... do yield</code></p>
 </blockquote>
+<h3 id="List-init">List.init</h3><p>根據 index 值建立新的 list</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myList = List.init <span class="number">10</span> (<span class="keyword">fun</span> index -&gt; index * index)</span><br><span class="line"></span><br><span class="line">myList</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 1; 4; 9; 16; 25; 36; 49; 64; 81]</span></span><br></pre></td></tr></table></figure>
 <h2 id="List_Operator">List Operator</h2><hr>
 <h3 id="::_Operator">:: Operator</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myList1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> myList2 = <span class="number">0</span> :: myList1</span><br><span class="line"></span><br><span class="line">myList2</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 1; 2; 3]</span></span><br></pre></td></tr></table></figure>
 <p>將 value 加到 <code>:</code> 之前， 將加到 list 最前面。</p>
