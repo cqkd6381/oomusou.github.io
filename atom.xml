@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-07T02:26:42.596Z</updated>
+  <updated>2018-04-07T02:27:21.204Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[深入探討 List Module 所提供的 Function Part I (A ~ F)]]></title>
+    <title><![CDATA[深入探討 List Module 所提供的 Function (A ~ F)]]></title>
     <link href="http://oomusou.io/fsharp/list-module-function-part1/"/>
     <id>http://oomusou.io/fsharp/list-module-function-part1/</id>
     <published>2018-04-06T12:23:43.000Z</published>
-    <updated>2018-04-07T02:26:42.596Z</updated>
+    <updated>2018-04-07T02:27:21.204Z</updated>
     <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
 <p>本文先探討英文字母 A ~ F 開頭的 function。</p>
 <a id="more"></a>
