@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-06T15:32:27.577Z</updated>
+  <updated>2018-04-07T02:24:06.854Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/list-module-function-part1/"/>
     <id>http://oomusou.io/fsharp/list-module-function-part1/</id>
     <published>2018-04-06T12:23:43.000Z</published>
-    <updated>2018-04-06T15:32:27.577Z</updated>
+    <updated>2018-04-07T02:24:06.854Z</updated>
     <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 list 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用 List module 所提供的眾多 function。</p>
 <p>本文先探討英文字母 A ~ F 開頭的 function。</p>
 <a id="more"></a>
@@ -198,10 +198,11 @@
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.exists (<span class="keyword">fun</span> elem -&gt; elem = <span class="number">2</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 <h2 id="List-exists2">List.exists2</h2><hr>
 <blockquote>
-<p>判斷兩個 list 是否相等，須自行提供 predicate function 為判斷的依據</p>
+<p>判斷兩個 list 是的相同位置，至少有一個 element 相等，須自行提供 predicate function 為判斷的依據</p>
 <p><code>predicate : (&#39;T1 -&gt; &#39;T2 -&gt; bool) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; bool</code></p>
 </blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">11</span> .. <span class="number">20</span> ]</span><br><span class="line"><span class="keyword">let</span> predicate elem1 elem2 = elem1 = elem2 </span><br><span class="line">    </span><br><span class="line">list1</span><br><span class="line">|&gt; List.exists2 predicate list2</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line"><span class="keyword">let</span> predicate elem1 elem2 = elem1 = elem2 </span><br><span class="line">    </span><br><span class="line">List.exists2 predicate list1 list2</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p><code>[ 1; 2; 3]</code> 與 <code>[ 3; 2; 1 ]</code> 中，至少第 1 個 element 都是 <code>2</code>，只要有一個 element 是相等的就為 <code>true</code>，否則為 <code>false</code>。</p>
 <p>若 <code>list1</code> 與  <code>list2</code> 的 <code>Length</code> 不同，會拋出 <code>System.ArgumentException : The lists had different lengths.</code> </p>
 <h2 id="List-filter">List.filter</h2><hr>
 <blockquote>
@@ -284,7 +285,7 @@
 <p>判斷是否兩個 list 的所有 element 都通過 predicate function 條件</p>
 <p><code>predicate : (&#39;T1 -&gt; &#39;T2 -&gt; bool) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; bool</code></p>
 </blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.forall2 (<span class="keyword">fun</span> elem1 elem2 -&gt; (elem1 + elem2) % <span class="number">2</span> = <span class="number">0</span>) list1 </span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line"></span><br><span class="line">List.forall2 (<span class="keyword">fun</span> elem1 elem2 -&gt; (elem1 + elem2) % <span class="number">2</span> = <span class="number">0</span>) list1 list2 </span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
