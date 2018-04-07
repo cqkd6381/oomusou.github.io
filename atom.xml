@@ -307,7 +307,7 @@
     <link href="http://oomusou.io/fsharp/list/"/>
     <id>http://oomusou.io/fsharp/list/</id>
     <published>2018-04-05T12:23:43.000Z</published>
-    <updated>2018-04-07T07:21:04.778Z</updated>
+    <updated>2018-04-07T07:24:39.772Z</updated>
     <content type="html"><![CDATA[<p>F# 除了使用 .NET Framework 所提供的型別外，自己還定義了不少適合 FP 的型別，其中最常用的就是 <code>List</code>，但這與 C# 的 <code>List&lt;T&gt;</code> 不同，反而類似 C# 的 <code>ImmutableList&lt;T&gt;</code>。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -366,7 +366,7 @@
 </blockquote>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myList = [ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line">myList.Tail</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [2; 3]</span></span><br></pre></td></tr></table></figure>
 <p>就算 Tail 只剩下 1 個 element，仍然是 1 個 element 的 list。</p>
-<h3 id="isEmpty">isEmpty</h3><blockquote>
+<h3 id="IsEmpty">IsEmpty</h3><blockquote>
 <p>判斷 list 是否為空</p>
 <p><code>bool</code></p>
 </blockquote>
