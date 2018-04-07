@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="探討 List 的各種語法">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-07T07:24:39.772Z">
+<meta property="og:updated_time" content="2018-04-07T07:28:04.664Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入探討 F# 之 List">
 <meta name="twitter:description" content="探討 List 的各種語法">
@@ -171,7 +171,7 @@
 </blockquote>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myList = [ <span class="number">1</span> .. <span class="number">2</span> ]</span><br><span class="line"></span><br><span class="line">printf <span class="string">"%b"</span> myList.IsEmpty</span><br><span class="line"><span class="comment">// false</span></span><br></pre></td></tr></table></figure>
 <h3 id="Item">Item</h3><blockquote>
-<p>獲得指定 index 的 element 的值</p>
+<p>傳回指定 index 的 element 值</p>
 <p><code>&#39;T</code></p>
 </blockquote>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myList = [ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line">printf <span class="string">"%d"</span> (myList.Item <span class="number">2</span>)</span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
