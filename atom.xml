@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-08T06:59:35.117Z</updated>
+  <updated>2018-04-08T15:32:35.087Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,431 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[深入探討 F# List Module 所提供的 Function (Q ~ Z)]]></title>
+    <link href="http://oomusou.io/fsharp/list-module-function-part3/"/>
+    <id>http://oomusou.io/fsharp/list-module-function-part3/</id>
+    <published>2018-04-07T13:23:43.000Z</published>
+    <updated>2018-04-08T15:32:35.087Z</updated>
+    <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
+<p>本文先探討英文字母 Q ~ Z 開頭的 function。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="List-reduce">List.reduce</h2><hr>
+<blockquote>
+<p>將 list 中每個 element 的值經過 reduction function 累加</p>
+<p><code>reduction : (&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : <code>List.fold()</code> 與 <code>List.reduce()</code> 有何差異？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.fold (<span class="keyword">fun</span> elm acc -&gt; acc + elm) <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+<p><strong>相同</strong></p>
+<ul>
+<li>都是 <code>累加</code></li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.fold()</code> 可以設定初始值；<code>List.reduce()</code> 不能設定初始值</li>
+<li><code>List.fold()</code> 可以不同型別，如 <code>(string * int) list</code> -&gt; int；<code>List.reduce()</code> 從頭到尾必須相同型別，如 <code>int lint -&gt; int</code></li>
+</ul>
+<h2 id="List-reduceBack">List.reduceBack</h2><hr>
+<blockquote>
+<p>將 list 中每個 element 的值從尾部經過 reduction function 累加<br><code>reduction : (&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.reduceBack (<span class="keyword">fun</span> elm acc -&gt; acc + elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-replicate">List.replicate</h2><hr>
+<blockquote>
+<p>以相同 element 建立 list</p>
+<p><code>count : int -&gt; initial : &#39;T -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List.replicate <span class="number">3</span> <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 0; 0]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-rev">List.rev</h2><hr>
+<blockquote>
+<p>將 list 反過來表示</p>
+<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.rev</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 2; 1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-scan">List.scan</h2><hr>
+<blockquote>
+<p>類似 <code>List.fold()</code> 與 <code>List.reduce()</code> 對 list 進行累加，但會將計算過程保留在新 list 的 element</p>
+<p><code>folder : (&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state : &#39;State -&gt; list : &#39;T list -&gt; &#39;State list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.scan (<span class="keyword">fun</span> acc elm -&gt; acc + elm) <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 1; 3; 6]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-scanBack">List.scanBack</h2><hr>
+<blockquote>
+<p>同 <code>List.scan()</code>，但從 list 尾部開始累加，並將最後結果先顯示</p>
+<p><code>folder : (&#39;T -&gt; &#39;State -&gt; &#39;State) -&gt; list : &#39;T list -&gt; state : &#39;State -&gt; &#39;State list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line">List.scanBack (<span class="keyword">fun</span> elm acc -&gt; acc + elm) list1 <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [6; 5; 3; 0]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-singleton">List.singleton</h2><hr>
+<blockquote>
+<p>將整個 list 成為新 list 的第一個 element</p>
+<p><code>value : &#39;T -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.singleton</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-skip">List.skip</h2><hr>
+<blockquote>
+<p>忽略前 n 個 element 並傳回新 list</p>
+<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.skip <span class="number">5</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [6; 7; 8; 9; 10]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-skipWhile">List.skipWhile</h2><hr>
+<blockquote>
+<p>忽略前 n 個符合 predicate function 的 element，若第一個 element 不符合則停止 skip</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.skipWhile (<span class="keyword">fun</span> elm -&gt; elm &lt; <span class="number">5</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [5; 6; 7; 8; 9; 10]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sort">List.sort</h2><hr>
+<blockquote>
+<p>將 list 排序 (由小到大)</p>
+<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line">|&gt;List.sort</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sortDescending">List.sortDescending</h2><hr>
+<blockquote>
+<p>將 list 排序 (由大到小)</p>
+<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sortDescending</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 2; 1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sortBy">List.sortBy</h2><hr>
+<blockquote>
+<p>將 list 的 element 透過 projection function 轉換過，再根據 key 排序 (由小到大)</p>
+<p><code>projection : (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line">|&gt;List.sortBy (<span class="keyword">fun</span> elm -&gt; elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sortByDescending">List.sortByDescending</h2><hr>
+<blockquote>
+<p>將 list 的 element 透過 projection function 轉換過，再根據 key 排序 (由大到小)</p>
+<p><code>projection : (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sortByDescending (<span class="keyword">fun</span> elm -&gt; elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 2; 1]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sortWith">List.sortWith</h2><hr>
+<blockquote>
+<p>將 list 的 element 透過 comparer function 排序</p>
+<p><code>comparer : (&#39;T -&gt; &#39;T -&gt; int) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line">|&gt;List.sortWith (<span class="keyword">fun</span> elm1 elm2 -&gt; elm1 - elm2)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-splitAt">List.splitAt</h2><hr>
+<blockquote>
+<p>將 list 根據指定 index 分成兩個 list</p>
+<p><code>index : int -&gt; list : &#39;T list -&gt; &#39;T list * &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.splitAt <span class="number">5</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 2; 3; 4; 5], [6; 7; 8; 9; 10])</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-splitInto">List.splitInto</h2><hr>
+<blockquote>
+<p>將 list 分成指定 chunk 數</p>
+<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.splitInto <span class="number">3</span> </span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3; 4]; [5; 6; 7]; [8; 9; 10]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sum">List.sum</h2><hr>
+<blockquote>
+<p>將 list 中所有 element 相加</p>
+<p><code>list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sum</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-sumBy">List.sumBy</h2><hr>
+<blockquote>
+<p>將 list 先將過 projection function 運算後再相加，相當於 <code>List.map()</code> + <code>List.sum()</code></p>
+<p><code>projection : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;U</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sumBy (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+<p>相當於</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line">|&gt; List.sum</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-tail">List.tail</h2><hr>
+<blockquote>
+<p>將 list 除了第 1 個 element 外，剩下的 list 傳回，相當於 list 的 <code>Tail</code> property</p>
+<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.tail</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-take">List.take</h2><hr>
+<blockquote>
+<p>回傳 list 前 n 個 element</p>
+<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.take <span class="number">3</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : <code>List.truncate()</code> 與 <code>List.take()</code> 有何差異？</p>
+</blockquote>
+<p>當 n 大於 <code>Length</code> 時，<code>List.truncate()</code> 不會報錯，只是將整個 list 傳回；但 <code>List.take()</code> 拋出 <code>InvalidOperationException</code></p>
+<h2 id="List-takeWhild">List.takeWhild</h2><hr>
+<blockquote>
+<p>回傳前 n 個符合 predicate function 的 element，若第一個 element 不符合則停止 take</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.takeWhile (<span class="keyword">fun</span> elm -&gt; elm &lt; <span class="number">5</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-toArray">List.toArray</h2><hr>
+<blockquote>
+<p>將 list 轉成 array</p>
+<p><code>list : &#39;T list -&gt; &#39;T []</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.toArray</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [|1; 2; 3|]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-toSeq">List.toSeq</h2><hr>
+<blockquote>
+<p>將 list 轉成 sequence</p>
+<p><code>list : &#39;T list -&gt; seq&lt;&#39;T&gt;</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.toSeq</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-transpose">List.transpose</h2><hr>
+<blockquote>
+<p>將 sequence 內的 list 加以 transpose</p>
+<p><code>list : seq&lt;&#39;T list&gt; -&gt; &#39;T list list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]]</span><br><span class="line">|&gt;List.transpose</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1]; [2]; [3]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-truncate">List.truncate</h2><hr>
+<blockquote>
+<p>回傳 list 最多 n 的 element</p>
+<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">|&gt;List.truncate <span class="number">6</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2]</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : <code>List.truncate()</code> 與 <code>List.take()</code> 有何差異？</p>
+</blockquote>
+<p>當 n 大於 <code>Length</code> 時，<code>List.truncate()</code> 不會報錯，只是將整個 list 傳回；但 <code>List.take()</code> 拋出 <code>InvalidOperationException</code></p>
+<h2 id="List-tryFind">List.tryFind</h2><hr>
+<blockquote>
+<p>找出 list 中符合 predicate function 條件的第一個 element</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFind (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 2</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p> <code>List.find()</code> 與 <code>List.tryFind()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.find()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryFind()</code> 傳回 <code>&#39;T option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.find()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFind()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFind()</code> 取代 <code>List.find()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryFindBack">List.tryFindBack</h2><hr>
+<blockquote>
+<p>從 list 尾部找出符合 predicate function 條件的第一個 element</p>
+<p><code>predicate：(&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFindBack (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 10</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.findBack()</code> 與 <code>List.tryFindBack()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.findBack()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryFindBack()</code> 傳回 <code>&#39;T option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.findBack()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindBack()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFindBack()</code> 取代 <code>List.findBack()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryFindIndex">List.tryFindIndex</h2><hr>
+<blockquote>
+<p>找出 list 中符合 predicate function 條件的第一 element 的 index</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFindIndex (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.findIndex()</code> 與 <code>List.tryFindIndex()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.findIndex()</code> 傳回 <code>int</code>；而 <code>List.tryFindIndex()</code> 傳回 <code>int option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.findIndex()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindIndex()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFindIndex()</code> 取代 <code>List.findIndex()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryFindIndexBack">List.tryFindIndexBack</h2><hr>
+<blockquote>
+<p>從 list 尾部找出符合 predicate function 條件的第一 element 的 index</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFindIndexBack (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 9</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.findIndexBack()</code> 與 <code>List.tryFindIndexBack()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.findIndexBack()</code> 傳回 <code>int</code>；而 <code>List.tryFindIndexBack()</code> 傳回 <code>int option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.findIndexBack()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindIndexBack()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFindIndexBack()</code> 取代 <code>List.findIndexBack()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryHead">List.tryHead</h2><hr>
+<blockquote>
+<p>傳回 list 第一個 element，相當於 list 的  <code>Head</code> property</p>
+<p><code>list : &#39;T list -&gt; &#39;T option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryHead</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.head()</code> 與 <code>List.tryHead()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都傳回 list 第一個 element</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.head()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryHead()</code> 傳回 <code>&#39;T option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.head()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryHead()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryHead()</code> 取代 <code>List.head()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryItem">List.tryItem</h2><hr>
+<blockquote>
+<p>傳回 list 指定 index 的 element 值，相當於 list 的 <code>Item</code> property</p>
+<p><code>index : int -&gt; list : &#39;T list -&gt; &#39;T option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryItem <span class="number">2</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 3</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.item()</code> 與 <code>List.tryItem()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都傳回 list 指定 index 的 element 值</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.item()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryItem()</code> 傳回 <code>&#39;T option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.head()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryHead()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryItem()</code> 取代 <code>List.item()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryLast">List.tryLast</h2><hr>
+<blockquote>
+<p>傳回 list 最後一個 element</p>
+<p><code>list : &#39;T list -&gt; &#39;T option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryLast</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 3</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.last()</code> 與 <code>List.tryLast()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都傳回 list 最後一個 element 值</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.last()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryLast()</code> 傳回 <code>&#39;T option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.last()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryLast()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryLast()</code> 取代 <code>List.last()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-tryPick">List.tryPick</h2><hr>
+<blockquote>
+<p>找出 list 中符合 chooser function 條件的第一個 element</p>
+<p><code>chooser : (&#39;T -&gt; &#39;U option) -&gt; list : &#39;T list -&gt; &#39;U option</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> chooser elm = </span><br><span class="line">    <span class="keyword">match</span> elm <span class="keyword">with</span> </span><br><span class="line">    | elm <span class="keyword">when</span> elm % <span class="number">2</span> = <span class="number">0</span> -&gt; Some elm</span><br><span class="line">    | _ -&gt; None</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryPick chooser</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 2</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q：<code>List.pick()</code> 與 <code>List.tryPick()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 chooser function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.pick()</code> 傳回 <code>&#39;U</code>；而 <code>List.tryPick()</code> 傳回 <code>&#39;U option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.pick()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryPick()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryPick()</code> 取代 <code>List.pick()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-unfold">List.unfold</h2><hr>
+<blockquote>
+<p>根據 generator function 建立 list，其中 generator function 可指定目前 state 與下一個 state</p>
+<p><code>generator : (&#39;State -&gt; (&#39;T * &#39;State) option) -&gt; state : &#39;State -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> generator state =</span><br><span class="line">    <span class="keyword">match</span> state <span class="keyword">with</span> </span><br><span class="line">    |_ <span class="keyword">when</span> state &lt; <span class="number">10</span> -&gt; Some(state, state + <span class="number">1</span>)</span><br><span class="line">    |_                 -&gt; None</span><br><span class="line"></span><br><span class="line">List.unfold generator <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-unzip">List.unzip</h2><hr>
+<blockquote>
+<p>將所有 element 為 pair 的 list，分解成兩個 list</p>
+<p><code>list : (&#39;T1 * &#39;T2) list -&gt; &#39;T1 list * &#39;T2 list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ (<span class="number">1</span>, <span class="number">4</span>); (<span class="number">2</span>, <span class="number">5</span>); (<span class="number">3</span>, <span class="number">6</span>) ]</span><br><span class="line">|&gt; List.unzip</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 2; 3], [4; 5; 6])</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-unzip3">List.unzip3</h2><hr>
+<blockquote>
+<p>將所有 element 為 triple 的 list，分解成三個 list</p>
+<p><code>list : (&#39;T1 * &#39;T2 * &#39;T3) list -&gt; &#39;T1 list * &#39;T2 list * &#39;T3 list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ (<span class="number">1</span>, <span class="number">4</span>, <span class="number">7</span>); (<span class="number">2</span>, <span class="number">5</span>, <span class="number">8</span>); (<span class="number">3</span>, <span class="number">6</span>, <span class="number">9</span>) ]</span><br><span class="line">|&gt; List.unzip3</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 2; 3], [4; 5; 6], [7; 8; 9])</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-where">List.where</h2><hr>
+<blockquote>
+<p>找出 list 中符合 predicate function 條件的所有 element</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">|&gt; List.where (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">1</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-windowed">List.windowed</h2><hr>
+<blockquote>
+<p>依照 list 的 element 順序，依序取出 n 個 element 的 list</p>
+<p><code>windowSize : int -&gt; list : &#39;T list -&gt; &#39;T list list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line">|&gt; List.windowed <span class="number">3</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3]; [2; 3; 4]; [3; 4; 5]]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-zip">List.zip</h2><hr>
+<blockquote>
+<p>將兩個 list 合併成 element 為 pair 的 list</p>
+<p> <code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; (&#39;T1 * &#39;T2) list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"></span><br><span class="line">List.zip list1 list2</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 4); (2, 5); (3, 6)]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-zip3">List.zip3</h2><hr>
+<blockquote>
+<p>將三個 list 合併成 element 為 triple 的 list</p>
+<p><code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; list3 : &#39;T3 list -&gt; (&#39;T1 * &#39;T2 * &#39;T3) list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list3 = [ <span class="number">7</span>; <span class="number">8</span>; <span class="number">9</span> ]</span><br><span class="line"></span><br><span class="line">List.zip3 list1 list2 list3</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 4, 7); (2, 5, 8); (3, 6, 9)]</span></span><br></pre></td></tr></table></figure>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://msdn.microsoft.com/en-us/" target="_blank" rel="external">MSDN</a>, <a href="https://msdn.microsoft.com/en-us/visualfsharpdocs/conceptual/collections.list-module-%5bfsharp%5d" target="_blank" rel="external">Collection.List Module (F#)</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[FP 的基本功]]>
+    
+    </summary>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 F# List Module 所提供的 Function (G ~ P)]]></title>
@@ -2891,92 +3316,6 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 FP 實現 OOP 的 Polymorphism ?]]></title>
-    <link href="http://oomusou.io/fsharp/polymorphism/"/>
-    <id>http://oomusou.io/fsharp/polymorphism/</id>
-    <published>2018-03-21T12:23:43.000Z</published>
-    <updated>2018-03-21T13:34:57.860Z</updated>
-    <content type="html"><![CDATA[<p>OOP 最自豪的就是 Polymorphism (多型)，若使用 FP，該如何實現這個 OOP 的招牌菜呢？</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>C# 7.2<br>F# 4.1</p>
-<h2 id="Shape_Again">Shape Again</h2><hr>
-<p>在眾多 OOP 書中，都會看到這個經典 Shape，這是展示 OOP 經典的 Polymorphism 與 Virtual / Override 的經典範例。</p>
-<p><img src="/images/fsharp/polymorphism/poly000.svg" alt="oly00"></p>
-<ul>
-<li><code>Circle</code>、<code>Rectangle</code> 與 <code>Triangle</code> 都抽象化成 <code>Shape</code> 這個 abstract class</li>
-<li>因為每個形狀計算面積的公式都不同，因此在 <code>Shape</code> 開 abstract method，再由 <code>Circle</code> 、 <code>Rectangle</code> 與 <code>Triangle</code> 各自實作 <code>Area()</code></li>
-<li>最後將 <code>Circle</code>、<code>Rectangle</code> 與 <code>Triangle</code> 都擺進 <code>List</code>，一一的呼叫每個形狀的 <code>Area()</code>，因為 OOP 的 Polymorphism 機制，所以我們不必去判斷 class 型別，自己會執行對的 class 與 method</li>
-</ul>
-<p>這就是我們熟悉的 Polymorphism。</p>
-<p>將分別以 C# 與 F# 實作此需求，體會一下 OOP 與 FP 的差異。</p>
-<h2 id="CSharp">CSharp</h2><hr>
-<p><strong>Shape.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">Shape</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>定義 <code>Shape</code> abstract class，其中 <code>Area()</code> 為 abstract method，因為每個形狀計算面積的公式不同，必須由子類別去實作。</p>
-<p><strong>Circle.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Circle</span> : <span class="title">Shape</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">double</span> _radius;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Circle</span>(<span class="params"><span class="keyword">double</span> radius</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _radius = radius;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">3.14</span> * _radius * _radius;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Circle</code> 由 constructor 傳入 <code>radius</code>，並 override <code>Area()</code> 計算圓形面積。</p>
-<p><strong>Rectangle.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Rectangle</span> : <span class="title">Shape</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">double</span> _width;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">double</span> _height;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Rectangle</span>(<span class="params"><span class="keyword">double</span> width, <span class="keyword">double</span> height</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _width = width;</span><br><span class="line">            _height = height;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _width * _height;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Rectangle</code> 由 constructor 傳入 <code>width</code> 與 <code>height</code>，並 override <code>Area()</code> 計算矩形面積。</p>
-<p><strong>Triangle.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Triangle</span>: <span class="title">Shape</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">double</span> _base;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="keyword">double</span> _height;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Triangle</span>(<span class="params"><span class="keyword">double</span> base_, <span class="keyword">double</span> height</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _base = base_;</span><br><span class="line">            _height = height;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">Area</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.5</span> * _base * _height;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Triangle</code> 由 constructor 傳入 <code>base</code> 與 <code>height</code>，並 override <code>Area()</code> 計算三角形面積。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            List&lt;Shape&gt; myList = <span class="keyword">new</span> List&lt;Shape&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Circle(<span class="number">10.0</span>),</span><br><span class="line">                <span class="keyword">new</span> Rectangle(<span class="number">2.0</span>, <span class="number">3.0</span>),</span><br><span class="line">                <span class="keyword">new</span> Triangle(<span class="number">4.0</span>, <span class="number">5.0</span>)</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> shape <span class="keyword">in</span> myList)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> result = shape.Area();</span><br><span class="line">                Console.WriteLine(<span class="string">"&#123;0:F1&#125;"</span>, result);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將 <code>Circle</code> 、<code>Rectangle</code> 與 <code>Triangle</code> 3 個物件都塞入 <code>List</code>，使用 <code>foreach</code> 執行每個物件的 <code>Area()</code>，不用判斷型別，就自動會執行對的物件，這就是我們熟知的 Polymorphism。</p>
-<p><img src="/images/fsharp/polymorphism/poly001.png" alt="oly00"></p>
-<p>各自算出各形狀的面積。</p>
-<h2 id="FSharp">FSharp</h2><hr>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>= </span><br><span class="line">    | Circle <span class="keyword">of</span> radius: float</span><br><span class="line">    | Rectangle <span class="keyword">of</span> width: float * height: float</span><br><span class="line">    | Triangle <span class="keyword">of</span> base_: float * height: float</span><br><span class="line">    </span><br><span class="line"><span class="keyword">let</span> area shape =</span><br><span class="line">    <span class="keyword">match</span> shape <span class="keyword">with</span> </span><br><span class="line">    | Circle radius -&gt; <span class="number">3.14</span> * radius * radius</span><br><span class="line">    | Rectangle (width, height) -&gt; width * height</span><br><span class="line">    | Triangle (base_, height) -&gt; <span class="number">0.5</span> * base_ * height</span><br><span class="line">    </span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> circle = Circle <span class="number">10.0</span></span><br><span class="line">    <span class="keyword">let</span> rectangle = Rectangle (<span class="number">2.0</span>, <span class="number">3.0</span>)</span><br><span class="line">    <span class="keyword">let</span> triangle = Triangle (<span class="number">4.0</span>, <span class="number">5.0</span>)</span><br><span class="line">    </span><br><span class="line">    [circle; rectangle; triangle]</span><br><span class="line">    |&gt; List.map area</span><br><span class="line">    |&gt; List.iter (printfn <span class="string">"%A"</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
-<p>第 3 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>= </span><br><span class="line">    | Circle <span class="keyword">of</span> radius: float</span><br><span class="line">    | Rectangle <span class="keyword">of</span> width: float * height: float</span><br><span class="line">    | Triangle <span class="keyword">of</span> base_: float * height: float</span><br></pre></td></tr></table></figure>
-<p>定義 <code>Shape</code> union，包含 <code>Circle</code>、<code>Rectangle</code> 與 <code>Triangle</code> 三個 case。</p>
-<p>至於三個型別的資料，則直接在 case 後面接 <code>of</code> 表示。</p>
-<blockquote>
-<p>我們看到 C# 必須使用 <code>abstract class</code> 與 <code>繼承</code>，才能描述 <code>Shape</code> 與 <code>Circle</code>、<code>Rectangle</code> 與 <code>Triangle</code> 之間的抽象關係，但 F# 使用 <code>union</code>只要 4 行即可，而且還是強型別</p>
-</blockquote>
-<p>第 8 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> area shape =</span><br><span class="line">    <span class="keyword">match</span> shape <span class="keyword">with</span> </span><br><span class="line">    | Circle radius -&gt; <span class="number">3.14</span> * radius * radius</span><br><span class="line">    | Rectangle (width, height) -&gt; width * height</span><br><span class="line">    | Triangle (base_, height) -&gt; <span class="number">0.5</span> * base_ * height</span><br></pre></td></tr></table></figure>
-<p>至於 <code>Area()</code> 的多型怎麼辦 ?</p>
-<p>只要使用 Pattern Matching 判斷 <code>shape</code> 的型別，各自實作其面積公式即可。</p>
-<blockquote>
-<p>我們看到 C# 必須使用 virtual / override 機制才能實現 Polymorphism，但 F# 使用 Pattern Matching 只要 5 行即可</p>
-</blockquote>
-<p>15 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> circle = Circle <span class="number">10.0</span></span><br><span class="line">    <span class="keyword">let</span> rectangle = Rectangle (<span class="number">2.0</span>, <span class="number">3.0</span>)</span><br><span class="line">    <span class="keyword">let</span> triangle = Triangle (<span class="number">4.0</span>, <span class="number">5.0</span>)</span><br><span class="line">    </span><br><span class="line">    [circle; rectangle; triangle]</span><br><span class="line">    |&gt; List.map area</span><br><span class="line">    |&gt; List.iter (printfn <span class="string">"%A"</span>)</span><br></pre></td></tr></table></figure>
-<p>不必使用 <code>foreach</code> ，只要以 Pipeline 方式透過 <code>List.map</code> 執行每個物件的 <code>area()</code>，再以 Pipeline 方式透過 <code>List.iter</code> 將計算的結果交給 <code>printfn</code> 顯示。</p>
-<blockquote>
-<p>C# 雖然也可以使用 LINQ 方式，與 F# 極為類似，不過 LINQ 已經屬於 functional ，不是傳統 OOP 的 imperative </p>
-</blockquote>
-<p><img src="/images/fsharp/polymorphism/poly002.png" alt="oly00"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>FP 使用 <code>union</code> 即可實作出 OOP 的 <code>繼承</code> 概念</li>
-<li>FP 使用 Pattern Matching 即可實作出 OOP 的 <code>virtual/override</code> 概念</li>
-<li>OOP 是將 data 與 function 合一，都包在 class 內；FP 是將 data 與 function 分離，data 歸 Type，function 還是 function</li>
-<li>F# 的程式碼明顯比 C# 精簡</li>
-<li>並不是要比較哪個語言的優劣，只想強調 OOP 與 FP 以不同的思維，都可以實作出 Polymorphism</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 GitHub 上找到：<a href="https://github.com/oomusou/OOPPolymorphism" target="_blank" rel="external">C#</a>、<a href="https://github.com/oomusou/FPPolymorphism" target="_blank" rel="external">F#</a></p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://fsharpforfunandprofit.com/" target="_blank" rel="external">F# for fun and profit</a>, <a href="https://fsharpforfunandprofit.com/posts/key-concepts/" target="_blank" rel="external">Four Key Concepts</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[體會 OOP 與 FP 不同的思維]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
