@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-12T10:46:37.138Z</updated>
+  <updated>2018-04-12T10:51:58.581Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/proxy/"/>
     <id>http://oomusou.io/design-pattern/proxy/</id>
     <published>2018-04-12T12:23:43.000Z</published>
-    <updated>2018-04-12T10:46:37.138Z</updated>
+    <updated>2018-04-12T10:51:58.581Z</updated>
     <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，隨著 FP 逐漸受到重視， Proxy Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -221,8 +221,8 @@
 <blockquote>
 <p>Q：Proxy Pattern 與 Decorator Pattern 有什麼差異？</p>
 </blockquote>
-<p><img src="/images/design-pattern/proxy/proxy020.svg" alt="proxy018"></p>
-<p><img src="/images/design-pattern/proxy/proxy019.svg" alt="proxy019"></p>
+<p><strong>Proxy Pattern</strong><br><img src="/images/design-pattern/proxy/proxy020.svg" alt="proxy018"></p>
+<p><strong>Decorator Pattern</strong><br><img src="/images/design-pattern/proxy/proxy019.svg" alt="proxy019"></p>
 <p>以 class diagram 角度，Proxy Pattern 與 Decorator Pattern 的確非常類似。</p>
 <blockquote>
 <p>學 Design Pattern 不能以 class diagram 的角度去思考，而要以他要解決什麼問題來思考</p>
