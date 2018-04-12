@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/design-pattern/proxy/</loc>
+    <lastmod>2018-04-12T10:46:37.138Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/list/</loc>
     <lastmod>2018-04-09T01:40:23.034Z</lastmod>
   </url>
@@ -892,12 +897,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-project-template/</loc>
+    <loc>http://oomusou.io/laravel/service/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/service/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-project-template/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   

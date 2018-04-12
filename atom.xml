@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-08T15:39:17.935Z</updated>
+  <updated>2018-04-12T10:46:37.138Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,251 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 C# 實現 Proxy Pattern ?]]></title>
+    <link href="http://oomusou.io/design-pattern/proxy/"/>
+    <id>http://oomusou.io/design-pattern/proxy/</id>
+    <published>2018-04-12T12:23:43.000Z</published>
+    <updated>2018-04-12T10:46:37.138Z</updated>
+    <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，隨著 FP 逐漸受到重視， Proxy Pattern 在實作上也有了新的面貌。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>C# 7.2</p>
+<h2 id="User_Story_1">User Story 1</h2><hr>
+<p>假設你在處理訂單，為了慶祝週年慶，<code>全館八折</code>。</p>
+<p><strong>Task</strong><br>將 <code>OrderService</code> 包在 <code>OrderLibrary</code> assembly 內。</p>
+<p><strong>Architecture</strong><br><img src="/images/design-pattern/proxy/proxy004.svg" alt="proxy004"></p>
+<p><strong>Implementation</strong><br><strong>Client</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy005.svg" alt="proxy004"></p>
+<p><strong>Program.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            PriceInterface orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line">            <span class="keyword">var</span> realPrice = orderService.GetPrice(<span class="number">0.8</span>, <span class="number">800</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"Real price : &#123;0&#125;"</span>, realPrice);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>與一般使用 service 寫法相同，建立 <code>OrderService</code> 物件，並執行 <code>getPrice()</code> 計算 <code>全館八折</code>。</p>
+<p><strong>PriceInterface</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy006.svg" alt="proxy004"></p>
+<p><strong>PriceInterface.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> discount, <span class="keyword">double</span> price</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>PriceInterface</code> 定義 <code>OrderService</code> 的 interface，只有 <code>GetPrice()</code> 一個 method。</p>
+<p><strong>OrderService</strong><br><img src="/images/design-pattern/proxy/proxy007.svg" alt="proxy007"></p>
+<p><strong>OrderService.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span> : <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> discount, <span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> discount * price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>OrderService</code> 實踐 <code>PriceInterface</code> 的 <code>GetPrice()</code>，計算 <code>全館八折</code>。</p>
+<blockquote>
+<p>目前 <code>PriceInterface</code> 與 <code>OrderService</code> 都包在 <code>OrderLibrary</code> assembly 內，與 <code>Client</code> 的 <code>ConsoleApp</code> 是不同 assembly。</p>
+</blockquote>
+<h2 id="User_Story_2">User Story 2</h2><hr>
+<p>週年慶過後，只有 <code>會員</code> 才享有 <code>全館八折</code>，一般消費者維持原價。</p>
+<p><strong>Task</strong></p>
+<ul>
+<li>由於 <code>開放封閉原則</code>， <code>OrderLibrary</code> 不再修改與編譯</li>
+<li>在相同的 <code>PriceInterface</code> 下，要使 <code>Client</code> 的修改程式碼降到最低</li>
+</ul>
+<h2 id="Inheritance">Inheritance</h2><p><strong>Architecture</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy002.svg" alt="proxy002"></p>
+<ul>
+<li><strong>Client</strong>：<code>OrderService</code> 的 user，實務上可能是 component 或 controller</li>
+<li><strong>PriceInterface</strong>：定義 <code>OrderService</code> 的 interface</li>
+<li><strong>OrderService</strong>：實現 <code>全館八折</code></li>
+<li><strong>MemberOrderService</strong>：根據 <code>MemberService</code> 判斷 <code>是否為會員</code>，並且因為 code reuse 繼承 <code>OrderService</code></li>
+<li><strong>MemberService</strong>：判斷 <code>是否為會員</code></li>
+</ul>
+<p><strong>Implementation</strong></p>
+<p><strong>MemberService</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy012.svg" alt="proxy012"></p>
+<p><strong>MemberService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">MemberLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MemberService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">bool</span> <span class="title">IsMember</span>(<span class="params"><span class="keyword">string</span> account</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> account == <span class="string">"Sam"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因為要判斷是否為 <code>會員</code>，新增 <code>MemberService</code>。</p>
+<blockquote>
+<p>實務上判斷 <code>是否為會員</code> 與資料庫有關，本文主要是談 Proxy Pattern，就只簡單的判斷會員是否為 <code>Sam</code> 即可。</p>
+</blockquote>
+<p><strong>MemberOrderService</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy013.svg" alt="proxy013"></p>
+<p><strong>MemberOrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> MemberLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MemberOrderService</span> : <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> MemberService _memberService = <span class="keyword">new</span> MemberService();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> discount, <span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _memberService.IsMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">                   <span class="keyword">base</span>.GetPrice(price, discount) : </span><br><span class="line">                   price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 5 行<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MemberOrderService</span> : <span class="title">OrderService</span></span><br></pre></td></tr></table></figure></p>
+<p>由於只是多了 <code>是否為會員</code> 判斷，<code>全館八折</code> 的邏輯還是一樣，因此最直覺的寫法就是直接繼承 <code>OrderService</code> 在加以 <code>override</code>。</p>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> MemberService _memberService = <span class="keyword">new</span> MemberService();</span><br></pre></td></tr></table></figure>
+<p>由於需使用 <code>MemberService</code> 判斷 <code>是否為會員</code>，因此宣告 <code>MemberService</code> 為 private field。</p>
+<blockquote>
+<p>實務上不應該直接 <code>new</code> service，而應該使用 DI 注入解耦合，因為本文主是談 Proxy Pattern，因此就偷懶直接 <code>new</code> 了。</p>
+</blockquote>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> _memberService.IsMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">       <span class="keyword">base</span>.GetPrice(price, discount) : </span><br><span class="line">       price;</span><br></pre></td></tr></table></figure>
+<p>由於 <code>MemberOrderService</code> 繼承 <code>OrderService</code>，因此使用 <code>base.GetPrice()</code> 呼叫父類別 <code>OrderService</code> 的 <code>GetPrice()</code>。</p>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy014.svg" alt="proxy014"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span> : <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> discount, <span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> discount * price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 因為 <code>MemberOrderService</code> 要 override <code>GetPrice()</code>，所以在 <code>OrderService</code> 必須宣告成 <code>virtual</code>。</p>
+<blockquote>
+<p>Q：使用 <code>繼承</code> 有什麼問題？</p>
+</blockquote>
+<ol>
+<li><code>OrderService.GetPrice()</code> 必須改成 <code>virtual</code>，<code>OrderLibrary</code> 必須修改與重新編譯，違反 <code>OrderLibrary 不再修改與編譯</code> 的需求，也違反 <code>開放封閉原則</code></li>
+<li><code>MemberOrderService</code> 必須加在 <code>OrderLibrary</code> assembly，違反 <code>OrderLibrary 不再修改與編譯</code> 的需求，也違反 <code>開放封閉原則</code></li>
+<li><code>繼承</code> 就該符合 <code>里氏替換原則</code>，也就是無論怎麼繼承， <code>GetPrice()</code> 都該只是計算 price，但 <code>MemberOrderService.GetPrice()</code> 卻還去判斷 <code>IsMember()</code>，這已經超出 <code>GetPrice()</code> 的職責，也就是違反 <code>單一職責原則</code></li>
+<li><code>MemberOrderService</code> 完全以 code reuse 的角度去繼承 <code>OrderService</code>，而不是以 <code>多型</code> 的角度去繼承 <code>OrderService</code>，這也違反 <code>里氏替換原則</code></li>
+<li><code>MemberOrderService</code> 與 <code>OrderService</code> 強耦合，將來在  <code>OrderService</code> 新增任何 field 與 method，都會污染到 <code>MemberOrderService</code>，違反 <code>介面隔離原則</code></li>
+</ol>
+<blockquote>
+<p><code>繼承</code> 不是不能用，若真的沒有駕馭 <code>繼承</code> 的功力，建議就遵循 <code>里氏替換原則</code></p>
+</blockquote>
+<h2 id="Proxy_Pattern">Proxy Pattern</h2><hr>
+<p><strong>Definition</strong></p>
+<blockquote>
+<p>Proxy Pattern</p>
+<p>在不改變原有 interface 的前提下，控制 service 的使用</p>
+</blockquote>
+<p><img src="/images/design-pattern/proxy/proxy015.svg" alt="proxy015"></p>
+<ul>
+<li><strong>Client</strong>：<code>Proxy</code> 的 user，實務上可能是 component 或 controller</li>
+<li><strong>Subject</strong>：定義 <code>Proxy</code> 與 <code>RealSubject</code> 的共用 interface</li>
+<li><strong>Proxy</strong> : <code>RealSubject</code> 的替身，<code>Client</code> 實際只接觸 <code>Proxy</code>， 再由 <code>Proxy</code> 呼叫 <code>RealSubject</code></li>
+<li><strong>RealSubject</strong>：實際功能的物件</li>
+</ul>
+<p><strong>適用時機</strong></p>
+<ul>
+<li>原有 interface 不能變動而想控制 service 使用</li>
+<li>原來的 class 在不同 assembly，無法修改 code 卻想控制 service 使用</li>
+<li>原本使用繼承而造成強耦合</li>
+</ul>
+<p><strong>優點</strong></p>
+<ul>
+<li>Interface 沒有變動，因此 client 程式不用修改 (如 .NET Core 的 Type Forwarding 設計)</li>
+</ul>
+<blockquote>
+<p>在 GoF 的 Proxy Pattern，有提到四種 proxy，分別為 Remote Proxy、Virtual Proxy、Protection Proxy、Smart Reference，本文只針對最常用的 Protection Proxy 討論</p>
+</blockquote>
+<p><strong>Architecture</strong><br><img src="/images/design-pattern/proxy/proxy000.svg" alt="proxy000"></p>
+<ul>
+<li><strong>Client</strong>：<code>OrderProxy</code> 的 user，實務上可能是 component 或 controller</li>
+<li><strong>PriceInterface</strong>：定義 <code>OrderProxy</code> 與 <code>OrderService</code> 的共用 interface，相當於 <code>Subject</code></li>
+<li><strong>OrderProxy</strong>：控制 <code>OrderService</code> 的使用，相當於 <code>Proxy</code></li>
+<li><strong>OrderService</strong>：實際計算 <code>全館八折</code>，相當於 <code>RealSubject</code></li>
+<li><strong>MemberService</strong>：判斷是否為會員，為 <code>OrderService</code> 所依賴的物件</li>
+</ul>
+<p><strong>Implementation</strong></p>
+<p><strong>OrderProxy</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy003.svg" alt="proxy003"></p>
+<p><strong>OrderProxy.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> MemberLibrary;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderProxy</span> : <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> PriceInterface _orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> MemberService _memberService = <span class="keyword">new</span> MemberService();</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> discount, <span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _memberService.IsMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">                   _orderService.GetPrice(discount, price) : </span><br><span class="line">                   price;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第 6 行<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderProxy</span> : <span class="title">PriceInterface</span></span><br></pre></td></tr></table></figure></p>
+<p>為了要達成 <code>使 Client 的修改程式碼降到最低</code> 的要求，<code>OrderProxy</code> 也繼續使用 <code>PriceInterface</code>。</p>
+<p>第 8 行<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> PriceInterface _orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> MemberService _memberService = <span class="keyword">new</span> MemberService();</span><br></pre></td></tr></table></figure></p>
+<p>由於 <code>OrderProxy</code> 有兩個相依的 service：<code>OrderService</code> 與  <code>MemberService</code>，因此宣告為 private field 儲存。</p>
+<blockquote>
+<p>實務上不應該直接 <code>new</code> service，而應該使用 DI 注入解耦合，因為本文主是談 Proxy Pattern，因此就偷懶直接 <code>new</code> 了。</p>
+</blockquote>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price, <span class="keyword">double</span> discount</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _memberService.IsMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">           _orderService.GetPrice(price, discount) : </span><br><span class="line">           price;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先判斷是否為會員，在執行 <code>OrderService.GetPrice()</code>。</p>
+<p>重點在於在呼叫 service 的之前與之後，我們都可以加上自己的邏輯，而不是直接呼叫 service，這就是 proxy 本質。</p>
+<p><strong>Client</strong><br><img src="/images/design-pattern/proxy/proxy001.svg" alt="proxy001"></p>
+<p><strong>Program.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            PriceInterface orderProxy = <span class="keyword">new</span> OrderProxy();</span><br><span class="line">            <span class="keyword">var</span> realPrice = orderProxy.GetPrice(<span class="number">0.8</span>, <span class="number">800</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"Real price : &#123;0&#125;"</span>, realPrice);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PriceInterface orderProxy = <span class="keyword">new</span> OrderProxy();</span><br></pre></td></tr></table></figure>
+<p>由 <code>OrderService</code> 改成 <code>OrderProxy</code>，再透過 Refactoring 的 <code>Rename</code> 將 <code>orderService</code> 重構成 <code>orderProxy</code>。</p>
+<p>其他都不用改，達成 <code>使 Client 的修改程式碼降到最低</code> 的要求。</p>
+<blockquote>
+<p>Q：<code>OrderProxy.GetPrice()</code> 與 <code>MemberOrderService.GetPrice()</code> 的程式碼差異不大，為什麼寫在 proxy 就可以，寫在 <code>繼承</code> 就不行？</p>
+</blockquote>
+<p>就功能而言，Proxy 與 <code>繼承</code> 都能達到需求，但語意不一樣：</p>
+<ul>
+<li>Proxy 目的就是 <code>控制 service 的使用</code>，所以加上 <code>IsMember()</code> 判斷就天經地義，這就是它的職責</li>
+<li><code>OrderProxy</code> 並沒有使用 <code>繼承</code>，因此不受 <code>里式替換原則</code> 約束，interface 只要遵循 <code>介面隔離原則</code> 即可</li>
+</ul>
+<h2 id="Func">Func<t></t></h2><hr>
+<p>雖然先定義好 <code>PriceInterface</code>，讓 <code>OrderService</code> 與 <code>OrderProxy</code> 共用 interface 的理念很好，但 …</p>
+<ul>
+<li>只有 <code>GetPrice()</code> 一個 method，真的需要開 interface 嗎？</li>
+<li>真的有必要特別實作 <code>OrderProxy</code> 嗎？</li>
+</ul>
+<p><strong>Architecture</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy008.svg" alt="proxy008"></p>
+<p><strong>Implementation</strong></p>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy009.svg" alt="proxy009"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> discount, <span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> discount * price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於 <code>OrderService</code> 都沒用到 field (state)， 是 pure function，因此可以將 <code>GetPrice()</code> 與 <code>OrderService</code> 全部改成 static。</p>
+<p><strong>MemberService</strong><br><img src="/images/design-pattern/proxy/proxy010.svg" alt="proxy010"></p>
+<p><strong>MemberService.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">MemberLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">MemberService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">IsMember</span>(<span class="params"><span class="keyword">string</span> account</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> account == <span class="string">"Sam"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由於 <code>MemberService</code>  也沒用到 field (state)，也是 pure function，因此將 <code>IsMember()</code> 與 <code>MemberService</code> 全部改成 static。</p>
+<p><strong>Client</strong></p>
+<p><img src="/images/design-pattern/proxy/proxy011.svg" alt="proxy011"></p>
+<p><strong>Program.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> MemberLibrary;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt; OrderProxy(Predicate&lt;<span class="keyword">string</span>&gt; isMember) =&gt;</span><br><span class="line">                isMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">                (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt;) OrderService.GetPrice : </span><br><span class="line">                (discount, price) =&gt; price;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> realPrice = OrderProxy(MemberService.IsMember)(<span class="number">0.8</span>, <span class="number">800</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"Real price : &#123;0&#125;"</span>, realPrice);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt; OrderProxy(Predicate&lt;<span class="keyword">string</span>&gt; isMember) =&gt;</span><br><span class="line">    isMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">    (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt;) OrderService.GetPrice : </span><br><span class="line">    (discount, price) =&gt; price;</span><br></pre></td></tr></table></figure>
+<p>將 <code>OrderProxy</code> 由 class 退化成 function，但 signature 仍然是 <code>Func&lt;double, double, double&gt;</code>，與原本的 <code>PriceInterface</code> 的 signature 一樣。</p>
+<p>在 <code>OrderProxy</code> class 的 dependency，我們使用 DI 解決 <code>依賴反轉原則</code> 要求，但 FP 該如何做呢 ?</p>
+<p>其實很簡單，function 就是 dependency，將 function 當參數傳入就好，也就是把 <code>orderProxy()</code> 當成 Higher Order Function，再將 <code>MemberService.IsMember()</code> 當成 predicate function 傳入 <code>orderProxy()</code> 即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt;) OrderService.GetPrice :</span><br></pre></td></tr></table></figure>
+<p>需要 <code>Func&lt;double, double, double&gt;</code> 轉型是因為 C# Type Inference 需求，所以一定得加。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(discount, price) =&gt; price;</span><br></pre></td></tr></table></figure>
+<p>由於 signature 要求為 <code>Func&lt;double, double, double&gt;</code>，所以 Lambda 的 input 一定要兩個參數，儘管只使用到 <code>price</code>。</p>
+<blockquote>
+<p>由此可發現所以 return function 都必須符合 <code>Func&lt;double, double, double&gt;</code>，這與 class interface 的本質是一樣的</p>
+</blockquote>
+<p>16 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> realPrice = OrderProxy(MemberService.IsMember)(<span class="number">0.8</span>, <span class="number">800</span>);</span><br></pre></td></tr></table></figure>
+<p><code>orderProxy(MemberService.IsMember)</code> 回傳為一 anonymous function，其中 <code>MemberService.IsMember</code> 為 function dependency，而  <code>(discount, originalPrice)</code> 為 anonymous function 的參數。</p>
+<p>也就是原本是</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> realPrice = orderService(discount, originalPrice);</span><br></pre></td></tr></table></figure>
+<p>因為 <code>orderProxy()</code> 回傳的 anonymous function 與 <code>orderService()</code> 的 signature 都是 <code>Func&lt;double, double, double&gt;</code>，所以其本質與 Proxy Pattern 都遵守 <code>PriceInterface</code> 意義是一樣的，只是 FP 使用 proxy function，而 OOP 使用 proxy class。</p>
+<h2 id="Refactoring">Refactoring</h2><hr>
+<p>或許你會覺得 <code>OrderProxy()</code> 這個 local function 放在 <code>Client</code> 太過沈重，想另外 <code>Move Method</code> 到 <code>OrderProxy</code> class，那也非常簡單。</p>
+<p><img src="/images/design-pattern/proxy/proxy016.svg" alt="proxy016"></p>
+<p><strong>OrderProxy</strong><br><img src="/images/design-pattern/proxy/proxy017.svg" alt="proxy017"></p>
+<p><strong>OrderProxy.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">OrderProxy</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt; GetPrice(Predicate&lt;<span class="keyword">string</span>&gt; isMember)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> isMember(<span class="string">"Sam"</span>) ? </span><br><span class="line">                   (Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>, <span class="keyword">double</span>&gt;) OrderService.GetPrice : </span><br><span class="line">                   (discount, price) =&gt; price;</span><br><span class="line">        &#125;</span><br><span class="line">            </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將 <code>OrderProxy()</code> local function 透過 Refactoring 的 <code>Move Method</code> 到 <code>OrderProxy</code> class，直接將 local function <code>剪下貼上</code> 即可。</p>
+<blockquote>
+<p><code>Move Method</code> 在 OOP Refactoring 雖然很基本，但實務上卻不容易達到，主要是因為 OOP 的 method 會與 field 有關，要 <code>Move Method</code> 可能得先 <code>Move Field</code>，要 <code>Move Field</code> 又可能得先 <code>Self Encapsulate Field</code>，然後又會發現更多 method 也必須跟著 <code>Move Method</code>，總之會是一連串的 combo 動作。</p>
+<p>但若是 Pure Function，則 <code>Move Method</code> 非常容易，只是 <code>剪下貼上</code> 即可，因為完全不涉及 field，也不會與其他 method 有關，所以 FP 非常適合重構 <code>Move Method</code>。</p>
+</blockquote>
+<p><strong>Client</strong><br><img src="/images/design-pattern/proxy/proxy018.svg" alt="proxy018"></p>
+<p><strong>Program.cs</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> MemberLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> realPrice = OrderProxy.GetPrice(MemberService.IsMember)(<span class="number">0.8</span>, <span class="number">800</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"Real price : &#123;0&#125;"</span>, realPrice);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Client</code> 提供 <code>OrderProxy.GetPrice()</code> 的 dependency function 後，就可處理訂單了。</p>
+<blockquote>
+<p> 從 OOP 原本具有 <code>垂直</code> 特性的架構，經過 FP 重構後，出現 <code>水平</code> 近似 <code>鐵道</code> 的架構，也就是所謂的 <code>Railway Oriented Programming</code>，因為重構到最後的架構都是 <code>水平</code> 的，剛好就是 FP 所強調的 Pipeline 與 Function Composition。</p>
+</blockquote>
+<h2 id="Summary">Summary</h2><hr>
+<blockquote>
+<p>Q：Proxy Pattern 與 Decorator Pattern 有什麼差異？</p>
+</blockquote>
+<p><img src="/images/design-pattern/proxy/proxy020.svg" alt="proxy018"></p>
+<p><img src="/images/design-pattern/proxy/proxy019.svg" alt="proxy019"></p>
+<p>以 class diagram 角度，Proxy Pattern 與 Decorator Pattern 的確非常類似。</p>
+<blockquote>
+<p>學 Design Pattern 不能以 class diagram 的角度去思考，而要以他要解決什麼問題來思考</p>
+</blockquote>
+<p><strong>Similarity</strong></p>
+<ul>
+<li>都在解決 <code>繼承濫用</code> </li>
+<li>Interface 都不會改變</li>
+</ul>
+<p><strong>Difference</strong></p>
+<ul>
+<li>Proxy 目的在對 service 做 <code>控制存取</code>；Decorator 目的在對 service <code>增加功能</code></li>
+<li>Proxy 與 Subject 只能在 compile-time <code>靜態對應</code>；Decorator 能在 run-time <code>動態新增</code></li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>繼承</code> 通常是 OOP 最直覺的作法，但也是維護上最容易出問題的地方，Proxy Pattern 與 Decorator Pattern 提供了 <code>繼承</code> 的取代方案，讓 client 與 service 之間的依賴僅限於 interface，而不是 concrete service</li>
+<li>Proxy Pattern 與 Decorator Pattern 非常類似，也都在解決 <code>繼承</code> 的老問題，但 Proxy Pattern 重點在於 <code>控制存取</code>，而 Decorator Pattern 重點在於 <code>增加功能</code></li>
+<li>Proxy class 亦可使用 Proxy function 取代，如此 interface 與 proxy class 都可省略，依賴注入可改用 Higher Order Function 解決。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Core2OrderProxy" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://sourcemaking.com/" target="_blank" rel="external">Source Making</a>, <a href="https://sourcemaking.com/design_patterns/proxy" target="_blank" rel="external">Proxy Design Pattern</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 FP 將有不同的實現方式]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
+    
+      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 F# List Module 所提供的 Function (Q ~ Z)]]></title>
@@ -3361,78 +3606,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[解開 .NET Core 跨平台的黑魔法]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[.NET Core 之 Metapackage 簡介]]></title>
-    <link href="http://oomusou.io/netcore/metapackage/"/>
-    <id>http://oomusou.io/netcore/metapackage/</id>
-    <published>2018-03-21T13:23:43.000Z</published>
-    <updated>2018-03-23T07:43:01.747Z</updated>
-    <content type="html"><![CDATA[<p>Metapackage 為 .NET Core 2.0 所提出，目的在簡化對 package 的管理。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101 </p>
-<h2 id="NuGet">NuGet</h2><hr>
-<ul>
-<li><strong>.NET Framework</strong> : 將所有 class 包在 <code>一整包</code> .NET Framework 內</li>
-<li><strong>.NET Core</strong> : 將 class 拆分成 <code>小包</code> 的 NuGet package</li>
-</ul>
-<blockquote>
-<p>.NET Core 從以前 <code>一整包</code> framework 轉型成 <code>package-based framework</code>，也就是整個 framework 改由 package 所構成</p>
-<p>簡單的說，以前 .NET Framework 是一個 framework 包含很多 DLL；而 .NET Core 是一個 DLL 就一個 package，你可以自行根據專案需求選用你用的 DLL</p>
-<p>這也與目前主流 framework  思維相同，如 Angular、Laravel 都可以看到類似的設計</p>
-</blockquote>
-<p><strong>優點</strong></p>
-<ul>
-<li><strong>Package 更新速度快</strong>：若 package 有 bug，可單獨發行更新版本，不用等 framework 統一發行 patch 版本</li>
-<li><strong>選擇特定 OS 與 CPU 的 package</strong> : 若有特殊需求，需使對特定 OS 與 CPU 版本最佳化的 package</li>
-<li><strong>可選擇只更新部分 package 版本</strong>：若 package 有 bug，可選擇只更新某 package，而不用被 framework patch 逼得要更新其他 package</li>
-<li><strong>可選擇自己需要的 package</strong> : 若你只寫 ASP.NET，其實並不需要 Windows Form、Web Form、WPF 或 UWP 的 package，只需下載 ASP.NET 相關的 package 即可</li>
-</ul>
-<p><strong>缺點</strong></p>
-<ul>
-<li><strong>不同 Package 間可能有相容性問題</strong>：由於 package 各自發佈，沒經過與其他 package 的整合測試，有可能遇到 package 彼此相衝</li>
-<li><strong>Package 拆得太細，導致加入困難</strong>：.NET Core 由於 package 都最小化，隨便寫一個專案就可能要自己加入一堆 package</li>
-</ul>
-<p>針對這兩個缺點，.NET Core 2.0 提出了 Metapackage 概念。</p>
-<h2 id="Metapackage">Metapackage</h2><hr>
-<p>.NET Core 包含了以下幾個主要 Metapackage：</p>
-<ul>
-<li><strong>NETStandard.Library</strong>：包含 .NET Standard 所定義 API 的全部 package</li>
-<li><strong>Microsoft.NETCore.App</strong>：包含 .NET Core 所需要 API 的全部 package，也包含 .NET Standard，但沒有包含全部的 .NET Standard 的 package</li>
-<li><strong>Microsoft.AspNetCore.All</strong>：包含 ASP.NET 所需要 API 的全部 package，包括 <code>Microsoft.NETCore.App</code>，與其他與 ASP.NET 相關的 package。</li>
-</ul>
-<p>專案只要加入了 Metapackage，就相當於加了 pakcage 懶人包，會自動幫你加入其他相關的 package。</p>
-<p>除此之外，Microsoft 既然發行了 Metapckage，就會確保 Metapackage 所發行的版本中，各 package 的相容性已經過測試。</p>
-<blockquote>
-<p>若你獨立更新 package 版本，可能會有 package 相容性問題，但若更新 Metapackage，則經過 Microsoft 測試，會挑選擇彼此相容的 package 版本</p>
-</blockquote>
-<h2 id="Microsoft-AspNetCore-All">Microsoft.AspNetCore.All</h2><hr>
-<p>實際體驗一下有 Metapackage 與沒有 Metapackage 的差異：</p>
-<h3 id="-NET_Core_1-1">.NET Core 1.1</h3><p><strong>MyMVC.csproj</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Project</span> <span class="attribute">Sdk</span>=<span class="value">"Microsoft.NET.Sdk.Web"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TargetFramework</span>&gt;</span>netcoreapp1.1<span class="tag">&lt;/<span class="title">TargetFramework</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore"</span> <span class="attribute">Version</span>=<span class="value">"1.1.1"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore.Mvc"</span> <span class="attribute">Version</span>=<span class="value">"1.1.2"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore.StaticFiles"</span> <span class="attribute">Version</span>=<span class="value">"1.1.1"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.Extensions.Logging.Debug"</span> <span class="attribute">Version</span>=<span class="value">"1.1.1"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.VisualStudio.Web.BrowserLink"</span> <span class="attribute">Version</span>=<span class="value">"1.1.0"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>預設只安裝了 4 個 package，若你用到了其他 package，需要自行加入。</p>
-<h3 id="-NET_Core_2-0">.NET Core 2.0</h3><p><strong>MyMVC.csproj</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Project</span> <span class="attribute">Sdk</span>=<span class="value">"Microsoft.NET.Sdk.Web"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TargetFramework</span>&gt;</span>netcoreapp2.0<span class="tag">&lt;/<span class="title">TargetFramework</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore.All"</span> <span class="attribute">Version</span>=<span class="value">"2.0.6"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">DotNetCliToolReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.VisualStudio.Web.CodeGeneration.Tools"</span> <span class="attribute">Version</span>=<span class="value">"2.0.3"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>預設只安裝 <code>Microsoft.AspNetCore.All</code> Metapackage。</p>
-<p><img src="/images/netcore/metapackage/tech000.png" alt="ech00"></p>
-<p>但事實上 <code>Microsoft.AspNetCore.All</code> 已經包含了眾多 package。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Metapackage 並不包含實作，只定義了包含哪些 package 與版本，讓我們設計專案時不用一個 package 一個 package 地加入</li>
-<li>Metapackage 也確保 package 間經過整合測試，減少 package 之間相容性問題</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/packages" target="_blank" rel="external">Packages, metapackages and frameworks</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[Package 懶人包概念]]>
     
     </summary>
     
