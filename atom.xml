@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-13T03:19:28.934Z</updated>
+  <updated>2018-04-13T03:28:52.439Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,18 +19,22 @@
     <link href="http://oomusou.io/fsharp/proxy/"/>
     <id>http://oomusou.io/fsharp/proxy/</id>
     <published>2018-08-30T12:23:43.000Z</published>
-    <updated>2018-04-13T03:19:28.934Z</updated>
+    <updated>2018-04-13T03:28:52.439Z</updated>
     <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Proxy Pattern。</p>
 <a id="more"></a>
-<h2 id="Version">Version</h2><p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="User_Story">User Story</h2><p>假設你在處理訂單，只有會員才能享受 <code>全館八折</code>，其他人都只能原價購買。</p>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，只有會員才能享受 <code>全館八折</code>，其他人都只能原價購買。</p>
 <ul>
 <li>目前已經有 <code>MemberService.isMember()</code> 判斷是否為會員</li>
 <li>目前已經有 <code>OrderService.getPrice()</code> 可根據折購計算售價</li>
 <li>在 <code>MemberService.isMember()</code> 與 <code>OrderService.getPrice()</code> 不修改的前提下 (<code>開放封閉原則</code>)，計算出售價</li>
 </ul>
-<h2 id="Task">Task</h2><p>直接使用 FP 的思維完成需求。</p>
-<h2 id="Definition">Definition</h2><blockquote>
+<h2 id="Task">Task</h2><hr>
+<p>直接使用 FP 的思維完成需求。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
 <p>Decorator Pattern</p>
 <p>在不改變原有 interface 的前提下，控制 service 的使用</p>
 </blockquote>
@@ -41,17 +45,20 @@
 <li>Client 藉由 Proxy 控制 RealSubject 的使用</li>
 </ol>
 <p>只要能達到這兩個目標，就算完成了 Decorator Pattern。</p>
-<h2 id="OOP_思考方式">OOP 思考方式</h2><ul>
+<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
+<ul>
 <li>為了讓 Proxy 與 RealSubject 的 interface 要相同，所以必須訂出共同的 interface</li>
 <li>Proxy 必須以 state 記住 RealSubject，client 才能透過 Proxy 使用 RealSubject</li>
 <li>Proxy 可以加上邏輯，控制 RealSubject 的使用</li>
 </ul>
-<h2 id="FP_思考方式">FP 思考方式</h2><ul>
+<h2 id="FP_思考方式">FP 思考方式</h2><hr>
+<ul>
 <li>Proxy 與 RealSubject 都是 function，不用事先定義 interface，反正只要 interface 不同，在 <code>if … else</code>、 <code>Pattern Matching</code> 或 <code>try catch</code> 一定會錯</li>
 <li>Proxy 與 RealSubject 都是 function，既然 interface 都相同，由 RealSubject 切換到 Proxy 就不用修改程式碼</li>
 <li>Proxy function 可加上邏輯，控制 RealSubject function 的使用</li>
 </ul>
-<h2 id="Implementation">Implementation</h2><p><strong>MemberService.fs</strong></p>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><strong>MemberService.fs</strong></p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> MemberLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> MemberService =</span><br><span class="line">    <span class="keyword">let</span> isMember account = account = <span class="string">"Sam"</span></span><br></pre></td></tr></table></figure>
 <p><code>isMember()</code> 判斷是否為 <code>會員</code>。</p>
 <blockquote>
@@ -70,7 +77,7 @@
 <p>由於會由 <code>MemberService.isMember()</code> 判斷是否為會員，先判斷並將結果 binding 到 <code>isMember</code>。</p>
 <p>13 行</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> orderProxy =</span><br><span class="line">    <span class="keyword">match</span> isMember <span class="keyword">with</span></span><br><span class="line">    | <span class="keyword">true</span>  -&gt; OrderService.getPrice</span><br><span class="line">    | <span class="keyword">false</span> -&gt; <span class="keyword">fun</span> _ price -&gt; price</span><br></pre></td></tr></table></figure>
-<p>將 <code>OrderProxy</code> class 退化成 <code>orderProxy()</code> function，其 interface 仍然為 <code>float -&gt; float -&gt; float</code>，Type Inference 會自動推導，若有違反，Pattern Match 就會報錯。</p>
+<p>將 <code>OrderProxy</code> class 退化成 <code>orderProxy()</code> function，其 interface 仍然為 <code>float -&gt; float -&gt; float</code>，Type Inference 會自動推導，若有違反，Pattern Matching 就會報錯。</p>
 <p><code>orderProxy()</code> 本質為 function，由於 closure 機制，可以自然使用到 function 外面的 <code>isMember</code>，因此不必使用 parameter 方式傳入。</p>
 <p>Pattern Matching 根據  <code>isMember</code> 結果回傳 <code>OrderService.getPrice()</code>，或者全新的 Lambda function。</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">| <span class="keyword">false</span> -&gt; <span class="keyword">fun</span> _ price -&gt; price</span><br></pre></td></tr></table></figure>
@@ -78,17 +85,20 @@
 <p>16 行</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">originalPrice</span><br><span class="line">|&gt; orderProxy discount</span><br><span class="line">|&gt; printf <span class="string">"Real price : %0.0f"</span></span><br></pre></td></tr></table></figure>
 <p>將 <code>originalPrice</code> 傳給 <code>orderProxy()</code> 計算，這是個已經考慮 <code>是否為會員</code> 的 <code>orderService()</code>，最後再傳給  <code>printf()</code> 顯示。</p>
-<h2 id="Summary">Summary</h2><p>回想 Proxy Pattern 的本質：</p>
+<h2 id="Summary">Summary</h2><hr>
+<p>回想 Proxy Pattern 的本質：</p>
 <ol>
 <li>Proxy 與 RealSubject 之間的 interface 必須相同</li>
 <li>Client 藉由 Proxy 控制 RealSubject 的使用</li>
 </ol>
 <p>雖然沒有特別定義 interface，但 <code>orderProxy()</code> 與 <code>OrderService.getPrice()</code> 的 signature 都是 <code>float -&gt; float -&gt; float</code>，若 function 的 signature 不同，在 Pattern Matching 就會編譯錯誤，與原本 Proxy Pattern 定義 interface 的本質相同。</p>
 <p>FP 則藉由 Proxy Function 控制 RealSubject function 的使用，與原本 Proxy Pattern 藉由 Proxy 控制 RealSubject 使用的本質相同。</p>
-<h2 id="Conclusion">Conclusion</h2><ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
 <li>Proxy Pattern 本質就是 delegation，但 object 的 delegation 沒 function 簡單直覺，所以才需要搭配 interface；但若純 function，連 interface 都不需要，而且也能享受 strong type 的編譯檢查</li>
 </ul>
-<h2 id="Sample_Code">Sample Code</h2><p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderProxy" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderProxy" target="_blank" rel="external">GitHub</a> 上找到</p>
 ]]></content>
     <summary type="html">
     <![CDATA[以 FP 重新思考 Proxy Pattern]]>
