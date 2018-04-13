@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-13T03:28:52.439Z</updated>
+  <updated>2018-04-13T12:21:20.948Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/proxy/"/>
     <id>http://oomusou.io/fsharp/proxy/</id>
     <published>2018-08-30T12:23:43.000Z</published>
-    <updated>2018-04-13T03:28:52.439Z</updated>
+    <updated>2018-04-13T12:21:20.948Z</updated>
     <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Proxy Pattern。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -35,7 +35,7 @@
 <p>直接使用 FP 的思維完成需求。</p>
 <h2 id="Definition">Definition</h2><hr>
 <blockquote>
-<p>Decorator Pattern</p>
+<p>Proxy Pattern</p>
 <p>在不改變原有 interface 的前提下，控制 service 的使用</p>
 </blockquote>
 <p><img src="/images/fsharp/proxy/proxy000.svg" alt="ecorator00"></p>
@@ -44,7 +44,7 @@
 <li>Proxy 與 RealSubject 之間的 interface 必須相同</li>
 <li>Client 藉由 Proxy 控制 RealSubject 的使用</li>
 </ol>
-<p>只要能達到這兩個目標，就算完成了 Decorator Pattern。</p>
+<p>只要能達到這兩個目標，就算完成了 Proxy Pattern。</p>
 <h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
 <ul>
 <li>為了讓 Proxy 與 RealSubject 的 interface 要相同，所以必須訂出共同的 interface</li>

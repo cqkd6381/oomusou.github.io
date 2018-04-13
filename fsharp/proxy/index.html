@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="以 FP 重新思考 Proxy Pattern">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-13T03:28:52.439Z">
+<meta property="og:updated_time" content="2018-04-13T12:21:20.948Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 F# 實現 Proxy Pattern？">
 <meta name="twitter:description" content="以 FP 重新思考 Proxy Pattern">
@@ -122,7 +122,7 @@
 <p>直接使用 FP 的思維完成需求。</p>
 <h2 id="Definition">Definition</h2><hr>
 <blockquote>
-<p>Decorator Pattern</p>
+<p>Proxy Pattern</p>
 <p>在不改變原有 interface 的前提下，控制 service 的使用</p>
 </blockquote>
 <p><img src="/images/fsharp/proxy/proxy000.svg" alt="ecorator00"></p>
@@ -131,7 +131,7 @@
 <li>Proxy 與 RealSubject 之間的 interface 必須相同</li>
 <li>Client 藉由 Proxy 控制 RealSubject 的使用</li>
 </ol>
-<p>只要能達到這兩個目標，就算完成了 Decorator Pattern。</p>
+<p>只要能達到這兩個目標，就算完成了 Proxy Pattern。</p>
 <h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
 <ul>
 <li>為了讓 Proxy 與 RealSubject 的 interface 要相同，所以必須訂出共同的 interface</li>
