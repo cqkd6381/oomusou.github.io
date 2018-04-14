@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-13T12:21:20.948Z</updated>
+  <updated>2018-04-14T12:30:35.082Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,80 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何安裝 Docker for Windows ?]]></title>
+    <link href="http://oomusou.io/docker/docker-for-windows/"/>
+    <id>http://oomusou.io/docker/docker-for-windows/</id>
+    <published>2018-04-14T12:23:43.000Z</published>
+    <updated>2018-04-14T12:30:35.082Z</updated>
+    <content type="html"><![CDATA[<p>由於 Docker 在本質上仍是個 Linux，只是多個 container 跑在同一個 Linux 上，因此若要將 Docker 跑在 Windows，仍然需要一個 VM 在背景跑 Linux。Docker for Windws 內建支援 Windows 的 Hyper-V，只會在 Hyper-V 內跑一個極小的 Linux，如此其他 container 就能跑在 Docker 上。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Parallel Desktop 13 for Mac Pro Edition 13.3.0 (43321)<br>Windows 10 Pro 1709 16299.371<br>Docker for Windows 18.03.0.ce (0520e24)</p>
+<h2 id="Docker_for_Windows">Docker for Windows</h2><hr>
+<p>要能在 Windows 執行 Docker，首先必須安裝 Docker for Windows。</p>
+<h3 id="下載_Docker_for_Windows">下載 Docker for Windows</h3><p><img src="/images/docker/docker-for-windows/win000.png" alt="win000"></p>
+<ol>
+<li>到 <a href="https://store.docker.com/editions/community/docker-ce-desktop-windows" target="_blank" rel="external">Docker 官網</a></li>
+<li>按 <code>Get Docker</code> 下載 Docker</li>
+</ol>
+<h3 id="執行_Installer">執行 Installer</h3><p><img src="/images/docker/docker-for-windows/win002.png" alt="win002"></p>
+<ol>
+<li>預設將 <code>Docker for Windows Installer</code> 下載到 <code>Downloads</code> 目錄</li>
+<li>執行 <code>Docker for Windows Installer</code></li>
+</ol>
+<h3 id="Configuration">Configuration</h3><p><img src="/images/docker/docker-for-windows/win003.png" alt="win003"></p>
+<ol>
+<li>可選擇是否在 desktop 增加 shortcut</li>
+<li>不要勾選 <code>Use Windows containers instead of Linux containers</code></li>
+</ol>
+<blockquote>
+<p>Windows container 與 Linux container 正在整合中，同時只能 <code>單獨使用</code> Windows container 或 Linux container，目前只有 Edge 版可以 <code>同時使用</code> Windows container 與 Linux container</p>
+</blockquote>
+<p><img src="/images/docker/docker-for-windows/win004.png" alt="win004"></p>
+<p>安裝 Docker for Windows 中。</p>
+<p><img src="/images/docker/docker-for-windows/win005.png" alt="win005"></p>
+<ol>
+<li>按 <code>Close and log out</code>，即將登出 Windows 並重新登入</li>
+</ol>
+<h2 id="Hyper-V">Hyper-V</h2><p><img src="/images/docker/docker-for-windows/win006.png" alt="win006"></p>
+<ol>
+<li>重新登入後，Docker 發現 Hyper-V 沒有啟動而無法執行</li>
+<li>按 <code>Ok</code> 後 Windows 將重新啟動並自動安裝 <code>Hyper-V</code></li>
+</ol>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker -v</span><br></pre></td></tr></table></figure>
+<p>預設 Windows 10 每次啟動都會執行 Docker，在 Command Prompt 輸入 <code>docker -v</code>，若出現 Docker 版本編號，則表示 Docker 安裝成功。</p>
+<p><img src="/images/docker/docker-for-windows/win007.png" alt="win007"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>安裝 Docker for Windows 之後，就可以安裝各種 image，並執行各種 container</li>
+</ul>
+<h2 id="Appendix">Appendix</h2><hr>
+<p>由於 Docker for Windows 會使用 Hyper-V，若在 Parallel Desktop 中的 Windows 10 執行 Docker，等於是在 VM 中執行 VM，必須在 Parallel Desktop 做額外的設定：</p>
+<p><img src="/images/docker/docker-for-windows/win001.png" alt="win001"></p>
+<ol>
+<li>選擇 <code>Hardware</code></li>
+<li>選擇 <code>CPU &amp; Memory</code></li>
+<li>將 <code>Enable nested virtualization</code> 打勾</li>
+</ol>
+<blockquote>
+<p>實務上不建議這樣使用 Docker，由於兩層 VM，效率並不好，建議直接使用 Docker for Mac</p>
+</blockquote>
+]]></content>
+    <summary type="html">
+    <![CDATA[Docker 在 Windows 的安裝越來越簡單了]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何使用 F# 實現 Proxy Pattern？]]></title>
     <link href="http://oomusou.io/fsharp/proxy/"/>
     <id>http://oomusou.io/fsharp/proxy/</id>
-    <published>2018-08-30T12:23:43.000Z</published>
-    <updated>2018-04-13T12:21:20.948Z</updated>
+    <published>2018-04-13T12:23:43.000Z</published>
+    <updated>2018-04-14T12:28:55.598Z</updated>
     <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Proxy Pattern。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -3510,99 +3579,6 @@
     <![CDATA[比 null 與 exception 更優雅的處理方式]]>
     
     </summary>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 F# 實現 Strategy Pattern ?]]></title>
-    <link href="http://oomusou.io/fsharp/strategy/"/>
-    <id>http://oomusou.io/fsharp/strategy/</id>
-    <published>2018-03-23T12:23:43.000Z</published>
-    <updated>2018-03-28T13:06:49.752Z</updated>
-    <content type="html"><![CDATA[<p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中 『解耦合』最經典的應用，F# 既然是 Function First Language，就讓我們以 function 的角度重新思考什麼是 『解耦合』。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
-<ul>
-<li>超過 1000 元，則 <code>滿千送百</code></li>
-<li>不到 1000 元，則 <code>全館8折</code></li>
-</ul>
-<h2 id="Task">Task</h2><hr>
-<p>直接使用 FP 的思維完成需求。</p>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p>Strategy Pattern</p>
-<p>將不同演算法抽象化成相同 interface，讓高階模組與實際演算法解耦合，而彼此僅相依於 interface，進而可動態切換演算法</p>
-</blockquote>
-<p><img src="/images/fsharp/strategy/strategy000.svg" alt="trategy00"></p>
-<p>首先思考 Strategy Pattern 的本質：</p>
-<ol>
-<li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
-<li><code>Strategy</code> 必須能動態切換</li>
-</ol>
-<p>只要能達到這兩個目標，就算完成了 Strategy Pattern。</p>
-<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
-<p>OOP 強調是 data 與 function 合一，認為什麼都是物件，所以 strategy 也是物件。</p>
-<p>要將不同的 strategy <code>抽象化</code> 看成相同的物件，才能使用 <code>多型</code> 操作，所以要設計 <code>interface</code> 訂定 <code>抽象化</code> 的標準。</p>
-<p>也就是 OOP 是將焦點放在 <code>不同的部分</code>，進而將 <code>不同的部分</code> 抽象化成 Inteface。</p>
-<h2 id="FP_思考方式">FP 思考方式</h2><hr>
-<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Function Composition，因為 strategy 只是功能，所以是 function。</p>
-<p>要將相同的部分抽出為 Higher Order Function，不同 strategy 抽成獨立 funciton，再將 strategy 以參數的方式傳入 Higher Order Function。</p>
-<p>也就是 FP 是將焦點放在 <code>相同的部分</code>，進而將 <code>相同的部分</code> 抽成 Higher Order Function。</p>
-<h2 id="Implemetation">Implemetation</h2><hr>
-<p><strong>Strategy.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceStrategy =</span><br><span class="line">    <span class="keyword">let</span> rebateStrategy price = price - <span class="number">100.0</span></span><br><span class="line">    <span class="keyword">let</span> discountStrategy discount price = price * discount * <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
-<p>將 <code>買千送百</code> 以 <code>rebateStrategy()</code> 表示。</p>
-<p>將 <code>全館8折</code> 以 <code>discountStrategy()</code> 表示。</p>
-<p>特別注意 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 singnature 並不一樣，傳統 OOP 在使用 Strategy Pattern 時，必須先定義 strategy interface，但只要遇到 strategy 間 signature 不同時就很困擾，甚至要動用 Adapter Pattern。</p>
-<p>但因為 FP 沒有 interface 概念，所以不需要為不同的 strategy <code>抽象化</code> 成相同 interface，故也沒有 interface 很難開的困擾。</p>
-<p><strong>OrderService.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> strategyFactory price = </span><br><span class="line">        <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span>  -&gt; PriceStrategy.rebateStrategy</span><br><span class="line">        | <span class="keyword">false</span> -&gt; PriceStrategy.discountStrategy <span class="number">0.8</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> getPrice price =</span><br><span class="line">        price</span><br><span class="line">        |&gt; strategyFactory price</span><br></pre></td></tr></table></figure>
-<p>第 4 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> strategyFactory price = </span><br><span class="line">    <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">    | <span class="keyword">true</span>  -&gt; PriceStrategy.rebateStrategy</span><br><span class="line">    | <span class="keyword">false</span> -&gt; PriceStrategy.discountStrategy <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
-<p>既然有不同的 strategy，就會有選擇 strategy 的邏輯，所以 factory 少不了，只是從 OOP 的 factory class 退化成 factory function。</p>
-<p>Strategy 的選擇，使用 FP 的 Pattern Matching 最適合，根據不同的條件回傳不同的 function。</p>
-<p><img src="/images/fsharp/strategy/strategy001.png" alt="trategy00"></p>
-<p>F# 雖然不用寫型別，但對於型別檢查依然非常嚴格，<code>strategyFactory()</code> 被 Type Inference 推導為 <code>float -&gt; (float -&gt; float)</code>，也就是我們必須回傳一個 <code>float -&gt; float</code> 的 function。</p>
-<p>在 C# 我們必須明確使用 <code>delegate</code> 或 <code>Func&lt;float, float&gt;</code> 定義 strategy 的 signature，但在 F# 都省了，因此程式碼變得非常精簡，兼具強型別語言與弱型別語言的優點。</p>
-<p>但 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 signature 畢竟不一樣，因此在使用 Pattern Matching 時，必須先將  <code>float -&gt; float</code> 整理好，因爲 F# 支援 Currying，<code>discountStrategy 0.8</code> 會自動回傳 <code>float -&gt; float</code> 的 function，如此將符合 Pattern Matching 對型別的要求。</p>
-<blockquote>
-<p>FP 不用 interface，不代表沒有型別要求，透過 Currying，可以解決 OOP 因為需求不同難開 interface 的老問題，只要在最後 signature 一樣即可，並不要求設計 function 時都要有相同的 signature，可使用 Currying 逐步完成 signature 要求</p>
-</blockquote>
-<p>第 9 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getPrice price =</span><br><span class="line">    price</span><br><span class="line">    |&gt; strategyFactory price</span><br></pre></td></tr></table></figure>
-<p>將 price 以 Pipeline 方式傳給對的 strategy 計算，其中 <code>strategyFactory price</code> 將傳回對的 strategy。</p>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line"></span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
-<p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
-<h2 id="Summary">Summary</h2><hr>
-<p>回想 Strategy Pattern 的本質：</p>
-<ol>
-<li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
-<li><code>Strategy</code> 必須能動態切換</li>
-</ol>
-<p>FP 雖然沒有定義 interface，但 strategy 已經與 context 實質解耦合，strategy 都必須嚴格遵守 <code>float -&gt; float</code> 的 signature，任何 <code>float -&gt; float</code> 的 function 都可視為 strategy。</p>
-<p>只要遵守 <code>float -&gt; float</code> 的 strategy，就能被 Pattern Matching 動態切換。</p>
-<p>所以 FP 版的 Strategy Pattern 雖然沒有 interface 也沒有 <code>多型</code>，但本質與 OOP 是相同的。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>不用很糾結一定要使用 interface 與 <code>多型</code>，重點在於 <code>解耦合</code> 與 <code>動態切換</code>，FP 使用 Higher Order Function 與 Pattern Matching 也能達成相同的目標</li>
-<li>FP 的 Higher Order Function，可以實現 <code>DRY</code> 原則，FP 設計時要將焦點放在 <code>相同的部分</code>，抽出 Higher Order Function 後，再透過 Function Composition 組合成新的 function</li>
-<li>FP 的 Pattern Matching，可以實現 OOP 的 <code>多型</code>，藉此達到 <code>動態切換</code> 需求</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderStrategy" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以 FP 的角度思考解耦合]]>
-    
-    </summary>
-    
-      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
