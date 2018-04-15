@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-14T12:30:35.082Z</updated>
+  <updated>2018-04-15T08:11:37.040Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,84 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 Closure 達成 Encapsulation ?]]></title>
+    <link href="http://oomusou.io/fsharp/closure-encapsulation/"/>
+    <id>http://oomusou.io/fsharp/closure-encapsulation/</id>
+    <published>2018-05-15T12:23:43.000Z</published>
+    <updated>2018-04-15T08:11:37.040Z</updated>
+    <content type="html"><![CDATA[<p><code>封裝</code> 是 OOP 三個重要的特色之一，也由於 <code>封裝</code>，才導致了 <code>多型</code>，而 <code>繼承</code> 則是實現多型的手段 (<code>里氏替換原則</code>)。事實上 FP 也能完美實現 <code>封裝</code>，關鍵就在於 Closure。</p>
+<p>我們分別來看看 TypeScript、ReasonML 與 F# 如何以 Clsoure 達成 <code>封裝</code>。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>TypeScript 2.8<br>ReasonML 3.1.0<br>F# 4.1</p>
+<h2 id="OOP_封裝">OOP 封裝</h2><hr>
+<p>以 OOP 最經典的 Strategy Pattern 為例，我們將各種 strategy 封裝在 context 內，讓 client 與 strategy 解耦合。</p>
+<p><strong>ClassEncapsulation.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Context &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private strategy: Strategy) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  request(x: <span class="built_in">number</span>, y:<span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.strategy.execute(x, y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> context = <span class="keyword">new</span> Context(<span class="keyword">new</span> <span class="keyword">class</span> <span class="keyword">implements</span> Strategy &#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = context.request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>訂出 strategy 的 class interface。</p>
+<p>第 5 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Context &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private strategy: Strategy) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  request(x: <span class="built_in">number</span>, y:<span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.strategy.execute(x, y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Context</code> class 負責將 strategy 封裝在 field，對於 client 來說只認得 <code>Context.request()</code>，將 client 與 strategy 解耦合。</p>
+<p>14 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = <span class="keyword">new</span> Context(<span class="keyword">new</span> <span class="keyword">class</span> <span class="keyword">implements</span> Strategy &#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Client 在建立 <code>Context</code> 物件時，順便將 strategy 傳入，由於只使用一次，可以使用 anonymous class。</p>
+<p>20 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = context.request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br></pre></td></tr></table></figure>
+<p>Client 實際執行的是 <code>Context.request()</code>，由於已經將 strategy object 封裝在 <code>Context</code> 的 field 內，因此 client 已經跟 strategy 解耦合。</p>
+<h2 id="FP_封裝">FP 封裝</h2><hr>
+<h3 id="TypeScript">TypeScript</h3><p>TypeScript 除了支援完整 OOP，也支援 FP。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  (x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> context = (strategy: Strategy) =&gt; (x, y) =&gt; strategy(x, y);</span><br><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt; x + y);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  (x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 strategy 的 interface 由 class interface 改成 function interface。</p>
+<p>第 5 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = (strategy: Strategy) =&gt; (x, y) =&gt; strategy(x, y);</span><br></pre></td></tr></table></figure>
+<p>將 <code>Context</code> class 退化成 <code>context()</code> function，class contructor 則退化成 function parameter，strategy function 依然要遵守 function interface。</p>
+<p>回傳為新的 function，此時 strategy function 將以 Closure 形式保留在新的 function 內，也因為 Closure，使得 strategy function 被封裝在新的 function 內。</p>
+<p>第 6 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt; x + y);</span><br></pre></td></tr></table></figure>
+<p>由 <code>context()</code> 傳入 strategy function，以 Arrow Function 形式表達，而 request 為一 function，此時 strategy function 已經被封裝在 <code>request()</code> 內。</p>
+<p>第 9 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br></pre></td></tr></table></figure>
+<p>Client 實際執行的是 <code>request()</code>，由於已經將 strategy function 封裝在 <code>request()</code>，因此 client 已經跟 strategy function 解耦合。</p>
+<h3 id="ReasonML">ReasonML</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = (strategy, x, y) =&gt; strategy(x, y);</span><br><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt;  x + y);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">Js.log(result);</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = (strategy, x, y) =&gt; strategy(x, y);</span><br></pre></td></tr></table></figure>
+<p>因為 ReasonML 支援 Partial Application Function，因此可以將 <code>context()</code> 與 <code>request()</code> 合一，若只提供 strategy parameter，回傳的就是 strategy function。</p>
+<p>第 2 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt;  x + y);</span><br></pre></td></tr></table></figure>
+<p>由 <code>context()</code> function 傳入 strategy function。</p>
+<p>第 4 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">Js.log(result);</span><br></pre></td></tr></table></figure>
+<p>Client 實際執行的是 <code>request()</code>，由於已經將 strategy function 封裝在 <code>request()</code>，因此 client 已經跟 strategy function 解耦合。</p>
+<blockquote>
+<p>ReasonML 支援了目前 JavaScript 與 TypeScript 尚未支援的  Partial Application Function，也因為有 Type Inference，所以也不需要 interface，因此 ReasonML 寫起來比 TypeScript 精簡</p>
+</blockquote>
+<h3 id="FSharp">FSharp</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context strategy x y = strategy x y</span><br><span class="line"><span class="keyword">let</span> request = context (<span class="keyword">fun</span> x y -&gt;  x + y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request <span class="number">1</span> <span class="number">1</span></span><br><span class="line">printf <span class="string">"%d"</span> result</span><br></pre></td></tr></table></figure>
+<p>F# 寫起來與 ReasonML 已經非常類似，就不再詳細討論，大抵就是 F# 不用 <code>()</code> 與 <code>;</code>，且 Lambda 使用 <code>fun</code>，但 F# 支援 Partial Function Application 與 Type Inference 則與 ReasonML 一致。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>OOP 使用 constructor + field 將變化加以封裝；而 FP 亦可使用 Higher Order Function + Closure 將變化加以封裝</li>
+<li>若以 FP 方式思考，無論使用 TypeScript、ReasonML 或 F#，寫法都已經相當接近，程式碼也比 OOP 精簡</li>
+<li>ReasonML 與 F# 支援 Partial Application Function 與 Type Inference，程式碼又會比 TypeScript 更加精簡</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[封裝也有了新的方式]]>
+    
+    </summary>
+    
+      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
+    
+      <category term="ReasonML" scheme="http://oomusou.io/tags/ReasonML/"/>
+    
+      <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何安裝 Docker for Windows ?]]></title>
@@ -3494,93 +3572,6 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入淺出 F# 之 Option]]></title>
-    <link href="http://oomusou.io/fsharp/option/"/>
-    <id>http://oomusou.io/fsharp/option/</id>
-    <published>2018-03-25T12:23:43.000Z</published>
-    <updated>2018-04-03T02:57:17.870Z</updated>
-    <content type="html"><![CDATA[<p>當我們要根據使用者輸入的 <code>OrderId</code> 到資料庫搜尋 <code>訂單資料</code>，若找的到就回傳該筆訂單，若搜尋不到呢？一般而言有兩種處理方式，傳回 <code>null</code> 或拋出 exception，但實務上常會因為忘記處理 <code>null</code> 或 exception，而在 run-time 得到 <code>NullReferenceException</code>，這種常見的錯誤，是否能在 compile-time 獲得解決呢？</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>C# 7.2<br>F# 4.1</p>
-<h2 id="Null">Null</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> order = Order.GetById(<span class="number">10</span>);</span><br><span class="line">Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, order.Name));</span><br></pre></td></tr></table></figure>
-<p><code>getById()</code> 會根據 user 輸入的 <code>OrderId</code>，到資料庫搜尋 <code>訂單資料</code>，junior 常會這樣寫程式。</p>
-<p>這樣的寫法乍看之下沒問題，但 code review 時一定會被 sernior 問：</p>
-<blockquote>
-<p>Q：若找不到訂單資料而回傳 <code>null</code> 該怎麼辦？</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> order = Order.GetById(<span class="number">10</span>);</span><br><span class="line"><span class="keyword">if</span> (order == <span class="keyword">null</span>) </span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"No orders found."</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span> </span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, order.Name));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Junior 會乖乖的補上 <code>null</code> 判斷，如此才不會在 run-time 得到 <code>NullReferenceException</code>。</p>
-<p>若使用 <code>null</code> 代表 <code>找不到資料</code>，會有幾個問題：</p>
-<ol>
-<li>必須額外加上 <code>null</code> 判斷，否則在 run-time 會得到 <code>NullReferenceException</code></li>
-<li>因為 <code>null</code> 也是 <code>Order</code> 型別，所以 compiler 對於 <code>null</code> 檢查無能為力，只能靠 developer 自己的細心，或靠 unit test 的 coverage 完整加以保護</li>
-<li>每個 function 都可能傳回 <code>null</code>，是否每個 function 都必須判斷 <code>null</code>？如此 code 會變得很髒</li>
-</ol>
-<h2 id="Exception">Exception</h2><hr>
-<blockquote>
-<p>Q：<code>null</code> 的確不好，所以若找不到訂單資料就拋 exception 不就好了？</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">var</span> order = Order.GetById(<span class="number">10</span>);</span><br><span class="line">    Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, order.Name));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (OrderNotFoundException e)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(<span class="string">"No orders found."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Exception 雖然比 <code>null</code> 好，但依然有些問題：</p>
-<ol>
-<li><code>getById()</code> 回傳 <code>Order</code> 型別，你該如何得知到底該處理 <code>null</code> 還是要處理 exception？靠文件還是要靠團隊共識？</li>
-<li>若 developer 忘記處理 exception，compiler 也無能為力，只能靠 developer 自己的細心，或靠 unit test 的 coverage 完整加以保護</li>
-<li>每個 function 都可能傳回 exception，是否每個 function 都必須處理 exception？<code>try catch</code> 寫法其實也好不到哪裡，一樣會把 code 弄髒</li>
-</ol>
-<h2 id="Option">Option</h2><hr>
-<p>FP 語言對 <code>null</code> 與 exception 提出了另外一種解決方案，在 OCaml 與 F# 有 <code>Option</code> 型別，在 Haskell 有 <code>Maybe</code> 型別，讓我們可以在 compile-time 就能處理，也不會把 code 弄髒。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Order</span> </span>= &#123;</span><br><span class="line">    Id: int</span><br><span class="line">    Name: string</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> getById id = Some &#123; Id = <span class="number">10</span>; Name = <span class="string">"Sam"</span> &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> order = getById <span class="number">10</span></span><br><span class="line">    <span class="keyword">match</span> order <span class="keyword">with</span></span><br><span class="line">    | Some order -&gt; printfn <span class="string">"%s"</span> order.Name</span><br><span class="line">    | None       -&gt; printfn <span class="string">"No orders found."</span>    </span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
-<p>由於 <code>getById()</code> 可能傳回 <code>訂單資料</code>，也可能找不到資料，因此回傳的就不是 <code>Order</code> 型別，也不是 <code>null</code>，而是另外一個 <code>Order option</code> 型別，也就是 <code>Option&lt;Order&gt;</code>。</p>
-<p>再搭配 Pattern Matching 對 <code>Option</code> 做處理，即可同時對 <code>找到訂單資料</code> 與 <code>找不到訂單資料</code> 進行處理。</p>
-<p><img src="/images/fsharp/option/option000.png" alt="ption00"></p>
-<p><code>getById()</code> 回傳的型別不再是 <code>Order</code> 型別 ，而是 <code>Order option</code> 型別，這是個 <code>Option</code> 型別。</p>
-<blockquote>
-<p>Q：什麼是 <code>Option</code> 型別呢 ?</p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Option</span>&lt;<span class="title">'a</span>&gt; </span>=</span><br><span class="line">    | Some <span class="keyword">of</span> <span class="attribute">'a</span></span><br><span class="line">    | None</span><br></pre></td></tr></table></figure>
-<p><code>Option</code> 事實上就是 <code>Union</code> 型別，只是已經是先定義好  <code>Some</code> 與 <code>None</code> 兩個 case。</p>
-<p>重點是 <code>null</code> 是 <code>Order</code> 型別，但 <code>None</code> 不是 <code>Order</code> 型別，而是 <code>Option</code> 型別。</p>
-<blockquote>
-<p>Q : <code>Option</code> 型別對於寫程式有什麼幫助？</p>
-</blockquote>
-<p>之前因為 <code>null</code> 屬於 <code>Order</code> 型別，也無法確定 <code>getById()</code> 是否拋出 exception 而造成困擾，但若確認 <code>getById()</code> 回傳的是 <code>Option</code> 而不是  <code>Order</code> 型別，則 client 就有心理準備，知道要怎麼處理 <code>Option</code>，不需靠文件也不需靠團隊共識。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> order = Order.getById <span class="number">10</span></span><br><span class="line">printfn <span class="string">"%s"</span> order.Name</span><br></pre></td></tr></table></figure>
-<p>就算 junior 寫出這樣的程式碼，不用等 senior 來 code review，compiler 已經編譯錯誤，因為 <code>order</code> 為 <code>Option</code> 型別，不是 <code>Order</code> 型別，因此無法直接由 <code>order.Name</code> 取值。</p>
-<p><img src="/images/fsharp/option/option001.png" alt="ption00"></p>
-<p>因為 <code>order</code> 不是 <code>Order</code> 型別，所以沒有 <code>Name</code> 可取，在 Intellisense 階段就已經提出警告。</p>
-<p>為了要從 <code>Option</code> 取值，就一定得搭配 Pattern Matching。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> order <span class="keyword">with</span></span><br><span class="line">| Some order -&gt; printfn <span class="string">"%s"</span> order.Name</span><br><span class="line">| None       -&gt; printfn <span class="string">"No orders found."</span></span><br></pre></td></tr></table></figure>
-<p>透過 Pattern Match 的 Some 將 <code>order</code> 取出來。</p>
-<p><img src="/images/fsharp/option/option002.png" alt="ption00"></p>
-<p>若在 Pattern Matching 只寫了 <code>Some</code>，忘記寫 <code>None</code> ，compiler 也會提出警告。</p>
-<h2 id="Summary">Summary</h2><hr>
-<p><code>Option</code> 型別具有以下優點</p>
-<ol>
-<li>透過 <code>Option</code> 型別，client 可以明確得知該 function 可能傳回資料，也可能不傳回資料，因此會有明確因應對策，而不像 <code>null</code> 與 exception 那樣</li>
-<li>由於 <code>Option</code> 型別不等於原本資料型別，因此 junior 無法直接對 Option 取值而造成 <code>NullReferenceException</code></li>
-<li>一定得用 Pattern Matching 處裡 <code>Option</code> 型別，若忘記使用 Pattern Matching 或 case 不夠完整，compiler 會在 compile-time 就加以警告，不會有忘記處理 <code>Option</code> 的問題</li>
-<li>Pattern Matching 遠比 <code>null checking</code> 與 <code>exception handling</code> 優雅，也不會把 code 弄髒</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>好的程式語言是在 compile-time 就幫我們找到錯誤，而不是要自己寫程式在 run-time 處理</li>
-<li><code>null</code> 與 exception 除了常常忘記處理而造成 <code>NullReferenceException</code>， 也很容易將 code 弄髒；但 <code>Option</code> + Pattern Matching 則可透過 compiler 幫我們檢查，code 也比較優雅</li>
-<li>JavaScript 已經有 <code>Option</code> 型別草案，希望能儘早成為 JavaScript 標準</li>
-</ul>
-<h2 id="Reference">Reference</h2><p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/options" target="_blank" rel="external">Options</a><br><a href="https://fsharpforfunandprofit.com/" target="_blank" rel="external">F# for fun and profit</a>, <a href="https://fsharpforfunandprofit.com/posts/the-option-type/" target="_blank" rel="external">The Option type</a><br><a href="https://twitter.com/David_Raab" target="_blank" rel="external">David Raad</a>, <a href="http://sidburn.github.io/blog/2016/03/20/null-is-evil" target="_blank" rel="external">null is Evil</a><br><a href="https://twitter.com/David_Raab" target="_blank" rel="external">David Raad</a>, <a href="http://sidburn.github.io/blog/2016/03/25/exceptions-are-evil" target="_blank" rel="external">Exceptions are Evil</a><br><a href="https://twitter.com/David_Raab" target="_blank" rel="external">David Raad</a>, <a href="http://sidburn.github.io/blog/2016/04/11/optionals" target="_blank" rel="external">Optionals</a><br><a href="https://twitter.com/David_Raab" target="_blank" rel="external">David Raad</a>, <a href="http://sidburn.github.io/blog/2016/05/11/option-module" target="_blank" rel="external">The Option Module</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[比 null 與 exception 更優雅的處理方式]]>
-    
-    </summary>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   

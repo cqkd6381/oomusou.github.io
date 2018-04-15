@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 Closure 達成 Encapsulation ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="封裝也有了新的方式">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="封裝也有了新的方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 Closure 達成 Encapsulation ?">
+<meta property="og:url" content="http://oomusou.io/fsharp/closure-encapsulation/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="封裝也有了新的方式">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-15T08:11:37.040Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 Closure 達成 Encapsulation ?">
+<meta name="twitter:description" content="封裝也有了新的方式">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 Closure 達成 Encapsulation ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 封裝也有了新的方式			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#OOP_封裝"><span class="toc-article-text">OOP 封裝</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FP_封裝"><span class="toc-article-text">FP 封裝</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#TypeScript"><span class="toc-article-text">TypeScript</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#ReasonML"><span class="toc-article-text">ReasonML</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#FSharp"><span class="toc-article-text">FSharp</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p><code>封裝</code> 是 OOP 三個重要的特色之一，也由於 <code>封裝</code>，才導致了 <code>多型</code>，而 <code>繼承</code> 則是實現多型的手段 (<code>里氏替換原則</code>)。事實上 FP 也能完美實現 <code>封裝</code>，關鍵就在於 Closure。</p>
+<p>我們分別來看看 TypeScript、ReasonML 與 F# 如何以 Clsoure 達成 <code>封裝</code>。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>TypeScript 2.8<br>ReasonML 3.1.0<br>F# 4.1</p>
+<h2 id="OOP_封裝">OOP 封裝</h2><hr>
+<p>以 OOP 最經典的 Strategy Pattern 為例，我們將各種 strategy 封裝在 context 內，讓 client 與 strategy 解耦合。</p>
+<p><strong>ClassEncapsulation.ts</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> Context &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private strategy: Strategy) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  request(x: <span class="built_in">number</span>, y:<span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.strategy.execute(x, y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> context = <span class="keyword">new</span> Context(<span class="keyword">new</span> <span class="keyword">class</span> <span class="keyword">implements</span> Strategy &#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = context.request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>訂出 strategy 的 class interface。</p>
+<p>第 5 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> Context &#123;</span><br><span class="line">  <span class="constructor"><span class="keyword">constructor</span>(private strategy: Strategy) </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  request(x: <span class="built_in">number</span>, y:<span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.strategy.execute(x, y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Context</code> class 負責將 strategy 封裝在 field，對於 client 來說只認得 <code>Context.request()</code>，將 client 與 strategy 解耦合。</p>
+<p>14 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = <span class="keyword">new</span> Context(<span class="keyword">new</span> <span class="keyword">class</span> <span class="keyword">implements</span> Strategy &#123;</span><br><span class="line">  execute(x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Client 在建立 <code>Context</code> 物件時，順便將 strategy 傳入，由於只使用一次，可以使用 anonymous class。</p>
+<p>20 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = context.request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br></pre></td></tr></table></figure>
+<p>Client 實際執行的是 <code>Context.request()</code>，由於已經將 strategy object 封裝在 <code>Context</code> 的 field 內，因此 client 已經跟 strategy 解耦合。</p>
+<h2 id="FP_封裝">FP 封裝</h2><hr>
+<h3 id="TypeScript">TypeScript</h3><p>TypeScript 除了支援完整 OOP，也支援 FP。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  (x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> context = (strategy: Strategy) =&gt; (x, y) =&gt; strategy(x, y);</span><br><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt; x + y);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="interface"><span class="keyword">interface</span> Strategy </span>&#123;</span><br><span class="line">  (x: <span class="built_in">number</span>, y: <span class="built_in">number</span>): <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 strategy 的 interface 由 class interface 改成 function interface。</p>
+<p>第 5 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = (strategy: Strategy) =&gt; (x, y) =&gt; strategy(x, y);</span><br></pre></td></tr></table></figure>
+<p>將 <code>Context</code> class 退化成 <code>context()</code> function，class contructor 則退化成 function parameter，strategy function 依然要遵守 function interface。</p>
+<p>回傳為新的 function，此時 strategy function 將以 Closure 形式保留在新的 function 內，也因為 Closure，使得 strategy function 被封裝在新的 function 內。</p>
+<p>第 6 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt; x + y);</span><br></pre></td></tr></table></figure>
+<p>由 <code>context()</code> 傳入 strategy function，以 Arrow Function 形式表達，而 request 為一 function，此時 strategy function 已經被封裝在 <code>request()</code> 內。</p>
+<p>第 9 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br></pre></td></tr></table></figure>
+<p>Client 實際執行的是 <code>request()</code>，由於已經將 strategy function 封裝在 <code>request()</code>，因此 client 已經跟 strategy function 解耦合。</p>
+<h3 id="ReasonML">ReasonML</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = (strategy, x, y) =&gt; strategy(x, y);</span><br><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt;  x + y);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">Js.log(result);</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context = (strategy, x, y) =&gt; strategy(x, y);</span><br></pre></td></tr></table></figure>
+<p>因為 ReasonML 支援 Partial Application Function，因此可以將 <code>context()</code> 與 <code>request()</code> 合一，若只提供 strategy parameter，回傳的就是 strategy function。</p>
+<p>第 2 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> request = context((x, y) =&gt;  x + y);</span><br></pre></td></tr></table></figure>
+<p>由 <code>context()</code> function 傳入 strategy function。</p>
+<p>第 4 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> result = request(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">Js.log(result);</span><br></pre></td></tr></table></figure>
+<p>Client 實際執行的是 <code>request()</code>，由於已經將 strategy function 封裝在 <code>request()</code>，因此 client 已經跟 strategy function 解耦合。</p>
+<blockquote>
+<p>ReasonML 支援了目前 JavaScript 與 TypeScript 尚未支援的  Partial Application Function，也因為有 Type Inference，所以也不需要 interface，因此 ReasonML 寫起來比 TypeScript 精簡</p>
+</blockquote>
+<h3 id="FSharp">FSharp</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context strategy x y = strategy x y</span><br><span class="line"><span class="keyword">let</span> request = context (<span class="keyword">fun</span> x y -&gt;  x + y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request <span class="number">1</span> <span class="number">1</span></span><br><span class="line">printf <span class="string">"%d"</span> result</span><br></pre></td></tr></table></figure>
+<p>F# 寫起來與 ReasonML 已經非常類似，就不再詳細討論，大抵就是 F# 不用 <code>()</code> 與 <code>;</code>，且 Lambda 使用 <code>fun</code>，但 F# 支援 Partial Function Application 與 Type Inference 則與 ReasonML 一致。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>OOP 使用 constructor + field 將變化加以封裝；而 FP 亦可使用 Higher Order Function + Closure 將變化加以封裝</li>
+<li>若以 FP 方式思考，無論使用 TypeScript、ReasonML 或 F#，寫法都已經相當接近，程式碼也比 OOP 精簡</li>
+<li>ReasonML 與 F# 支援 Partial Application Function 與 Type Inference，程式碼又會比 TypeScript 更加精簡</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/docker/docker-for-windows/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-05-15 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>19</span></a></li> <li><a href="/tags/ReasonML/">ReasonML<span>1</span></a></li> <li><a href="/tags/TypeScript/">TypeScript<span>23</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
