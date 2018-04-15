@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="封裝也有了新的方式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-15T08:18:33.044Z">
+<meta property="og:updated_time" content="2018-04-15T12:56:09.786Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Closure 達成 Encapsulation ?">
 <meta name="twitter:description" content="封裝也有了新的方式">
@@ -156,7 +156,7 @@
 <blockquote>
 <p>ReasonML 支援了目前 JavaScript 與 TypeScript 尚未支援的  Partial Application Function，也因為有 Type Inference，所以也不需要 interface，因此 ReasonML 寫起來比 TypeScript 精簡</p>
 </blockquote>
-<h3 id="FSharp">FSharp</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context strategy x y = strategy x y</span><br><span class="line"><span class="keyword">let</span> request = context (<span class="keyword">fun</span> x y -&gt;  x + y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request <span class="number">1</span> <span class="number">1</span></span><br><span class="line">printf <span class="string">"%d"</span> result</span><br></pre></td></tr></table></figure>
+<h3 id="FSharp">FSharp</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context strategy x y = strategy x y</span><br><span class="line"><span class="keyword">let</span> request = context (<span class="keyword">fun</span> x y -&gt;  x + y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request <span class="number">1</span> <span class="number">1</span></span><br><span class="line">printf <span class="string">"%d"</span> result</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>F# 寫起來與 ReasonML 已經非常類似，就不再詳細討論，大抵就是 F# 不用 <code>()</code> 與 <code>;</code>，且 Lambda 使用 <code>fun</code>，但 F# 支援 Partial Function Application 與 Type Inference 則與 ReasonML 一致。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>

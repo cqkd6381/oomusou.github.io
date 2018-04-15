@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-15T08:18:33.044Z</updated>
+  <updated>2018-04-15T12:56:09.786Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/fsharp/closure-encapsulation/"/>
     <id>http://oomusou.io/fsharp/closure-encapsulation/</id>
     <published>2018-05-15T12:23:43.000Z</published>
-    <updated>2018-04-15T08:18:33.044Z</updated>
+    <updated>2018-04-15T12:56:09.786Z</updated>
     <content type="html"><![CDATA[<p><code>封裝</code> 是 OOP 三個重要的特色之一，也由於 <code>封裝</code>，才導致了 <code>多型</code>，而 <code>繼承</code> 則是實現多型的手段 (<code>里氏替換原則</code>)。事實上 FP 也能完美實現 <code>封裝</code>，關鍵就在於 Closure。</p>
 <p>我們分別來看看 TypeScript、ReasonML 與 F# 如何以 Clsoure 達成 <code>封裝</code>。</p>
 <a id="more"></a>
@@ -69,7 +69,7 @@
 <blockquote>
 <p>ReasonML 支援了目前 JavaScript 與 TypeScript 尚未支援的  Partial Application Function，也因為有 Type Inference，所以也不需要 interface，因此 ReasonML 寫起來比 TypeScript 精簡</p>
 </blockquote>
-<h3 id="FSharp">FSharp</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context strategy x y = strategy x y</span><br><span class="line"><span class="keyword">let</span> request = context (<span class="keyword">fun</span> x y -&gt;  x + y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request <span class="number">1</span> <span class="number">1</span></span><br><span class="line">printf <span class="string">"%d"</span> result</span><br></pre></td></tr></table></figure>
+<h3 id="FSharp">FSharp</h3><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> context strategy x y = strategy x y</span><br><span class="line"><span class="keyword">let</span> request = context (<span class="keyword">fun</span> x y -&gt;  x + y)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> result = request <span class="number">1</span> <span class="number">1</span></span><br><span class="line">printf <span class="string">"%d"</span> result</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>F# 寫起來與 ReasonML 已經非常類似，就不再詳細討論，大抵就是 F# 不用 <code>()</code> 與 <code>;</code>，且 Lambda 使用 <code>fun</code>，但 F# 支援 Partial Function Application 與 Type Inference 則與 ReasonML 一致。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
