@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/docker/docker-for-mac/</loc>
+    <lastmod>2018-04-16T09:50:54.838Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/closure-encapsulation/</loc>
     <lastmod>2018-04-15T13:03:42.808Z</lastmod>
   </url>
