@@ -2,13 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://oomusou.io/docker/docker-for-mac/</loc>
-    <lastmod>2018-04-16T09:50:54.838Z</lastmod>
+    <loc>http://oomusou.io/docker/ubuntu/</loc>
+    <lastmod>2018-04-16T12:52:08.957Z</lastmod>
   </url>
   
   <url>
     <loc>http://oomusou.io/fsharp/closure-encapsulation/</loc>
-    <lastmod>2018-04-15T13:03:42.808Z</lastmod>
+    <lastmod>2018-04-16T12:45:14.274Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/docker/docker-for-mac/</loc>
+    <lastmod>2018-04-16T12:44:42.330Z</lastmod>
   </url>
   
   <url>
@@ -404,11 +409,6 @@
   <url>
     <loc>http://oomusou.io/fsharp/setup/</loc>
     <lastmod>2018-02-26T06:51:52.785Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/docker/ubuntu/</loc>
-    <lastmod>2018-02-24T12:53:58.420Z</lastmod>
   </url>
   
   <url>
