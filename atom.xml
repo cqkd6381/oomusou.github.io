@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-18T10:46:06.770Z</updated>
+  <updated>2018-04-18T10:54:57.899Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/composite/"/>
     <id>http://oomusou.io/design-pattern/composite/</id>
     <published>2018-04-18T12:23:43.000Z</published>
-    <updated>2018-04-18T10:46:06.770Z</updated>
+    <updated>2018-04-18T10:54:57.899Z</updated>
     <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -151,7 +151,7 @@
 <blockquote>
 <p>這就是 Composite Pattern 的關鍵，也因為都有實踐 <code>IPrice</code> interface，我們能安心使用 <code>IPrice</code> 的 <code>GetPrice()</code>，且 IDE 的 intellisense 也能顯示</p>
 </blockquote>
-<h3 id="Refactoring">Refactoring</h3><p>目前為止 Composite Pattern 已經完成，但我們發現有不少 code smell 並不好，需要進一步的重構。</p>
+<h3 id="Refactoring">Refactoring</h3><p>目前為止 Composite Pattern 已經完成，但我們發現有不少 code smell，需要進一步的重構。</p>
 <p><strong>MacBookPro</strong></p>
 <p><img src="/images/design-pattern/composite/composite003.svg" alt="composite003"></p>
 <p><strong>MacBookPro.cs</strong></p>
