@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/design-pattern/composite/</loc>
+    <lastmod>2018-04-18T10:46:06.770Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/docker/ubuntu/</loc>
     <lastmod>2018-04-16T13:15:32.503Z</lastmod>
   </url>

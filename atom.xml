@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-16T13:15:32.503Z</updated>
+  <updated>2018-04-18T10:46:06.770Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,198 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 C# 實現 Composite Pattern ?]]></title>
+    <link href="http://oomusou.io/design-pattern/composite/"/>
+    <id>http://oomusou.io/design-pattern/composite/</id>
+    <published>2018-04-18T12:23:43.000Z</published>
+    <updated>2018-04-18T10:46:06.770Z</updated>
+    <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>C# 7.2</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>由購物車計算商品價錢，但在活動期間，Apple 產品組合有特惠 ：</p>
+<ul>
+<li><strong>MacBook Pro 15”</strong>：6 萬</li>
+<li><strong>iPad Air</strong>：1 萬</li>
+<li><strong>Apple Watch</strong>：1 萬</li>
+<li><strong>Apple 套餐組合</strong> : (Macbook Pro + iPad Air + Apple Watch) 總價打九折：<code>(6 + 1 + 1) * 0.9</code> = 7.2 萬</li>
+</ul>
+<p><img src="/images/design-pattern/composite/composite011.svg" alt="composite011"></p>
+<p>若同時買 MacBook Pro + iPad Air + Apple Watch + Apple 套餐為 15.2 萬。</p>
+<h2 id="Task">Task</h2><hr>
+<p>在不改變產品 interface 的原則下，計算購物車價錢。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>當 <code>單一資料</code> 與 <code>整體資料</code> 同時存在時，讓 client 有一致性的操作方式</p>
+</blockquote>
+<p><img src="/images/design-pattern/composite/composite008.svg" alt="composite008"></p>
+<ul>
+<li><p><strong>Client</strong>：<code>Leaf</code> 與 <code>Composite</code> 的 user，實務上可能是 component 或 controller</p>
+</li>
+<li><p><strong>Component</strong>：定義 <code>Leaf</code> 與 <code>Composite</code> 的共用 interface</p>
+</li>
+<li><p><strong>Leaf</strong>：表示 <code>單一資料</code></p>
+</li>
+<li><p><strong>Composite</strong>：表示 <code>整體資料</code></p>
+</li>
+</ul>
+<p><img src="/images/design-pattern/composite/composite009.svg" alt="composite009"></p>
+<p>由於 <code>Composite</code> 表示 <code>整體資料</code>，實務上可能還包含其他 <code>Composite</code>，而產生類似 tree 的結構。</p>
+<blockquote>
+<p>Composite Pattern 的確可以處理 tree 結構，但 tree 並非必要條件</p>
+</blockquote>
+<p><strong>適用時機</strong></p>
+<ul>
+<li>同時存在 <code>單一資料</code> 與 <code>整體資料</code> 時</li>
+<li>想讓 client 不需分辨 <code>單一資料</code> 與 <code>整體資料</code>，都以相同的方式操作資料</li>
+</ul>
+<p><strong>優點</strong></p>
+<ul>
+<li>​ Client 程式碼精簡，不需寫一堆 <code>if else</code> 判斷是 <code>單一資料</code> 或 <code>整體資料</code>，完全發揮 OOP 的 <code>多型</code></li>
+<li>增加新的 <code>Leaf</code> 或 <code>Composite</code>，也不用修改 client 程式碼，符合 <code>開放封閉原則</code></li>
+</ul>
+<h2 id="Architecture">Architecture</h2><hr>
+<p><img src="/images/design-pattern/composite/composite000.svg" alt="composite000"></p>
+<ul>
+<li><p><strong>ShoppingService</strong>：相當於 <code>Client</code></p>
+</li>
+<li><p><strong>IPrice</strong>：定義 <code>MabookPro</code>、<code>IPadAir</code>、<code>AppleWatch</code> 與 <code>AppleCombo</code> 的共用 interface，相當於 <code>Component</code> interface</p>
+</li>
+<li><p><strong>MacbookPro</strong>：單一產品，相當於 <code>Leaf</code></p>
+</li>
+<li><p><strong>IPadAir</strong>：單一產品，相當於 <code>Leaf</code></p>
+</li>
+<li><p><strong>AppleWatch</strong>：單一產品，相當於 <code>Leaf</code></p>
+</li>
+<li><p><strong>AppleCombo</strong>：套餐組合，相當於 <code>Composite</code></p>
+</li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><img src="/images/design-pattern/composite/composite001.svg" alt="composite001"></p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ShoppingCartLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> shoppingCartService = <span class="keyword">new</span> ShoppingCartService();</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> MacBookPro());</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> IPadAir());</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> AppleWatch());</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> AppleCombo());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> result = shoppingCartService.CalculatePrice();</span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>無論是 MacBook Pro、IPad Air、Apple Watch 或 AppleCombo 套餐組合，都統一用 <code>AddCart()</code> 新增。</p>
+<p>且無論是 <code>單一產品</code> 或 <code>套餐組合</code>，都使用 <code>CalculatePrice()</code> 統一計算。</p>
+<blockquote>
+<p>可以猜想 <code>AddCart()</code> 與 <code>CalculatePrice()</code> 應該遵循特定 interface 使用，且 <code>單一產品</code> 與 <code>套餐組合</code> 也應該遵循特定 interface 實踐，client 才有可能這麼漂亮的實作</p>
+</blockquote>
+<h3 id="Composite_Pattern">Composite Pattern</h3><p><strong>IPrice</strong></p>
+<p><img src="/images/design-pattern/composite/composite002.svg" alt="composite002"></p>
+<p><strong>IPrice.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>訂定 <code>單一產品</code> 與 <code>套餐組合</code> 所遵守的共同 interface，這也是 Composite Pattern 的關鍵。</p>
+<p><strong>MacBookPro</strong></p>
+<p><img src="/images/design-pattern/composite/composite003.svg" alt="composite003"></p>
+<p><strong>MacBookPro.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MacBookPro</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">60000.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>單一產品 MacBookPro 實踐 <code>IPrice</code>。</p>
+<p><strong>IPadAir</strong></p>
+<p><img src="/images/design-pattern/composite/composite004.svg" alt="composite004"></p>
+<p><strong>IPadAir.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">IPadAir</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10000.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>單一產品 IPadAir 實踐 <code>IPrice</code>。</p>
+<blockquote>
+<p>在 C# 世界習慣 interface 以 <code>I</code> 為 prefix，理論上 class name 不建議以 <code>I</code> 為開頭，這裡是因為 Apple 產品就叫做 <code>I</code> PadAir</p>
+</blockquote>
+<p><strong>AppleWatch</strong></p>
+<p><img src="/images/design-pattern/composite/composite005.svg" alt="composite005"></p>
+<p><strong>AppleWatch.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleWatch</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10000.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>單一產品 AppleWatch 實踐 <code>IPrice</code>。</p>
+<p><strong>AppleCombo</strong></p>
+<p><img src="/images/design-pattern/composite/composite006.svg" alt="composite006"></p>
+<p><strong>AppleCombo.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleCombo</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AppleCombo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> IPadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _products)</span><br><span class="line">            &#123;</span><br><span class="line">                sum += product.GetPrice();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.9</span> * sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleCombo</span> : <span class="title">IPrice</span></span><br></pre></td></tr></table></figure>
+<p>Apple <code>套餐組合</code> 也要實踐 <code>IPrice</code>，重點在於不再是 <code>單一產品</code> 要實踐 interface，而是連 <code>套餐組合</code> 也要實踐 interface。</p>
+<p>也就是在將來，我們會將 <code>單一產品</code> 與 <code>套餐組合</code> 都一視同仁使用，也就是 OOP 的 <code>多型</code> 的實踐。</p>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br></pre></td></tr></table></figure>
+<p>將套餐中所有產品 <code>封裝</code> 在 <code>_products</code> field，注意 <code>List</code> 的泛型為 <code>IPrice</code> interface，也就是只有實踐 <code>IPrice</code> 的單一產品才能加入，若該產品沒有實踐 <code>IPrice</code>，compiler 在編譯階段就可以擋掉。</p>
+<blockquote>
+<p>這也是 OOP 處理 side effect 方式，使用 private field 封裝在 class 內，避免資料被外界修改</p>
+</blockquote>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AppleCombo</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">        <span class="keyword">new</span> IPadAir(),</span><br><span class="line">        <span class="keyword">new</span> AppleWatch()</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因為 Apple 套餐組合同時包含 MacBook Pro、iPad Air 與 Apple Watch，因此在 constructor 同時將產品建立好。</p>
+<p>19 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _products)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += product.GetPrice();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0.9</span> * sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將所有產品加總，並打九折。</p>
+<p>也因為所有產品都遵守 <code>IPrice()</code> interface 的 <code>GetPrice()</code>，因此可以使用 <code>foreach()</code> 一視同仁以 <code>GetPrice()</code> 計算，這就是 interface 與 OOP <code>多型</code> 的優點。</p>
+<p><strong>ShoppingCartService</strong></p>
+<p><img src="/images/design-pattern/composite/composite007.svg" alt="composite007"></p>
+<p><strong>ShoppingCartService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ShoppingCartService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _carts = <span class="keyword">new</span> List&lt;IPrice&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddCart</span>(<span class="params">IPrice product</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _carts.Add(product);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _carts)</span><br><span class="line">            &#123;</span><br><span class="line">                sum += product.GetPrice();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _carts = <span class="keyword">new</span> List&lt;IPrice&gt;();</span><br></pre></td></tr></table></figure>
+<p>將購物車的購物資料封裝在 <code>_carts</code> field，注意 List 的泛型為 <code>IPrice</code> interface，也就是無論是 <code>單一產品</code> 或者 <code>套餐組合</code>，只要實踐 <code>IPrice</code> interface 就一視同仁，只要任何產品或套餐沒實踐 interface 而加入 List，compiler 在 compile-time 就會報錯。</p>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddCart</span>(<span class="params">IPrice product</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    _carts.Add(product);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>AddCart()</code> 新增至購物車，只要實踐 <code>IPrice</code> 的 <code>單一產品</code> 或 <code>套餐組合</code> 都可加入購物車。</p>
+<p>14 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _carts)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += product.GetPrice();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>CalculatePrice()</code> 計算購物車內的產品總金額，也由於 <code>單一產品</code> 與 <code>套餐組合</code> 都實踐 <code>IPrice</code> interface，因此可以安心用 <code>foreach()</code> 一視同仁的使用 <code>GetPrice()</code> 計算。</p>
+<blockquote>
+<p>這就是 Composite Pattern 的關鍵，也因為都有實踐 <code>IPrice</code> interface，我們能安心使用 <code>IPrice</code> 的 <code>GetPrice()</code>，且 IDE 的 intellisense 也能顯示</p>
+</blockquote>
+<h3 id="Refactoring">Refactoring</h3><p>目前為止 Composite Pattern 已經完成，但我們發現有不少 code smell 並不好，需要進一步的重構。</p>
+<p><strong>MacBookPro</strong></p>
+<p><img src="/images/design-pattern/composite/composite003.svg" alt="composite003"></p>
+<p><strong>MacBookPro.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MacBookPro</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Price = <span class="number">60000.0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之前將 <code>60000.0</code> hardcode 在 <code>GetPrice()</code>，這樣會造成將來維護上的困然，應該使用 <code>Introduce Field</code> 重構到 field。</p>
+<p><strong>IPadAir</strong></p>
+<p><img src="/images/design-pattern/composite/composite004.svg" alt="composite004"></p>
+<p><strong>IPadAir.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">IPadAir</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Price = <span class="number">10000.0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之前將 <code>10000.0</code> hardcode 在 <code>GetPrice()</code>，這樣會造成將來維護上的困然，應該使用 <code>Introduce Field</code> 重構到 field。</p>
+<p><strong>AppleWatch</strong></p>
+<p><img src="/images/design-pattern/composite/composite005.svg" alt="composite005"></p>
+<p><strong>AppleWatch.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleWatch</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Price = <span class="number">10000.0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之前將 <code>10000.0</code> hardcode 在 <code>GetPrice()</code>，這樣會造成將來維護上的困然，應該使用 <code>Introduce Field</code> 重構到 field。</p>
+<p><strong>AppleCombo</strong></p>
+<p><img src="/images/design-pattern/composite/composite006.svg" alt="composite006"></p>
+<p><strong>AppleCombo.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleCombo</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Discount = <span class="number">0.9</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AppleCombo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> IPadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>21 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> 將 <code>0.9</code> 使用 <code>Introduce Field</code> 重構到 field，並將 for loop 重構成 LINQ 的 <code>Sum()</code> 。</p>
+<blockquote>
+<p>實務上若搭配 List，使用 <code>foreach()</code> 的機率幾乎為 0，因為 LINQ 對 <code>IEnumerable</code> 的支援已經很完整，可以使用 FP 的方式使用 List，更加精簡，可讀性也更高</p>
+</blockquote>
+<p><strong>ShoppingCartService</strong></p>
+<p><img src="/images/design-pattern/composite/composite007.svg" alt="composite007"></p>
+<p><strong>ShoppingCartService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ShoppingCartService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _carts = <span class="keyword">new</span> List&lt;IPrice&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddCart</span>(<span class="params">IPrice product</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _carts.Add(product);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _carts.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>15 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _carts.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 for loop 重構成 LINQ 的 <code>Sum()</code> 。</p>
+<h2 id="Summary">Summary</h2><hr>
+<ul>
+<li><code>單一產品</code> 與 <code>套餐組合</code>，原本是完全不同的東西，但藉由實踐相同的 interface，在邏輯上視為相同的物件，因此可藉由 OOP 的 <code>多型</code> 加以操作，而不須在 client 做任何判斷，將來新增任何 <code>單一產品</code> 或 <code>套餐組合</code>，也不用修改 client，符合 <code>開放封閉原則</code> 的要求</li>
+<li>計算 List 的總和可使用 LINQ 的 <code>Sum()</code>，可讀性更高也更精簡</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>大部分書籍資料都將 Composite Pattern 用來實作 tree 資料結構，因此很多初學者以為此 pattern 就是為了用來實作 tree，但 tree 並非 Composite Pattern 的必要條件，事實上只要同時需要處理 <code>單一資料</code> 與 <code>整體資料</code>，就適合使用 Composite Pattern，因此也稱為 Part-Whole Pattern，<code>讓單一資料與整體資料有一致操作方式</code>，這就是 Composite Pattern 的本質</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><p>完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpComposite" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[將物件與容器一視同仁操作]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
+    
+      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 Docker 安裝 Ubuntu ?]]></title>
@@ -3310,58 +3502,6 @@
       <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
     
       <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 macOS 安裝 SonarQube ?]]></title>
-    <link href="http://oomusou.io/sonarqube/macos-setup/"/>
-    <id>http://oomusou.io/sonarqube/macos-setup/</id>
-    <published>2018-03-29T12:23:43.000Z</published>
-    <updated>2018-03-29T10:23:45.199Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。它是一套以 Java 開發的工具，在 macOS 安裝很簡單，不使用 <code>pkg</code> 格式，所以不用擔心移除問題，只需解壓縮即可執行。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Java SE 1.8.0_112<br>SonarQube 6.7.2 LTS</p>
-<h2 id="Download">Download</h2><hr>
-<p><img src="/images/sonarqube/macos-setup/mac000.png" alt="ac00"></p>
-<p>到  <a href="https://www.sonarqube.org/downloads/" target="_blank" rel="external">SonarQube 官網</a> 下載，因為由 Java 開發，所以不分系統版本。</p>
-<p><img src="/images/sonarqube/macos-setup/mac001.png" alt="ac00"></p>
-<p>下載後為一 <code>zip</code> 格式檔案。</p>
-<h2 id="Installation">Installation</h2><hr>
-<p><img src="/images/sonarqube/macos-setup/mac002.png" alt="ac00"></p>
-<p>將下載的 <code>zip</code> 檔案解開，可安裝在任意目錄，目前安裝在 home directory 的 <code>sonarqube-6.7.2</code>。</p>
-<h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> start</span><br></pre></td></tr></table></figure>
-<p>使用 <code>sonar.sh start</code> 啟動 SonarQube。</p>
-<p><img src="/images/sonarqube/macos-setup/mac004.png" alt="ac00"></p>
-<ol>
-<li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
-<li>輸入  <code>./sonar.sh start</code> 啟動 SonarQube</li>
-</ol>
-<p><img src="/images/sonarqube/macos-setup/mac003.png" alt="ac00"></p>
-<p>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功。</p>
-<h2 id="結束_SonarQube">結束 SonarQube</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> stop</span><br></pre></td></tr></table></figure>
-<p>使用 <code>sonar.sh stop</code> 結束 SonarQube。</p>
-<p><img src="/images/sonarqube/macos-setup/mac005.png" alt="ac00"></p>
-<ol>
-<li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
-<li>輸入  <code>./sonar.sh stop</code> 結束 SonarQube</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>雖然 SonarQube 主要是安裝在 Linux server 上，但透過安裝在 macOS，我們也可以在本機測試 SonarQube</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[直接在 macOS 執行 SonarQube]]>
-    
-    </summary>
-    
-      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
     
   </entry>
   
