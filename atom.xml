@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-19T02:14:41.165Z</updated>
+  <updated>2018-04-19T02:18:53.472Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/design-pattern/composite/"/>
     <id>http://oomusou.io/design-pattern/composite/</id>
     <published>2018-04-18T12:23:43.000Z</published>
-    <updated>2018-04-19T02:14:41.165Z</updated>
+    <updated>2018-04-19T02:18:53.472Z</updated>
     <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -196,7 +196,7 @@
 <p>學 Design Pattern 不能以 class diagram 的角度去思考，而要以他要解決什麼問題來思考</p>
 </blockquote>
 <h3 id="Similarity">Similarity</h3><ul>
-<li>都在解決 <code>繼承濫用</code> </li>
+<li>都在解決 <code>繼承濫用</code>，將原本 <code>垂直結構</code> 變成 <code>水平結構</code></li>
 <li>Interface 都不會改變</li>
 </ul>
 <h3 id="Difference">Difference</h3><ul>
