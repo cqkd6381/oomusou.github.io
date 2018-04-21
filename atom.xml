@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-21T08:12:40.351Z</updated>
+  <updated>2018-04-21T16:07:41.112Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,137 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[深入探討 Rider 的 Refactoring：Change Signature]]></title>
+    <link href="http://oomusou.io/rider/change-signature/"/>
+    <id>http://oomusou.io/rider/change-signature/</id>
+    <published>2018-04-26T12:23:43.000Z</published>
+    <updated>2018-04-21T16:07:41.112Z</updated>
+    <content type="html"><![CDATA[<p>Rider 相當於 IntelliJ + Resharper，除了保有 IntelliJ 平台的特色外，還包含 Resharper 強悍的功能，本文將討論其 Refactoring 中的 Change Signature。 </p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>JetBrains Rider 2018.1</p>
+<h2 id="Change_Signature">Change Signature</h2><hr>
+<p>實務上常在通過單元測試後，在重構階段才發現 method 的 parameter 需要重構，此時就該使用 Change Signature。</p>
+<ul>
+<li><strong>重構 method 名稱</strong>：Method、Property、Indexer</li>
+<li><strong>重構 method 回傳型別</strong>：Method、Property</li>
+<li><strong>重構 parameter 名稱與型別</strong>：Method、Constructor、Indexer</li>
+<li><strong>新增或刪除 parameter</strong>：Method、Constructor、Indexer</li>
+<li><strong>重構 parameter 順序</strong>：Method、Constructor、Indexer</li>
+</ul>
+<h2 id="重構_Signature_並修改呼叫端">重構 Signature 並修改呼叫端</h2><hr>
+<p><strong>Calculator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> calculator = <span class="keyword">new</span> Calculator();</span><br><span class="line">            <span class="keyword">var</span> result = calculator.Add(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>欲將 <code>Calculator.Add()</code> 加以 Change Signature。</p>
+<p><img src="/images/rider/change-signature/sig000.png" alt="sig000"></p>
+<ol>
+<li>將游標放到 <code>Add()</code></li>
+<li>按熱鍵：<code>⌃ + T</code>，選擇 Change Signature</li>
+</ol>
+<p><img src="/images/rider/change-signature/sig001.png" alt="sig001"></p>
+<ol>
+<li>將 method 名稱重構成 <code>Add3</code></li>
+<li>增加 parameter <code>int x</code></li>
+<li>對原本呼叫的 function 選擇直接 <code>Modify</code> (稍後會介紹 <code>Delegate via overloading method</code>)</li>
+<li>按 <code>Next</code> 下一步</li>
+</ol>
+<p><img src="/images/rider/change-signature/sig002.png" alt="sig002"></p>
+<p>對於新增的 parameter，Rider 提供 4 種重構方式</p>
+<ol>
+<li><code>Leave code non-compatible, I&#39;ll correct calls my selft</code>：也就是 Rider 不做任何修改</li>
+<li><code>Use 0</code>：Rider 會對新的參數傳入 <code>0</code></li>
+<li><code>Resolve with call tree</code>：Rider 會對每個呼叫的 method 停下來，讓我們決定該如何修改 (稍後會介紹)</li>
+<li><code>Use the following value</code>：統一給定指定值傳入</li>
+</ol>
+<p>在此選擇 <code>Use 0</code> 。</p>
+<p><img src="/images/rider/change-signature/sig003.png" alt="sig003"></p>
+<ol>
+<li>Rider 替我們將 method 名稱改成 <code>Add3()</code></li>
+<li>Rider 替我們增加了 parameter <code>int z</code></li>
+</ol>
+<p><img src="/images/rider/change-signature/sig004.png" alt="sig004"></p>
+<ol>
+<li>呼叫端也改成 <code>Add3</code></li>
+<li>Argument 多傳了 <code>0</code> </li>
+</ol>
+<h2 id="重構_Signature_但不修改呼叫端">重構 Signature 但不修改呼叫端</h2><hr>
+<p><img src="/images/rider/change-signature/sig005.png" alt="sig005"></p>
+<ol>
+<li>選擇 <code>Delegate via overloading method</code>，將以 Overloading 方式重構</li>
+</ol>
+<p><img src="/images/rider/change-signature/sig002.png" alt="sig002"></p>
+<p>對於呼叫端，一樣有 4 種重構方式。</p>
+<p><img src="/images/rider/change-signature/sig006.png" alt="sig006"></p>
+<ol>
+<li>原本的 <code>Add()</code> 重構成 <code>Add3()</code>，也增加了 parameter <code>int z</code></li>
+<li>另外新增一個 <code>Add()</code> 呼叫 <code>Add3()</code>，如此可在不修改呼叫端的情況下，改變 signature</li>
+</ol>
+<blockquote>
+<p>如 class library 已經正式發佈，有其他的 client 使用中，這種重構方式可使的 client 不用修改程式碼，也能達到 Change Signature 的目的</p>
+</blockquote>
+<h2 id="直接修改呼叫端_Signature">直接修改呼叫端 Signature</h2><hr>
+<p><img src="/images/rider/change-signature/sig007.png" alt="sig007"></p>
+<ol>
+<li>直接在呼叫端新增 argument <code>2</code></li>
+<li>按熱鍵 <code>⌥ + ↩</code>，顯示了多種重構方式，甚至可以新增 Overloading Method</li>
+</ol>
+<p><img src="/images/rider/change-signature/sig008.png" alt="sig008"></p>
+<ol>
+<li>Rider 幫我們增加了新 parameter <code>int i</code></li>
+</ol>
+<h2 id="根據_Call_Tree_逐步修改呼叫端">根據 Call Tree 逐步修改呼叫端</h2><hr>
+<p><strong>Calculator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Multiply</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x * y;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Calculate</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Multiply(Add(x, y), z);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>新增 <code>Multiply()</code> 與 <code>Calculate()</code> 。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> calculator = <span class="keyword">new</span> Calculator();</span><br><span class="line">            <span class="keyword">var</span> result = calculator.Calculate(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Client 改呼叫 <code>Calculate()</code>。</p>
+<p><img src="/images/rider/change-signature/sig009.png" alt="sig009"></p>
+<p>一樣針對 <code>Add()</code> 加以重構。</p>
+<p><img src="/images/rider/change-signature/sig001.png" alt="sig001"></p>
+<p>一樣重構 method name 與增加 parameter。</p>
+<p><img src="/images/rider/change-signature/sig010.png" alt="sig010"></p>
+<ol>
+<li>選擇 <code>Resolve with call tree</code></li>
+</ol>
+<p><img src="/images/rider/change-signature/sig011.png" alt="sig011"></p>
+<ol>
+<li>Rider 會逐一根據 call tree 一步一步重構，首先遇到呼叫 <code>Add3()</code> 之處，會詢問你該如何重構，內建提供多種方法，選擇 <code>Create field _z in type Calculator</code></li>
+</ol>
+<p><img src="/images/rider/change-signature/sig012.png" alt="sig012"></p>
+<ol>
+<li>Rider 自動幫我們加上 field 與 Constructor</li>
+</ol>
+<p><img src="/images/rider/change-signature/sig013.png" alt="sig013"></p>
+<p>既然 <code>Calculator</code> 新增了 constructor，接下來就是針對 constructor 加以重構。</p>
+<ol>
+<li>針對 constructor 也提供了眾多重構方式，選擇 User edit</li>
+</ol>
+<p><img src="/images/rider/change-signature/sig014.png" alt="sig014"></p>
+<ol>
+<li>自行在 constructor 輸入 <code>4</code></li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Rider 針對 Change Signature 提供多種重構方式，甚至還可以根據 call tree，一步一步提供客製化的重構</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/RiderChangeSignature" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://www.jetbrains.com/help/rider" target="_blank" rel="external">JetBrains Rider</a>, <a href="https://www.jetbrains.com/help/rider/Refactorings__Change_Signature.html?keymap=rider_osx#delegating" target="_blank" rel="external">Change Signature refactoring</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[針對 Method 的 Signature 加以重構]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 F# 實現 Composite Pattern？]]></title>
@@ -3483,92 +3614,6 @@
       <category term="PHP" scheme="http://oomusou.io/tags/PHP/"/>
     
       <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 F# 實現 Decorator Pattern？]]></title>
-    <link href="http://oomusou.io/fsharp/decorator/"/>
-    <id>http://oomusou.io/fsharp/decorator/</id>
-    <published>2018-03-30T12:23:43.000Z</published>
-    <updated>2018-04-01T11:41:44.110Z</updated>
-    <content type="html"><![CDATA[<p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Decorator Pattern。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
-<ul>
-<li>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></li>
-<li>不到 1000 元，則 <code>全館八折</code></li>
-</ul>
-<h2 id="Task">Task</h2><hr>
-<p>直接使用 FP 的思維完成需求。</p>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p>Decorator Pattern</p>
-<p>在不改變原有 interface 的前提下，動態增加原有的功能</p>
-</blockquote>
-<p><img src="/images/fsharp/decorator/decorator000.svg" alt="ecorator00"></p>
-<p>首先思考 Decorator Pattern 的本質：</p>
-<ol>
-<li>Component 與 decorator 之間的 interface 必須相同</li>
-<li>Component 可自由組合 decorator</li>
-</ol>
-<p>只要能達到這兩個目標，就算完成了 Decorator Pattern。</p>
-<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
-<ul>
-<li>為了讓 component 與 decorator 的 interface 要相同，所以必須訂出共同的 interface</li>
-<li>由於 decorator 必須包含原本 component 功能，因此 decorator 必須以 state 方式保存原本 component</li>
-<li>由於各 decorator 都必須透過 constructor 保存原本 component，因此將共用 constructor 抽出來由 <code>AbstractDecorator</code> 實作<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於 OOP 的 Decorator 實作，詳細請參考 <a href="http://oomusou.io/design-pattern/decorator/">如何使用 C# 實現 Decorator Pattern ?</a></span></span></span></li>
-</ul>
-<h2 id="FP_思考方式">FP 思考方式</h2><hr>
-<ul>
-<li>Component 與 decorator 都是 function，不用事先定義 interface，反正只要 interface 不同，在 Pattern Matching 一定會編譯錯誤</li>
-<li>Component 與 decorator 都是 function，既然 interface 都相同，只要使用 Function Composition 產生新的 function 即可</li>
-</ul>
-<h2 id="Implementation">Implementation</h2><hr>
-<p><strong>PriceDecorator.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceDecorator =  </span><br><span class="line">    <span class="keyword">let</span> discountPrice price = price * <span class="number">0.8</span></span><br><span class="line">    <span class="keyword">let</span> rebatePrice price = price - <span class="number">100.0</span></span><br></pre></td></tr></table></figure>
-<p>以 <code>discountPrice()</code> 表示 <code>全館八折</code>。</p>
-<p>以 <code>rebatePrice()</code> 表示 <code>滿千送百</code>。</p>
-<p>由於 component 與 decorator 基本上都是 <code>double -&gt; double</code> 的型別，可以廣義視為 decorator 放在同一 module。</p>
-<p><strong>OrderService.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> PriceDecorator</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> getPrice price = </span><br><span class="line">        <span class="keyword">match</span> price &gt; <span class="number">1000.0</span> <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span> -&gt; (discountPrice &gt;&gt; rebatePrice) price</span><br><span class="line">        | <span class="keyword">false</span> -&gt; discountPrice price</span><br></pre></td></tr></table></figure>
-<p>根據商業邏輯：</p>
-<blockquote>
-<p>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></p>
-</blockquote>
-<p>因此將 <code>discountPrice()</code> 與 <code>rebatePrice()</code> 以 <code>&gt;&gt;</code> compose 成一個新的 function，就相當於 <code>全館八折</code> 再 <code>滿千送百</code></p>
-<blockquote>
-<p>在 FP 只要使用 Compose Function，就相當於 OOP 的 Decorator Pattern，在 F# 只需 <code>&gt;&gt;</code>，但 C# 卻要 interface 與 abstract class 的搭配才能實現</p>
-</blockquote>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">        </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
-<p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
-<h2 id="Summary">Summary</h2><hr>
-<p>回想 Decorator Pattern 的本質：</p>
-<ol>
-<li>Component 與 decorator 之間的 interface 必須相同</li>
-<li>Component 可自由組合 decorator</li>
-</ol>
-<p>由於 component 與 decorator 的 interface 相同，可以廣義視為 decorator，雖然沒有特別定義 interface，但 <code>discountPrice()</code> 與 <code>rebatePrice()</code> 的 signature 都是 <code>double -&gt; double</code>，若 function 的 signature 不同，在 Pattern Matching 就會編譯錯誤，與原本 Decorator Pattern 定義 interface 的本質相同。</p>
-<p>原本 OOP 的 Decorator Pattern 可以透過 <code>new</code> 自由組合 decorator object，但 FP 可透過 <code>&gt;&gt;</code> 自由組合 decorator function，與原本 Decorator Pattern 的自由組合 decorator 本質相同。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Decorator Pattern 本質就是 object 的組合，但 object 的組合沒 function 簡單直覺，所以才需要搭配 interface 與 abstract class，但若純 function，只要使用 Function Composition 即可簡單完成</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderDecorator" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以 FP 重新思考 Decorator Pattern]]>
-    
-    </summary>
-    
-      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
