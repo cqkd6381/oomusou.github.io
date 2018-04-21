@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/fsharp/composite/</loc>
+    <lastmod>2018-04-21T08:12:40.351Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/design-pattern/composite/</loc>
     <lastmod>2018-04-19T02:50:08.129Z</lastmod>
   </url>
