@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="針對 Method 的 Signature 加以重構">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-21T16:07:41.112Z">
+<meta property="og:updated_time" content="2018-04-21T16:19:03.749Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入探討 Rider 的 Refactoring：Change Signature">
 <meta name="twitter:description" content="針對 Method 的 Signature 加以重構">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Change_Signature"><span class="toc-article-text">Change Signature</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構_Signature_並修改呼叫端"><span class="toc-article-text">重構 Signature 並修改呼叫端</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構_Signature_但不修改呼叫端"><span class="toc-article-text">重構 Signature 但不修改呼叫端</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#直接修改呼叫端_Signature"><span class="toc-article-text">直接修改呼叫端 Signature</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#根據_Call_Tree_逐步修改呼叫端"><span class="toc-article-text">根據 Call Tree 逐步修改呼叫端</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Change_Signature"><span class="toc-article-text">Change Signature</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構_Signature_並修改_Client"><span class="toc-article-text">重構 Signature 並修改 Client</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構_Signature_但不修改_Client"><span class="toc-article-text">重構 Signature 但不修改 Client</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#直接修改_Client_的_Argument"><span class="toc-article-text">直接修改 Client 的 Argument</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#根據_Call_Tree_逐步修改_Client"><span class="toc-article-text">根據 Call Tree 逐步修改 Client</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -120,7 +120,7 @@
 <li><strong>新增或刪除 parameter</strong>：Method、Constructor、Indexer</li>
 <li><strong>重構 parameter 順序</strong>：Method、Constructor、Indexer</li>
 </ul>
-<h2 id="重構_Signature_並修改呼叫端">重構 Signature 並修改呼叫端</h2><hr>
+<h2 id="重構_Signature_並修改_Client">重構 Signature 並修改 Client</h2><hr>
 <p><strong>Calculator.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>Program.cs</strong></p>
@@ -154,35 +154,35 @@
 </ol>
 <p><img src="/images/rider/change-signature/sig004.png" alt="sig004"></p>
 <ol>
-<li>呼叫端也改成 <code>Add3</code></li>
+<li>Client 也改成 <code>Add3</code></li>
 <li>Argument 多傳了 <code>0</code> </li>
 </ol>
-<h2 id="重構_Signature_但不修改呼叫端">重構 Signature 但不修改呼叫端</h2><hr>
+<h2 id="重構_Signature_但不修改_Client">重構 Signature 但不修改 Client</h2><hr>
 <p><img src="/images/rider/change-signature/sig005.png" alt="sig005"></p>
 <ol>
 <li>選擇 <code>Delegate via overloading method</code>，將以 Overloading 方式重構</li>
 </ol>
 <p><img src="/images/rider/change-signature/sig002.png" alt="sig002"></p>
-<p>對於呼叫端，一樣有 4 種重構方式。</p>
+<p>對於 client，一樣有 4 種重構方式。</p>
 <p><img src="/images/rider/change-signature/sig006.png" alt="sig006"></p>
 <ol>
 <li>原本的 <code>Add()</code> 重構成 <code>Add3()</code>，也增加了 parameter <code>int z</code></li>
-<li>另外新增一個 <code>Add()</code> 呼叫 <code>Add3()</code>，如此可在不修改呼叫端的情況下，改變 signature</li>
+<li>另外新增一個 <code>Add()</code> 呼叫 <code>Add3()</code>，如此可在不修改 Client 的情況下，改變 signature</li>
 </ol>
 <blockquote>
 <p>如 class library 已經正式發佈，有其他的 client 使用中，這種重構方式可使的 client 不用修改程式碼，也能達到 Change Signature 的目的</p>
 </blockquote>
-<h2 id="直接修改呼叫端_Signature">直接修改呼叫端 Signature</h2><hr>
+<h2 id="直接修改_Client_的_Argument">直接修改 Client 的 Argument</h2><hr>
 <p><img src="/images/rider/change-signature/sig007.png" alt="sig007"></p>
 <ol>
-<li>直接在呼叫端新增 argument <code>2</code></li>
+<li>直接在 client 新增 argument <code>2</code></li>
 <li>按熱鍵 <code>⌥ + ↩</code>，顯示了多種重構方式，甚至可以新增 Overloading Method</li>
 </ol>
 <p><img src="/images/rider/change-signature/sig008.png" alt="sig008"></p>
 <ol>
 <li>Rider 幫我們增加了新 parameter <code>int i</code></li>
 </ol>
-<h2 id="根據_Call_Tree_逐步修改呼叫端">根據 Call Tree 逐步修改呼叫端</h2><hr>
+<h2 id="根據_Call_Tree_逐步修改_Client">根據 Call Tree 逐步修改 Client</h2><hr>
 <p><strong>Calculator.cs</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Multiply</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x * y;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Calculate</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Multiply(Add(x, y), z);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>新增 <code>Multiply()</code> 與 <code>Calculate()</code> 。</p>
