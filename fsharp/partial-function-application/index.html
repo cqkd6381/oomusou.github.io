@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="更優雅的方式產生 function">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-03T02:55:22.082Z">
+<meta property="og:updated_time" content="2018-04-22T02:18:06.682Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入淺出 F# 之 Partial Function Application">
 <meta name="twitter:description" content="更優雅的方式產生 function">
@@ -110,7 +110,7 @@
 	    <p>FP 既然強調 Higher Order Function，就會希望 argument 以 function 傳入，因此就會有 function 能夠傳回 function 的需求，除了回傳 Anonymous Function 或 Lambda Expression 外，F# 更提供了 Partial Function Application ，讓程式碼更優雅。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="Lambda_Expression">Lambda Expression</h2><hr>
 <p>舉一個最簡單的例子</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1.</span><span class="number">.5</span>]</span><br><span class="line">|&gt; List.iter (<span class="keyword">fun</span> i -&gt; printfn <span class="string">"%d"</span> i)</span><br></pre></td></tr></table></figure>

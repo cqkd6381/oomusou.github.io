@@ -2,23 +2,83 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://oomusou.io/rider/change-signature/</loc>
-    <lastmod>2018-04-22T01:48:59.367Z</lastmod>
+    <loc>http://oomusou.io/fsharp/unit-ignore/</loc>
+    <lastmod>2018-04-22T02:20:29.158Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/fsharp/composite/</loc>
-    <lastmod>2018-04-21T08:12:40.351Z</lastmod>
+    <loc>http://oomusou.io/fsharp/union/</loc>
+    <lastmod>2018-04-22T02:20:20.999Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/design-pattern/composite/</loc>
-    <lastmod>2018-04-19T02:50:08.129Z</lastmod>
+    <loc>http://oomusou.io/fsharp/tuple/</loc>
+    <lastmod>2018-04-22T02:18:34.680Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/strategy/</loc>
+    <lastmod>2018-04-22T02:18:25.265Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/partial-function-application/</loc>
+    <lastmod>2018-04-22T02:18:06.682Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/list/</loc>
+    <lastmod>2018-04-22T02:17:57.722Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/list-module-function-part3/</loc>
+    <lastmod>2018-04-22T02:17:52.655Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/list-module-function-part2/</loc>
+    <lastmod>2018-04-22T02:17:47.554Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/list-module-function-part1/</loc>
+    <lastmod>2018-04-22T02:17:42.075Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/decorator/</loc>
+    <lastmod>2018-04-22T02:17:23.723Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/design-pattern/strategy/</loc>
+    <lastmod>2018-04-22T02:17:01.348Z</lastmod>
   </url>
   
   <url>
     <loc>http://oomusou.io/design-pattern/proxy/</loc>
-    <lastmod>2018-04-19T02:11:07.516Z</lastmod>
+    <lastmod>2018-04-22T02:16:05.917Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/proxy/</loc>
+    <lastmod>2018-04-22T02:15:45.237Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/design-pattern/composite/</loc>
+    <lastmod>2018-04-22T02:15:20.454Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/fsharp/composite/</loc>
+    <lastmod>2018-04-22T02:15:18.990Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/rider/change-signature/</loc>
+    <lastmod>2018-04-22T02:15:17.982Z</lastmod>
   </url>
   
   <url>
@@ -42,38 +102,8 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/fsharp/proxy/</loc>
-    <lastmod>2018-04-14T12:28:55.598Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/list/</loc>
-    <lastmod>2018-04-09T01:40:23.034Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/list-module-function-part2/</loc>
-    <lastmod>2018-04-08T15:44:33.323Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/list-module-function-part1/</loc>
-    <lastmod>2018-04-08T15:39:24.615Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/list-module-function-part3/</loc>
-    <lastmod>2018-04-08T15:39:17.935Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/angular/multi-provider/</loc>
     <lastmod>2018-04-04T13:27:38.707Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/tuple/</loc>
-    <lastmod>2018-04-04T06:32:07.242Z</lastmod>
   </url>
   
   <url>
@@ -92,18 +122,8 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/fsharp/unit-ignore/</loc>
-    <lastmod>2018-04-03T02:57:31.197Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/fsharp/option/</loc>
     <lastmod>2018-04-03T02:57:17.870Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/partial-function-application/</loc>
-    <lastmod>2018-04-03T02:55:22.082Z</lastmod>
   </url>
   
   <url>
@@ -132,11 +152,6 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/fsharp/decorator/</loc>
-    <lastmod>2018-04-01T11:41:44.110Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/docker/jenkins/</loc>
     <lastmod>2018-03-31T06:04:03.582Z</lastmod>
   </url>
@@ -149,11 +164,6 @@
   <url>
     <loc>http://oomusou.io/docker/netcore/</loc>
     <lastmod>2018-03-29T14:06:57.210Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/union/</loc>
-    <lastmod>2018-03-29T13:06:55.187Z</lastmod>
   </url>
   
   <url>
@@ -174,16 +184,6 @@
   <url>
     <loc>http://oomusou.io/design-pattern/decorator/</loc>
     <lastmod>2018-03-29T05:16:36.121Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/design-pattern/strategy/</loc>
-    <lastmod>2018-03-29T05:16:23.041Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/fsharp/strategy/</loc>
-    <lastmod>2018-03-28T13:06:49.752Z</lastmod>
   </url>
   
   <url>

@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-22T01:48:59.367Z</updated>
+  <updated>2018-04-22T02:15:17.982Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,11 +19,11 @@
     <link href="http://oomusou.io/rider/change-signature/"/>
     <id>http://oomusou.io/rider/change-signature/</id>
     <published>2018-04-26T12:23:43.000Z</published>
-    <updated>2018-04-22T01:48:59.367Z</updated>
+    <updated>2018-04-22T02:15:17.982Z</updated>
     <content type="html"><![CDATA[<p>Rider 相當於 IntelliJ + Resharper，除了保有 IntelliJ 平台的特色外，還包含 Resharper 強悍的功能，本文將討論其 Refactoring 中的 Change Signature。 </p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>JetBrains Rider 2018.1</p>
+<p>macOS High Sierra 10.13.3<br>Rider 2018.1</p>
 <h2 id="Change_Signature">Change Signature</h2><hr>
 <p>實務上常在通過單元測試後，在重構階段才發現 method 的 parameter 需要重構，此時就該使用 Change Signature。</p>
 <ul>
@@ -152,11 +152,11 @@
     <link href="http://oomusou.io/fsharp/composite/"/>
     <id>http://oomusou.io/fsharp/composite/</id>
     <published>2018-04-21T12:23:43.000Z</published>
-    <updated>2018-04-21T08:12:40.351Z</updated>
+    <updated>2018-04-22T02:15:18.990Z</updated>
     <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Composite Pattern。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2018.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2018.1<br>F# 4.1</p>
 <h2 id="User_Story">User Story</h2><hr>
 <p>由購物車計算商品價錢，但在活動期間，Apple 產品組合有特惠 ：</p>
 <ul>
@@ -258,11 +258,11 @@
     <link href="http://oomusou.io/design-pattern/composite/"/>
     <id>http://oomusou.io/design-pattern/composite/</id>
     <published>2018-04-18T12:23:43.000Z</published>
-    <updated>2018-04-19T02:50:08.129Z</updated>
+    <updated>2018-04-22T02:15:20.454Z</updated>
     <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>C# 7.2</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>C# 7.2</p>
 <h2 id="User_Story">User Story</h2><hr>
 <p>由購物車計算商品價錢，但在活動期間，Apple 產品組合有特惠 ：</p>
 <ul>
@@ -844,11 +844,11 @@
     <link href="http://oomusou.io/fsharp/proxy/"/>
     <id>http://oomusou.io/fsharp/proxy/</id>
     <published>2018-04-13T12:23:43.000Z</published>
-    <updated>2018-04-14T12:28:55.598Z</updated>
+    <updated>2018-04-22T02:15:45.237Z</updated>
     <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Proxy Pattern。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="User_Story">User Story</h2><hr>
 <p>假設你在處理訂單，只有會員才能享受 <code>全館八折</code>，其他人都只能原價購買。</p>
 <ul>
@@ -941,11 +941,11 @@
     <link href="http://oomusou.io/design-pattern/proxy/"/>
     <id>http://oomusou.io/design-pattern/proxy/</id>
     <published>2018-04-12T12:23:43.000Z</published>
-    <updated>2018-04-19T02:11:07.516Z</updated>
+    <updated>2018-04-22T02:16:05.917Z</updated>
     <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，隨著 FP 逐漸受到重視， Proxy Pattern 在實作上也有了新的面貌。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>C# 7.2</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>C# 7.2</p>
 <h2 id="User_Story_1">User Story 1</h2><hr>
 <p>假設你在處理訂單，為了慶祝週年慶，<code>全館八折</code>。</p>
 <p><strong>Task</strong><br>將 <code>OrderService</code> 包在 <code>OrderLibrary</code> assembly 內。</p>
@@ -1186,12 +1186,12 @@
     <link href="http://oomusou.io/fsharp/list-module-function-part3/"/>
     <id>http://oomusou.io/fsharp/list-module-function-part3/</id>
     <published>2018-04-07T13:23:43.000Z</published>
-    <updated>2018-04-08T15:39:17.935Z</updated>
+    <updated>2018-04-22T02:17:52.655Z</updated>
     <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
 <p>本文探討英文字母 Q ~ Z 開頭的 function。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="List-reduce">List.reduce</h2><hr>
 <blockquote>
 <p>將 list 中每個 element 的值經過 reduction function 累加</p>
@@ -1611,12 +1611,12 @@
     <link href="http://oomusou.io/fsharp/list-module-function-part2/"/>
     <id>http://oomusou.io/fsharp/list-module-function-part2/</id>
     <published>2018-04-07T12:23:43.000Z</published>
-    <updated>2018-04-08T15:44:33.323Z</updated>
+    <updated>2018-04-22T02:17:47.554Z</updated>
     <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
 <p>本文探討英文字母 G ~ P 開頭的 function。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="List-head">List.head</h2><hr>
 <blockquote>
 <p>傳回 list 第一個 element，相當於 list 的  <code>Head</code> property</p>
@@ -1892,12 +1892,12 @@
     <link href="http://oomusou.io/fsharp/list-module-function-part1/"/>
     <id>http://oomusou.io/fsharp/list-module-function-part1/</id>
     <published>2018-04-06T12:23:43.000Z</published>
-    <updated>2018-04-08T15:39:24.615Z</updated>
+    <updated>2018-04-22T02:17:42.075Z</updated>
     <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
 <p>本文探討英文字母 A ~ F 開頭的 function。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="List-allPairs">List.allPairs</h2><hr>
 <blockquote>
 <p>將兩個 list 的 element 取 cartesian product</p>
@@ -2266,11 +2266,11 @@
     <link href="http://oomusou.io/fsharp/list/"/>
     <id>http://oomusou.io/fsharp/list/</id>
     <published>2018-04-05T12:23:43.000Z</published>
-    <updated>2018-04-09T01:40:23.034Z</updated>
+    <updated>2018-04-22T02:17:57.722Z</updated>
     <content type="html"><![CDATA[<p>F# 除了使用 .NET Framework 所提供的型別外，自己還定義了不少適合 FP 的型別，其中最常用的就是 <code>List</code>，但這與 C# 的 <code>List&lt;T&gt;</code> 不同，反而類似 C# 的 <code>ImmutableList&lt;T&gt;</code>。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="Definition">Definition</h2><hr>
 <blockquote>
 <p>List</p>
@@ -2489,11 +2489,11 @@
     <link href="http://oomusou.io/fsharp/tuple/"/>
     <id>http://oomusou.io/fsharp/tuple/</id>
     <published>2018-04-04T12:23:43.000Z</published>
-    <updated>2018-04-04T06:32:07.242Z</updated>
+    <updated>2018-04-22T02:18:34.680Z</updated>
     <content type="html"><![CDATA[<p><code>Tuple</code> 是 FP 語言常見的型別，且 C# 7.0 也開始有 <code>Tuple</code>，讓我們藉由 F# 學習該如何活用 <code>Tuple</code>。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="Definition">Definition</h2><hr>
 <blockquote>
 <p>Tuple</p>
@@ -2937,11 +2937,11 @@
     <link href="http://oomusou.io/fsharp/partial-function-application/"/>
     <id>http://oomusou.io/fsharp/partial-function-application/</id>
     <published>2018-04-03T12:23:43.000Z</published>
-    <updated>2018-04-03T02:55:22.082Z</updated>
+    <updated>2018-04-22T02:18:06.682Z</updated>
     <content type="html"><![CDATA[<p>FP 既然強調 Higher Order Function，就會希望 argument 以 function 傳入，因此就會有 function 能夠傳回 function 的需求，除了回傳 Anonymous Function 或 Lambda Expression 外，F# 更提供了 Partial Function Application ，讓程式碼更優雅。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="Lambda_Expression">Lambda Expression</h2><hr>
 <p>舉一個最簡單的例子</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1.</span><span class="number">.5</span>]</span><br><span class="line">|&gt; List.iter (<span class="keyword">fun</span> i -&gt; printfn <span class="string">"%d"</span> i)</span><br></pre></td></tr></table></figure>
@@ -3326,11 +3326,11 @@
     <link href="http://oomusou.io/fsharp/unit-ignore/"/>
     <id>http://oomusou.io/fsharp/unit-ignore/</id>
     <published>2018-04-01T12:23:43.000Z</published>
-    <updated>2018-04-03T02:57:31.197Z</updated>
+    <updated>2018-04-22T02:20:29.158Z</updated>
     <content type="html"><![CDATA[<p>F# 是 FP，強調 function 都要有 input 值，也要有 return 值，若 function 真的沒有 input 值，也沒有 return 值，在 F# 該如何表示呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>F# 4.1</p>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
 <h2 id="Unit_與_()">Unit 與 ()</h2><hr>
 <p>FP 的思考來自於數學函數，認為 function 都要有 <code>定義域</code> 與 <code>對應域</code>，如 <code>y = f(x)</code>，也就是 input  <code>x</code> 的型別就是 <code>定義域</code>，而 return  <code>y</code> 的型別就是 <code>對應域</code>。</p>
 <p>但在電腦語言的 function，可能沒有 input 值，也可能沒有 return 值，這就與數學 function 不同，針對這種需求，F# 特別設計出新的型別 <code>unit</code>，其值只有一個 <code>()</code>。</p>
