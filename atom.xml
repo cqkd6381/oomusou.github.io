@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-21T16:19:03.749Z</updated>
+  <updated>2018-04-22T01:48:59.367Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/rider/change-signature/"/>
     <id>http://oomusou.io/rider/change-signature/</id>
     <published>2018-04-26T12:23:43.000Z</published>
-    <updated>2018-04-21T16:19:03.749Z</updated>
+    <updated>2018-04-22T01:48:59.367Z</updated>
     <content type="html"><![CDATA[<p>Rider 相當於 IntelliJ + Resharper，除了保有 IntelliJ 平台的特色外，還包含 Resharper 強悍的功能，本文將討論其 Refactoring 中的 Change Signature。 </p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -140,6 +140,8 @@
     <![CDATA[針對 Method 的 Signature 加以重構]]>
     
     </summary>
+    
+      <category term="Refactoring" scheme="http://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
     
