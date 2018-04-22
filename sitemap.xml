@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/docker/postgres/</loc>
+    <lastmod>2018-04-22T15:33:04.628Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/rider/change-signature/</loc>
+    <lastmod>2018-04-22T15:24:13.791Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/fsharp/unit-ignore/</loc>
     <lastmod>2018-04-22T02:20:29.158Z</lastmod>
   </url>
@@ -74,11 +84,6 @@
   <url>
     <loc>http://oomusou.io/fsharp/composite/</loc>
     <lastmod>2018-04-22T02:15:18.990Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/rider/change-signature/</loc>
-    <lastmod>2018-04-22T02:15:17.982Z</lastmod>
   </url>
   
   <url>
