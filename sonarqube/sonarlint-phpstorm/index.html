@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 PhpStorm 使用 SonarLint ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="讓 SonarQube 即時在 PhpStorm 內檢查">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="讓 SonarQube 即時在 PhpStorm 內檢查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 PhpStorm 使用 SonarLint ?">
+<meta property="og:url" content="http://oomusou.io/sonarqube/sonarlint-phpstorm/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="讓 SonarQube 即時在 PhpStorm 內檢查">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-24T06:53:10.349Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 PhpStorm 使用 SonarLint ?">
+<meta name="twitter:description" content="讓 SonarQube 即時在 PhpStorm 內檢查">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 PhpStorm 使用 SonarLint ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 讓 SonarQube 即時在 PhpStorm 內檢查			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_SonarLint"><span class="toc-article-text">安裝 SonarLint</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#General_Setting"><span class="toc-article-text">General Setting</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Settings"><span class="toc-article-text">Settings</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#File_Exclusions"><span class="toc-article-text">File Exclusions</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Project_Setting"><span class="toc-article-text">Project Setting</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Bind_to_SonarQube_project"><span class="toc-article-text">Bind to SonarQube project</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#File_Exclusion"><span class="toc-article-text">File Exclusion</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Automatic_Analysis"><span class="toc-article-text">Automatic Analysis</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>SonarQube 除了搭配 Jenkins 檢查程式碼品質外，還可以在 IDE 中使用 SonarLint，讓 developer 在程式開發階段就及早發現可能的 bugs、vulenrability、code smell 與 duplication，本文將介紹 SonarLint + PhpStorm。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>PhpStorm 2018.1<br>SonarLint 3.3.0.2482<br>PHP 7.1.14<br>Laravel 5.6.17</p>
+<h2 id="安裝_SonarLint">安裝 SonarLint</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint000.png" alt="sonarlint000"></p>
+<ol>
+<li><strong><em>PhpStorm -&gt; Preferences … -&gt; Plugins</em></strong></li>
+<li>按 <code>Browse repositories…</code></li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint001.png" alt="sonarlint001"></p>
+<ol>
+<li>輸入 <code>SonarLint</code></li>
+<li>按 <code>Install</code> 安裝</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint002.png" alt="sonarlint002"></p>
+<ol>
+<li>下載完 SonarLint 後，按 <code>Restart PhpStorm</code></li>
+</ol>
+<h2 id="General_Setting">General Setting</h2><hr>
+<h3 id="Settings">Settings</h3><p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint003.png" alt="sonarlint003"></p>
+<ol>
+<li><strong><em>PhpStorm -&gt; Preferences -&gt; Other Settings -&gt; SonarLint General Settings</em></strong></li>
+<li>選擇 <code>Settings</code> tab</li>
+<li>勾選 <code>Automatically trigger analysis</code>，SonarLint 將會自動檢查目前的檔案</li>
+<li>在 <code>SonarQube servers</code> 按 <code>+</code> 新增 server</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint004.png" alt="sonarlint004"></p>
+<ol>
+<li>為設定取一個名字</li>
+<li>輸入 SonarQube 的網址</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint005.png" alt="sonarlint005"></p>
+<ol>
+<li><code>Authentication type</code> 選擇 <code>Login / Password</code></li>
+<li>Login / Password 填預設的  <code>admin/admin</code></li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint006.png" alt="sonarlint006"></p>
+<ol>
+<li>按 <code>Finish</code> 完成設定</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint007.png" alt="sonarlint007"></p>
+<ol>
+<li>按 <code>Update binding</code> 從 SonarQube server 更新 project list、profile、rule 到本機</li>
+</ol>
+<h3 id="File_Exclusions">File Exclusions</h3><p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint008.png" alt="sonarlint008"></p>
+<ol>
+<li>選擇 <code>File Exclusions</code> tab，若每個專案都有特定的目錄不想被 SonarLint 檢查，可統一設定在此</li>
+</ol>
+<h2 id="Project_Setting">Project Setting</h2><hr>
+<h3 id="Bind_to_SonarQube_project">Bind to SonarQube project</h3><p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint009.png" alt="sonarlint009"></p>
+<ol>
+<li><strong><em>PhpStorm -&gt; Preferences -&gt; Other Settings -&gt; SonarLint Project Settings</em></strong></li>
+<li>選擇 <code>Bind to SonarQube project</code> tab</li>
+<li>將 <code>Enable binding to remote SonarQube server</code> 打勾，如此本地專案將與 SonarQube server 端綁定</li>
+<li><code>Bind to server</code> 選擇剛剛建立的 <code>MySonarQube</code></li>
+<li><code>SonarQube project</code> 選擇欲綁定的 <code>SonarQube</code> 專案</li>
+</ol>
+<h3 id="File_Exclusion">File Exclusion</h3><p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint010.png" alt="sonarlint010"></p>
+<ol>
+<li>選擇 <code>File Exclusions</code> tab，若專案中有特定的目錄不想被 SonarLint 檢查，可設定在此</li>
+<li>按 <code>OK</code> 儲存設定</li>
+</ol>
+<h2 id="Automatic_Analysis">Automatic Analysis</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint011.png" alt="sonarlint011"></p>
+<p>SonarQube 檢查出在 <code>app/Console/Kernel.php</code> 有 code smell，不該在程式碼有註解掉的 code，而應該直接刪除，由 Git 作版控。</p>
+<p><img src="/images/sonarqube/sonarlint-phpstorm/sonarlint012.png" alt="sonarlint012"></p>
+<p>SonarLint 能在 PhpStorm 內即時的檢查出目前檔案的 issue。</p>
+<ol>
+<li>下方選擇 <code>SonarLint</code> tab</li>
+<li>有問題的 code</li>
+<li>SonarLint 的錯誤訊息，與 SonarQube server 完全一樣，</li>
+<li>解釋該 rule 檢查理由</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>有了 SonarLint，developer 就能更即時的獲得 SonarQube 的建議，養成寫出 clean code 的好習慣</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/docker/postgres/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-24 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li> <li><a href="/tags/SonarLint/">SonarLint<span>1</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>6</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
