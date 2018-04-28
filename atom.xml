@@ -116,8 +116,8 @@
   
   <entry>
     <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
-    <link href="http://oomusou.io/Docker/postgres/"/>
-    <id>http://oomusou.io/Docker/postgres/</id>
+    <link href="http://oomusou.io/docker/postgres/"/>
+    <id>http://oomusou.io/docker/postgres/</id>
     <published>2018-04-22T13:23:43.000Z</published>
     <updated>2018-04-22T15:33:04.000Z</updated>
     <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 安裝。本文除了安裝 PostgreSQL 外，還分別使用 DataGrip 與 Rider 連接 PostgreSQL。</p>
@@ -686,8 +686,8 @@
   
   <entry>
     <title><![CDATA[如何使用 Docker 安裝 Ubuntu ?]]></title>
-    <link href="http://oomusou.io/Docker/ubuntu/"/>
-    <id>http://oomusou.io/Docker/ubuntu/</id>
+    <link href="http://oomusou.io/docker/ubuntu/"/>
+    <id>http://oomusou.io/docker/ubuntu/</id>
     <published>2018-04-16T13:23:43.000Z</published>
     <updated>2018-04-16T13:15:32.000Z</updated>
     <content type="html"><![CDATA[<p>以前在 macOS 安裝 Ubuntu 都要先安裝 Parallel Desktop，然後再將 Ubuntu 安裝在 Parallel Desktop 上，安裝了 Docker for Mac 後，只要下載 Ubuntu 的 Docker image，Ubuntu 就能以 container 形式跑在 Docker 上。</p>
@@ -837,8 +837,8 @@
   
   <entry>
     <title><![CDATA[如何安裝 Docker for Mac ?]]></title>
-    <link href="http://oomusou.io/Docker/docker-for-mac/"/>
-    <id>http://oomusou.io/Docker/docker-for-mac/</id>
+    <link href="http://oomusou.io/docker/docker-for-mac/"/>
+    <id>http://oomusou.io/docker/docker-for-mac/</id>
     <published>2018-04-16T12:23:43.000Z</published>
     <updated>2018-04-16T12:44:42.000Z</updated>
     <content type="html"><![CDATA[<p>由於 Docker 在本質上仍是個 Linux，只是多個 container 跑在同一個 Linux 上，因此若要將 Docker 跑在 macOS，仍然需要一個 VM 在背景跑 Linux。Docker for Mac 讓我們不用安裝其他 VM，就可以將 container 跑在 Docker 上。</p>
@@ -991,8 +991,8 @@
   
   <entry>
     <title><![CDATA[如何安裝 Docker for Windows ?]]></title>
-    <link href="http://oomusou.io/Docker/docker-for-windows/"/>
-    <id>http://oomusou.io/Docker/docker-for-windows/</id>
+    <link href="http://oomusou.io/docker/docker-for-windows/"/>
+    <id>http://oomusou.io/docker/docker-for-windows/</id>
     <published>2018-04-14T12:23:43.000Z</published>
     <updated>2018-04-14T12:30:35.000Z</updated>
     <content type="html"><![CDATA[<p>由於 Docker 在本質上仍是個 Linux，只是多個 container 跑在同一個 Linux 上，因此若要將 Docker 跑在 Windows，仍然需要一個 VM 在背景跑 Linux。Docker for Windws 內建支援 Windows 的 Hyper-V，只會在 Hyper-V 內跑一個極小的 Linux，如此其他 container 就能跑在 Docker 上。</p>

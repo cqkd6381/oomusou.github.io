@@ -7,7 +7,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/postgres/</loc>
+    <loc>http://oomusou.io/docker/postgres/</loc>
     <lastmod>2018-04-22T15:33:04.000Z</lastmod>
   </url>
   
@@ -92,7 +92,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/ubuntu/</loc>
+    <loc>http://oomusou.io/docker/ubuntu/</loc>
     <lastmod>2018-04-16T13:15:32.000Z</lastmod>
   </url>
   
@@ -102,12 +102,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/docker-for-mac/</loc>
+    <loc>http://oomusou.io/docker/docker-for-mac/</loc>
     <lastmod>2018-04-16T12:44:42.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/docker-for-windows/</loc>
+    <loc>http://oomusou.io/docker/docker-for-windows/</loc>
     <lastmod>2018-04-14T12:30:35.000Z</lastmod>
   </url>
   
@@ -162,7 +162,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/jenkins/</loc>
+    <loc>http://oomusou.io/docker/jenkins/</loc>
     <lastmod>2018-03-31T06:03:58.000Z</lastmod>
   </url>
   
@@ -172,7 +172,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/netcore/</loc>
+    <loc>http://oomusou.io/docker/netcore/</loc>
     <lastmod>2018-03-29T14:06:57.000Z</lastmod>
   </url>
   
@@ -402,7 +402,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/mount-host-dir/</loc>
+    <loc>http://oomusou.io/docker/mount-host-dir/</loc>
     <lastmod>2018-03-03T15:32:27.000Z</lastmod>
   </url>
   
@@ -417,12 +417,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/jenkins-core/</loc>
+    <loc>http://oomusou.io/docker/jenkins-core/</loc>
     <lastmod>2018-03-03T02:03:07.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/Docker/ubuntu-core/</loc>
+    <loc>http://oomusou.io/docker/ubuntu-core/</loc>
     <lastmod>2018-03-03T01:50:26.000Z</lastmod>
   </url>
   
@@ -927,22 +927,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/service/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-project-template/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://oomusou.io/phpstorm/phpstorm-code-inspection/</loc>
-    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/laravel/homestead/homestead-per-project/</loc>
-    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/tdd/tdd-factory-ocp/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -957,7 +947,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-github/</loc>
+    <loc>http://oomusou.io/tdd/tdd-factory-ocp/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -967,7 +957,17 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-project-template/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-github/</loc>
+    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/laravel/service/</loc>
+    <lastmod>2016-10-18T06:13:35.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/laravel/homestead/homestead-per-project/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -1072,12 +1072,17 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-spellcheck/</loc>
+    <loc>http://oomusou.io/ci/travis-ci-setup/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://oomusou.io/phpstorm/phpstorm-new-laravel-project/</loc>
+    <lastmod>2016-03-22T14:03:51.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/refactor/refactor-remove-assignments-to-parameters/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -1088,11 +1093,6 @@
   
   <url>
     <loc>http://oomusou.io/phpstorm/phpstorm-markdown/</loc>
-    <lastmod>2016-03-22T14:03:51.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/refactor/refactor-remove-assignments-to-parameters/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -1112,12 +1112,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/php/php-trait/</loc>
+    <loc>http://oomusou.io/tdd/tdd-phpunit-native-function/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/tdd/tdd-phpunit-native-function/</loc>
+    <loc>http://oomusou.io/php/php-trait/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -1127,7 +1127,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/ci/travis-ci-setup/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-spellcheck/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
