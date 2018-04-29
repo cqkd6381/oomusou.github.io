@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-29T14:10:40.575Z</updated>
+  <updated>2018-04-29T14:24:35.311Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,91 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 Visual Studio 使用 SonarLint ?]]></title>
+    <link href="http://oomusou.io/sonarqube/sonarlint-vs/"/>
+    <id>http://oomusou.io/sonarqube/sonarlint-vs/</id>
+    <published>2018-04-29T13:23:43.000Z</published>
+    <updated>2018-04-29T14:24:35.311Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 除了搭配 Jenkins 檢查程式碼品質外，還可以在 IDE 中使用 SonarLint，讓 developer 在程式開發階段就及早發現可能的 bugs、vulenrability、code smell 與 duplication，本文將介紹 SonarLint + Visual Studio。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Windows 10 Pro 1709 16299.371<br>SonarQube 6.7.2 LTS<br>Visual Studio Enterprise 2017 15.6.6<br>SonarLint 3.10.0.3095<br>C# 7.2<br>.NET Framework 4.6.1</p>
+<h2 id="安裝_SonarLint">安裝 SonarLint</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint000.png" alt="sonarlint000"></p>
+<p><strong><em>Tools -&gt; Extensions and Update…</em></strong></p>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint001.png" alt="sonarlint001"></p>
+<ol>
+<li><p>選擇 <code>Online</code></p>
+</li>
+<li><p>輸入 <code>SonarLint</code></p>
+</li>
+<li><p>選擇 <code>SonarLint for Visual Studio</code> 下載</p>
+</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint002.png" alt="sonarlint002"></p>
+<ol>
+<li>關閉 Visual Studio 後，按 <code>Modify</code> 安裝 SonarLint for Visual Studio</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint003.png" alt="sonarlint003"></p>
+<p>安裝完第一次進入 Visual Studio 後</p>
+<ol>
+<li>SonarLint 即將下載其他語言的 scanner，如 JavaScript，將 <code>Don&#39;t show this message again</code> 打勾</li>
+<li>按 <code>Yes</code> 繼續</li>
+</ol>
+<h2 id="連接_SonarQube_Server">連接 SonarQube Server</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint004.png" alt="sonarlint004"></p>
+<p>先開啟 solution。</p>
+<p><strong><em>Analyze -&gt; Manage SonarQube Connections…</em></strong></p>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint005.png" alt="sonarlint005"></p>
+<ol>
+<li>按 <code>Connect...</code> 連接 SonarQube server</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint006.png" alt="sonarlint006"></p>
+<ol>
+<li>輸入 SonarQube server 網址</li>
+<li>Login / Password 填預設的 <code>admin/admin</code></li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint007.png" alt="sonarlint007"></p>
+<p>連上 SonarQube server 後，會出現目前 server 上所有的 project，選擇你要綁定的專案。</p>
+<blockquote>
+<p>綁定後會從 server 下載 profile 與 rule 到本機</p>
+</blockquote>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint008.png" alt="sonarlint008"></p>
+<p>與 SonarQube 綁定後，在 solution 下會出現 <code>SonarQube</code>。</p>
+<h2 id="Automatic_Analysis">Automatic Analysis</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint009.png" alt="sonarlint009"></p>
+<p>SonarQube 檢查出 <code>IPadAir.cs</code> 有 code smell，class 不該使用 <code>I</code> 開頭。</p>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint010.png" alt="sonarlint010"></p>
+<p>SonarLint 能在 Visual Studio 內即時的檢查出目前檔案的 issue。</p>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint011.png" alt="sonarlint011"></p>
+<p>點擊左側的小燈泡，SonarLint 會解釋該 rule 檢查的理由。</p>
+<h2 id="Manual_Analysis">Manual Analysis</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint012.png" alt="sonarlint012"></p>
+<p>SonarLint 亦可手動檢查整個 solution。</p>
+<ol>
+<li>點擊 solution 右鍵，選 <code>Analyze -&gt; Run Code Analysis on Solution</code></li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-vs/sonarlint013.png" alt="sonarlint013"></p>
+<p>SonarLint 會將所有檢查到的 issue 顯示在下方。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>有了 SonarLint，developer 就能更即時的獲得 SonarQube 的建議，養成寫出 clean code 的好習慣</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[讓 SonarQube 即時在 Visual Studio 內檢查]]>
+    
+    </summary>
+    
+      <category term="SonarLint" scheme="http://oomusou.io/tags/SonarLint/"/>
+    
+      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
+    
+      <category term="Visual Studio" scheme="http://oomusou.io/tags/Visual-Studio/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 SonarQube 檢查 .NET Core 專案？]]></title>
@@ -3375,55 +3460,6 @@
       <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
     
       <category term="TypeScript" scheme="http://oomusou.io/tags/TypeScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入淺出 F# 之 Partial Function Application]]></title>
-    <link href="http://oomusou.io/fsharp/partial-function-application/"/>
-    <id>http://oomusou.io/fsharp/partial-function-application/</id>
-    <published>2018-04-03T12:23:43.000Z</published>
-    <updated>2018-04-22T02:18:06.000Z</updated>
-    <content type="html"><![CDATA[<p>FP 既然強調 Higher Order Function，就會希望 argument 以 function 傳入，因此就會有 function 能夠傳回 function 的需求，除了回傳 Anonymous Function 或 Lambda Expression 外，F# 更提供了 Partial Function Application ，讓程式碼更優雅。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="Lambda_Expression">Lambda Expression</h2><hr>
-<p>舉一個最簡單的例子</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1.</span><span class="number">.5</span>]</span><br><span class="line">|&gt; List.iter (<span class="keyword">fun</span> i -&gt; printfn <span class="string">"%d"</span> i)</span><br></pre></td></tr></table></figure>
-<p>將 <code>1</code> 到 <code>5</code> 的 <code>List</code> 全部印出來。</p>
-<p><img src="/images/fsharp/partial/partial000.png" alt="artial00"></p>
-<p><code>List.iter()</code> 的 argument 要求 <code>&#39;T -&gt; unit</code> 的 function。</p>
-<p>在沒有提供 Partial Function Application 的程式語言，我們會傳進 Anonymous function 或 Lambda Expression。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> i -&gt; printfn <span class="string">"%d"</span> i</span><br></pre></td></tr></table></figure>
-<p>這種寫法中規中矩，儘管語法不太一樣，在一般語言都看得到。</p>
-<h2 id="Partial_Function_Application">Partial Function Application</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1.</span><span class="number">.5</span>]</span><br><span class="line">|&gt; List.iter (printfn <span class="string">"%d"</span>)</span><br></pre></td></tr></table></figure>
-<p>既然 <code>List.iter()</code> 的 argument 要求 <code>&#39;T -&gt; unit</code> 的 function，我們只要能產生 <code>T -&gt; unit</code> 就符合 <code>List.iter()</code> 的需求。</p>
-<p><code>printfn()</code> 的 singnature 為 <code>string -&gt; &#39;T -&gt; unit</code>，他的意思是：</p>
-<ul>
-<li>當傳入兩個參數為 <code>string</code> 與 <code>&#39;T</code> 時，回傳值為 <code>unit</code></li>
-<li>當傳入一個 參數為 <code>string</code> 時，回傳值回 <code>T -&gt; unit</code></li>
-</ul>
-<p><code>List.iter()</code> 要的正是 <code>&#39;T -&gt; unit</code>，所以我們只要傳入一個參數即可。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printfn <span class="string">"%d"</span></span><br></pre></td></tr></table></figure>
-<p>這種寫法是不是比 Lambda Expression 更優雅呢？</p>
-<h2 id="Summary">Summary</h2><hr>
-<ul>
-<li>在多參數的 function，只要提供 <code>部分參數</code>，就會回傳一個新的 function，而不必自己建立 Anonymous Function 或 Lambda Expression。</li>
-<li>在多參數的 function，其型別是以 <code>-&gt;</code> 隔開，如 <code>string -&gt; &#39;T -&gt; unit</code>，而不是 <code>string, &#39;T -&gt; unit</code>，因為 F# 的 function 可隨時提供 <code>部分參數</code>，而回傳新的 function，如只提供 <code>string</code>，就會回傳 <code>&#39;T -&gt; unit</code>，這也是為什麼 F# 在每個參數間以 <code>-&gt;</code> 隔開，而非 <code>,</code></li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Partial Function Application 並不是 F# 的獨門絕技，只要是 FP 語言都會有，算是 FP 語言的基本要求，但在一般語言如 C#、JavaScript 卻看不到，只能使用 Lambda Expression / Anonymous Function / Arrow Function 來處理，但 Partial Function Application 提供了更優雅的方式</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[更優雅的方式產生 function]]>
-    
-    </summary>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
