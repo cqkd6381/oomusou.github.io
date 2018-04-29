@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/sonarqube/netcore/</loc>
+    <lastmod>2018-04-29T14:10:40.575Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/sonarqube/macos-setup/</loc>
+    <lastmod>2018-04-28T12:19:29.068Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/sonarqube/sonarlint-phpstorm/</loc>
     <lastmod>2018-04-24T06:53:10.000Z</lastmod>
   </url>
@@ -122,11 +132,6 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/sonarqube/netcore/</loc>
-    <lastmod>2018-04-03T06:48:49.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/sonarqube/php/</loc>
     <lastmod>2018-04-03T06:48:42.000Z</lastmod>
   </url>
@@ -184,11 +189,6 @@
   <url>
     <loc>http://oomusou.io/typescript/module/</loc>
     <lastmod>2018-03-29T10:26:11.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/sonarqube/macos-setup/</loc>
-    <lastmod>2018-03-29T10:23:45.000Z</lastmod>
   </url>
   
   <url>
