@@ -104,7 +104,7 @@
     <link href="http://oomusou.io/sonarqube/netcore/"/>
     <id>http://oomusou.io/sonarqube/netcore/</id>
     <published>2018-04-29T12:23:43.000Z</published>
-    <updated>2018-04-29T14:10:40.575Z</updated>
+    <updated>2018-04-29T23:02:35.443Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
 <p>SonarQube 已經內建 SonarC#，可以直接對 C# 進行檢查，本文將以 .NET Core 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
 <a id="more"></a>
@@ -317,8 +317,6 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
     
       <category term="Jenkins" scheme="http://oomusou.io/tags/Jenkins/"/>
     
