@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/sonarqube/macos/</loc>
+    <lastmod>2018-04-30T02:02:59.400Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/sonarqube/netcore/</loc>
     <lastmod>2018-04-29T23:02:35.443Z</lastmod>
   </url>
@@ -9,11 +14,6 @@
   <url>
     <loc>http://oomusou.io/sonarqube/sonarlint-vs/</loc>
     <lastmod>2018-04-29T14:24:35.311Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/sonarqube/macos-setup/</loc>
-    <lastmod>2018-04-28T12:19:29.068Z</lastmod>
   </url>
   
   <url>

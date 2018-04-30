@@ -13,11 +13,11 @@
  <meta name="description" content="直接在 macOS 執行 SonarQube">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何在 macOS 安裝 SonarQube ?">
-<meta property="og:url" content="http://oomusou.io/sonarqube/macos-setup/index.html">
+<meta property="og:url" content="http://oomusou.io/sonarqube/macos/index.html">
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="直接在 macOS 執行 SonarQube">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-28T12:19:29.068Z">
+<meta property="og:updated_time" content="2018-04-30T02:02:59.400Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在 macOS 安裝 SonarQube ?">
 <meta name="twitter:description" content="直接在 macOS 執行 SonarQube">
@@ -102,40 +102,36 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載_SonarQube"><span class="toc-article-text">下載 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_SonarQube"><span class="toc-article-text">安裝 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#啟動_SonarQube"><span class="toc-article-text">啟動 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#結束_SonarQube"><span class="toc-article-text">結束 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_SonarQube"><span class="toc-article-text">安裝 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#啟動_SonarQube"><span class="toc-article-text">啟動 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_SonarQube-1"><span class="toc-article-text">安裝 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。它是一套以 Java 開發的工具，在 macOS 安裝很簡單，不使用 <code>pkg</code> 格式，所以不用擔心移除問題，只需解壓縮即可執行。</p>
-<a id="more"></a>
+	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>透過 Homebrew，我們可以很簡單地安裝 SonarQube。<br><a id="more"></a></p>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Java SE 1.8.0_112<br>SonarQube 6.7.2 LTS</p>
-<h2 id="下載_SonarQube">下載 SonarQube</h2><hr>
-<p><img src="/images/sonarqube/macos-setup/mac000.png" alt="ac00"></p>
-<p>到  <a href="https://www.sonarqube.org/downloads/" target="_blank" rel="external">SonarQube 官網</a> 下載，因為由 Java 開發，所以不分系統版本。</p>
-<p><img src="/images/sonarqube/macos-setup/mac001.png" alt="ac00"></p>
-<p>下載後為一 <code>zip</code> 格式檔案。</p>
+<p>macOS High Sierra 10.13.4<br>Java 10.0.1 2018-04-17<br>SonarQube 7.1</p>
 <h2 id="安裝_SonarQube">安裝 SonarQube</h2><hr>
-<p><img src="/images/sonarqube/macos-setup/mac002.png" alt="ac00"></p>
-<p>將下載的 <code>zip</code> 檔案解開，可安裝在任意目錄，目前安裝在 home directory 的 <code>sonarqube-6.7.2</code>。</p>
-<h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> start</span><br></pre></td></tr></table></figure>
-<p>使用 <code>sonar.sh start</code> 啟動 SonarQube。</p>
-<p><img src="/images/sonarqube/macos-setup/mac004.png" alt="ac00"></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install sonarqube</span><br></pre></td></tr></table></figure>
+<p>使用 Home-brew 安裝 SonarQube。</p>
+<p><img src="/images/sonarqube/macos/mac000.png" alt="ac00"></p>
 <ol>
-<li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
-<li>輸入  <code>./sonar.sh start</code> 啟動 SonarQube</li>
+<li>輸入 <code>brew install sonarqube</code> 安裝</li>
+<li>若想在每次 Mac 重開機就自動執行 SonarQube，輸入 <code>brew services start sonarqube</code></li>
+<li>若想自行啟動 SonarQube，輸入 <code>sonar console</code></li>
 </ol>
-<p><img src="/images/sonarqube/macos-setup/mac003.png" alt="ac00"></p>
-<p>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功。</p>
-<h2 id="結束_SonarQube">結束 SonarQube</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./sonar<span class="class">.sh</span> stop</span><br></pre></td></tr></table></figure>
-<p>使用 <code>sonar.sh stop</code> 結束 SonarQube。</p>
-<p><img src="/images/sonarqube/macos-setup/mac005.png" alt="ac00"></p>
+<h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sonar <span class="built_in">console</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>sonar console</code> 自行啟動 SonarQube。</p>
+<p><img src="/images/sonarqube/macos/mac001.png" alt="ac00"></p>
 <ol>
-<li>將目錄切到 <code>sonarqube-6.7.2/bin/macosx-universal-64</code></li>
-<li>輸入  <code>./sonar.sh stop</code> 結束 SonarQube</li>
+<li>輸入 <code>sonar console</code> 自行啟動 SonarQube</li>
+</ol>
+<h2 id="安裝_SonarQube-1">安裝 SonarQube</h2><hr>
+<p><img src="/images/sonarqube/macos/mac002.png" alt="ac00"></p>
+<ol>
+<li>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功</li>
+<li>右上角 <code>Log in</code> 可登入管理設定 SonarQube，預設為 <code>admin/admin</code></li>
 </ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
@@ -149,14 +145,14 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/sonarqube/docker/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-		   <li class="next"><a href="/design-pattern/decorator/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+		   <li class="next"><a href="/sonarqube/sonarlint-vs/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -177,7 +173,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2018-03-29 
+	2018-04-30 
 	</div>
 	
 
