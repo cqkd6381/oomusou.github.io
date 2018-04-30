@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>如何重灌 macOS High Sierra ? | 點燈坊</title>
+  <title>如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ? | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
-  <meta name="description" content="因為 APFS 所導致的問題">
+  <meta name="description" content="SonarTS 版本太舊所導致">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
- <meta name="description" content="因為 APFS 所導致的問題">
+ <meta name="description" content="SonarTS 版本太舊所導致">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何重灌 macOS High Sierra ?">
-<meta property="og:url" content="http://oomusou.io/macos/install-clean-high-sierra/index.html">
+<meta property="og:title" content="如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?">
+<meta property="og:url" content="http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/index.html">
 <meta property="og:site_name" content="點燈坊">
-<meta property="og:description" content="因為 APFS 所導致的問題">
+<meta property="og:description" content="SonarTS 版本太舊所導致">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-30T02:45:59.428Z">
+<meta property="og:updated_time" content="2018-04-30T02:54:47.576Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何重灌 macOS High Sierra ?">
-<meta name="twitter:description" content="因為 APFS 所導致的問題">
+<meta name="twitter:title" content="如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?">
+<meta name="twitter:description" content="SonarTS 版本太舊所導致">
  
 
   
@@ -81,7 +81,7 @@
     	 
 	
 		<div class="page-header">		
-			<h1> 如何重灌 macOS High Sierra ?</h1>
+			<h1> 如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?</h1>
 		</div>		
 	
 
@@ -95,7 +95,7 @@
 
 	
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 因為 APFS 所導致的問題			
+			<i class="fa fa-info-circle"></i> SonarTS 版本太舊所導致			
 		</div> <!-- alert -->
 		
 
@@ -107,53 +107,37 @@
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>High Sierra 引入 APFS 新的磁碟格式後，優點是對 SSD 最佳化，效率很高，缺點是 APFS 使的 Time Machine 之前的備份面臨了極大的挑戰，除了無法整顆硬碟還原外，連要重新安裝 High Sierra 也很不方便。</p>
+	    <p>當在 IntelliJ 平台使用 SonarLint 時，只要在 <code>SonarLint General Settings</code> 下按 <code>Update Binding</code> 就會出現 <code>Analyzer Not Loaded</code> 的錯誤訊息，這該如何解決呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>MacBook Pro Retina, 15”, Mid 2014<br>macOS 10.13.4</p>
+<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarTS 1.6<br>PhpStorm 2018.1<br>SonarLint 3.3.0.2482</p>
 <h2 id="Sympton">Sympton</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts000.png" alt="sonarts000"></p>
+<p><strong><em>PhpStorm -&gt; Other Settings -&gt; SonarLint General Settings</em></strong></p>
 <ol>
-<li>雖然一直更新到 High Sierra，也都一直有做 Time Machine 備份，但真的要整顆 SSD 還原時卻無法還原，出現 <code>An error occurred while restoring from the backup</code> 錯誤訊息</li>
-<li>因為還原之前已經選擇 erase 整顆 SSD，因此只能選擇 reinstall macOS 一途</li>
-<li>真的重灌 High Sierra 時，到最後會出現 <code>Could not create preboot volumn for APFS install</code></li>
+<li>當按下 <code>Update binding</code>，欲將 SonarQube server 上的 project lists、rules、profile 下載到本機</li>
+<li>出現 <code>Analyzers Not Loaded</code> 錯誤訊息</li>
 </ol>
-<p>也就是面臨進退兩難，退無法使用 Time Machine 還原，進也無法重灌 High Sierra 的窘境。</p>
-<blockquote>
-<p>這些問題都是我在 MBPR Mid 2014 所遇到，不確定其他 MBPR 是否也如此</p>
-</blockquote>
 <h2 id="Root_Cause">Root Cause</h2><hr>
-<p>所有的問題都出在 APFS。</p>
+<p>SonarLint 3.3.0.2482 必須搭配使用 SonarTS 1.5 以上，但是 SonarQube 6.7.2 LTS 預設提供為 SonarTS 1.1，因此 SonarLint 無法載入 TypeScript analyzer。</p>
+<blockquote>
+<p>SonarQube 7.1 預設就提供 SonarTS 1.6，就不會有這個問題</p>
+</blockquote>
+<h2 id="Recipe">Recipe</h2><p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts001.png" alt="sonarts001"></p>
 <ol>
-<li>Time Machine 目前對於 APFS  的支援，之前舊的備份無法整顆 SSD 還原</li>
-<li>High Sierra 無法直接安裝在 APFS 格式的 SSD，僅能由 <code>Mac OS Extented (Journaled)</code> 格式的 SSD 安裝，在升級成 APFS 格式</li>
+<li>到 SonarTS 的 <a href="https://github.com/SonarSource/SonarTS/releases" target="_blank" rel="external">GitHub</a> 下載最新版 SonarTS 1.6</li>
+<li>選擇 <code>.jar</code> 格式下載</li>
 </ol>
-<p><code>1</code> 基本上無解，只能將原本 Time Machine 備份砍掉後，然後備份重新開始。</p>
-<p><code>2</code> 可自行將 SSD 重新格式化成 <code>Mac OS Extented (Journaled)</code> 格式後即可重灌。</p>
-<h2 id="Recipe">Recipe</h2><hr>
-<blockquote>
-<p>由於無法截圖，只能以文字描述</p>
-</blockquote>
-<ul>
-<li>以 ⌘ + R 開機，在 <code>Disk Utility</code> 將 APFS 格式的 SSD 刪除，使 MBPR 處於沒有 SSD 狀態</li>
-</ul>
-<blockquote>
-<p>SSD 一旦被格式化成 APFS 之後，就無法格式化成其他格式，因此只能將 SSD 刪除</p>
-</blockquote>
-<ul>
-<li>再以 ⌘ + R 重新開機，因為已經沒 SSD 可以開機，BIOS 會自動要求連上網路，下載最小可開機所需要的檔案</li>
-<li>進入 <code>Disk Utility</code>，將 SSD 格式化成 <code>Mac OS Extented (Journaled)</code></li>
-<li>離開 <code>Disk Utility</code>，進入 <code>Reinstall OS X</code>，會出現 <code>OS X Yosemite</code> 安裝畫面</li>
-</ul>
-<blockquote>
-<p>這裡預估不同 MBPR 的版本會不同，當時 MBPR Mid 2014 所附的版本就是 Yosemite</p>
-</blockquote>
-<ul>
-<li>Yosemite 安裝完成後，再由 App Store 更新成 High Sierra</li>
-</ul>
+<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts002.png" alt="sonarts002"></p>
+<ol>
+<li>到 SonarQube 安裝目錄下的 <code>extensions/plugins</code> </li>
+<li>將原本的 <code>`sonar-typescript-plugin-1.1.0.1079.jar</code> 刪除，以 <code>sonar-typescript-plugin-1.6.0.2388.jar</code> 取代之</li>
+<li>重新啟動 SonarQube</li>
+</ol>
+<p>在 PhpStorm 重新 <code>Update binding</code> 就不會出現錯誤訊息了。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>APFS 格式雖然適合 SSD，但對於 Resintall OS X 與 Time Machine 並不友善，尤其舊的備份竟然無法在 APFS 整顆 SSD 還原</li>
-<li>High Sierra 無法直接安裝在 APFS，雖然可以手動格式化成 <code>Mac OS Extented (Journaled)</code>，但要先安裝 Yosemite，才能升級為 High Sierra，這也使得 Reinstall OS X 變得非常麻煩</li>
+<li>若使用 SonarQube 最新版就不會有這個問題，但若使用 SonarQube LTS，因為 SonarTS 的版本較舊，與 SonarLint 搭配就會有問題</li>
 </ul>
 	  
 	</div>
@@ -163,14 +147,14 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/sonarqube/sonarlint-analyzer-not-loaded/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-		   <li class="next"><a href="/sonarqube/macos/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+		   <li class="next"><a href="/macos/install-clean-high-sierra/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -201,7 +185,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/macOS/">macOS<span>15</span></a></li>
+  <li><a href="/tags/SonarLint/">SonarLint<span>3</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>8</span></a></li>
     </ul>
 	</div>
 		

@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/</loc>
+    <lastmod>2018-04-30T02:54:47.576Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/macos/install-clean-high-sierra/</loc>
     <lastmod>2018-04-30T02:45:59.428Z</lastmod>
   </url>
