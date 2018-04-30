@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-04-30T02:54:47.576Z</updated>
+  <updated>2018-04-30T02:57:49.875Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/"/>
     <id>http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/</id>
     <published>2018-04-30T14:23:43.000Z</published>
-    <updated>2018-04-30T02:54:47.576Z</updated>
+    <updated>2018-04-30T02:57:49.875Z</updated>
     <content type="html"><![CDATA[<p>當在 IntelliJ 平台使用 SonarLint 時，只要在 <code>SonarLint General Settings</code> 下按 <code>Update Binding</code> 就會出現 <code>Analyzer Not Loaded</code> 的錯誤訊息，這該如何解決呢？</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -44,7 +44,7 @@
 <p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts002.png" alt="sonarts002"></p>
 <ol>
 <li>到 SonarQube 安裝目錄下的 <code>extensions/plugins</code> </li>
-<li>將原本的 <code>`sonar-typescript-plugin-1.1.0.1079.jar</code> 刪除，以 <code>sonar-typescript-plugin-1.6.0.2388.jar</code> 取代之</li>
+<li>將原本的 <code>sonar-typescript-plugin-1.1.0.1079.jar</code> 刪除，以 <code>sonar-typescript-plugin-1.6.0.2388.jar</code> 取代之</li>
 <li>重新啟動 SonarQube</li>
 </ol>
 <p>在 PhpStorm 重新 <code>Update binding</code> 就不會出現錯誤訊息了。</p>
