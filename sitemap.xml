@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/macos/finder-show-hidden-files/</loc>
+    <lastmod>2018-05-02T06:06:25.921Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/finder-show-hidden-files/</loc>
+    <lastmod>2018-05-02T06:02:25.204Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/</loc>
     <lastmod>2018-04-30T02:57:49.875Z</lastmod>
   </url>
