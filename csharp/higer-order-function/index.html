@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 FP 方式處理共用">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-05-04T11:00:16.304Z">
+<meta property="og:updated_time" content="2018-05-04T11:07:35.869Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Higer Order Function 抽出共用 ?">
 <meta name="twitter:description" content="使用 FP 方式處理共用">
@@ -177,7 +177,7 @@
 <p>OOP 為了要使用 <code>virtual</code> 與 <code>override</code> ，使用同一個 method 名稱，硬將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 抽到 parent class 的 <code>GetPrice()</code>。</p>
 <p>實務上常會發現，為了抽共用，常將與 method 名稱不符的 code 抽到 parent class。</p>
 <p>如 <code>Products.Sum(product =&gt; product.GetPrice())</code> 與 <code>GetPrice()</code> 並不相符，應該要取名 <code>GetSumOfPrice()</code> 較為恰當。</p>
-<p>此外，將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 放到 parent class 的 <code>GetPrice()</code>，會使得 code 被綁在 <code>IPrice</code> 繼承體系，這段 code 將來幾乎無法在重構。</p>
+<p>此外，將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 放到 parent class 的 <code>GetPrice()</code>，會使得 code 被綁在 <code>IPrice</code> 繼承體系，這段 code 將來幾乎無法再重構。</p>
 <h3 id="FP">FP</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>GetSumOfPrice()</code> 與  <code>Products.Sum(product =&gt; product.GetPrice())</code> 名實相符。</p>
 <p>且 <code>GetSumOfPrice()</code> 並非 <code>IPrice</code> 繼承體系的一員，將來很容易將 <code>GetSumOfPrice()</code> 重構到其他 class，甚至重構到 static helper class，非常靈活。</p>
