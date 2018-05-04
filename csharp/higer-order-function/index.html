@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 FP 方式處理共用">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-05-04T11:08:47.265Z">
+<meta property="og:updated_time" content="2018-05-04T14:42:01.895Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Higher Order Function 抽出共用 ?">
 <meta name="twitter:description" content="使用 FP 方式處理共用">
@@ -178,11 +178,13 @@
 <p>實務上常會發現，為了抽共用，常將與 method 名稱不符的 code 抽到 parent class。</p>
 <p>如 <code>Products.Sum(product =&gt; product.GetPrice())</code> 與 <code>GetPrice()</code> 並不相符，應該要取名 <code>GetSumOfPrice()</code> 較為恰當。</p>
 <p>此外，將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 放到 parent class 的 <code>GetPrice()</code>，會使得 code 被綁在 <code>IPrice</code> 繼承體系，這段 code 將來幾乎無法再重構。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _discount * <span class="keyword">base</span>.GetPrice();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Child class 無法藉由 <code>base.GetPrice()</code> 得知語意，一定得 trace 進 parent class 才知道 <code>base.GetPrice()</code> 到底在幹什麼。</p>
 <h3 id="FP">FP</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>GetSumOfPrice()</code> 與  <code>Products.Sum(product =&gt; product.GetPrice())</code> 名實相符。</p>
 <p>且 <code>GetSumOfPrice()</code> 並非 <code>IPrice</code> 繼承體系的一員，將來很容易將 <code>GetSumOfPrice()</code> 重構到其他 class，甚至重構到 static helper class，非常靈活。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Child class 也非常清楚看到 <code>GetSumOfPrice()</code>，且回傳值就是 <code>sum</code>，也非常清楚。</p>
+<p>Child class 也非常清楚看到 <code>GetSumOfPrice()</code>，且回傳值就是 <code>sum</code>，語意非常清楚，不必 trace 到 parent class。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li><code>Pull Member Up</code> 是典型 OOP 的重構手法，但藉由 FP 的 Higher Order Function，一樣可以實踐 DRY 原則，且更為靈活</li>
