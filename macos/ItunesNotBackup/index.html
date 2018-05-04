@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>如何使 Finder 顯示隱藏檔 ? | 點燈坊</title>
+  <title>如何使 iTunes 不要對 iOS Device 備份 ? | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
   <meta name="description" content="必須在 terminal 下指令">
@@ -12,14 +12,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
  <meta name="description" content="必須在 terminal 下指令">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何使 Finder 顯示隱藏檔 ?">
-<meta property="og:url" content="http://oomusou.io/macos/finder-show-hidden-files/index.html">
+<meta property="og:title" content="如何使 iTunes 不要對 iOS Device 備份 ?">
+<meta property="og:url" content="http://oomusou.io/macos/ItunesNotBackup/index.html">
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="必須在 terminal 下指令">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-05-02T06:06:25.921Z">
+<meta property="og:updated_time" content="2018-05-04T09:44:44.093Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何使 Finder 顯示隱藏檔 ?">
+<meta name="twitter:title" content="如何使 iTunes 不要對 iOS Device 備份 ?">
 <meta name="twitter:description" content="必須在 terminal 下指令">
  
 
@@ -81,7 +81,7 @@
     	 
 	
 		<div class="page-header">		
-			<h1> 如何使 Finder 顯示隱藏檔 ?</h1>
+			<h1> 如何使 iTunes 不要對 iOS Device 備份 ?</h1>
 		</div>		
 	
 
@@ -107,16 +107,16 @@
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>Finder 預設不會顯示隱藏檔，也沒有 GUI 可以設定，必須直接在 terminal 下指令。</p>
+	    <p>若要對 iOS device 同步 mp3，預設會先對 iOS device 備份，會浪費很多時間，如何讓 iTune 永遠不要備份呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4</p>
+<p>macOS High Sierra 10.13.4<br>iTunes 12.7.4.80</p>
 <h2 id="Recipe">Recipe</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ defaults <span class="command">write</span> com.apple.finder AppleShowAllFiles -<span class="type">boolean</span> <span class="constant">true</span> ; killall Finder</span><br></pre></td></tr></table></figure>
-<p>在 terminal  貼上以上指令，Finder 就會顯示隱藏檔了。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">defaults write com<span class="class">.apple</span><span class="class">.iTunes</span> DeviceBackupsDisabled -bool true</span><br></pre></td></tr></table></figure>
+<p>在 terminal 貼上以上指令，iTunes 就永遠不再備份了。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>對初學者不顯示隱藏檔是安全的，但對 power user 卻不方便，透過以上設定，Finder 就可正常顯示隱藏檔了。</li>
+<li>不備份 iOS 當然也有風險，不過實務上建議將重要資料直接備份在雲端，如 iCloud 或 Dropbox，而不用整個 iOS device 備份</li>
 </ul>
 	  
 	</div>
@@ -126,14 +126,14 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/macos/ItunesNotBackup/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-		   <li class="next"><a href="/sonarqube/sonarlint-analyzer-not-loaded/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+		   <li class="next"><a href="/macos/finder-show-hidden-files/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -154,7 +154,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2018-05-02 
+	2018-05-04 
 	</div>
 	
 
