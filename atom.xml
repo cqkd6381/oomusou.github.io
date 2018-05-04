@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-04T09:44:44.093Z</updated>
+  <updated>2018-05-04T10:53:34.078Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,101 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 Higer Order Function 抽出共用 ?]]></title>
+    <link href="http://oomusou.io/csharp/higer-order-function/"/>
+    <id>http://oomusou.io/csharp/higer-order-function/</id>
+    <published>2018-05-04T13:23:43.000Z</published>
+    <updated>2018-05-04T10:53:34.078Z</updated>
+    <content type="html"><![CDATA[<p>無論使用 TDD 或 Design Pattern，最後一定會經歷 Refactoring 階段，處理程式碼共用部分，避免違反 DRY 原則。在傳統 OOP，我們會使用 <code>Pull Member Up</code> 將共用 method 抽到 abstract class，但若使用 FP，我們則有新的武器：將共用部分抽成 Higher Order Function，將不共用部分以 Lambda 傳入。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core 2.0.7<br>C# 7.2</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p><strong>Apple.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Apple;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _discount = <span class="number">0.9</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Apple</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> PadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Nintendo.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Nintendo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Nintendo</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _minus = <span class="number">1000</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Nintendo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Switch(),</span><br><span class="line">                <span class="keyword">new</span> Zelda()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _products.Sum(product =&gt; product.GetPrice()) - _minus;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Apple.cs</code> 與 <code>Nintendo.cs</code> 都實踐相同的 <code>IPrice</code>，且我們已經看到有兩處程式碼非常相近：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br></pre></td></tr></table></figure>
+<p>都具有 <code>_products</code> List。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>與</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _products.Sum(product =&gt; product.GetPrice()) - _minus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也非常相近，都共用 <code>Products.Sum(product =&gt; product.GetPrice())</code>。</p>
+<h2 id="OOP_Refactoring">OOP Refactoring</h2><hr>
+<p><strong>ComboBase.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">ComboBase</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">protected</span> List&lt;IPrice&gt; Products;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>抽出 <code>ComboBase</code> abstract class，將重複部分全放在 parent class。</p>
+<p>但無論怎麼抽 class，一樣都實踐 <code>IPrice</code> interface，因此對 client 沒有影響，符合 <code>開放封閉原則</code>。</p>
+<p><strong>Apple.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Apple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _discount = <span class="number">0.9</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Apple</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> PadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _discount * <span class="keyword">base</span>.GetPrice();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 8 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">ComboBase</span></span><br></pre></td></tr></table></figure>
+<p>從原本實踐 <code>IPrice</code> interface，改繼承 <code>ComboBase</code>。</p>
+<p>由於 <code>ComboBase</code> 也是實踐 <code>IPrice</code>，因此對 client 沒有影響，符合 <code>開放封閉原則</code>。</p>
+<p>22 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _discount * <span class="keyword">base</span>.GetPrice();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於 <code>ComboBase.GetPrice()</code> 已經實作 <code>Products.Sum(product =&gt; product.GetPrice())</code>，因此使用 <code>base.GetPrice()</code> 呼叫 parent class 的 <code>GetPrice()</code>。</p>
+<p><strong>Nintendo.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Nintendo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Nintendo</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _minus = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Nintendo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Switch(),</span><br><span class="line">                <span class="keyword">new</span> Zelda()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">base</span>.GetPrice() - _minus;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>21 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">base</span>.GetPrice() - _minus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一樣使用 <code>base.GetPrice()</code> 呼叫 parent class 的 <code>GetPrice()</code>，只是在此是 <code>- _minus</code> 。</p>
+<blockquote>
+<p>這就是 OOP 典型的手法，將共用部分 <code>Pull Member Up</code> 到 parent class，並將 method 開成 <code>virtual</code>，再有 child class 去 <code>override</code> method，且使用 <code>base</code> 去呼叫 parent class 的 method</p>
+</blockquote>
+<h2 id="FP_Refactoring">FP Refactoring</h2><hr>
+<p>在 FP 由於有了 Higher Order Function，解決 DRY 有了新的手法：</p>
+<blockquote>
+<p>將共用部分抽成 Higher Order Function，將不共用部分以 Lambda 傳入</p>
+</blockquote>
+<p><strong>ComboBase.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">ComboBase</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">protected</span> List&lt;IPrice&gt; Products;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將共用部分抽成 <code>GetSumOfPrice()</code>，<code>action</code> 參數部分則傳入不共用部分。</p>
+<p>將共用的 <code>Products.Sum(product =&gt; product.GetPrice())</code> 傳入 <code>action()</code> 的參數。</p>
+<p>17 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span>;</span><br></pre></td></tr></table></figure>
+<p>原本 <code>GetPrice()</code> 使用 <code>abstract</code> 即可，由 child class 負責實作。</p>
+<p><strong>Apple.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Apple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _discount = <span class="number">0.9</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Apple</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> PadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>21 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>呼叫 parent class 的 <code>GetSumOfPrice()</code> ，回傳即為 lambda 的第一個參數 <code>sum</code> ，既然拿到 <code>sum</code>，我們就能在 <code>=&gt;</code> 之後做任何我們想做的運算。</p>
+<p><strong>Nintendo.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Nintendo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Nintendo</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _minus = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Nintendo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Switch(),</span><br><span class="line">                <span class="keyword">new</span> Zelda()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> GetSumOfPrice(sum =&gt; sum - _minus);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一樣呼叫 parent class 的 <code>GetSumOfPrice()</code> ，回傳即為 lambda 的第一個參數 <code>sum</code> ，既然拿到 <code>sum</code>，我們就能在 <code>=&gt;</code> 之後做任何我們想做的運算。</p>
+<h2 id="Summary">Summary</h2><hr>
+<blockquote>
+<p>Q : 兩種抽共用的方式都可行，有什麼差別呢 ?</p>
+</blockquote>
+<p>若以結果論，的確 OOP 與 FP 方法都可行，但 FP 方式語意較佳。</p>
+<h3 id="OOP">OOP</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>OOP 為了要使用 <code>virtual</code> 與 <code>override</code> ，使用同一個 method 名稱，硬將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 抽到 parent class 的 <code>GetPrice()</code>。</p>
+<p>實務上常會發現，為了抽共用，常將與 method 名稱不符的 code 抽到 parent class。</p>
+<p>如 <code>Products.Sum(product =&gt; product.GetPrice())</code> 與 <code>GetPrice()</code> 並不相符，應該要取名 <code>GetSumOfPrice()</code> 較為恰當。</p>
+<p>此外，將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 放到 parent class 的 <code>GetPrice()</code>，會使得 code 被綁在 <code>IPrice</code> 繼承體系，這段 code 將來幾乎無法在重構。</p>
+<h3 id="FP">FP</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>GetSumOfPrice()</code> 與  <code>Products.Sum(product =&gt; product.GetPrice())</code> 名實相符。</p>
+<p>且 <code>GetSumOfPrice()</code> 並非 <code>IPrice</code> 繼承體系的一員，將來很容易將 <code>GetSumOfPrice()</code> 重構到其他 class，甚至重構到 static helper class，非常靈活。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Child class 也非常清楚看到 <code>GetSumOfPrice()</code>，且回傳值就是 <code>sum</code>，也非常清楚。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>Pull Member Up</code> 是典型 OOP 的重構手法，但藉由 FP 的 Higher Order Function，一樣可以實踐 DRY 原則，且更為靈活</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 FP 方式處理共用]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使 iTunes 不要對 iOS Device 備份 ?]]></title>
@@ -2335,287 +2430,6 @@
 <p><code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; list3 : &#39;T3 list -&gt; (&#39;T1 * &#39;T2 * &#39;T3) list</code></p>
 </blockquote>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list3 = [ <span class="number">7</span>; <span class="number">8</span>; <span class="number">9</span> ]</span><br><span class="line"></span><br><span class="line">List.zip3 list1 list2 list3</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 4, 7); (2, 5, 8); (3, 6, 9)]</span></span><br></pre></td></tr></table></figure>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://msdn.microsoft.com/en-us/" target="_blank" rel="external">MSDN</a>, <a href="https://msdn.microsoft.com/en-us/visualfsharpdocs/conceptual/collections.list-module-%5bfsharp%5d" target="_blank" rel="external">Collection.List Module (F#)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[FP 的基本功]]>
-    
-    </summary>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 F# List Module 所提供的 Function (G ~ P)]]></title>
-    <link href="http://oomusou.io/fsharp/list-module-function-part2/"/>
-    <id>http://oomusou.io/fsharp/list-module-function-part2/</id>
-    <published>2018-04-07T12:23:43.000Z</published>
-    <updated>2018-04-22T02:17:47.000Z</updated>
-    <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
-<p>本文探討英文字母 G ~ P 開頭的 function。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="List-head">List.head</h2><hr>
-<blockquote>
-<p>傳回 list 第一個 element，相當於 list 的  <code>Head</code> property</p>
-<p><code>list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.head</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-<p>若為 empty list，會拋出 <code>ArgumentException</code>。</p>
-<blockquote>
-<p>Q：<code>List.head()</code> 與 <code>List.tryHead()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都傳回 list 第一個 element</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.head()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryHead()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.head()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryHead()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryHead()</code> 取代 <code>List.head()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-indexed">List.indexed</h2><hr>
-<blockquote>
-<p>將 element 的 key 與 value 封裝成 tuple 的 list</p>
-<p><code>list : &#39;T list -&gt; (int * &#39;T) list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.indexed</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(0, 1); (1, 2); (2, 3)]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-init">List.init</h2><hr>
-<blockquote>
-<p>根據 index 值建立新的 list</p>
-<p><code>int -&gt; initializer : (int -&gt; &#39;T) -&gt; &#39;T list</code>   </p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List.init <span class="number">10</span> (<span class="keyword">fun</span> idx -&gt; idx * <span class="number">2</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 2; 4; 6; 8; 10; 12; 14; 16; 18]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-isEmpty">List.isEmpty</h2><hr>
-<blockquote>
-<p>判斷 list 是否為空，相當於 list 的  <code>IsEmpty</code> property</p>
-<p><code>list : &#39;T list -&gt; bool</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[]</span><br><span class="line">|&gt; List.isEmpty</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-item">List.item</h2><hr>
-<blockquote>
-<p>傳回 list 指定 index 的 element 值，相當於 list 的 <code>Item</code> property</p>
-<p><code>index : int -&gt; list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.item <span class="number">2</span></span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p>若找不到 element，會拋出 <code>ArgumentException</code>。</p>
-<blockquote>
-<p>Q：<code>List.item()</code> 與 <code>List.tryItem()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都傳回 list 指定 index 的 element 值</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.item()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryItem()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.head()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryHead()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryItem()</code> 取代 <code>List.item()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-iter">List.iter</h2><hr>
-<blockquote>
-<p>對每個 element 執行回傳值為 <code>unit</code> 的 action function</p>
-<p><code>action : (&#39;T -&gt; unit) -&gt; list : &#39;T list -&gt; unit</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.iter (printf <span class="string">"%A "</span>)</span><br><span class="line"><span class="comment">// 1 2 3</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-iter2">List.iter2</h2><hr>
-<blockquote>
-<p>同時對兩個 list 的每個 element 執行回傳值為 <code>unit</code> 的 action function</p>
-<p><code>action : (&#39;T1 -&gt; &#39;T2 -&gt; unit) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; unit</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> action elm1 elm2 =</span><br><span class="line">    printf <span class="string">"%d "</span> (elm1 + elm2) </span><br><span class="line"></span><br><span class="line">List.iter2 action list1 list2</span><br><span class="line"><span class="comment">// 5 7 9</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-iteri">List.iteri</h2><hr>
-<blockquote>
-<p>對每個 element 執行回傳值為 <code>unit</code> 的 action function，但會將 index 也傳入 action function</p>
-<p><code>action : (int -&gt; &#39;T -&gt; unit) -&gt; list : &#39;T list -&gt; unit</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.iteri (<span class="keyword">fun</span> idx elm -&gt; printfn <span class="string">"%d : %d"</span> idx elm)</span><br><span class="line"><span class="comment">// 0 : 1</span></span><br><span class="line"><span class="comment">// 1 : 2</span></span><br><span class="line"><span class="comment">// 2 : 3</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-iteri2">List.iteri2</h2><hr>
-<blockquote>
-<p>同時對兩個 list 的每個 element 執行回傳值為 <code>unit</code> 的 action function，但會將 index 也傳入 action function</p>
-<p><code>action : (int -&gt; &#39;T1 -&gt; &#39;T2 -&gt; unit) -&gt; list1 : &#39;T1 list -&gt; list2 :  &#39;T2 list -&gt; unit</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> action idx elm1 elm2 =</span><br><span class="line">    printfn <span class="string">"%d : %d"</span> idx (elm1 + elm2) </span><br><span class="line"></span><br><span class="line">List.iteri2 action list1 list2</span><br><span class="line"><span class="comment">// 0 : 5</span></span><br><span class="line"><span class="comment">// 1 : 7</span></span><br><span class="line"><span class="comment">// 2 : 9</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-last">List.last</h2><hr>
-<blockquote>
-<p>傳回 list 最後一個 element</p>
-<p><code>list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.last</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p>若找不到 element，會拋出 <code>ArgumentException</code>。</p>
-<blockquote>
-<p>Q：<code>List.last()</code> 與 <code>List.tryLast()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都傳回 list 最後一個 element 值</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.last()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryLast()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.last()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryLast()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryLast()</code> 取代 <code>List.last()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-length">List.length</h2><hr>
-<blockquote>
-<p>傳回 list 的 element 個數，相當於 list 的  <code>Length</code> property</p>
-<p><code>list: &#39;T list -&gt; int</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.length</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-map">List.map</h2><hr>
-<blockquote>
-<p>將 list 的每個 element  根據 mapping function 轉換成另外一個 value 的 list</p>
-<p><code>mapping : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;U list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 4; 9]</span></span><br></pre></td></tr></table></figure>
-<p>若經過 mapping function 後 element 個數不一樣，請用 <code>List.collect()</code></p>
-<h2 id="List-map2">List.map2</h2><hr>
-<blockquote>
-<p>將兩個 list 的每個 element  根據 mapping function 轉換成另外一個 value 的 list</p>
-<p><code>mapping : (&#39;T1 -&gt; &#39;T2 -&gt; &#39;U) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; &#39;U list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"></span><br><span class="line">List.map2 (<span class="keyword">fun</span> elem1 elem2 -&gt; elem1 + elem2) list1 list2</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [5; 7; 9]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-map3">List.map3</h2><hr>
-<blockquote>
-<p>將三個 list 的每個 element  根據 mapping function 轉換成另外一個 value 的 list</p>
-<p><code>mapping : (&#39;T1 -&gt; &#39;T2 -&gt; &#39;T3 -&gt; &#39;U) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; list3 : &#39;T3 list -&gt; &#39;U list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list3 = [ <span class="number">7</span>; <span class="number">8</span>; <span class="number">9</span> ]</span><br><span class="line"></span><br><span class="line">List.map3 (<span class="keyword">fun</span> elm1 elm2 elm3 -&gt; elm1 + elm2 + elm3) list1 list2 list3</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [12; 15; 18]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-mapFold">List.mapFold</h2><hr>
-<blockquote>
-<p>相當於 <code>List.map()</code> + <code>List.fold()</code> 合體，回傳為 tuple。</p>
-<p><code>mapping : (&#39;State -&gt; &#39;T -&gt; &#39;Result * &#39;State) -&gt; state : &#39;State -&gt; list : &#39;T list -&gt; &#39;Result list * &#39;State</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.mapFold (<span class="keyword">fun</span> acc elm -&gt; (elm * elm , acc + elm * elm)) <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 4; 9], 14)</span></span><br></pre></td></tr></table></figure>
-<p>mapping funciton 中，回傳的是 tuple。</p>
-<ul>
-<li>第 1 個 element 為 <code>List.map()</code> 的結果</li>
-<li>第 2 個 element 為 <code>List.fold()</code> 的結果</li>
-</ul>
-<h2 id="List-mapFoldBack">List.mapFoldBack</h2><hr>
-<blockquote>
-<p>相當於 <code>List.map()</code> + <code>List.fold()</code> 合體，回傳為 tuple，但從 list 的尾部開始，signature 的順序也不一樣</p>
-<p><code>mapping : (&#39;T -&gt; &#39;State -&gt; &#39;Result * &#39;State) -&gt; list : &#39;T list -&gt; state : &#39;State -&gt; &#39;Result * &#39;State</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line">List.mapFoldBack (<span class="keyword">fun</span> elm acc -&gt; (elm * elm , acc + elm * elm)) list1 <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 4; 9], 14)</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-mapi">List.mapi</h2><hr>
-<blockquote>
-<p>對 list 的每個 element  根據 mapping function 轉換成另外一個 value 的 list，但會將 index 也傳入 mapping function</p>
-<p><code>mapping : (int -&gt; &#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;U list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.mapi (<span class="keyword">fun</span> idx elm -&gt; idx * elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 2; 6]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-mapi2">List.mapi2</h2><hr>
-<blockquote>
-<p>同時對兩個 list 的每個 element  根據 mapping function 轉換成另外一個 value 的 list，但會將 index 也傳入 mapping function</p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> mapping idx elm1 elm2 =</span><br><span class="line">    idx + elm1 + elm2</span><br><span class="line"></span><br><span class="line">List.mapi2 mapping list1 list2</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [5; 8; 11]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-max">List.max</h2><hr>
-<blockquote>
-<p>傳回 list 內 element 最大值</p>
-<p><code>list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.max</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-maxBy">List.maxBy</h2><hr>
-<blockquote>
-<p>傳回 list 內 element 最大值，但所比較的是經過 projection function 轉換過的值</p>
-<p><code>project : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.maxBy (<span class="keyword">fun</span> elm -&gt; <span class="number">1</span> - elm)</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-<p><code>[1; 2; 3]</code> 經過 projection function 後為 <code>[0; -1; -2]</code>，所以最大值為 <code>0</code>，但 <code>List.maxBy()</code> 回傳的是原 list 的值，所以為 <code>1</code>。</p>
-<blockquote>
-<p>Projection function 的值只是比較用，不是回傳用</p>
-</blockquote>
-<h2 id="List-min">List.min</h2><hr>
-<blockquote>
-<p>傳回 list 內 element 最小值</p>
-<p><code>list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.min</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-minBy">List.minBy</h2><hr>
-<blockquote>
-<p>傳回 list 內 element 最小值，但所比較的是經過 projection function 轉換過的值</p>
-<p><code>project : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.minBy (<span class="keyword">fun</span> elm -&gt; <span class="number">1</span> - elm)</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p><code>[1; 2; 3]</code> 經過 projection function 後為 <code>[0; -1; -2]</code>，所以最小值為 <code>0</code>，但 <code>List.minBy()</code> 回傳的是原 list 的值，所以為 <code>3</code>。</p>
-<blockquote>
-<p>Projection function 的值只是比較用，不是回傳用</p>
-</blockquote>
-<h2 id="List-ofArray">List.ofArray</h2><hr>
-<blockquote>
-<p>由 array 轉成 list</p>
-<p><code>array : &#39;T [] -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[| <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> |]</span><br><span class="line">|&gt; List.ofArray</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-ofSeq">List.ofSeq</h2><hr>
-<blockquote>
-<p>由 sequence 轉成 list</p>
-<p><code>source : seq&lt;&#39;T&gt; -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">seq &#123; <span class="number">1</span> .. <span class="number">5</span> &#125;</span><br><span class="line">|&gt; List.ofSeq</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4; 5]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-pairWise">List.pairWise</h2><hr>
-<blockquote>
-<p>根據 list 順序，回傳兩兩成為 tuple 的 list</p>
-<p><code>list : &#39;T list -&gt; (&#39;T * &#39;T) list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span> ]</span><br><span class="line">|&gt; List.pairwise</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">//[(1, 2); (2, 3); (3, 4)]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-partition">List.partition</h2><hr>
-<blockquote>
-<p>將 list 根據 predicate function 條件拆成兩個 list</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list * &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.partition (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([2; 4; 6; 8; 10], [1; 3; 5; 7; 9])</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-permute">List.permute</h2><hr>
-<blockquote>
-<p>List 重新根據 indexMap function 的規則，重新調整 element 順序</p>
-<p><code>indexMap : (int -&gt; int) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.permute (<span class="keyword">fun</span> idx -&gt; (idx + <span class="number">1</span>) % <span class="number">3</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 1; 2]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-pick">List.pick</h2><hr>
-<blockquote>
-<p>找出 list 中符合 chooser function 條件的第一個 element</p>
-<p><code>chooser : (&#39;T -&gt; &#39;U option) -&gt; list : &#39;T list -&gt; -&gt; &#39;U</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> chooser elm = </span><br><span class="line">    <span class="keyword">match</span> elm <span class="keyword">with</span> </span><br><span class="line">    | elm <span class="keyword">when</span> elm % <span class="number">2</span> = <span class="number">0</span> -&gt; Some elm</span><br><span class="line">    | _ -&gt; None</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.pick chooser</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-<p>若找不到 element，會拋出 <code>KeyNotFoundException</code>。</p>
-<blockquote>
-<p>Q：<code>List.find()</code> 與 <code>List.pick()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li><p>都用來找資料</p>
-</li>
-<li><p>找不到資料都會拋出 <code>KeyNotFoundException</code></p>
-</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><code>List.find()</code> 的 predicate function 為 <code>&#39;T -&gt; bool</code></li>
-<li><code>List.pick()</code> 的 chooser function 為 <code>&#39;T -&gt; &#39;U option</code></li>
-</ul>
-<blockquote>
-<p>若 fuction 回傳為 <code>option</code>，則適合用 <code>List.pick()</code>，否則使用 <code>List.find()</code></p>
-</blockquote>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
