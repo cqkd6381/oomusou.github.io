@@ -1,0 +1,326 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入淺出 JavaScript 之 Mixin | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="動態組合物件取代繼承">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="動態組合物件取代繼承">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入淺出 JavaScript 之 Mixin">
+<meta property="og:url" content="http://oomusou.io/javascript/mixin/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="動態組合物件取代繼承">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-05-06T11:54:32.997Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入淺出 JavaScript 之 Mixin">
+<meta name="twitter:description" content="動態組合物件取代繼承">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入淺出 JavaScript 之 Mixin</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 動態組合物件取代繼承			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object_Mixin"><span class="toc-article-text">Object Mixin</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Class_Mixin"><span class="toc-article-text">Class Mixin</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Functional_Mixin"><span class="toc-article-text">Functional Mixin</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>實務上常會發現需要兩個物件 method，但礙於 JavaScript 只能 <code>單一繼承</code> 於 prototype，我們無法同時繼承兩個物件；但透過 Mixin，我們可實現類似 <code>多重繼承</code> 的功能。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Mixin</p>
+<p>將物件中所有 method 複製到其他物件，讓該物件馬上擁有新的 method</p>
+</blockquote>
+<p>實務上我們可能會想要 code reuse 其他物件的 method，直覺會想到 <code>繼承</code>，但：</p>
+<ol>
+<li>JavaScript 只能單一繼承於 prototype，若我想要 code reuse 到兩個以上的物件呢？</li>
+<li>根據 <code>里氏替換原則</code>：<code>父類別能被子類別取代</code>，也就是我們該以 <code>多型</code> 為前提使用繼承，而不該以 <code>code reuse</code> 使用繼承</li>
+</ol>
+<p>但實務上的確有 code reuse 的需求，既然不能用 <code>繼承</code>，我們該用什麼呢 ?</p>
+<p>答案就是：Mixin</p>
+<h2 id="Object_Mixin">Object Mixin</h2><hr>
+<p><strong>Mixin1.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = &#123;</span><br><span class="line">    area: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LogMixin = &#123;</span><br><span class="line">    startLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    stopLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.assign(Button.prototype, CircleMixin, LogMixin);</span><br><span class="line"><span class="comment">// Button.prototype = &#123;...Button.prototype, ...CircleMixin, ...LogMixin&#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start log...</span></span><br><span class="line"><span class="comment">// 78.53981633974483</span></span><br><span class="line"><span class="comment">// End log...</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = &#123;</span><br><span class="line">    area: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>CircleMixin</code>，其本質為 object，擁有 <code>area()</code> method。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> LogMixin = &#123;</span><br><span class="line">    startLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    stopLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>LogMixin</code>，其本質亦為 object，擁有 <code>startLog()</code> 與 <code>stopLog()</code> method。</p>
+<p>17 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>宣告 <code>Button</code> constructor function，也可使用 ECMAScript 2015 的 <code>class</code> 與 <code>constructor</code>。</p>
+<blockquote>
+<p>Class 與 construcor function 本質相同，只是 syntax sugar</p>
+</blockquote>
+<p>27 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.assign(Button.prototype, CircleMixin, LogMixin);</span><br></pre></td></tr></table></figure>
+<p>如今我們希望 <code>Button</code> class 同時有 <code>CircleMixin</code> 的 <code>area()</code>，又有 <code>LogMixin</code> 的 <code>startLog()</code> 與 <code>stopLog()</code>。</p>
+<p>若使用繼承，JavaScript 無法同時繼承 <code>CircleMixin</code> 與  <code>LogMixin</code>。</p>
+<p>且 <code>Button</code> 無論繼承 <code>CircleMixin</code> 與 <code>LogMixin</code> 都違反 <code>里氏替換原則</code>，因為 <code>Button</code> 並非 <code>CircleMixin</code> 或 <code>LogMixin</code> 多型體系下的成員。</p>
+<p>但透過 <code>Object.assign()</code>，我們能輕易將 <code>CircleMixin</code> 與 <code>LogMixin</code> 的所有 method 複製到 <code>Button.prototype</code>，讓 <code>Button</code> class 瞬間有了新的 method。</p>
+<p>28 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Button.prototype = &#123;...Button.prototype, ...CircleMixin, ...LogMixin&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>亦可使用 ECMAScript 2015 的 <code>…</code> object spread operator，將所有物件 property 展開，重新合併重新的物件給 <code>Button.prototype</code>。</p>
+<p>30 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br></pre></td></tr></table></figure>
+<p>經過 Mixin 之後，<code>button</code> 物件就有了 <code>startLog()</code>、<code>area()</code> 與 <code>stopLog()</code> 三個 method，重點還是來自於不同的 Mixin 物件。</p>
+<blockquote>
+<p>我們可發現 Mixin 為 object，以 Object Composition 方式組合出新功能，與 GoF  所謂的 <code>多用組合，少用繼承</code> 想法不謀而合，同時也解決了 <code>單一繼承</code> 與 <code>里氏替換原則</code> 所面臨的挑戰</p>
+</blockquote>
+<h2 id="Class_Mixin">Class Mixin</h2><hr>
+<p><strong>Mixin2.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    area() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LogMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    startLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stopLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">LogMixin</span>(<span class="title">CircleMixin</span>(<span class="title">Base</span>)) </span>&#123;</span><br><span class="line">    constructor(radius) &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start log...</span></span><br><span class="line"><span class="comment">// 78.53981633974483</span></span><br><span class="line"><span class="comment">// End log...</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    area() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>CircleMixin</code>，其本質為 function，回傳擁有 <code>area()</code> 的 class。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> LogMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    startLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stopLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>LoginMixin</code>，其本質為 function，回傳擁有 <code>startLog()</code> 與  <code>stopLog()</code> 的 class。</p>
+<p>17 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">LogMixin</span>(<span class="title">CircleMixin</span>(<span class="title">Base</span>)) </span>&#123;</span><br><span class="line">    constructor(radius) &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>extends</code> 透過 <code>CircleMixin()</code> 與 <code>LogMixin()</code>，達成類似 <code>多重繼承</code> 的效果。</p>
+<blockquote>
+<p>語法上雖然看似 <code>繼承</code>，實則為 Class Composition，與 Object Mixin 差異在於：</p>
+<ul>
+<li>Object Mixin 是建立 object 後再 <code>組合</code> object</li>
+<li>Class Mixin 是先組合 class 再建立 object</li>
+</ul>
+</blockquote>
+<p>26 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br></pre></td></tr></table></figure>
+<p>對 client 而言，使用 Object Mixin 與 Class Mixin ，用起來都一樣。</p>
+<h2 id="Functional_Mixin">Functional Mixin</h2><hr>
+<p><strong>Mixin3.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.area = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LogMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.startLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.stopLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">CircleMixin.call(Button.prototype);</span><br><span class="line">LogMixin.call(Button.prototype);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start log...</span></span><br><span class="line"><span class="comment">// 78.53981633974483</span></span><br><span class="line"><span class="comment">// End log...</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.area = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>將 <code>CircleMixin</code> 由 object 改成 function。</p>
+<p>使用 <code>this.area</code> 宣告物件的 method。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> LogMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.startLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.stopLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>將 <code>LoginMixin</code> 由 object 改成 function。</p>
+<p>使用 <code>this.startLog</code> 與 <code>this.stopLog</code> 宣告物件的 method。</p>
+<p>17 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>宣告 <code>Button</code> constructor function，也可使用 ECMAScript 2015 的 <code>class</code> 與 <code>constructor</code>。</p>
+<p>27 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CircleMixin.call(Button.prototype);</span><br><span class="line">LogMixin.call(Button.prototype);</span><br></pre></td></tr></table></figure>
+<p>在 <code>CircleMixin()</code> 與 <code>LoginMixin()</code> 中都使用了 <code>this</code>，在 JavaScript 中，最重要的就是 <code>this</code> 到底是誰 ?</p>
+<p>我們使用 <code>Function.call()</code> 將 <code>this</code> 指向 <code>Button.prototype</code>，因此 <code>area()</code>、<code>startLog()</code> 與 <code>stopLog()</code> 就自然成為 <code>Button</code> 的 method。</p>
+<p>30 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br></pre></td></tr></table></figure>
+<p>對 client 而言，無論使用 Object Mixin 、Class Mixin 或 Functional Mixin，用起來都一樣。</p>
+<blockquote>
+<p>Functional Mixin 使用了 <code>this</code>，因此必須搭配 <code>Function.call()</code> 指定 <code>this</code> 為何物件</p>
+</blockquote>
+<h2 id="Summary">Summary</h2><hr>
+<blockquote>
+<p>Q：Mixin 的價值何在？</p>
+</blockquote>
+<ol>
+<li>解決 <code>單一繼承</code> 所面臨的難題</li>
+<li>解決 <code>里氏替換原則</code> 將 <code>繼承</code> 用在 <code>多型</code> 的限制</li>
+<li>Object Mixin 與 Functional Mixin 可在 run-time 實現 Composition</li>
+</ol>
+<blockquote>
+<p>Q：Mixin 實務上該用在哪裡 ?</p>
+</blockquote>
+<ol>
+<li>單純為了 code reuse，且之間並沒有 <code>多型</code> 的關係，因此不適合使用 <code>繼承</code></li>
+<li>需要在 run-time 實現 Composition</li>
+<li>Design-time 時 data 與 function 分開，直到 run-time 才需要將 data 與 function 合一</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Object Mixin 與 Functional Mixin 屬於 run-time 的 Composition；而 Class Mixin 則屬於 design-time 的 Composition</li>
+<li>Functional Mixin 需要有 <code>this</code> 與 <code>call</code> 觀念，門檻較高</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/JavaScriptMixin" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://twitter.com/angusTweets" target="_blank" rel="external">Angus Croll</a>, <a href="https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/" target="_blank" rel="external">A fresh look at JavaScript Mixins</a><br><a href="https://developer.mozilla.org/en-US/" target="_blank" rel="external">MDN web docs</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank" rel="external">Classes</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/csharp/higer-order-function/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-05-06 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/JavaScript/">JavaScript<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

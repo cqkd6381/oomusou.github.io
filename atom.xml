@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-04T15:16:52.215Z</updated>
+  <updated>2018-05-06T11:54:32.997Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,140 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[深入淺出 JavaScript 之 Mixin]]></title>
+    <link href="http://oomusou.io/javascript/mixin/"/>
+    <id>http://oomusou.io/javascript/mixin/</id>
+    <published>2018-05-06T12:23:43.000Z</published>
+    <updated>2018-05-06T11:54:32.997Z</updated>
+    <content type="html"><![CDATA[<p>實務上常會發現需要兩個物件 method，但礙於 JavaScript 只能 <code>單一繼承</code> 於 prototype，我們無法同時繼承兩個物件；但透過 Mixin，我們可實現類似 <code>多重繼承</code> 的功能。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Mixin</p>
+<p>將物件中所有 method 複製到其他物件，讓該物件馬上擁有新的 method</p>
+</blockquote>
+<p>實務上我們可能會想要 code reuse 其他物件的 method，直覺會想到 <code>繼承</code>，但：</p>
+<ol>
+<li>JavaScript 只能單一繼承於 prototype，若我想要 code reuse 到兩個以上的物件呢？</li>
+<li>根據 <code>里氏替換原則</code>：<code>父類別能被子類別取代</code>，也就是我們該以 <code>多型</code> 為前提使用繼承，而不該以 <code>code reuse</code> 使用繼承</li>
+</ol>
+<p>但實務上的確有 code reuse 的需求，既然不能用 <code>繼承</code>，我們該用什麼呢 ?</p>
+<p>答案就是：Mixin</p>
+<h2 id="Object_Mixin">Object Mixin</h2><hr>
+<p><strong>Mixin1.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = &#123;</span><br><span class="line">    area: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LogMixin = &#123;</span><br><span class="line">    startLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    stopLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.assign(Button.prototype, CircleMixin, LogMixin);</span><br><span class="line"><span class="comment">// Button.prototype = &#123;...Button.prototype, ...CircleMixin, ...LogMixin&#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start log...</span></span><br><span class="line"><span class="comment">// 78.53981633974483</span></span><br><span class="line"><span class="comment">// End log...</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = &#123;</span><br><span class="line">    area: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>CircleMixin</code>，其本質為 object，擁有 <code>area()</code> method。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> LogMixin = &#123;</span><br><span class="line">    startLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    stopLog: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>LogMixin</code>，其本質亦為 object，擁有 <code>startLog()</code> 與 <code>stopLog()</code> method。</p>
+<p>17 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>宣告 <code>Button</code> constructor function，也可使用 ECMAScript 2015 的 <code>class</code> 與 <code>constructor</code>。</p>
+<blockquote>
+<p>Class 與 construcor function 本質相同，只是 syntax sugar</p>
+</blockquote>
+<p>27 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.assign(Button.prototype, CircleMixin, LogMixin);</span><br></pre></td></tr></table></figure>
+<p>如今我們希望 <code>Button</code> class 同時有 <code>CircleMixin</code> 的 <code>area()</code>，又有 <code>LogMixin</code> 的 <code>startLog()</code> 與 <code>stopLog()</code>。</p>
+<p>若使用繼承，JavaScript 無法同時繼承 <code>CircleMixin</code> 與  <code>LogMixin</code>。</p>
+<p>且 <code>Button</code> 無論繼承 <code>CircleMixin</code> 與 <code>LogMixin</code> 都違反 <code>里氏替換原則</code>，因為 <code>Button</code> 並非 <code>CircleMixin</code> 或 <code>LogMixin</code> 多型體系下的成員。</p>
+<p>但透過 <code>Object.assign()</code>，我們能輕易將 <code>CircleMixin</code> 與 <code>LogMixin</code> 的所有 method 複製到 <code>Button.prototype</code>，讓 <code>Button</code> class 瞬間有了新的 method。</p>
+<p>28 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Button.prototype = &#123;...Button.prototype, ...CircleMixin, ...LogMixin&#125;;</span></span><br></pre></td></tr></table></figure>
+<p>亦可使用 ECMAScript 2015 的 <code>…</code> object spread operator，將所有物件 property 展開，重新合併重新的物件給 <code>Button.prototype</code>。</p>
+<p>30 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br></pre></td></tr></table></figure>
+<p>經過 Mixin 之後，<code>button</code> 物件就有了 <code>startLog()</code>、<code>area()</code> 與 <code>stopLog()</code> 三個 method，重點還是來自於不同的 Mixin 物件。</p>
+<blockquote>
+<p>我們可發現 Mixin 為 object，以 Object Composition 方式組合出新功能，與 GoF  所謂的 <code>多用組合，少用繼承</code> 想法不謀而合，同時也解決了 <code>單一繼承</code> 與 <code>里氏替換原則</code> 所面臨的挑戰</p>
+</blockquote>
+<h2 id="Class_Mixin">Class Mixin</h2><hr>
+<p><strong>Mixin2.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    area() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LogMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    startLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stopLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">LogMixin</span>(<span class="title">CircleMixin</span>(<span class="title">Base</span>)) </span>&#123;</span><br><span class="line">    constructor(radius) &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start log...</span></span><br><span class="line"><span class="comment">// 78.53981633974483</span></span><br><span class="line"><span class="comment">// End log...</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    area() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>CircleMixin</code>，其本質為 function，回傳擁有 <code>area()</code> 的 class。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> LogMixin = base =&gt; <span class="class"><span class="keyword">class</span> <span class="keyword">extends</span> <span class="title">base</span> </span>&#123;</span><br><span class="line">    startLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    stopLog() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>LoginMixin</code>，其本質為 function，回傳擁有 <code>startLog()</code> 與  <code>stopLog()</code> 的 class。</p>
+<p>17 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">LogMixin</span>(<span class="title">CircleMixin</span>(<span class="title">Base</span>)) </span>&#123;</span><br><span class="line">    constructor(radius) &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.radius = radius;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>extends</code> 透過 <code>CircleMixin()</code> 與 <code>LogMixin()</code>，達成類似 <code>多重繼承</code> 的效果。</p>
+<blockquote>
+<p>語法上雖然看似 <code>繼承</code>，實則為 Class Composition，與 Object Mixin 差異在於：</p>
+<ul>
+<li>Object Mixin 是建立 object 後再 <code>組合</code> object</li>
+<li>Class Mixin 是先組合 class 再建立 object</li>
+</ul>
+</blockquote>
+<p>26 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br></pre></td></tr></table></figure>
+<p>對 client 而言，使用 Object Mixin 與 Class Mixin ，用起來都一樣。</p>
+<h2 id="Functional_Mixin">Functional Mixin</h2><hr>
+<p><strong>Mixin3.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.area = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> LogMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.startLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.stopLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">CircleMixin.call(Button.prototype);</span><br><span class="line">LogMixin.call(Button.prototype);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start log...</span></span><br><span class="line"><span class="comment">// 78.53981633974483</span></span><br><span class="line"><span class="comment">// End log...</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> CircleMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.area = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.PI * <span class="keyword">this</span>.radius * <span class="keyword">this</span>.radius;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>將 <code>CircleMixin</code> 由 object 改成 function。</p>
+<p>使用 <code>this.area</code> 宣告物件的 method。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> LogMixin = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.startLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"Start log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.stopLog = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"End log..."</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>將 <code>LoginMixin</code> 由 object 改成 function。</p>
+<p>使用 <code>this.startLog</code> 與 <code>this.stopLog</code> 宣告物件的 method。</p>
+<p>17 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="keyword">function</span> (<span class="params">radius</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.radius = radius;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// class Button &#123;</span></span><br><span class="line"><span class="comment">//     constructor(radius) &#123;</span></span><br><span class="line"><span class="comment">//         this.radius = radius;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p>宣告 <code>Button</code> constructor function，也可使用 ECMAScript 2015 的 <code>class</code> 與 <code>constructor</code>。</p>
+<p>27 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CircleMixin.call(Button.prototype);</span><br><span class="line">LogMixin.call(Button.prototype);</span><br></pre></td></tr></table></figure>
+<p>在 <code>CircleMixin()</code> 與 <code>LoginMixin()</code> 中都使用了 <code>this</code>，在 JavaScript 中，最重要的就是 <code>this</code> 到底是誰 ?</p>
+<p>我們使用 <code>Function.call()</code> 將 <code>this</code> 指向 <code>Button.prototype</code>，因此 <code>area()</code>、<code>startLog()</code> 與 <code>stopLog()</code> 就自然成為 <code>Button</code> 的 method。</p>
+<p>30 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> button = <span class="keyword">new</span> Button(<span class="number">5</span>);</span><br><span class="line">button.startLog();</span><br><span class="line"><span class="built_in">console</span>.log(button.area());</span><br><span class="line">button.stopLog();</span><br></pre></td></tr></table></figure>
+<p>對 client 而言，無論使用 Object Mixin 、Class Mixin 或 Functional Mixin，用起來都一樣。</p>
+<blockquote>
+<p>Functional Mixin 使用了 <code>this</code>，因此必須搭配 <code>Function.call()</code> 指定 <code>this</code> 為何物件</p>
+</blockquote>
+<h2 id="Summary">Summary</h2><hr>
+<blockquote>
+<p>Q：Mixin 的價值何在？</p>
+</blockquote>
+<ol>
+<li>解決 <code>單一繼承</code> 所面臨的難題</li>
+<li>解決 <code>里氏替換原則</code> 將 <code>繼承</code> 用在 <code>多型</code> 的限制</li>
+<li>Object Mixin 與 Functional Mixin 可在 run-time 實現 Composition</li>
+</ol>
+<blockquote>
+<p>Q：Mixin 實務上該用在哪裡 ?</p>
+</blockquote>
+<ol>
+<li>單純為了 code reuse，且之間並沒有 <code>多型</code> 的關係，因此不適合使用 <code>繼承</code></li>
+<li>需要在 run-time 實現 Composition</li>
+<li>Design-time 時 data 與 function 分開，直到 run-time 才需要將 data 與 function 合一</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Object Mixin 與 Functional Mixin 屬於 run-time 的 Composition；而 Class Mixin 則屬於 design-time 的 Composition</li>
+<li>Functional Mixin 需要有 <code>this</code> 與 <code>call</code> 觀念，門檻較高</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/JavaScriptMixin" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://twitter.com/angusTweets" target="_blank" rel="external">Angus Croll</a>, <a href="https://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/" target="_blank" rel="external">A fresh look at JavaScript Mixins</a><br><a href="https://developer.mozilla.org/en-US/" target="_blank" rel="external">MDN web docs</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes" target="_blank" rel="external">Classes</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[動態組合物件取代繼承]]>
+    
+    </summary>
+    
+      <category term="JavaScript" scheme="http://oomusou.io/tags/JavaScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 Higher Order Function 抽出共用 ?]]></title>
@@ -2023,431 +2157,6 @@
       <category term="C#" scheme="http://oomusou.io/tags/C/"/>
     
       <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 F# List Module 所提供的 Function (Q ~ Z)]]></title>
-    <link href="http://oomusou.io/fsharp/list-module-function-part3/"/>
-    <id>http://oomusou.io/fsharp/list-module-function-part3/</id>
-    <published>2018-04-07T13:23:43.000Z</published>
-    <updated>2018-04-22T02:17:52.000Z</updated>
-    <content type="html"><![CDATA[<p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
-<p>本文探討英文字母 Q ~ Z 開頭的 function。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="List-reduce">List.reduce</h2><hr>
-<blockquote>
-<p>將 list 中每個 element 的值經過 reduction function 累加</p>
-<p><code>reduction : (&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q : <code>List.fold()</code> 與 <code>List.reduce()</code> 有何差異？</p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.fold (<span class="keyword">fun</span> elm acc -&gt; acc + elm) <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<p><strong>相同</strong></p>
-<ul>
-<li>都是 <code>累加</code></li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><code>List.fold()</code> 可以設定初始值；<code>List.reduce()</code> 不能設定初始值</li>
-<li><code>List.fold()</code> 可以不同型別，如 <code>(string * int) list</code> -&gt; int；<code>List.reduce()</code> 從頭到尾必須相同型別，如 <code>int lint -&gt; int</code></li>
-</ul>
-<h2 id="List-reduceBack">List.reduceBack</h2><hr>
-<blockquote>
-<p>將 list 中每個 element 的值從尾部經過 reduction function 累加<br><code>reduction : (&#39;T -&gt; &#39;T -&gt; &#39;T) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.reduceBack (<span class="keyword">fun</span> elm acc -&gt; acc + elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-replicate">List.replicate</h2><hr>
-<blockquote>
-<p>以相同 element 建立 list</p>
-<p><code>count : int -&gt; initial : &#39;T -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List.replicate <span class="number">3</span> <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 0; 0]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-rev">List.rev</h2><hr>
-<blockquote>
-<p>將 list 反過來表示</p>
-<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.rev</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 2; 1]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-scan">List.scan</h2><hr>
-<blockquote>
-<p>類似 <code>List.fold()</code> 與 <code>List.reduce()</code> 對 list 進行累加，但會將計算過程保留在新 list 的 element</p>
-<p><code>folder : (&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state : &#39;State -&gt; list : &#39;T list -&gt; &#39;State list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.scan (<span class="keyword">fun</span> acc elm -&gt; acc + elm) <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 1; 3; 6]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-scanBack">List.scanBack</h2><hr>
-<blockquote>
-<p>同 <code>List.scan()</code>，但從 list 尾部開始累加，並將最後結果先顯示</p>
-<p><code>folder : (&#39;T -&gt; &#39;State -&gt; &#39;State) -&gt; list : &#39;T list -&gt; state : &#39;State -&gt; &#39;State list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line">List.scanBack (<span class="keyword">fun</span> elm acc -&gt; acc + elm) list1 <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [6; 5; 3; 0]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-singleton">List.singleton</h2><hr>
-<blockquote>
-<p>將整個 list 成為新 list 的第一個 element</p>
-<p><code>value : &#39;T -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.singleton</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3]]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-skip">List.skip</h2><hr>
-<blockquote>
-<p>忽略前 n 個 element 並傳回新 list</p>
-<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.skip <span class="number">5</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [6; 7; 8; 9; 10]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-skipWhile">List.skipWhile</h2><hr>
-<blockquote>
-<p>忽略前 n 個符合 predicate function 的 element，若第一個 element 不符合則停止 skip</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.skipWhile (<span class="keyword">fun</span> elm -&gt; elm &lt; <span class="number">5</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [5; 6; 7; 8; 9; 10]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sort">List.sort</h2><hr>
-<blockquote>
-<p>將 list 排序 (由小到大)</p>
-<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line">|&gt;List.sort</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sortDescending">List.sortDescending</h2><hr>
-<blockquote>
-<p>將 list 排序 (由大到小)</p>
-<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sortDescending</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 2; 1]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sortBy">List.sortBy</h2><hr>
-<blockquote>
-<p>將 list 的 element 透過 projection function 轉換過，再根據 key 排序 (由小到大)</p>
-<p><code>projection : (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line">|&gt;List.sortBy (<span class="keyword">fun</span> elm -&gt; elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sortByDescending">List.sortByDescending</h2><hr>
-<blockquote>
-<p>將 list 的 element 透過 projection function 轉換過，再根據 key 排序 (由大到小)</p>
-<p><code>projection : (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sortByDescending (<span class="keyword">fun</span> elm -&gt; elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 2; 1]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sortWith">List.sortWith</h2><hr>
-<blockquote>
-<p>將 list 的 element 透過 comparer function 排序</p>
-<p><code>comparer : (&#39;T -&gt; &#39;T -&gt; int) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line">|&gt;List.sortWith (<span class="keyword">fun</span> elm1 elm2 -&gt; elm1 - elm2)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-splitAt">List.splitAt</h2><hr>
-<blockquote>
-<p>將 list 根據指定 index 分成兩個 list</p>
-<p><code>index : int -&gt; list : &#39;T list -&gt; &#39;T list * &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.splitAt <span class="number">5</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 2; 3; 4; 5], [6; 7; 8; 9; 10])</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-splitInto">List.splitInto</h2><hr>
-<blockquote>
-<p>將 list 分成指定 chunk 數</p>
-<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.splitInto <span class="number">3</span> </span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3; 4]; [5; 6; 7]; [8; 9; 10]]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sum">List.sum</h2><hr>
-<blockquote>
-<p>將 list 中所有 element 相加</p>
-<p><code>list : &#39;T list -&gt; &#39;T</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sum</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 6</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-sumBy">List.sumBy</h2><hr>
-<blockquote>
-<p>將 list 先將過 projection function 運算後再相加，相當於 <code>List.map()</code> + <code>List.sum()</code></p>
-<p><code>projection : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;U</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.sumBy (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
-<p>相當於</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line">|&gt; List.sum</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-tail">List.tail</h2><hr>
-<blockquote>
-<p>將 list 除了第 1 個 element 外，剩下的 list 傳回，相當於 list 的 <code>Tail</code> property</p>
-<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.tail</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [2; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-take">List.take</h2><hr>
-<blockquote>
-<p>回傳 list 前 n 個 element</p>
-<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.take <span class="number">3</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q : <code>List.truncate()</code> 與 <code>List.take()</code> 有何差異？</p>
-</blockquote>
-<p>當 n 大於 <code>Length</code> 時，<code>List.truncate()</code> 不會報錯，只是將整個 list 傳回；但 <code>List.take()</code> 拋出 <code>InvalidOperationException</code></p>
-<h2 id="List-takeWhild">List.takeWhild</h2><hr>
-<blockquote>
-<p>回傳前 n 個符合 predicate function 的 element，若第一個 element 不符合則停止 take</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt;List.takeWhile (<span class="keyword">fun</span> elm -&gt; elm &lt; <span class="number">5</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-toArray">List.toArray</h2><hr>
-<blockquote>
-<p>將 list 轉成 array</p>
-<p><code>list : &#39;T list -&gt; &#39;T []</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.toArray</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [|1; 2; 3|]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-toSeq">List.toSeq</h2><hr>
-<blockquote>
-<p>將 list 轉成 sequence</p>
-<p><code>list : &#39;T list -&gt; seq&lt;&#39;T&gt;</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt;List.toSeq</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-transpose">List.transpose</h2><hr>
-<blockquote>
-<p>將 sequence 內的 list 加以 transpose</p>
-<p><code>list : seq&lt;&#39;T list&gt; -&gt; &#39;T list list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]]</span><br><span class="line">|&gt;List.transpose</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1]; [2]; [3]]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-truncate">List.truncate</h2><hr>
-<blockquote>
-<p>回傳 list 最多 n 的 element</p>
-<p><code>count : int -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">|&gt;List.truncate <span class="number">6</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2]</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q : <code>List.truncate()</code> 與 <code>List.take()</code> 有何差異？</p>
-</blockquote>
-<p>當 n 大於 <code>Length</code> 時，<code>List.truncate()</code> 不會報錯，只是將整個 list 傳回；但 <code>List.take()</code> 拋出 <code>InvalidOperationException</code></p>
-<h2 id="List-tryFind">List.tryFind</h2><hr>
-<blockquote>
-<p>找出 list 中符合 predicate function 條件的第一個 element</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFind (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 2</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p> <code>List.find()</code> 與 <code>List.tryFind()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都使用 predicate function 為搜尋條件</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.find()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryFind()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.find()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFind()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryFind()</code> 取代 <code>List.find()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryFindBack">List.tryFindBack</h2><hr>
-<blockquote>
-<p>從 list 尾部找出符合 predicate function 條件的第一個 element</p>
-<p><code>predicate：(&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFindBack (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 10</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.findBack()</code> 與 <code>List.tryFindBack()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都使用 predicate function 為搜尋條件</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.findBack()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryFindBack()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.findBack()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindBack()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryFindBack()</code> 取代 <code>List.findBack()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryFindIndex">List.tryFindIndex</h2><hr>
-<blockquote>
-<p>找出 list 中符合 predicate function 條件的第一 element 的 index</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFindIndex (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 1</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.findIndex()</code> 與 <code>List.tryFindIndex()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都使用 predicate function 為搜尋條件</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.findIndex()</code> 傳回 <code>int</code>；而 <code>List.tryFindIndex()</code> 傳回 <code>int option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.findIndex()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindIndex()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryFindIndex()</code> 取代 <code>List.findIndex()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryFindIndexBack">List.tryFindIndexBack</h2><hr>
-<blockquote>
-<p>從 list 尾部找出符合 predicate function 條件的第一 element 的 index</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.tryFindIndexBack (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 9</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.findIndexBack()</code> 與 <code>List.tryFindIndexBack()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都使用 predicate function 為搜尋條件</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.findIndexBack()</code> 傳回 <code>int</code>；而 <code>List.tryFindIndexBack()</code> 傳回 <code>int option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.findIndexBack()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindIndexBack()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryFindIndexBack()</code> 取代 <code>List.findIndexBack()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryHead">List.tryHead</h2><hr>
-<blockquote>
-<p>傳回 list 第一個 element，相當於 list 的  <code>Head</code> property</p>
-<p><code>list : &#39;T list -&gt; &#39;T option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryHead</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 1</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.head()</code> 與 <code>List.tryHead()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都傳回 list 第一個 element</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.head()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryHead()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.head()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryHead()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryHead()</code> 取代 <code>List.head()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryItem">List.tryItem</h2><hr>
-<blockquote>
-<p>傳回 list 指定 index 的 element 值，相當於 list 的 <code>Item</code> property</p>
-<p><code>index : int -&gt; list : &#39;T list -&gt; &#39;T option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryItem <span class="number">2</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 3</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.item()</code> 與 <code>List.tryItem()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都傳回 list 指定 index 的 element 值</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.item()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryItem()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.head()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryHead()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryItem()</code> 取代 <code>List.item()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryLast">List.tryLast</h2><hr>
-<blockquote>
-<p>傳回 list 最後一個 element</p>
-<p><code>list : &#39;T list -&gt; &#39;T option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryLast</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 3</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.last()</code> 與 <code>List.tryLast()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都傳回 list 最後一個 element 值</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.last()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryLast()</code> 傳回 <code>&#39;T option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.last()</code> 會拋出  <code>ArgumentException</code>；但 <code>List.tryLast()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryLast()</code> 取代 <code>List.last()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-tryPick">List.tryPick</h2><hr>
-<blockquote>
-<p>找出 list 中符合 chooser function 條件的第一個 element</p>
-<p><code>chooser : (&#39;T -&gt; &#39;U option) -&gt; list : &#39;T list -&gt; &#39;U option</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> chooser elm = </span><br><span class="line">    <span class="keyword">match</span> elm <span class="keyword">with</span> </span><br><span class="line">    | elm <span class="keyword">when</span> elm % <span class="number">2</span> = <span class="number">0</span> -&gt; Some elm</span><br><span class="line">    | _ -&gt; None</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line">|&gt; List.tryPick chooser</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// Some 2</span></span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>Q：<code>List.pick()</code> 與 <code>List.tryPick()</code> 有何差異？</p>
-</blockquote>
-<p><strong>相同</strong></p>
-<ul>
-<li>都使用 chooser function 為搜尋條件</li>
-</ul>
-<p><strong>相異</strong></p>
-<ul>
-<li><p><code>List.pick()</code> 傳回 <code>&#39;U</code>；而 <code>List.tryPick()</code> 傳回 <code>&#39;U option</code></p>
-</li>
-<li><p>若找不到資料，<code>List.pick()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryPick()</code> 只會回傳 <code>None</code></p>
-</li>
-</ul>
-<blockquote>
-<p>實務上建議使用 <code>List.tryPick()</code> 取代 <code>List.pick()</code>，較為安全</p>
-</blockquote>
-<h2 id="List-unfold">List.unfold</h2><hr>
-<blockquote>
-<p>根據 generator function 建立 list，其中 generator function 可指定目前 state 與下一個 state</p>
-<p><code>generator : (&#39;State -&gt; (&#39;T * &#39;State) option) -&gt; state : &#39;State -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> generator state =</span><br><span class="line">    <span class="keyword">match</span> state <span class="keyword">with</span> </span><br><span class="line">    |_ <span class="keyword">when</span> state &lt; <span class="number">10</span> -&gt; Some(state, state + <span class="number">1</span>)</span><br><span class="line">    |_                 -&gt; None</span><br><span class="line"></span><br><span class="line">List.unfold generator <span class="number">0</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-unzip">List.unzip</h2><hr>
-<blockquote>
-<p>將所有 element 為 pair 的 list，分解成兩個 list</p>
-<p><code>list : (&#39;T1 * &#39;T2) list -&gt; &#39;T1 list * &#39;T2 list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ (<span class="number">1</span>, <span class="number">4</span>); (<span class="number">2</span>, <span class="number">5</span>); (<span class="number">3</span>, <span class="number">6</span>) ]</span><br><span class="line">|&gt; List.unzip</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 2; 3], [4; 5; 6])</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-unzip3">List.unzip3</h2><hr>
-<blockquote>
-<p>將所有 element 為 triple 的 list，分解成三個 list</p>
-<p><code>list : (&#39;T1 * &#39;T2 * &#39;T3) list -&gt; &#39;T1 list * &#39;T2 list * &#39;T3 list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ (<span class="number">1</span>, <span class="number">4</span>, <span class="number">7</span>); (<span class="number">2</span>, <span class="number">5</span>, <span class="number">8</span>); (<span class="number">3</span>, <span class="number">6</span>, <span class="number">9</span>) ]</span><br><span class="line">|&gt; List.unzip3</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// ([1; 2; 3], [4; 5; 6], [7; 8; 9])</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-where">List.where</h2><hr>
-<blockquote>
-<p>找出 list 中符合 predicate function 條件的所有 element</p>
-<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">|&gt; List.where (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">1</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 3]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-windowed">List.windowed</h2><hr>
-<blockquote>
-<p>依照 list 的 element 順序，依序取出 n 個 element 的 list</p>
-<p><code>windowSize : int -&gt; list : &#39;T list -&gt; &#39;T list list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line">|&gt; List.windowed <span class="number">3</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3]; [2; 3; 4]; [3; 4; 5]]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-zip">List.zip</h2><hr>
-<blockquote>
-<p>將兩個 list 合併成 element 為 pair 的 list</p>
-<p> <code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; (&#39;T1 * &#39;T2) list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"></span><br><span class="line">List.zip list1 list2</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 4); (2, 5); (3, 6)]</span></span><br></pre></td></tr></table></figure>
-<h2 id="List-zip3">List.zip3</h2><hr>
-<blockquote>
-<p>將三個 list 合併成 element 為 triple 的 list</p>
-<p><code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; list3 : &#39;T3 list -&gt; (&#39;T1 * &#39;T2 * &#39;T3) list</code></p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span>; <span class="number">5</span>; <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list3 = [ <span class="number">7</span>; <span class="number">8</span>; <span class="number">9</span> ]</span><br><span class="line"></span><br><span class="line">List.zip3 list1 list2 list3</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 4, 7); (2, 5, 8); (3, 6, 9)]</span></span><br></pre></td></tr></table></figure>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://msdn.microsoft.com/en-us/" target="_blank" rel="external">MSDN</a>, <a href="https://msdn.microsoft.com/en-us/visualfsharpdocs/conceptual/collections.list-module-%5bfsharp%5d" target="_blank" rel="external">Collection.List Module (F#)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[FP 的基本功]]>
-    
-    </summary>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
