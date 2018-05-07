@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-06T12:10:17.713Z</updated>
+  <updated>2018-05-07T03:02:03.054Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://oomusou.io/javascript/mixin/"/>
     <id>http://oomusou.io/javascript/mixin/</id>
     <published>2018-05-06T12:23:43.000Z</published>
-    <updated>2018-05-06T12:10:17.713Z</updated>
-    <content type="html"><![CDATA[<p>實務上常會發現需要兩個物件 method，但礙於 JavaScript 只能 <code>單一繼承</code> 於 prototype，我們無法同時繼承兩個物件；但透過 Mixin，我們可實現類似 <code>多重繼承</code> 的功能。</p>
+    <updated>2018-05-07T03:02:03.054Z</updated>
+    <content type="html"><![CDATA[<p>實務上常會發現需要兩個物件的 method，但礙於 JavaScript 只能 <code>單一繼承</code> 於 prototype，我們無法同時繼承兩個物件；但透過 Mixin，我們可實現類似 <code>多重繼承</code> 的功能。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>ECMAScript 2015</p>
@@ -1447,7 +1447,7 @@
     <link href="http://oomusou.io/docker/ubuntu/"/>
     <id>http://oomusou.io/docker/ubuntu/</id>
     <published>2018-04-16T13:23:43.000Z</published>
-    <updated>2018-04-16T13:15:32.000Z</updated>
+    <updated>2018-05-07T03:03:47.387Z</updated>
     <content type="html"><![CDATA[<p>以前在 macOS 安裝 Ubuntu 都要先安裝 Parallel Desktop，然後再將 Ubuntu 安裝在 Parallel Desktop 上，安裝了 Docker for Mac 後，只要下載 Ubuntu 的 Docker image，Ubuntu 就能以 container 形式跑在 Docker 上。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1469,10 +1469,10 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyUbuntu -dt ubuntu</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
 <ul>
-<li><code>--name</code> : 替 container 取一個人能夠識別的名字 <code>MyUbuntu</code> ( 若省略，Docker 將隨機命名 )</li>
-<li><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
-<li><code>-t</code> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
-<li><code>ubuntu</code> : Ubuntu 的官方 image 名稱</li>
+<li><strong>–name</strong> : 替 container 取一個人能夠識別的名字 <code>MyUbuntu</code> ( 若省略，Docker 將隨機命名 )</li>
+<li><strong>-d</strong> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
+<li><strong>-t</strong> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
+<li><strong>ubuntu</strong> : Ubuntu 的官方 image 名稱</li>
 </ul>
 <blockquote>
 <p>Docker container  重要觀念</p>
@@ -1502,10 +1502,10 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyUbuntu bash</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
 <ul>
-<li><code>-i</code> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
-<li><code>-t</code> : <code>t</code>erminal，可對 terminal 顯示資料</li>
-<li><code>MyUbuntu</code> : Container 名稱</li>
-<li><code>bash</code> : 對 container 下的指令</li>
+<li><strong>-i</strong> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
+<li><strong>-t</strong> : <code>t</code>erminal，可對 terminal 顯示資料</li>
+<li><strong>MyUbuntu</strong> : Container 名稱</li>
+<li><strong>bash</strong> : 對 container 下的指令</li>
 </ul>
 <p><img src="/images/docker/ubuntu/ubuntu007.png" alt="ubuntu007"></p>
 <ol>
@@ -1566,8 +1566,8 @@
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rmi ubuntu</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker rmi</code> 刪除 image。</p>
 <ul>
-<li><code>rm</code> : 刪除</li>
-<li><code>i</code> : <code>i</code>mage</li>
+<li><strong>rm</strong> : 刪除</li>
+<li><strong>i</strong> : <code>i</code>mage</li>
 </ul>
 <p><img src="/images/docker/ubuntu/ubuntu013.png" alt="ubuntu013"></p>
 <ol>

@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 Docker 快速建立 Ubuntu 測試環境">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-04-16T13:15:32.000Z">
+<meta property="og:updated_time" content="2018-05-07T03:03:47.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 安裝 Ubuntu ?">
 <meta name="twitter:description" content="使用 Docker 快速建立 Ubuntu 測試環境">
@@ -128,10 +128,10 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyUbuntu -dt ubuntu</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
 <ul>
-<li><code>--name</code> : 替 container 取一個人能夠識別的名字 <code>MyUbuntu</code> ( 若省略，Docker 將隨機命名 )</li>
-<li><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
-<li><code>-t</code> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
-<li><code>ubuntu</code> : Ubuntu 的官方 image 名稱</li>
+<li><strong>–name</strong> : 替 container 取一個人能夠識別的名字 <code>MyUbuntu</code> ( 若省略，Docker 將隨機命名 )</li>
+<li><strong>-d</strong> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
+<li><strong>-t</strong> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
+<li><strong>ubuntu</strong> : Ubuntu 的官方 image 名稱</li>
 </ul>
 <blockquote>
 <p>Docker container  重要觀念</p>
@@ -161,10 +161,10 @@
 <figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyUbuntu bash</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
 <ul>
-<li><code>-i</code> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
-<li><code>-t</code> : <code>t</code>erminal，可對 terminal 顯示資料</li>
-<li><code>MyUbuntu</code> : Container 名稱</li>
-<li><code>bash</code> : 對 container 下的指令</li>
+<li><strong>-i</strong> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
+<li><strong>-t</strong> : <code>t</code>erminal，可對 terminal 顯示資料</li>
+<li><strong>MyUbuntu</strong> : Container 名稱</li>
+<li><strong>bash</strong> : 對 container 下的指令</li>
 </ul>
 <p><img src="/images/docker/ubuntu/ubuntu007.png" alt="ubuntu007"></p>
 <ol>
@@ -225,8 +225,8 @@
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rmi ubuntu</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker rmi</code> 刪除 image。</p>
 <ul>
-<li><code>rm</code> : 刪除</li>
-<li><code>i</code> : <code>i</code>mage</li>
+<li><strong>rm</strong> : 刪除</li>
+<li><strong>i</strong> : <code>i</code>mage</li>
 </ul>
 <p><img src="/images/docker/ubuntu/ubuntu013.png" alt="ubuntu013"></p>
 <ol>
