@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-10T05:28:40.943Z</updated>
+  <updated>2018-05-10T05:52:53.173Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/linux-deployment/"/>
     <id>http://oomusou.io/netcore/linux-deployment/</id>
     <published>2018-05-07T12:23:43.000Z</published>
-    <updated>2018-05-10T05:28:40.943Z</updated>
+    <updated>2018-05-10T05:52:53.173Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 為跨平台解決方案，我們可在 macOS 或 Windows 開發 .NET Core App，最後再發佈到 Linux 主機上。</p>
 <p>.NET Core 提供 FDD 與 SCD 兩種發佈方式。</p>
 <a id="more"></a>
@@ -266,7 +266,7 @@
 <p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[以 SCD 與 FDD 部署到 Linux]]>
+    <![CDATA[以 SCD 與 FDD 發佈到 Linux]]>
     
     </summary>
     
