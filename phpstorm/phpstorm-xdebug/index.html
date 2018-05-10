@@ -1,0 +1,289 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 PhpStorm 對 Laravel 除錯? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以中斷點方式替 Laravel 除錯">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以中斷點方式替 Laravel 除錯">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 PhpStorm 對 Laravel 除錯?">
+<meta property="og:url" content="http://oomusou.io/phpstorm/phpstorm-xdebug/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以中斷點方式替 Laravel 除錯">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-06-12T02:45:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 PhpStorm 對 Laravel 除錯?">
+<meta name="twitter:description" content="以中斷點方式替 Laravel 除錯">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 PhpStorm 對 Laravel 除錯?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以中斷點方式替 Laravel 除錯			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定_Xdebug"><span class="toc-article-text">設定 Xdebug</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定_Hosts"><span class="toc-article-text">設定 Hosts</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#啟動_PHP_外掛"><span class="toc-article-text">啟動 PHP 外掛</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定_Interpreter"><span class="toc-article-text">設定 Interpreter</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#產生_Bookmarklets"><span class="toc-article-text">產生 Bookmarklets</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定中斷點"><span class="toc-article-text">設定中斷點</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#傾聽_Xdebug"><span class="toc-article-text">傾聽 Xdebug</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#啟動_Xdebug"><span class="toc-article-text">啟動 Xdebug</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>傳統 PHP 大都使用 <code>echo()</code>、<code>var_dump()</code> 或 <code>dd()</code> 除錯，此種方式必須破壞原本程式碼，而且所能觀察的變數有限，也無法明確得知程式執行的流程。PhpStorm 支援 Xdebug，允許我們設定中斷點，程式將停在中斷點設定之處，讓我們透過 Step Into、Step Over、Step Out 的方式除錯，非常方便。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 7.0.0<br>Laravel 5.2.37<br>MAMP PRO 3.5<br>PhpStorm 2016.1.2</p>
+<h2 id="設定_Xdebug">設定 Xdebug</h2><hr>
+<p>MAMP PRO 預設已經有安裝 Xdebug，只是在 <code>php.ini</code> 並沒有啟動，必須手動啟動後，再加上一些設定。</p>
+<figure class="highlight php"><figcaption><span>/Applications/MAMP/bin/php/php7.0.0/conf/php.ini</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[xdebug]</span><br><span class="line">zend_extension=<span class="string">"/Applications/MAMP/bin/php/php7.0.0/lib/php/extensions/no-debug-non-zts-20151012/xdebug.so"</span></span><br><span class="line">xdebug.remote_enable=<span class="number">1</span></span><br><span class="line">xdebug.remote_port=<span class="number">9000</span></span><br><span class="line">xdebug.profiler_enable=<span class="number">1</span></span><br><span class="line">xdebug.profiler_output_dir=<span class="string">"/Applications/MAMP/tmp"</span></span><br></pre></td></tr></table></figure>
+<p>MAMP PRO 預設將 PHP 安裝在<code>/Applications/MAMP/bin/php/phpX.X.XX/conf/php.ini</code>，選擇版本加以修改<code>php.ini</code>。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>若不知道該改哪一個<code>php.ini</code>，可下<code>php --ini</code>指令，看看目前系統正在使用哪一個<code>php.ini</code>。</span></span></span></p>
+<p>其中 <code>[xdebug]</code> 位於 <code>php.ini</code> 的最後一行，預設使用 <code>;</code> 註解，將 <code>;</code> 拿掉，並加上以上的 Xdebug 設定。</p>
+<p>存檔後須重新啟動MAMP。</p>
+<h2 id="設定_Hosts">設定 Hosts</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug007.png" alt=""></p>
+<p>在 MAMP PRO 設定新 host。</p>
+<ul>
+<li><strong>PHP version</strong> : 7.0.0。</li>
+<li><strong>Document root</strong> : <code>/Users/oomusou/Code/Demo/Laravel52Xdebug_demo/public</code>。</li>
+</ul>
+<p>存檔後須重新啟動MAMP。</p>
+<h2 id="啟動_PHP_外掛">啟動 PHP 外掛</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug000.png" alt=""></p>
+<p><strong><em>PhpStorm -&gt; Preferences -&gt; Plugins</em></strong></p>
+<ul>
+<li>PhpStorm 預設已經安裝並啟動 PHP 外掛，確認此外掛已經啟動。</li>
+</ul>
+<h2 id="設定_Interpreter">設定 Interpreter</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug001.png" alt=""></p>
+<p><strong><em>PhpStorm -&gt; Preferences -&gt; Language &amp; Frameworks -&gt; PHP</em></strong></p>
+<ul>
+<li><strong>PHP language level</strong> : <code>7</code>。</li>
+<li><strong>Interpreter</strong> : 按 <code>...</code> 設定PHP interpreter。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>PHP Interpreter 每個專案都要重新設定一遍。</span></span></span></li>
+</ul>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug002.png" alt=""></p>
+<p>選擇 <code>PHP 7.0.0</code> 的路徑 : <code>/Applications/MAMP/bin/php/php7.0.0/bin/php</code>。</p>
+<p>若路徑正確，PhpStorm 會抓到 PHP 與 Xdebug 的版本。</p>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug003.png" alt=""></p>
+<p>從原本的 <code>&lt;no interpreter&gt;</code> 變成明確的 <code>PHP7 (7.0.0)</code>。</p>
+<h2 id="產生_Bookmarklets">產生 Bookmarklets</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug004.png" alt=""></p>
+<p><strong><em>PhpStorm -&gt; Preferences -&gt; Language &amp; Frameworks -&gt; PHP -&gt; Debug</em></strong></p>
+<ul>
+<li>按下 <code>Use debugger bookmarklets to initiate debugging form your favorite browser</code>，將會使用你預設的瀏覽器開啟 <code>https://www.jetbrains.com/phpstorm/marklets/</code>。</li>
+</ul>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug005.png" alt=""></p>
+<p>在左側的 Xdebug 部分，按下 <code>Generate</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug006.png" alt=""></p>
+<p>將產生 <code>Start debugger</code>，<code>Stop Debugger</code> 與 <code>Debug this page</code>。</p>
+<p>將這 3 個連結拖拉到上方的 Bookmarks Bar。</p>
+<ul>
+<li><strong>Start debugger</strong> : 啟動 Xdebug 除錯。</li>
+<li><strong>Stop debugger</strong> : 停止 Xdebug 除錯。</li>
+<li><strong>Debug this page</strong> : 啟動 Xdebug，並重新載入目前網頁。</li>
+</ul>
+<h2 id="設定中斷點">設定中斷點</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug008.png" alt=""></p>
+<p>在 <code>app/Http/routes.php</code> 的 14 行的最左側點一下，設定中斷點。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>實務上你可以在任何你想要除錯的 PHP 程式碼中設定中斷點，本範例是以 Laravel 預設專案的 <code>routes.php</code> 為例。</span></span></span></p>
+<h2 id="傾聽_Xdebug">傾聽 Xdebug</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug009.png" alt=""></p>
+<p>按下上方的 <code>電話筒</code> 圖示，綠色表示開始傾聽 Xdebug，可在所設定的中斷點停止。</p>
+<h2 id="啟動_Xdebug">啟動 Xdebug</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug010.png" alt=""></p>
+<p>開啟瀏覽器，按下 <code>Start debugger</code>，在網址列輸入 <code>http://laravel52xdebug:8888</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug011.png" alt=""></p>
+<p>PhpStorm 會跳出 <code>Incoming Connection From Xdebug</code> 視窗，按 <code>Accept</code> 繼續。</p>
+<p><img src="/images/phpstorm/phpstorm-xdebug/xdebug012.png" alt=""></p>
+<p>程式執行將停在剛剛設定的中斷點。</p>
+<p>下方會出現 Debugger 視窗，提供除錯的詳細資訊。</p>
+<ul>
+<li>左側綠色三角形為 <code>Resume Program</code>，表示將繼續執行，直到下一個中斷點停止。</li>
+<li>左側紅色方形為 <code>Stop</code>，表示停止目前程式執行。</li>
+<li>上方第一個圖示為 <code>Step Over</code>，表示將跳過目前函式。</li>
+<li>上方第二個圖示為 <code>Step Into</code>，表示將執行目前函式內部的程式碼。</li>
+<li>上方第三個圖示為 <code>Force Step Into</code>，表示將強制執行目前函式內部的程式碼。</li>
+<li>上方第四個圖示為 <code>Step Out</code>，表示將跳出目前函式內部的程式碼。</li>
+<li>上方第五個圖示為 <code>Run to Cursor</code>，表示將快速執行到目前游標處停止。</li>
+<li><code>Variables</code> 為目前 scope 所有的變數值。</li>
+<li><code>Watches</code> 可自行新增想觀察的變數。</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>使用這種方式之後，我再也沒用過 <code>echo()</code>、<code>var_dump()</code> 或 <code>dd()</code> 來除錯，只要在認為有問題的程式碼之處，設定中斷點，就可以觀察當時所有變數的值，並且觀察程式實際執行的流程。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/phpstorm/refactor-namespace/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/phpstorm-directories/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-06-11 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/MAMP/">MAMP<span>4</span></a></li> <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li> <li><a href="/tags/Xdebug/">Xdebug<span>4</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

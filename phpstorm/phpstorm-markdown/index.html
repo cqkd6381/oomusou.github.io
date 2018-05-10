@@ -1,0 +1,221 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使PhpStorm支援Markdown? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="只要安裝Markdown Support Plugin就可以在PhpStorm編輯Markdown">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="只要安裝Markdown Support Plugin就可以在PhpStorm編輯Markdown">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使PhpStorm支援Markdown?">
+<meta property="og:url" content="http://oomusou.io/phpstorm/phpstorm-markdown/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="只要安裝Markdown Support Plugin就可以在PhpStorm編輯Markdown">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使PhpStorm支援Markdown?">
+<meta name="twitter:description" content="只要安裝Markdown Support Plugin就可以在PhpStorm編輯Markdown">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使PhpStorm支援Markdown?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 只要安裝Markdown Support Plugin就可以在PhpStorm編輯Markdown			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝Plugin"><span class="toc-article-text">安裝Plugin</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>由於Github的流行，越來越多人喜歡用markdown格式寫文件。使用Hexo寫blog時，我會使用Sublime Text寫markdown，但若寫專案的readme.md時，由於是在PhpStorm內工作，所以會希望也能在PhpStorm內寫markdown。可惜PhpStorm內建並沒有支援markdown格式，所幸JetBrains有另外開發plugin，讓我們也可以在PhpStorm寫markdown了。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PhpStorm 9.0.2<br>Markdown Support Plugin 8.0.0.20150929</p>
+<h2 id="安裝Plugin">安裝Plugin</h2><hr>
+<p><strong><em>PhpStorm -&gt; Preference -&gt; Plugins -&gt; Install JetBrains plugin…</em></strong><br><img src="/images/phpstorm/phpstorm-markdown/markdown000.png" alt=""></p>
+<p>輸入 <code>markdown</code>，找到 <strong><em>Markdown support</em></strong>。<br><img src="/images/phpstorm/phpstorm-markdown/markdown001.png" alt=""></p>
+<p>安裝完會要求重新啟動PhpStorm。</p>
+<p>以後只要開啟<code>*.md</code>格式，就會出現左右分隔畫面，其中左側為我們編輯markdown的文字編輯器，右邊為<code>所見即所得</code>，讓我們<code>不用存檔</code>就可以立刻看到render結果，非常方便。<br><img src="/images/phpstorm/phpstorm-markdown/markdown002.png" alt=""></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Markdown格式非常簡單，而且<code>所寫即所得</code>，寫熟了之後非常有效率，建議大家文件使用markdown格式撰寫，將來要放在Hexo，或轉成HTML或PDF格式都很方便。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/ci/travis-ci-setup/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/laravel/laravel42/laravel-42-phpunit/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-10-12 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Markdown/">Markdown<span>2</span></a></li> <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

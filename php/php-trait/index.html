@@ -1,0 +1,336 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用Trait? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="深入探討PHP 5.4的Trait觀念與用法">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="深入探討PHP 5.4的Trait觀念與用法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用Trait?">
+<meta property="og:url" content="http://oomusou.io/php/php-trait/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="深入探討PHP 5.4的Trait觀念與用法">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用Trait?">
+<meta name="twitter:description" content="深入探討PHP 5.4的Trait觀念與用法">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用Trait?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 深入探討PHP 5.4的Trait觀念與用法			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#為什麼要使用Trait?"><span class="toc-article-text">為什麼要使用Trait?</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用繼承"><span class="toc-article-text">使用繼承</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用多型"><span class="toc-article-text">使用多型</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用Trait"><span class="toc-article-text">使用Trait</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Trait的作用域"><span class="toc-article-text">Trait的作用域</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Insteadof與As關鍵字"><span class="toc-article-text">Insteadof與As關鍵字</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#繼承_vs-_多型_vs-_Trait"><span class="toc-article-text">繼承 vs. 多型 vs. Trait</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#繼承"><span class="toc-article-text">繼承</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#多型"><span class="toc-article-text">多型</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Trait"><span class="toc-article-text">Trait</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Good_Practice"><span class="toc-article-text">Good Practice</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#與其他程式語言比較"><span class="toc-article-text">與其他程式語言比較</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Ruby"><span class="toc-article-text">Ruby</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#PHP"><span class="toc-article-text">PHP</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Trait是部分class的實現 ，讓我們能將部分class注入到其他class。</p>
+<p>trait有兩個功能 : </p>
+<ul>
+<li>提供如interface的<code>合約</code>。</li>
+<li>提供如class的<code>實作</code>。</li>
+</ul>
+<p>所以trait是一個看起來像interface，但用起來像class的東西。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 5.4</p>
+<h2 id="為什麼要使用Trait?">為什麼要使用Trait?</h2><hr>
+<p>假設現在我們有兩個class : <code>RetailStore</code> class與<code>Car</code> class，我們希望這兩個class都能提供log功能，紀錄class的內部運作。</p>
+<p>我們分別想到了3個方法實現log功能 : </p>
+<ul>
+<li>使用繼承</li>
+<li>使用多型 (interface)</li>
+<li>使用trait</li>
+</ul>
+<h3 id="使用繼承">使用繼承</h3><img src="/images/php/php-trait/trait000.svg" width="400">
+<figure class="highlight php"><figcaption><span>log.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Log</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">startLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">stopLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<figure class="highlight php"><figcaption><span>RetailStore.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RetailStore</span> <span class="keyword">extends</span> <span class="title">Log</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<figure class="highlight php"><figcaption><span>Car.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">extends</span> <span class="title">Log</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<p>這種寫法強迫<code>RetailStore</code>與<code>Car</code>去繼承<code>Log</code>，繼承後也會連<code>Log</code>的<code>startLog()</code>與<code>stopLog()</code>一起繼承。</p>
+<p>以功能面來說，這樣是可行的，但問題<code>繼承並不是這樣用的</code>。</p>
+<p>解釋繼承最典型的例子就是國中學生物的<code>界門綱目科屬種</code> ，舉例來說，人類屬於 : </p>
+<ul>
+<li>界 : 動物界 Animalia</li>
+<li>門 : 脊索動物門 Chordata</li>
+<li>綱 : 哺乳綱 Mammalia</li>
+<li>目 : 靈長目 Primates</li>
+<li>科 : 人科 Hominidae</li>
+<li>屬 : 人屬 Homo</li>
+<li>種 : 智人 H. sapiens</li>
+</ul>
+<p>下一層的分類都是上一層的特化，也繼承了上一層分類的所有特性。</p>
+<p>也就是<code>智人</code>包含了<code>哺乳綱</code> 的所有特性，所以<code>智人</code>也算是一種<code>哺乳類</code>。</p>
+<p>但因為<code>智人</code>還有其他的特性，是<code>哺乳綱</code>所沒有的，所以又再被分類成<code>靈長目</code>。 </p>
+<p>但<code>RetailStore</code> class在理解上與<code>Log class</code>不相關，<code>Car</code> class在理解上也與<code>Log</code> class不相關，也就是說<code>RetailStore</code>根本不算是一種<code>Log</code>類，而<code>Car</code>也根本不算是一種<code>Log</code>類，<code>在這裡使用繼承完全是因為Log功能硬兜出來的，而不是因為class天生的特性加以繼承所分類</code>。換句話說，<code>Log</code> class根本不適合當<code>RetailStore</code> class與<code>Log</code> class的祖先。</p>
+<p>這是一個典型誤用<code>繼承</code>的例子，並不是一個好的方法。</p>
+<h3 id="使用多型">使用多型</h3><img src="/images/php/php-trait/trait001.svg" width="400">
+<figure class="highlight php"><figcaption><span>ILog.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">ILog</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">startLog</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">stopLog</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<figure class="highlight php"><figcaption><span>RetailStore.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RetailStore</span> <span class="keyword">implements</span> <span class="title">ILog</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">startLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">stopLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<figure class="highlight php"><figcaption><span>Car.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> <span class="keyword">implements</span> <span class="title">ILog</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">startLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">stopLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<p>既然<code>繼承</code>不能用，那我們改用<code>多型</code>吧，建立一個<code>ILog</code> interface，定義了<code>startLog()</code>與<code>stopLog()</code>兩個函式，基於之前<code>強迫繼承</code>的錯誤，我們只要求<code>RetailStore</code> class與<code>Car</code> class實踐<code>ILog</code> interface。</p>
+<p>使用interface方式比用繼承好多了，但還不是最好，由於<code>RetailStore</code> class與<code>Car</code> class都要實踐<code>ILog</code> interface，這導致了<code>startLog()</code>與<code>stopLog()</code>演算法在<code>RetailStore</code> class與<code>Car</code> class都要實作，也就是說，將來萬一<code>start()</code>與<code>stop()</code>演算法有bug，兩個class都要去修改code，這違反了DRY原則 (Don’t Repeat Yourself)原則，因為相同的code寫兩分，將來維護會很麻煩。</p>
+<p>目前看來物件導向兩大絕招<code>繼承</code>與<code>多型</code> 已經陣亡了。</p>
+<p>Trait就是為了解決這個問題所產生的，trait允許我們寫一個<code>部分class</code>的<code>TLog</code> trait，然後將<code>Log</code> trait注入到<code>RetailStore</code> class與<code>Car</code> class。</p>
+<h3 id="使用Trait">使用Trait</h3><img src="/images/php/php-trait/trait002.svg" width="500">
+<figure class="highlight php"><figcaption><span>TLog.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> TLog </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">startLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">stopLog</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<figure class="highlight php"><figcaption><span>RetailStore.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RetailStore</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">TLog</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<figure class="highlight php"><figcaption><span>Car.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Car</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">TLog</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<p>既然<code>多型</code>還不夠好，會造成code重複的問題，假如我們能把<code>實踐</code>的部分也寫在interface就好了。trait就是允許我們直接將<code>實踐</code>寫在裡面，避免code重複。</p>
+<p>建立一個<code>TLog</code> trait，定義了<code>startLog()</code>與<code>stopLog()</code>兩個函式，直接將<code>startLog()</code>與<code>stopLog()</code>演算法寫在trait的函式內。</p>
+<p>既然trait已經將<code>startLog()</code>與<code>stopLog()</code>都寫好了，其他class就不用implements了，PHP使用了<code>use</code>關鍵字，讓我們將trait的函式直接注入到<code>RetailStore</code> class與<code>Car</code> class。也就是說，雖然<code>RetailStore</code> class與<code>Car</code> class都沒有實踐<code>startLog()</code>與<code>stopLog()</code>，透過use住入<code>TLog</code> trait之後，就相當於有了<code>startLog()</code>與<code>stopLog()</code>函式了。 </p>
+<p>無論以上3種寫法，對於使用<code>RetailStore</code> class與<code>Car</code> class來說都一樣。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$store</span> = <span class="keyword">new</span> RetailStore();</span><br><span class="line"><span class="variable">$store</span>-&gt;startLog();</span><br><span class="line"><span class="variable">$store</span>-&gt;stopLog();</span><br><span class="line"></span><br><span class="line"><span class="variable">$car</span> = <span class="keyword">new</span> Car();</span><br><span class="line"><span class="variable">$car</span>-&gt;startLog();</span><br><span class="line"><span class="variable">$car</span>-&gt;stopLog();</span><br></pre></td></tr></table></figure></p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  繼承、interface與trait的比較</div>
+<p>繼承的方式雖然可行，但很暴力也不合理；interface方式雖然也可行，但不符合DRY原則，將來不好維護；只有使用trait，一個介於繼承與interface中間的方法，巧妙的融合class與interface的優點，對於class間要加入毫不相關的功能提供了另外一種不錯的解決方式。</p>
+<div class="alert alert-success"><i class="fa fa-lightbulb-o"></i>  PHP內部實踐Trait方式</div>
+<p>對於PHP來說，在使用use關鍵字時，PHP只是將trait的所有變數與函式「複製」進class內，讓class馬上擁有trait的所有功能。</p>
+<h2 id="Trait的作用域">Trait的作用域</h2><hr>
+<p>因為trait在實作上是使用<code>複製</code>， 所以原本在trait內宣告的<code>public</code>、<code>protected</code>、<code>private</code>變數與函式都會複製到class內，也就是說，<code>class內被trait加進來變數與函式的scope將與原trait完全一樣</code>。</p>
+<p>比較一下繼承的<code>extends</code>，當使用繼承時，只有<code>public</code>與<code>protected</code>的變數與函式會被繼承下來，<code>private</code>函式將不會被繼承下來。 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> PrivateTrait </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> privateFunc() </span><br><span class="line">    &#123; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"This is private"</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrivateClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">privateTrait</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// This is allowed.</span></span><br><span class="line">    <span class="keyword">public</span> publicFunc() </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;privateFunc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExtendingClass</span> <span class="keyword">extends</span> <span class="title">PrivateClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// This is NOT allowed - privateFunc() is only available</span></span><br><span class="line">    <span class="comment">// to the class which directly utilizes it.</span></span><br><span class="line">    <span class="keyword">public</span> someFunc() </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;privateFunc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第1行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> PrivateTrait </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> privateFunc() </span><br><span class="line">    &#123; </span><br><span class="line">        <span class="keyword">echo</span> <span class="string">"This is private"</span>; </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>定義了<code>PrivateTrait</code>，並宣告的一個<code>private</code>函式。</p>
+<p>第9行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PrivateClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">privateTrait</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// This is allowed.</span></span><br><span class="line">    <span class="keyword">public</span> publicFunc() </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;privateFunc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>publicFunc()</code>函式呼叫了在<code>PrivateTrait</code>定義的<code>privateFunc()</code>，雖然<code>privateFunc()</code>是<code>private</code>，但因為沒用繼承，所以在class內可以使用。</p>
+<p>20行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExtendingClass</span> <span class="keyword">extends</span> <span class="title">PrivateClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">// This is NOT allowed - privateFunc() is only available</span></span><br><span class="line">    <span class="comment">// to the class which directly utilizes it.</span></span><br><span class="line">    <span class="keyword">public</span> someFunc() </span><br><span class="line">    &#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;privateFunc();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>ExtendingClass</code> 是繼承自<code>PrivateClass</code>，但在<code>someFunc()</code>函式裡呼叫<code>privateFunc()</code>是錯誤的，因為<code>privateFunc()</code>在<code>PrivateTrait</code>定義是<code>private</code>，而<code>private</code>無法被繼承，所以在<code>ExtendingClass</code>是看不到<code>privateFunc()</code>的。</p>
+<h2 id="Insteadof與As關鍵字">Insteadof與As關鍵字</h2><hr>
+<p>由於PHP使用<code>複製</code>來實作<code>use</code>，所以有可能出現trait所定義的變數與函式已經在其他class已經被定義，PHP提出了<code>insteadof</code>與<code>as</code>關鍵字來解決。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> A </span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">someFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ... </span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">otherFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">trait</span> B </span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">someFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123; </span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">otherFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">A</span>, <span class="title">B</span> &#123;</span><br><span class="line">        <span class="title">A</span>::<span class="title">someFunc</span> <span class="title">insteadof</span> <span class="title">B</span>;</span><br><span class="line">        B::otherFunc <span class="keyword">as</span> differentFunc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第1行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> A </span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">someFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">otherFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">trait</span> B </span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">someFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">otherFunc</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>兩個trait所定義的函式完全相同。</p>
+<p>25行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">A</span>, <span class="title">B</span> &#123;</span><br><span class="line">        <span class="title">A</span>::<span class="title">someFunc</span> <span class="title">insteadof</span> <span class="title">B</span>;</span><br><span class="line">        B::otherFunc <span class="keyword">as</span> differentFunc;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>MyClass同時使用了<code>A</code> trait與<code>B</code> trait，但因為這兩個trait的函式完全相同，所以造成了函式名稱衝突。</p>
+<p><code>use</code>關鍵字同時加上了<code>A</code>與<code>B</code>兩個trait，後面加上大括號描述該怎麼處理函式名稱衝突。</p>
+<p><code>insteadof</code>關鍵字告訴PHP我們要使用<code>A</code> trait的<code>someFunc()</code>而不要使用<code>B</code> trait的<code>someFunc()</code>。</p>
+<p><code>as</code>關鍵字可以替trait的變數名稱與函式名稱取別名。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  那B::someFunc()怎麼辦?</div>
+<p>以上面的例子，<code>因為沒有描述B::someFunc()，所以就被忽略而消失不見了</code>。</p>
+<p>若要使用<code>B::someFunc()</code>可以自行加上<code>as</code>另外取別名。</p>
+<h2 id="繼承_vs-_多型_vs-_Trait">繼承 vs. 多型 vs. Trait</h2><hr>
+<p>回到一個更基本的問題，何時該用繼承？何時該用多型？何時該用trait？</p>
+<h3 id="繼承">繼承</h3><p><code>想要重複使用既有程式功能</code>。缺點是耦合度高，當你繼承了某個class時，已經綁死了某個class，而且繼承在編譯時期就已經決定，無法在執行時期改變。</p>
+<h3 id="多型">多型</h3><p><code>想要解耦合既有程式功能</code>。只要訂出interface，未來有新的功能只要實作interface即可。由於多型特性，可以在執行時期動態改變物件。優點是耦合度低，耦合只到interface層級，不會被特定class綁死。</p>
+<h3 id="Trait">Trait</h3><p><code>想要共享相同程式功能</code>。有一句話說 : </p>
+<blockquote>
+<p>Inheritance is for extending logic, trait is for sharing behavior.</p>
+</blockquote>
+<p>也就是所謂的<code>Vertial Inheritance and Horizontal Reuse</code>。繼承看起來像是垂直的結構，而trait看起來像是水平的結構。</p>
+<p>實務上多型可以取代繼承，但trait卻無法取代多型與繼承，只要需要共享相同的功能，就要多多使用trait。 </p>
+<h2 id="Good_Practice">Good Practice</h2><hr>
+<p><strong>一個檔案只使用一個Trait</strong><br>就語法上，PHP允許一個檔案內包含多個trait :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> TFoo </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFoo</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">trait</span> TBar </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getBar</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但實務上，基於一個class一個檔案<code>one class per file</code>原則，一個檔案也應該只包含一個trait。</p>
+<p><strong>Namespace的Use與Trait的Use</strong><br>雖然namespace與trait都使用use關鍵字，但彼此並不會混淆。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">MyNamespace</span>\<span class="title">SubNamespace</span>; </span><br><span class="line"> </span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Contracts</span>\<span class="title">JsonableInterface</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Contracts</span>\<span class="title">RenderableInterface</span>;  </span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">  <span class="keyword">use</span> <span class="title">MyTrait</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>當use用在namespace時，會寫在class外面。</li>
+<li>當use用在trait時，會寫在class裡面。</li>
+</ul>
+<h2 id="與其他程式語言比較">與其他程式語言比較</h2><hr>
+<h3 id="Ruby">Ruby</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">MyTrait</span></span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">setAddress</span><span class="params">(address)</span></span></span><br><span class="line">        ...</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span></span></span><br><span class="line">    <span class="keyword">include</span> <span class="constant">MyTrait</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span></span></span><br><span class="line">    extend <span class="constant">MyTrait</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>宣告trait :  </p>
+<ul>
+<li>Ruby沒提供trait關鍵字，要用module模擬。</li>
+</ul>
+<p>注入trait : </p>
+<ul>
+<li>include關鍵字是instance method</li>
+<li>extend關鍵字是class method(相當於PHP的 static function)。</li>
+</ul>
+<h3 id="PHP">PHP</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">trait</span> MyTrait </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">setAddress</span><span class="params">(<span class="variable">$address</span>)</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">  <span class="keyword">use</span> <span class="title">MyTrait</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>宣告trait :  </p>
+<ul>
+<li>使用trait關鍵字。</li>
+</ul>
+<p>注入trait : </p>
+<ul>
+<li>在class內部使用use關鍵字。</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>trait可以簡單的想成<code>部分class</code>，允許我們將trait注入到其他的class內，有些應用在繼承與多型都不好用時，可以考慮用trait。</li>
+<li><code>insteadof</code>與<code>as</code>關鍵字可解決trait與class函式與變數名稱衝突的問題。</li>
+<li>實務上多型可以取代繼承，但trait卻無法取代多型與繼承，只要需要共享相同的功能，就要多多使用trait。 </li>
+<li>namespace與trait都使用了<code>use</code>關鍵字，唯用在namespace時會寫在class外面，而用在trait時會寫在class裡面。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/macos/iterm2-setup/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/php/php-interface/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-09-01 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/LaraDiner/">LaraDiner<span>14</span></a></li> <li><a href="/tags/PHP/">PHP<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

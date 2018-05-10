@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用Namespace? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="深入探討PHP 5.3的Namespace觀念與用法">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="深入探討PHP 5.3的Namespace觀念與用法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用Namespace?">
+<meta property="og:url" content="http://oomusou.io/php/php-namespace/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="深入探討PHP 5.3的Namespace觀念與用法">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用Namespace?">
+<meta name="twitter:description" content="深入探討PHP 5.3的Namespace觀念與用法">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用Namespace?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 深入探討PHP 5.3的Namespace觀念與用法			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#定義"><span class="toc-article-text">定義</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#為什麼要使用Namespace?"><span class="toc-article-text">為什麼要使用Namespace?</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#宣告Namespace"><span class="toc-article-text">宣告Namespace</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Use關鍵字"><span class="toc-article-text">Use關鍵字</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#實務上使用Use"><span class="toc-article-text">實務上使用Use</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Use_Function"><span class="toc-article-text">Use Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Use_Constant"><span class="toc-article-text">Use Constant</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#As關鍵字"><span class="toc-article-text">As關鍵字</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Global_Namespace"><span class="toc-article-text">Global Namespace</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Good_Practice"><span class="toc-article-text">Good Practice</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#與其他程式語言比較"><span class="toc-article-text">與其他程式語言比較</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#C++"><span class="toc-article-text">C++</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#C#"><span class="toc-article-text">C#</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Java"><span class="toc-article-text">Java</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Ruby"><span class="toc-article-text">Ruby</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#PHP"><span class="toc-article-text">PHP</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Namespace是物件導向語言很基本的功能，主要在解決class名稱衝突的問題。C++與C#也稱為namespace，Java則稱為package，雖然名稱不一樣，但精神都一樣，不過在語法部分PHP有自己的主張，與其他語言稍有不同。</p>
+<p>Namespace最大的貢獻是使得framework與package能被大量地流通使用，是PHP現代化中最重要的一個基石。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 5.3</p>
+<h2 id="定義">定義</h2><hr>
+<p>Namespace觀念在2010年末的PHP 5.3被引進，它讓我們能將PHP的class, interface, function, constant再用namespace分類一次，如同檔案系統的目錄結構一樣可以分階層管理。也就是說，每個framework與package都有自己的namespace，這樣就可以解決framework與package的class名稱可能互相衝突，或與自己專案的class名稱相衝突的問題。</p>
+<h2 id="為什麼要使用Namespace?">為什麼要使用Namespace?</h2><hr>
+<p>以Laravel 5.1的Response class為例 :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Http</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">ArrayObject</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Jsonable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Renderable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">HttpFoundation</span>\<span class="title">Response</span> <span class="title">as</span> <span class="title">BaseResponse</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Response</span> <span class="keyword">extends</span> <span class="title">BaseResponse</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第8行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Response</span> <span class="keyword">extends</span> <span class="title">BaseResponse</span></span></span><br></pre></td></tr></table></figure></p>
+<p>我們可以發現Laravel建立了Response class，這是一個很普通的class名稱，很可能其他package會用到，甚至我們自己的專案也會用到Response這個class名稱，若因為用了其他framework或package而導致class名稱相衝，需要重新改code換class名稱，這就失去了快速開發的意義了。</p>
+<p>第1行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Http</span>;</span><br></pre></td></tr></table></figure></p>
+<p>我們可以發現Response class是被定義在<code>Illuminate\Http</code>這個namespace下，也就是說，<code>class名稱可以互相衝突，但只要躲在不相衝突的namespace下即可。</code>因為namespace的緣故，class已經被包在namespace下，因此class名稱可以互相衝突。</p>
+<p>假如是一個人從頭寫到尾的PHP專案，就不會遇到class名稱互相衝突的問題，但如果大量使用別人的framework或package，就很可能遇到class名稱相衝突的問題，所以才說namespace是PHP現代化最重要的基石。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>現代PHP與傳統PHP的最大差別就是引入framework與package。</span></span></span></p>
+<h2 id="宣告Namespace">宣告Namespace</h2><hr>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Oreilly</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Namespace的宣告會緊接著在<code>&lt;?php</code>的下一行，命名規則建議最頂層的namespace名稱以vendor命名(公司名稱或組織名稱)，必須是世界上唯一的名稱，以免class名稱雖然不衝突，但namespace名稱卻衝突了。</p>
+<p>之後所有的class, interface, function, constant都是活在Oreilly這個namespace下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Oreilly</span>\<span class="title">ModernPHP</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"><span class="preprocessor">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Namespace允許我們如同檔案系統的目錄結構般對namespace加以分類，Oreilly有很多書，與<code>ModernPHP</code>這本書相關的class, interface, function, constant應該放在<code>ModernPHP</code>這個subnamespace較恰當。 </p>
+<p>就理論上而言，只要每個class所宣告的namespace相同，對於PHP而言就視為處在相同namespace，與PHP檔案放在檔案系統哪個目錄無關；但在實務上，為了符合PSR-4 autoloader標準，建議namespace與subnamespace的關係與實際上的檔案系統的目錄階層一樣。事實上，Laravel的namespace與subnamespace的關係也是依照這個建議所實踐。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  PHP內部實踐Namespace方式</div>
+<p>Namespace聽起來很玄，但PHP實踐namespace的方式卻很簡單，以Laravel的Response class而言，事實上在PHP內部會將namespace名稱與class名稱加起來一起識別，也就是內部是以<code>Illuminate\Http\Response</code>這個class名稱運作，如此就可以保證class名稱永遠不會衝突。</p>
+<h2 id="Use關鍵字">Use關鍵字</h2><hr>
+<p>若我們要使用Laravel的Response class，原本PHP要這樣寫<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$response</span> = <span class="keyword">new</span> Illuminate\Http\Response(<span class="string">'Oops'</span>, <span class="number">400</span>);</span><br><span class="line"><span class="variable">$response</span>-&gt;send();</span><br></pre></td></tr></table></figure></p>
+<p>由於使用了namespace，造成使用class時必須引用其完整namespace路徑，否則PHP會找不到class。</p>
+<p>這種寫法假如寫一次就算了，若每次要使用Response class都要這樣寫一定會瘋掉。</p>
+<p>PHP新加入了use關鍵字，讓我們只要輸入完整的namespace路徑一次就好。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Response</span>;</span><br><span class="line"><span class="variable">$response</span> = <span class="keyword">new</span> Response(<span class="string">'Oops'</span>, <span class="number">400</span>);</span><br><span class="line"><span class="variable">$response</span>-&gt;send();</span><br></pre></td></tr></table></figure></p>
+<p>我們只要透過use輸入Illuminate\Http\Response一次就好，接下來要使用Response class時，只要打Response即可，不用再輸入完整namespace路徑。</p>
+<h2 id="實務上使用Use">實務上使用Use</h2><hr>
+<p>以Laravel 5.1的Response class為例 : </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Http</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">ArrayObject</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Jsonable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Renderable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">HttpFoundation</span>\<span class="title">Response</span> <span class="title">as</span> <span class="title">BaseResponse</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Response</span> <span class="keyword">extends</span> <span class="title">BaseResponse</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在<code>&lt;?php</code>下，我們會馬上宣告namespace，接下來馬上使用use，把目前這個class會用到其他namespace的class全部use進來，這樣接下來的code就可以很簡單的使用那些外部的class。</p>
+<p>在PHP 5.6，PHP增加了2個新功能，讓我們不只可以use class，還可以use function與constant。</p>
+<h2 id="Use_Function">Use Function</h2><hr>
+<p>使用<code>use func</code>關鍵字。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">func</span> <span class="title">Namespace</span>\<span class="title">functionName</span>;</span><br><span class="line">functionName();</span><br></pre></td></tr></table></figure></p>
+<h2 id="Use_Constant">Use Constant</h2><hr>
+<p>使用<code>use constant</code>關鍵字。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">constant</span> <span class="title">Namespace</span>\<span class="title">CONST_NAME</span>;</span><br><span class="line"><span class="keyword">echo</span> CONST_NAME;</span><br></pre></td></tr></table></figure></p>
+<h2 id="As關鍵字">As關鍵字</h2><hr>
+<p>以Laravel 5.1的Response class為例 : </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Http</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">ArrayObject</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Jsonable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Renderable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">HttpFoundation</span>\<span class="title">Response</span> <span class="title">as</span> <span class="title">BaseResponse</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Response</span> <span class="keyword">extends</span> <span class="title">BaseResponse</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第6行<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator"><span class="keyword">use</span> Symfony\Component\HttpFoundation\Response <span class="keyword">as</span> BaseResponse;</span></span><br></pre></td></tr></table></figure></p>
+<p>由於Symfony也叫Response class，而Laravel也叫Response class，我們可以先將Symfony的Response class<code>取別名</code>為BaseResponse，以免與Laravel的class名稱相同。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  as純粹是為了讓人識別用，避免寫出<b>class Response extends Response</b>的程式碼。</div>
+<p>PHP內部並不會因為Symfony與Laravel都取名為Response class而出問題，事實上在PHP內部，Symfony的class為<code>Symfony\Component\HttpFoundation\Response</code>，而Laravel的class為<code>Illuminate\Http\Response</code>。</p>
+<div class="alert alert-success"><i class="fa fa-lightbulb-o"></i>  as也常拿來縮短namespace名稱。</div>
+<h2 id="Global_Namespace">Global Namespace</h2><hr>
+<p>Global namespace是PHP歷史留下來的產物，也是PHP所獨有的。在還沒有Namespace之前，PHP已經有大量的class與function，而這些沒有namespace的class與function，通通歸在global namespace底下。</p>
+<p>當一個class, interface, function, constant出現時，PHP會依照以下順序搜尋 : </p>
+<ol>
+<li>目前namespace。</li>
+<li>使用use的其他namespace。</li>
+<li>使用完整路徑的namespace。</li>
+</ol>
+<p>所以如果是global namespace的class, interface, function, constant，PHP就會找不到而出現錯誤。</p>
+<p>對於global namespace，PHP的解決方案是加上<code>\</code>。</p>
+<p>一個典型的例子是PHP的Exception class。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">My</span>\<span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doSomething</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$exception</span> = <span class="keyword">new</span> <span class="keyword">Exception</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>這樣寫會導致PHP找不到Exception class而出錯，因為Exception是在global namespace。</p>
+<p>要改成如下的寫法才正確 :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">My</span>\<span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">doSomething</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> \<span class="keyword">Exception</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>Exception前面加上<code>\</code>之後，告訴PHP Exception class是屬於global namespace。</p>
+<h2 id="Good_Practice">Good Practice</h2><hr>
+<p><strong>一個use只搭配一個namespace</strong><br>就語法上，PHP允許一個use關鍵字搭配很多namespace :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Jsonable</span>,</span><br><span class="line">    <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Renderable</span>,</span><br><span class="line">    <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br></pre></td></tr></table></figure></p>
+<p>但實務上，建議每一行的use只搭配一個namespace，雖然會多打一點字，但比較不會造成困擾。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>事實上，其他程式語言(C++, C#, Java)也都是每一行個use只搭配一個namespace。</span></span></span><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Jsonable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Support</span>\<span class="title">Renderable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br></pre></td></tr></table></figure></p>
+<p><strong>一個檔案只使用一個namespace</strong><br>就語法上，PHP允許一個檔案內包含多個namespace，每個namespace以大括號刮起來，類似C++與C#的寫法 :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">Foo</span> &#123;</span><br><span class="line">// <span class="title">Declare</span> <span class="title">classes</span>, <span class="title">interfaces</span>, <span class="title">functions</span>, <span class="title">and</span> <span class="title">constants</span> <span class="title">here</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title">namespace</span> <span class="title">Bar</span> &#123;</span><br><span class="line">// <span class="title">Declare</span> <span class="title">classes</span>, <span class="title">interfaces</span>, <span class="title">functions</span>, <span class="title">and</span> <span class="title">constants</span> <span class="title">here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但實務上，基於一個class一個檔案(one class per file)原則，一個檔案也應該只包含一個namespace。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>事實上，Laravel的source code也都是一個檔案只包含一個namespace。</span></span></span></p>
+<h2 id="與其他程式語言比較">與其他程式語言比較</h2><hr>
+<h3 id="C++">C++</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> MyName &#123;</span><br><span class="line">    <span class="keyword">namespace</span> SubName &#123;</span><br><span class="line">        <span class="keyword">class</span> MyClass &#123;</span><br><span class="line"></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> MyName::SubName;</span><br><span class="line"><span class="keyword">using</span> MyName::SubName::MyClass;</span><br></pre></td></tr></table></figure>
+<p>宣告namespace : </p>
+<ul>
+<li>使用<code>namespace</code>關鍵字。 </li>
+<li>巢狀namespace需在括號內。 </li>
+<li>class須放在namespace內。 </li>
+</ul>
+<p>引用namespace :  </p>
+<ul>
+<li>使用<code>using namespace</code>關鍵字。 </li>
+<li>namespace與subnamespace之間用<code>::</code>，路徑不包含到class名稱，類似path概念。 </li>
+</ul>
+<p>引用class :  </p>
+<ul>
+<li>使用<code>using</code>關鍵字，直接指定class的完整路徑。 </li>
+</ul>
+<h3 id="C&#35;">C&#35;</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">MyName.SubName</span> &#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">MyClass</span> &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> MyName.SubName;</span><br><span class="line"><span class="keyword">using</span> MyName.SubName.MyClass;</span><br></pre></td></tr></table></figure>
+<p>宣告namespace : </p>
+<ul>
+<li>使用<code>namespace</code>關鍵字。 </li>
+<li>巢狀namespace不須使用括號。 </li>
+<li>class須放在namespace內。 </li>
+</ul>
+<p>引用namespace : </p>
+<ul>
+<li>使用<code>using</code>關鍵字。 </li>
+<li>namespace與subnamespace之間用<code>.</code>，路徑不包含到class名稱，類似path概念。 </li>
+</ul>
+<p>引用class :  </p>
+<ul>
+<li>使用<code>using</code>關鍵字，直接指定class的完整路徑。 </li>
+</ul>
+<h3 id="Java">Java</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> MyName.SubName;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> MyName.SubName.*;</span><br><span class="line"><span class="keyword">import</span> MyName.SubName.MyClass;</span><br></pre></td></tr></table></figure>
+<p>宣告namespace :  </p>
+<ul>
+<li>使用<code>package</code>關鍵字。</li>
+<li>巢狀namespace不須使用括號。</li>
+<li>class不須放在namespace內。</li>
+</ul>
+<p>引用namespace : </p>
+<ul>
+<li><p>使用<code>import</code>關鍵字。</p>
+</li>
+<li><p>namespace與subnamespace之間用<code>.</code>，最後須加上<code>*</code>，類似path概念。</p>
+</li>
+</ul>
+<p>引用class :  </p>
+<ul>
+<li>使用import關鍵字，直接指定class的完整路徑。 </li>
+</ul>
+<h3 id="Ruby">Ruby</h3><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">MyName</span></span></span><br><span class="line">    <span class="class"><span class="keyword">module</span> <span class="title">SubName</span></span></span><br><span class="line">        <span class="class"><span class="keyword">class</span> <span class="title">MyClass</span></span></span><br><span class="line">            ...</span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+<p>宣告namespace :  </p>
+<ul>
+<li>使用<code>module</code>關鍵字。</li>
+<li>巢狀module需在括號內</li>
+<li>class須放在module內。 </li>
+</ul>
+<p>引用namespace :  </p>
+<ul>
+<li>不提供。</li>
+</ul>
+<p>引用class :  </p>
+<ul>
+<li>不提供。</li>
+</ul>
+<h3 id="PHP">PHP</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">MyName</span>\<span class="title">SubName</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">MyName</span>\<span class="title">SubName</span>\<span class="title">MyClass</span>;</span><br></pre></td></tr></table></figure>
+<p>宣告namespace :  </p>
+<ul>
+<li>使用<code>namespace</code>關鍵字。</li>
+<li>巢狀namespace不須使用括號。</li>
+<li>class不須放在namespace內。</li>
+</ul>
+<p>引用namespace :  </p>
+<ul>
+<li>不提供。</li>
+</ul>
+<p>引用class :  </p>
+<ul>
+<li>namespace與subnamespace之間用<code>\</code>。</li>
+<li>使用<code>use</code>關鍵字，直接指定class的完整路徑。</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><ul>
+<li>namespace是class的再一次分類，主要在解決class名稱衝突的問題。</li>
+<li>namespace最頂層的名稱最重要，必須是世界唯一，subnamespace則只要容易辨識理解即可。</li>
+<li>PHP的use的完整路徑須包含到class，與其他程式語言不太一樣。</li>
+<li>PHP的namespace與subnamespace之間用<code>\</code>分隔，與其他程式語言不太一樣。</li>
+<li>Global namespace是PHP所獨有的，在class前面加上<code>\</code>，為了相容沒有namespace時代的傳統PHP。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/hexo/draft/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/hexo/freemind-tag-overview/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-08-29 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/LaraDiner/">LaraDiner<span>14</span></a></li> <li><a href="/tags/PHP/">PHP<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

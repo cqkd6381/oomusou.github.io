@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 Docker 安裝 SonarQube？ | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 Docker 安裝 SonarQube 更簡單">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 Docker 安裝 SonarQube 更簡單">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 Docker 安裝 SonarQube？">
+<meta property="og:url" content="http://oomusou.io/sonarqube/docker/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 Docker 安裝 SonarQube 更簡單">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-29T14:14:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 Docker 安裝 SonarQube？">
+<meta name="twitter:description" content="使用 Docker 安裝 SonarQube 更簡單">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 Docker 安裝 SonarQube？</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 Docker 安裝 SonarQube 更簡單			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載_Docker_Image"><span class="toc-article-text">下載 Docker Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#啟動_SonarQube"><span class="toc-article-text">啟動 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#停止_SonarQube"><span class="toc-article-text">停止 SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環，亦可使用 Docker 安裝，將來管理會更加容易。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac59 (23608)<br>SonarQube 6.7.2 (build 37468)</p>
+<h2 id="下載_Docker_Image">下載 Docker Image</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -d --name sonarqube -p <span class="number">9000</span>:<span class="number">9000</span> -p <span class="number">9092</span>:<span class="number">9092</span> sonarqube:lts</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 下載 image 並建立 container 並執行之。</p>
+<ul>
+<li><strong>-d</strong>：<code>d</code> etach，建立 container 後，就脫離目前 process</li>
+<li><strong>–name</strong>：替 container 取一個人能夠識別的名字</li>
+<li><strong>-p</strong>：Docker 外部與 SonarQube內部所對應的 port，其中左邊為外部 Docker 的 port，右邊為 SonarQube 內部的 port</li>
+<li><p><strong>sonarqube:lts</strong>：SonarQube 的 LTS 版本，目前為 <code>6.7.2</code></p>
+<p>若要下載最新版 SonarQube，可使用以下指令：</p>
+</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name sonarqube -p <span class="number">9000</span>:<span class="number">9000</span> -p <span class="number">9092</span>:<span class="number">9092</span> sonarqube</span><br></pre></td></tr></table></figure>
+<p>不指定為 LTS 版，則下載最新版 SonarQube。</p>
+<p><img src="/images/sonarqube/docker/docker000.png" alt="ocker00"></p>
+<ol>
+<li>輸入 <code>docker run …</code> 下載 SonarQube 的 docker image，並建立 container 執行之</li>
+</ol>
+<p><img src="/images/sonarqube/docker/docker001.png" alt="ocker00"></p>
+<p>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功。</p>
+<h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">start</span> sonarqube</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker start</code> 啟動 SonarQube container。</p>
+<p><img src="/images/sonarqube/docker/docker003.png" alt="ocker00"></p>
+<ol>
+<li>輸入 <code>docker start sonarqube</code> 啟動 SonarQube container</li>
+</ol>
+<h2 id="停止_SonarQube">停止 SonarQube</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker stop sonarqube</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker stop</code> 停止 SonarQube container。</p>
+<p><img src="/images/sonarqube/docker/docker002.png" alt="ocker00"></p>
+<ol>
+<li>輸入 <code>docker stop sonarqube</code> 停止 sonarqube container</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>雖然在 macOS 安裝原生的 SonarQube 並不難，但使用 Docker 安裝 SonarQube 更簡單，且管理更方便</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/decorator/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/design-pattern/decorator/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-29 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Docker/">Docker<span>12</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>8</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

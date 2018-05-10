@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何對工廠模式開放封閉? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="將邏輯改用 LUT 表示，可將 LUT 改放到 app.php 設定檔">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="將邏輯改用 LUT 表示，可將 LUT 改放到 app.php 設定檔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何對工廠模式開放封閉?">
+<meta property="og:url" content="http://oomusou.io/tdd/tdd-factory-ocp/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="將邏輯改用 LUT 表示，可將 LUT 改放到 app.php 設定檔">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-10-18T06:13:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何對工廠模式開放封閉?">
+<meta name="twitter:description" content="將邏輯改用 LUT 表示，可將 LUT 改放到 app.php 設定檔">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何對工廠模式開放封閉?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 將邏輯改用 LUT 表示，可將 LUT 改放到 app.php 設定檔			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#前言"><span class="toc-article-text">前言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#實際案例"><span class="toc-article-text">實際案例</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#單元測試"><span class="toc-article-text">單元測試</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#ShippingService"><span class="toc-article-text">ShippingService</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#工廠模式"><span class="toc-article-text">工廠模式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_if_else_重構成_switch"><span class="toc-article-text">將 if else 重構成 switch</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_swtich_重構成_LUT"><span class="toc-article-text">將 swtich 重構成 LUT</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將_LUT_重構到_app-php"><span class="toc-article-text">將 LUT 重構到 app.php</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構成依賴注入"><span class="toc-article-text">重構成依賴注入</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構單元測試"><span class="toc-article-text">重構單元測試</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構工廠模式"><span class="toc-article-text">重構工廠模式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>將建構物件的邏輯封裝在工廠模式，已經達到 90% 的開放封閉，最少其他 class 都已經開放封閉，將來所有的邏輯修改只剩下工廠模式，若能將工廠模式也開放封閉，那就太好了。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 7.0.0<br>Laravel 5.2.31</p>
+<h2 id="前言">前言</h2><hr>
+<p>在<a href="/phpstorm/phpstorm-tdd-refactor/">如何使用 PhpStorm 實現 TDD、重構與偵錯?</a>與<a href="/tdd/tdd-di/">深入探討依賴注入</a>中，為了達到工廠模式的開放封閉，我用了一個技巧 : 故意將<strong>參數名稱</strong>與<strong>class名稱</strong>取相同，達到工廠模式的開放封閉，但實務上，可能參數來自於下拉式選單的 index，如 0, 1, 2 ….，或者參數與實際 class 名稱並不相同，需要一個 <code>if else</code> 或 <code>switch</code> 轉換，這樣就必須在工廠模式的 <code>create()</code> 或 <code>bind()</code> 寫邏輯，因此無法達成開放封閉原則的要求。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>本範例為<a href="/tdd/tdd-di/">深入探討依賴注入</a>的延伸，若覺得本文的範例看不懂，請先閱讀<a href="/tdd/tdd-di/">深入探討依賴注入</a></span></span></span></p>
+<h2 id="實際案例">實際案例</h2><hr>
+<p>假設目前有 3 家貨運公司，每家公司的計費方式不同，使用者可以動態選擇不同的貨運公司，將一步步的重構將工廠模式開放封閉。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>本範例靈感來自於91哥的<a href="https://dotblogs.com.tw/hatelove/archive/2013/01/02/learning-tdd-in-30-days-day17-refactoring-with-strategy-pattern.aspx" target="_blank" rel="external">30天快速上手TDD Day 17:Refactoring - Stagegy Pattern</a></span></span></span></p>
+<h2 id="單元測試">單元測試</h2><hr>
+<p><strong>ShippingServiceTest.php</strong><span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/90363a0c813718490c4fd6ec25310544d8bffeeb" target="_blank" rel="external">新增黑貓單元測試</a></span></span></span><br><figure class="highlight php"><figcaption><span>tests/Services/ShippingServiceTest.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">ShippingService</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShippingServiceTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@test</span> */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> 黑貓單元測試<span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">/** arrange */</span></span><br><span class="line">        <span class="variable">$companyNo</span> = <span class="number">0</span>;</span><br><span class="line">        <span class="variable">$weight</span> = <span class="number">1</span>;</span><br><span class="line">        <span class="variable">$expected</span> = <span class="number">110</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** act */</span></span><br><span class="line">        <span class="variable">$target</span> = App::make(ShippingService::class);</span><br><span class="line">        <span class="variable">$actual</span> = <span class="variable">$target</span>-&gt;calculateFee(<span class="variable">$companyNo</span>, <span class="variable">$weight</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** assert */</span></span><br><span class="line">        <span class="variable">$this</span>-&gt;assertEquals(<span class="variable">$expected</span>, <span class="variable">$actual</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>先建立 <code>ShippingService</code> 的單元測試。</p>
+<h2 id="ShippingService">ShippingService</h2><hr>
+<p><strong>ShippingService.php</strong><span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/8dd2d0ed4957c4a6fcd5430285384c0b9a1e9554" target="_blank" rel="external">新增 ShippingService</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/ShippingService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShippingService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@param</span> int $companyNo</span><br><span class="line">     * <span class="doctag">@param</span> int $weight</span><br><span class="line">     * <span class="doctag">@return</span> int</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">calculateFee</span><span class="params">(int <span class="variable">$companyNo</span>, int <span class="variable">$weight</span>)</span> : <span class="title">int</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$logistics</span> = LogisticsFactory::create(<span class="variable">$companyNo</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$logistics</span>-&gt;calculateFee(<span class="variable">$weight</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因為已經制定了 <code>LogisticsInterface</code>，3 家貨運公司的計費方式，已經分別被封裝在 <code>BlackCat</code>、<code>Hsinchu</code> 與 <code>PostOffice</code> 3 個 class 內，所以必須使用工廠模式根據 <code>$companyNo</code>，回傳適當的貨運公司物件。</p>
+<h2 id="工廠模式">工廠模式</h2><hr>
+<p><strong>LogisticsFactory.php</strong><span class="margin-note-marker"><sup>5</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">5</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/79b6ecd9ce06658bbc359a3cda3070759a34d141" target="_blank" rel="external">新增 LogisticsFactory</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/LogisticsFactory.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticsFactory</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(int <span class="variable">$companyNo</span> = <span class="number">0</span>)</span> : <span class="title">LogisticsInterface</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$companyNo</span> == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> BlackCat();</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="variable">$companyNo</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Hsinchu();</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="variable">$companyNo</span> == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> PostOffice();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> BlackCat();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>if else</code> 判斷 <code>$companyNo</code>，根據不同的 <code>$companyNo</code>，回傳不同的貨運公司物件。</p>
+<p>目前為止完全符合需求，會得到第 1 個 <span class="label label-success">綠燈</span>。</p>
+<h2 id="將_if_else_重構成_switch">將 if else 重構成 switch</h2><hr>
+<p><strong>LogisticsFactory.php</strong><span class="margin-note-marker"><sup>6</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">6</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/04646722e327a0b844168cd615be9f36755938ab" target="_blank" rel="external">將 if else 重構成 switch</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/LogisticsFactory.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticsFactory</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(int <span class="variable">$companyNo</span> = <span class="number">0</span>)</span> : <span class="title">LogisticsInterface</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">switch</span> (<span class="variable">$companyNo</span>) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> BlackCat();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> Hsinchu();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> PostOffice();</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> BlackCat();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將 <code>if else</code> 重構成 <code>switch</code>，可稍微改善程式碼的可讀性。<span class="margin-note-marker"><sup>7</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">7</span>將 <code>if else</code> 重構成 <code>switch</code>，請參考<a href="/phpstorm/phpstorm-if-switch/">如何在PhpStorm將if else重構成switch case?</a></span></span></span></p>
+<p>重構後趕快執行測試，看看有沒有重構壞掉。</p>
+<p>目前為止完全符合需求，會得到第 2 個 <span class="label label-success">綠燈</span>。</p>
+<h2 id="將_swtich_重構成_LUT">將 swtich 重構成 LUT</h2><hr>
+<p><strong>LogisticsFactory.php</strong><span class="margin-note-marker"><sup>8</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">8</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/63876d0ddec8c859562588755a5c43fd73a1adc5" target="_blank" rel="external">將 switch 重構成 LUT</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/LogisticsFactory.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Collection</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticsFactory</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(int <span class="variable">$companyNo</span> = <span class="number">0</span>)</span> : <span class="title">LogisticsInterface</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$lut</span> = [</span><br><span class="line">            <span class="number">0</span> =&gt; BlackCat::class,</span><br><span class="line">            <span class="number">1</span> =&gt; Hsinchu::class,</span><br><span class="line">            <span class="number">2</span> =&gt; PostOffice::class</span><br><span class="line">        ];</span><br><span class="line">        <span class="variable">$className</span> = Collection::make(<span class="variable">$lut</span>)-&gt;get(<span class="variable">$companyNo</span>, BlackCat::class);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="variable">$className</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將 <code>switch</code> 的條件式，改用 LUT (Look Up Table) 的方式表示，其中 <code>case</code> 重構成陣列的 key，要 <code>new</code> 的 class 重構成陣列的 value。</p>
+<p>使用 <code>Collection::make()</code> 將陣列轉成 Laravel 的 collection。<span class="margin-note-marker"><sup>9</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">9</span>使用 <code>collect()</code> helper 亦可。</span></span></span></p>
+<p>使用 collection 的 <code>get()</code>，針對 <code>$lut</code> 做搜尋。</p>
+<ul>
+<li>第 1 個參數傳入的是 key 的比對值，相當於 <code>switch</code> 的 <code>case</code>。</li>
+<li>第 2 個參數傳入的示若 key 搜尋不到，所傳回的預設值，相當於 <code>switch</code> 的 <code>default</code>。</li>
+</ul>
+<p>重構後趕快執行測試，看看有沒有重構壞掉。</p>
+<p>目前為止完全符合需求，會得到第 3 個 <span class="label label-success">綠燈</span>。</p>
+<h2 id="將_LUT_重構到_app-php">將 LUT 重構到 app.php</h2><hr>
+<p><strong>app.php</strong><span class="margin-note-marker"><sup>10</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">10</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/1f81b011192c27ab06a552b32f808aaaddbf2a03" target="_blank" rel="external">將 LUT 重構到 config/app.php</a></span></span></span><br><figure class="highlight php"><figcaption><span>config/app.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'logistics'</span> =&gt; [</span><br><span class="line">    <span class="number">0</span> =&gt; App\Services\BlackCat::class,</span><br><span class="line">    <span class="number">1</span> =&gt; App\Services\Hsinchu::class,</span><br><span class="line">    <span class="number">2</span> =&gt; App\Services\PostOffice::class</span><br><span class="line">],</span><br></pre></td></tr></table></figure></p>
+<p>將陣列搬到 <code>config/app.php</code> 下，將來若對應邏輯有所修改，只需改 <code>app.php</code> 即可。</p>
+<p><strong>LogisticsFactory.php</strong><span class="margin-note-marker"><sup>11</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">11</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/1f81b011192c27ab06a552b32f808aaaddbf2a03" target="_blank" rel="external">將 LUT 重構到 config/app.php</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/LogisticsFactory.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Collection</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticsFactory</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(int <span class="variable">$companyNo</span> = <span class="number">0</span>)</span> : <span class="title">LogisticsInterface</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$lut</span> = config(<span class="string">'app.logistics'</span>);</span><br><span class="line">        <span class="variable">$className</span> = Collection::make(<span class="variable">$lut</span>)-&gt;get(<span class="variable">$companyNo</span>, BlackCat::class);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="variable">$className</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>$lut</code> 改由 <code>config()</code> 讀取 <code>config/app.php</code> 的設定，目前工廠不包含建立物件的邏輯，LUT 已經搬到 <code>app.php</code>，因此完成工廠模式的開放封閉。</p>
+<p>重構後趕快執行測試，看看有沒有重構壞掉。</p>
+<p>目前為止完全符合需求，會得到第 4 個 <span class="label label-success">綠燈</span>。</p>
+<h2 id="重構成依賴注入">重構成依賴注入</h2><hr>
+<p>為了達到可測試性的要求，你可能會想將貨運公司物件改用依賴注入的方式，因此我們繼續重構。</p>
+<p><strong>ShippingService.php</strong><span class="margin-note-marker"><sup>12</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">12</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/68f1de804a36258178d0fc5375ab2dea84d8f59d" target="_blank" rel="external">ShippingService 改用依賴注入</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/ShippingService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShippingService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@var</span> LogisticsInterface</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$logistics</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * ShippingService constructor.</span><br><span class="line">     * <span class="doctag">@param</span> LogisticsInterface $logistics</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(LogisticsInterface <span class="variable">$logistics</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;logistics = <span class="variable">$logistics</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@param</span> int $weight</span><br><span class="line">     * <span class="doctag">@return</span> int</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">calculateFee</span><span class="params">(int <span class="variable">$weight</span>)</span> : <span class="title">int</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$this</span>-&gt;logistics-&gt;calculateFee(<span class="variable">$weight</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>改用 constructor injection 的方式，將貨運物件注入。</p>
+<h2 id="重構單元測試">重構單元測試</h2><hr>
+<p>由於 <code>ShippingService</code> 重構成依賴注入方式，因此單元測試也要跟著重構。</p>
+<p><strong>ShippingServiceTest.php</strong><span class="margin-note-marker"><sup>13</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">13</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/6454e2d748935b6f1aea3131af0cc1fa176475c0" target="_blank" rel="external">重構黑貓單元測試</a></span></span></span><br><figure class="highlight php"><figcaption><span>tests/Services/ShippingServiceTest.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">LogisticsFactory</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">ShippingService</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ShippingServiceTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@test</span> */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> 黑貓單元測試<span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="comment">/** arrange */</span></span><br><span class="line">        <span class="variable">$companyNo</span> = <span class="number">0</span>;</span><br><span class="line">        <span class="variable">$weight</span> = <span class="number">1</span>;</span><br><span class="line">        <span class="variable">$expected</span> = <span class="number">110</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** act */</span></span><br><span class="line">        LogisticsFactory::bind(<span class="variable">$companyNo</span>);</span><br><span class="line">        <span class="variable">$target</span> = App::make(ShippingService::class);</span><br><span class="line">        <span class="variable">$actual</span> = <span class="variable">$target</span>-&gt;calculateFee(<span class="variable">$weight</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/** assert */</span></span><br><span class="line">        <span class="variable">$this</span>-&gt;assertEquals(<span class="variable">$expected</span>, <span class="variable">$actual</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因為改成依賴注入，工廠模式的功能不再是建立物件，而是在決定 <code>App::bind()</code> 該與什麼 class 做連結，因此也將工廠模式的 <code>create()</code> 改成 <code>bind()</code>。</p>
+<h2 id="重構工廠模式">重構工廠模式</h2><hr>
+<p><strong>LogisticsFactory.php</strong><span class="margin-note-marker"><sup>14</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">14</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52FactoryOCP-/commit/95a2295156f4a35e702f9415ee9ac3993f5210de" target="_blank" rel="external">重構 LogisticsFactory</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/LogisticsFactory.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Collection</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticsFactory</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="function"><span class="keyword">function</span> <span class="title">bind</span><span class="params">(int <span class="variable">$companyNo</span> = <span class="number">0</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$lut</span> = config(<span class="string">'app.logistics'</span>);</span><br><span class="line">        <span class="variable">$className</span> = Collection::make(<span class="variable">$lut</span>)-&gt;get(<span class="variable">$companyNo</span>, BlackCat::class);</span><br><span class="line"></span><br><span class="line">        App::bind(LogisticsInterface::class, <span class="variable">$className</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>$lut</code> 也是改由 <code>config()</code> 讀取 <code>config/app.php</code> 的設定，目前工廠不包含 <code>App::bind()</code> 的邏輯，LUT 已經搬到 <code>app.php</code>，因此完成工廠模式的開放封閉。</p>
+<p>重構後趕快執行測試，看看有沒有重構壞掉。</p>
+<p>目前為止完全符合需求，會得到第 5 個 <span class="label label-success">綠燈</span>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>將 <code>if else</code> 或 <code>switch</code> 邏輯改用 LUT 表示，可將陣列改放到 <code>config/app.php</code> 下，將來若有任何邏輯修改，都是修改在設定檔，而達成工廠模式的開放封閉。</li>
+<li>透過 collection 的 <code>get()</code>，可以很方便的搭配 LUT，還可傳入預設參數，配合 <code>switch</code> 的 <code>default</code>。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Laravel52FactoryOCP-" target="_blank" rel="external">GitHub</a> 上找到。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/javascript/variable-property/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/php/closure-practice/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-05-08 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Design-Pattern/">Design Pattern<span>17</span></a></li> <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/TDD/">TDD<span>23</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

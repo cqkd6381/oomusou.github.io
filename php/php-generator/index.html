@@ -1,0 +1,255 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用Generator? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="深入探討PHP 5.5的Generator觀念與用法">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="深入探討PHP 5.5的Generator觀念與用法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用Generator?">
+<meta property="og:url" content="http://oomusou.io/php/php-generator/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="深入探討PHP 5.5的Generator觀念與用法">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用Generator?">
+<meta name="twitter:description" content="深入探討PHP 5.5的Generator觀念與用法">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用Generator?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 深入探討PHP 5.5的Generator觀念與用法			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#為什麼要使用Generator?"><span class="toc-article-text">為什麼要使用Generator?</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#最簡單的Generator"><span class="toc-article-text">最簡單的Generator</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#實作range()"><span class="toc-article-text">實作range()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#讀取4GB的超大檔案"><span class="toc-article-text">讀取4GB的超大檔案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>在物件導向時代，我們會使用<code>foreach</code>的方式遍訪每一個物件，傳統上我們會採用<code>Iterator Pattern</code>，去實作<code>Iterator</code> interface，簡單地說，generator就是更簡單的iterator。</p>
+<p>Generator讓你不須實踐<code>Iterator</code> interface，也不須將資料放在記憶體中，直到<code>foreach</code>要取值時，才及時產生資料使用<code>yield</code>傳回。 </p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 5.5</p>
+<h2 id="為什麼要使用Generator?">為什麼要使用Generator?</h2><hr>
+<p>傳統上我們會將資料準備在記憶體當中，為了讓<code>foreach</code>能遍訪每一筆資料，我們必須實踐<code>Iterator</code> interface。假如資料筆數很龐大，會遇到以下問題 : </p>
+<ul>
+<li>需要浪費極大的記憶體空間儲存資料。</li>
+<li>需要浪費寫入記憶體與讀出記憶體的時間。</li>
+</ul>
+<p>假如我們能在<code>foreach</code>遍訪每一筆資料時，才動態地產生資料傳回，這樣就不會浪費記憶體，也不用浪費時間讀寫記憶體，這就是generator要做的。</p>
+<h2 id="最簡單的Generator">最簡單的Generator</h2><hr>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myGenerator</span><span class="params">()</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value1'</span>;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value2'</span>;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value3'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (myGenerator() <span class="keyword">as</span> <span class="variable">$yieldedValue</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$yieldedValue</span>, PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>執行結果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">value1</span><br><span class="line">value2</span><br><span class="line">value3</span><br></pre></td></tr></table></figure></p>
+<p>第1行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myGenerator</span><span class="params">()</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value1'</span>;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value2'</span>;</span><br><span class="line">    <span class="keyword">yield</span> <span class="string">'value3'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>因為使用了<code>yield</code>關鍵字，所以搖身一變成了generator函式。</p>
+<p>傳統函式會使用<code>return</code>關鍵字，而且一個函式最多只能有一個<code>return</code>。</p>
+<p>而generator會使用<code>yield</code>取代<code>return</code>，而且可以有多個<code>yield</code>，回傳的是<code>Generator</code>物件，這是一個已經實踐<code>Iterator</code> interface的物件，可以給<code>foreach</code>使用。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  yield與return的差異</div>
+<p>與傳統函式最大的差別在於return回傳值後，函式所在的記憶體在stack會釋放，導致函式內的變數都會不見，但generator函式yield回傳generator物件後，generator函式所在的記憶體stack並沒有釋放，所有函式內的變數都被保留。除此之外，當generator函式再次被呼叫時，會從上一次yield的下一行開始執行，而不是從函式的第一行開始執行。</p>
+<p>第8行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (myGenerator() <span class="keyword">as</span> <span class="variable">$yieldedValue</span>) &#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$yieldedValue</span>, PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其流程圖如下所示 :<br><img src="/images/php/php-generator/yield000.svg" width="180"></p>
+<p><code>foreach</code>雖然執行了3次<code>myGenerator()</code>，但事實上每次執行的內容都不一樣，第一次只執行到<code>yield &#39;value1&#39;</code>就結束，而第二次會執行下一行的<code>yield &#39;value2&#39;</code>，最後才執行<code>yield &#39;value3&#39;</code>。</p>
+<h2 id="實作range()">實作range()</h2><hr>
+<p>以上簡單的範例只是讓我們了解generator函式是如何運行，但還沒展現其威力，接著我們來實作PHP的<code>range()</code>函式。</p>
+<p>若使用傳統寫法，我們可能會這樣實作<code>range()</code>。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRange</span><span class="params">(<span class="variable">$length</span>)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$dataset</span> = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$length</span>; <span class="variable">$i</span>++)</span><br><span class="line">        <span class="variable">$dataset</span>[] = <span class="variable">$i</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$dataset</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$customRange</span> = makeRange(<span class="number">1000000</span>);</span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$customRange</span> <span class="keyword">as</span> <span class="variable">$i</span>)</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$i</span>, PHP_EOL;</span><br></pre></td></tr></table></figure>
+<p>這種寫法雖然可行，但有2個問題 : </p>
+<ul>
+<li>若傳進<code>makeRange()</code>的值很大，<code>$dataset</code>會非常佔記憶體。</li>
+<li><code>makeRange()</code>的<code>return $dataset</code>，因為<code>makeRange()</code>執行完stack會釋放，必須將<code>$dataset</code>複製到外面stack記憶體，若傳進<code>makeRange()</code>的值很大，記憶體複製會非常耗時。</li>
+</ul>
+<p>若使用generator，就會有新的做法 :<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRange</span><span class="params">(<span class="variable">$length</span>)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt; <span class="variable">$length</span>; <span class="variable">$i</span>++)</span><br><span class="line">        <span class="keyword">yield</span> <span class="variable">$i</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (makeRange(<span class="number">1000000</span>) <span class="keyword">as</span> <span class="variable">$i</span>) </span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="variable">$i</span>, PHP_EOL;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我們不必再準備一塊記憶體放<code>$dataset</code>，也不用擔心<code>return $dataset</code>造成記憶體複製的負擔。</p>
+<p>取而代之的是每次<code>foreach</code>才去<code>yield</code>值，而每次<code>yield</code>之後，記憶體不會釋放，變數<code>i</code>值會保留，下一次<code>yield</code>就是<code>$i++</code>的值。</p>
+<h2 id="讀取4GB的超大檔案">讀取4GB的超大檔案</h2><hr>
+<p>Modern PHP書中還提到另外一個在實務上非常實用的範例，若我們需要讀取一個超大檔案(4GB)，但server只分配1GB的記憶給PHP使用，顯然我們不可能再將4GB的檔案放在記憶體來<code>foreach</code>，若使用generator將有很棒的解法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getRows</span><span class="params">(<span class="variable">$file</span>)</span> </span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$handle</span> = fopen(<span class="variable">$file</span>, <span class="string">'rb'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$handle</span> === <span class="keyword">false</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="keyword">Exception</span>();</span><br><span class="line">  </span><br><span class="line">    <span class="keyword">while</span> (feof(<span class="variable">$handle</span>) === <span class="keyword">false</span>)</span><br><span class="line">        <span class="keyword">yield</span> fgetcsv(<span class="variable">$handle</span>);</span><br><span class="line">  </span><br><span class="line">    fclose(<span class="variable">$handle</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (getRows(<span class="string">'data.csv'</span>) <span class="keyword">as</span> <span class="variable">$row</span>)</span><br><span class="line">    print_r(<span class="variable">$row</span>);</span><br></pre></td></tr></table></figure>
+<p><code>getRows()</code> generator函式一次只靠yield回傳一行，也就是說，記憶體的需求從原本的4GB降低到只需一行的記憶體。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  Generator並非萬靈丹。</div>
+<p>因為它沒有在記憶體保存所有資料，所以只能算是forward-only iterator，它只知道目前的資料為何，然後靠yield傳回，它無法後退，也無法快轉，若要求更進階的功能，就必須使用Standard PHP Library (SPL) iterator，並且實踐Iterator interface。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Generator與<code>yield</code>是PHP很大的syntax sugar，程式執行的方式與傳統函式不太一樣。</li>
+<li>Generator並沒有替PHP增加新的功能，generator的所有功能都可以使用傳統函式搭配<code>Iterator</code> interfae達成，但generator更簡單、更快速、且更節省記憶體，但也只提供forward-only功能。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/php/closure/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/macos/iterm2-setup/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-09-06 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/LaraDiner/">LaraDiner<span>14</span></a></li> <li><a href="/tags/PHP/">PHP<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

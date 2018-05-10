@@ -1,0 +1,272 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何安裝與移除 Project Template ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="發現更多有趣的 .NET Core 應用">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="發現更多有趣的 .NET Core 應用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何安裝與移除 Project Template ?">
+<meta property="og:url" content="http://oomusou.io/netcore/project-template/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="發現更多有趣的 .NET Core 應用">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-19T02:12:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何安裝與移除 Project Template ?">
+<meta name="twitter:description" content="發現更多有趣的 .NET Core 應用">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何安裝與移除 Project Template ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 發現更多有趣的 .NET Core 應用			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#列出所有_Project_Template"><span class="toc-article-text">列出所有 Project Template</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_Project_Template"><span class="toc-article-text">安裝 Project Template</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#移除_Project_Template"><span class="toc-article-text">移除 Project Template</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>.NET Core SDK 已經內建提供不少 project template，但事實上 .NET Core 官網還提供不少 project template，可自行另外安裝。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="列出所有_Project_Template">列出所有 Project Template</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk001.png" alt="sdk001"></p>
+<p>我們可以發現內建的 project template 對 C# 支援最齊全，預設就是 C#，其次是 F#。</p>
+<p><img src="/images/netcore/project-template/sdk002.png" alt="sdk001"></p>
+<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載。</p>
+<h2 id="安裝_Project_Template">安裝 Project Template</h2><hr>
+<p><img src="/images/netcore/project-template/sdk003.png" alt="sdk003"></p>
+<p>以 C# 為例，.NET Core 官網亦提供了 <code>AWS Lambda .NET Core Templates</code>，讓我們自動安裝相關工具與 NuGet package。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"Amazon.Lambda.Templates::*"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-i</strong> : <code>i</code>nstall，使用 <code>dotnet new -i</code> 安裝新 project template</li>
+</ul>
+<p><img src="/images/netcore/project-template/sdk004.png" alt="sdk004"></p>
+<ol>
+<li>輸入 <code>dotnet new -i &quot;Amazon.Lambda.Templates::*&quot;</code> 安裝 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>由於 <code>Amazon Lambda</code> project template 的 NuGet package 較大，安裝要一點時間</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk005.png" alt="sdk005"></p>
+<ol>
+<li>安裝完後會自動執行 <code>dotnet new -l</code>，會安裝不少 <code>Amazon Lambda</code> 相關的 project template</li>
+</ol>
+<h2 id="移除_Project_Template">移除 Project Template</h2><hr>
+<p>既然能安裝 project template，也就要能移除 project template，但比較麻煩。</p>
+<p>.NET Core SDK 預設將所有的 project template 安裝在 <code>Users/oomusou/.templateengine/dotnetcli/v2.1.101/packages</code> 目錄下。</p>
+<blockquote>
+<p>其中 <code>oomusou</code> 為 user name</p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk006.png" alt="sdk006"></p>
+<ol>
+<li><code>amazon.lambda.template.2.0.3.nupkg</code> 為剛剛所安裝的 <code>Amazon Lambda</code> project template</li>
+</ol>
+<blockquote>
+<p>我們可以發現每個 project template 事實上都是 NuGet package</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -u .../amazon.lambda.templates<span class="number">.2</span><span class="number">.0</span><span class="number">.3</span>.nupkg</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-u</strong> : <code>u</code>ninstall，使用 <code>dotnet new -u</code> 移除已安裝的 project template NuGet package</li>
+</ul>
+<blockquote>
+<p>NuGet package 不可使用 <code>./</code> 方式，但可用完整路徑或 <code>~/</code></p>
+</blockquote>
+<p><img src="/images/netcore/project-template/sdk007.png" alt="sdk007"></p>
+<ol>
+<li>輸入 <code>dotnet new -u /Users/…/amazon.lambda.templates.2.0.3.nupkg</code>，必須是完整路徑或 <code>~/</code>，不可為 <code>./</code></li>
+</ol>
+<p><img src="/images/netcore/project-template/sdk008.png" alt="sdk008"></p>
+<ol>
+<li><code>Amazon Lambda</code> project template 已順利移除。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>若想知道 C# 與 F# 還有什麼應用，可上 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a> 發現更多有趣的 project template</li>
+<li>若要移除 project template，NuGet package 必須使用 <code>完整路徑</code> 或 <code>~/</code>，不可使用 <code>./</code></li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/restore/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/basic-sdk/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-16 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>28</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

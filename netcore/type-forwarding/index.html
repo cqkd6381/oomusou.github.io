@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入探討 .NET Core 之 Type Forwarding | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="解開 .NET Core 跨平台的黑魔法">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="解開 .NET Core 跨平台的黑魔法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探討 .NET Core 之 Type Forwarding">
+<meta property="og:url" content="http://oomusou.io/netcore/type-forwarding/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="解開 .NET Core 跨平台的黑魔法">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-22T09:47:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入探討 .NET Core 之 Type Forwarding">
+<meta name="twitter:description" content="解開 .NET Core 跨平台的黑魔法">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入探討 .NET Core 之 Type Forwarding</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 解開 .NET Core 跨平台的黑魔法			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#實戰_Type_Forwarding"><span class="toc-article-text">實戰 Type Forwarding</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立_ClassLibrary1"><span class="toc-article-text">建立 ClassLibrary1</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立_ConsoleApp"><span class="toc-article-text">建立 ConsoleApp</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立_ClassLibrary2"><span class="toc-article-text">建立 ClassLibrary2</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#ClassLibrary1_使用_Type_Forwarding"><span class="toc-article-text">ClassLibrary1 使用 Type Forwarding</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#觀察_netstandard_Assembly"><span class="toc-article-text">觀察 netstandard Assembly</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Proxy_Pattern"><span class="toc-article-text">Proxy Pattern</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>.NET Core 能跨平台看似很神奇，事實上底層所使用的技術為 Type Forwarding，說穿了就是 Proxy Pattern 的應用。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>Visual Studio 2017 15.6.2</p>
+<h2 id="Definition">Definition</h2><hr>
+<p>Client 在不改變 assembly reference 狀態下，就可使用其他 assembly 所提供的 class。</p>
+<p><img src="/images/netcore/type-forwarding/type007.svg" alt="ype00"></p>
+<p>.NET App 會直接與 <code>Assembly A</code> 耦合，僅能使用 <code>Assembly A</code> 的 <code>MyClass</code>。</p>
+<p><img src="/images/netcore/type-forwarding/type008.svg" alt="ype00"></p>
+<p>.NET App 依然只與 <code>Assembly A</code> 耦合，但卻能夠透過 Type Forwarding 使用 <code>Assembly B</code> 的 <code>MyClass</code>。</p>
+<h2 id="實戰_Type_Forwarding">實戰 Type Forwarding</h2><hr>
+<h3 id="建立_ClassLibrary1">建立 ClassLibrary1</h3><p><strong>Class1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Class1</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>ClassLibrary1</code> assembly 建立 <code>Class1.Sum()</code>。</p>
+<h3 id="建立_ConsoleApp">建立 ConsoleApp</h3><p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary1;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> object1 = <span class="keyword">new</span> Class1();</span><br><span class="line">            <span class="keyword">var</span> result = object1.Sum(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            Console.WriteLine(result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在 <code>ConsoleApp</code> 使用 <code>ClassLibrary1</code> 的 <code>Class1.Sum()</code>。</p>
+<p><img src="/images/netcore/type-forwarding/type000.png" alt="ype00"></p>
+<ol>
+<li>目前只有 <code>ClassLibrary1</code> 與 <code>ConsoleApp</code></li>
+<li>執行結果為 <code>2</code></li>
+<li><code>ConsoleApp</code> 的 project reference 只有 <code>ClassLibrary1</code></li>
+</ol>
+<h3 id="建立_ClassLibrary2">建立 ClassLibrary2</h3><p><strong>Class1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary1</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Class1</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>ClassLibrary1</code> 的 <code>Class1.cs</code> 全部程式碼搬到 <code>ClassLibrary2</code>。</p>
+<h3 id="ClassLibrary1_使用_Type_Forwarding">ClassLibrary1 使用 Type Forwarding</h3><p><strong>Class1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Runtime.CompilerServices;</span><br><span class="line"></span><br><span class="line">[assembly:TypeForwardedTo(<span class="keyword">typeof</span>(ClassLibrary1.Class1))]</span><br></pre></td></tr></table></figure>
+<p>因為 <code>ClassLibrary1</code> 的 <code>Class1.cs</code> 程式碼已經搬到 <code>ClassLibrary2</code>，將原本 <code>ClassLibrary1</code> 的 <code>Class1.cs</code> 加上 Type Forwarding。</p>
+<p>當 <code>ConsoleApp</code> 使用 <code>ClassLibrary1</code> assembly 的 <code>ClassLibrary1.Class1</code> 時，會自動 Type Forwarding 到 <code>ClassLibrary2</code> assembly 的 <code>ClassLibrary1.Class1</code> 。</p>
+<p>Rebuild 整個 solution 的 3 個 project 並執行。</p>
+<p><img src="/images/netcore/type-forwarding/type001.png" alt="ype00"></p>
+<ol>
+<li>目前有 <code>ClassLibrary1</code> 、<code>ClassLibrary2</code> 與 <code>ConsoleApp</code></li>
+<li>執行結果依然為 <code>2</code></li>
+<li>原本 <code>ConsoleApp</code> 的 project reference 只有 <code>ClassLibrary1</code>，因為 Type Forwarding，所以現在也有了 <code>ClassLibrary2</code></li>
+</ol>
+<blockquote>
+<p>我們並沒有對 <code>ConsoleApp</code> 將 <code>ClassLibrary2</code> 加入 project reference，而是因為 Type Forwarding</p>
+</blockquote>
+<h2 id="觀察_netstandard_Assembly">觀察 netstandard Assembly</h2><hr>
+<p>Metapackage 與 .NET Standard 談了這麼多，是否感覺很抽象呢 ? 讓我們以反組譯 <code>netstandard</code> Assembly 來理解其中的黑魔法。</p>
+<p>使用 Visual Studio 2017 開啟 solution。</p>
+<p><img src="/images/netcore/type-forwarding/type002.png" alt="ype00"></p>
+<p><strong><em>View -&gt; Object Browser</em></strong> 開啟 Object Browser，可以讓我們看到整個 solution 所用到的 assembly。</p>
+<ol>
+<li>展開 <code>ClassLibrary1</code>，看不到任何 namespace 與 class，因為我們已經在 <code>ClassLibrary1</code> 使用 Type Forwarding。</li>
+<li>展開 <code>ClassLibrary2</code>，我們看到了 <code>ClassLibrary1</code> namespace 與 <code>Class1</code> class。</li>
+</ol>
+<blockquote>
+<p>若 assembly 使用了 Type Forwarding，使用 Object Browser 將看不到該 assembly 任何實作的 namespace 與 class</p>
+</blockquote>
+<p><img src="/images/netcore/type-forwarding/type003.png" alt="ype00"></p>
+<ol>
+<li>點擊 <code>mscorlib</code> 與 <code>netstandard</code> 兩個 assembly ，亦發現沒有任何實作的 namespace 與 class，其中 <code>mscorlib</code> 就是 <code>Microsoft.NETCore.App</code>，而 <code>netstandard</code> 就是 <code>NETStandard.Library</code></li>
+<li>顯示 <code>netstandard</code> assembly 的實際路徑</li>
+</ol>
+<blockquote>
+<p>由於 <code>mscorlib</code> 與 <code>netstandard</code> 都沒有任何實作，根據 <code>ClassLibrary1</code> 的經驗推測，很可能也是用了 Type Forwarding </p>
+</blockquote>
+<p><img src="/images/netcore/type-forwarding/type004.png" alt="ype00"></p>
+<p>使用 ILSpy 反組譯 <code>netstandard</code> assembly，我們可以發現真的沒有任何實作，但大量使用了 Type Forwarding。</p>
+<p>在傳統 .NET Framework 世界裡，我們是直接參考 .NET Framework 內某個 assembly 的 class，也因此與 Windows 平台的 assembly 的 class 耦合。</p>
+<p>但在 .NET Core 世界裡，我們改參考 .NET Standard，再由 .NET Standard 透過 Type Forwarding 方式參考實際 host 的 assembly 的 class，若 host  是 macOS，則參考 macOS 上的 assembly 的 class，若 host 是 Linux，則參考 Linux 上的 assembly 的 class。</p>
+<blockquote>
+<p>因為 client 只與有 Type Forwarding 的 .NET Standard 耦合，而沒與特定平台的 class 耦合，所以 .NET Core 能達到跨平台，在不同 host os 下，不用編譯就可以自動找到正確的 class</p>
+</blockquote>
+<h2 id="Proxy_Pattern">Proxy Pattern</h2><hr>
+<blockquote>
+<p>Proxy Pattern</p>
+<p>Client 為了避免與實際物件耦合，改透過相同 interface 的 <code>白手套</code> proxy 耦合，再由 proxy 負責與實際物件溝通</p>
+</blockquote>
+<p><img src="/images/netcore/type-forwarding/type005.svg" alt="ype00"></p>
+<p><code>Client</code> 實際上要使用 <code>RealSubject</code>，但為了將 <code>RealSubject</code> 與 <code>Client</code> 解耦合，<code>Client</code> 只與相同 interface 的 <code>Proxy</code> 耦合，再由白手套 <code>Proxy</code> 使用 <code>RealSubject</code>。</p>
+<p><strong>.NET Standard</strong></p>
+<p><img src="/images/netcore/type-forwarding/type006.svg" alt="ype00"></p>
+<p><code>Client</code> 實際上要使用各平台的 <code>.NET Core SDK</code>，但為了將各平台的 <code>.NET Core SDK</code> 與 <code>Client</code> 解耦合，<code>Client</code> 只與一樣遵守 .NET Standard 的 <code>netstandard</code> 耦合，再由白手套 <code>netstandard</code> 透過 Type Forwarding 使用各平台的 <code>.NET Core SDK</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Metapackage 與 .NET Standard 不是什麼黑魔法，只是一個使用 Type Forwarding 的 DLL</li>
+<li>我們只要跟 .NET Standard 耦合即可，它會使用 Type Forwarding 幫我們使用各平台實際的 class</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/TypeForwarding" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/framework/app-domains/type-forwarding-in-the-common-language-runtime" target="_blank" rel="external">Type Fowarding in the Common Language Runtime</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/strategy/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/metapackage/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-22 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>28</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,309 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何驗證 Class Library ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 .NET Core SDK 建立 Class Library">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 .NET Core SDK 建立 Class Library">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何驗證 Class Library ?">
+<meta property="og:url" content="http://oomusou.io/netcore/console/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 .NET Core SDK 建立 Class Library">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-19T02:08:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何驗證 Class Library ?">
+<meta name="twitter:description" content="使用 .NET Core SDK 建立 Class Library">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何驗證 Class Library ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 .NET Core SDK 建立 Class Library			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Console_App_專案"><span class="toc-article-text">建立 Console App 專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_VS_Code_開啟專案"><span class="toc-article-text">使用 VS Code 開啟專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#新增_Project_Reference"><span class="toc-article-text">新增 Project Reference</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編輯_Program-cs"><span class="toc-article-text">編輯 Program.cs</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編譯_Console_App"><span class="toc-article-text">編譯 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Console_App"><span class="toc-article-text">執行 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#發佈_Console_App"><span class="toc-article-text">發佈 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Console_App-1"><span class="toc-article-text">執行 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#其他相關指令"><span class="toc-article-text">其他相關指令</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>雖然我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案，但畢竟是 class library，無法看到結果，此時我們會建立另外一個 console app 專案當成 client，用來測試 class library 的結果。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>console</strong> : 建立 console 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/console/console000.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
+<p><img src="/images/netcore/console/console001.png" alt="onsole00"></p>
+<ol>
+<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/console/console002.png" alt="onsole01"></p>
+<ol>
+<li><code>.vscode</code> 被 VS Code 自動建立</li>
+</ol>
+<h2 id="新增_Project_Reference">新增 Project Reference</h2><hr>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="keyword">add</span> <span class="keyword">reference</span> ../MyClassLib/MyClassLib.csproj</span><br></pre></td></tr></table></figure>
+<p>因為 <code>MyConsole</code> 需要使用 <code>MyClassLib</code>，所以使用 <code>dotnet add reference</code> 新增 project reference。</p>
+<p><img src="/images/netcore/console/console003.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet add reference ../MyClassLib/MyClassLib.csproj</code> 將 <code>MyClassLib</code> project 加入 reference</li>
+<li>觀察 <code>MyConsole.csproj</code></li>
+<li><code>MyClassLib.csproj</code>  被加入在  <code>&lt;ItemGroup&gt;</code> 下的 <code>&lt;ProjectReference&gt;</code> </li>
+</ol>
+<blockquote>
+<p>若你不想下 <code>dotnet add reference</code> 指令，也可以直接修改 <code>MyConsole.csproj</code> 檔案</p>
+</blockquote>
+<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> MyClassLib;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyConsole</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> calculatorService = <span class="keyword">new</span> CalculatorService();</span><br><span class="line">            <span class="keyword">var</span> result = calculatorService.Sum(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125; + &#123;1&#125; = &#123;2&#125;"</span>, <span class="number">1</span>, <span class="number">1</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立 <code>CalculatorService</code> 物件，並執行 <code>Sum()</code>。</p>
+<p><img src="/images/netcore/console/console004.png" alt="onsole00"></p>
+<ol>
+<li>開啟 <code>Program.cs</code></li>
+<li>建立 <code>CalculatorService</code> 物件並執行</li>
+</ol>
+<h2 id="編譯_Console_App">編譯 Console App</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 編譯專案。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/console/console005.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet build -c Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>自動執行 <code>dotnet restore</code></li>
+<li>最後 build 出 <code>MyConsole.dll</code></li>
+</ol>
+<blockquote>
+<p>注意 <code>dotnet restore</code> 與 <code>dotnet build</code> 時，<code>MyClassLib</code> 與 <code>MyConsole</code> 兩個專案都會重新 build 與 restore</p>
+</blockquote>
+<h2 id="執行_Console_App">執行 Console App</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet run</code> 執行專案。</p>
+<p><img src="/images/netcore/console/console006.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
+</ol>
+<h2 id="發佈_Console_App">發佈 Console App</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyConsole</span> $ <span class="keyword">dotnet</span> publish -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet publish</code> 將編譯後的 dll 與其 dependency 整理到 <code>publish</code> 目錄，將來只要將此目錄 deploy 到 server 即可。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet publish</code> 是將 <code>Debug</code> 模式的 dll 整理至 <code>publish</code> 目錄，若要整理 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/console/console007.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet publish -c Release</code> 將欲 deploy 的檔案整理到 <code>bin/Release/netcoreapp2.0/publish</code> 目錄</li>
+<li>在 <code>publish</code> 目錄下，我們發現除了有 <code>MyConsole.dll</code> 外，還有 reference 的 <code>MyClassLib.dll</code>，<code>dotnet publish</code> 也一並幫我們整理到 <code>publish</code> 目錄了</li>
+</ol>
+<h2 id="執行_Console_App-1">執行 Console App</h2><hr>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyProject $ dotnet run bin/</span>Release<span class="regexp">/netcoreapp2.0/</span>publish<span class="regexp">/MyConsole.dll</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet</code> 執行 publish 後的 dll。</p>
+<p><img src="/images/netcore/console/console008.png" alt="onsole00"></p>
+<ol>
+<li>輸入 <code>dotnet</code> 直接執行  publish 過的 <code>MyConsole.dll</code></li>
+<li>馬上出現 <code>1 + 1 = 2</code> ，不用等待</li>
+</ol>
+<h2 id="其他相關指令">其他相關指令</h2><hr>
+<figure class="highlight oxygene"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">remove</span> <span class="keyword">reference</span> *.csproj</span><br></pre></td></tr></table></figure>
+<p>移除 project reference。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="type">list</span> <span class="keyword">reference</span></span><br></pre></td></tr></table></figure>
+<p>列出所有 project reference。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Console app 適合用來測試 class library</li>
+<li>使用 <code>dotnet add reference</code> 新增 project reference</li>
+<li><code>dotnet publish</code> 時，會一併將 class library 的 dll 也整理到 <code>publish</code> 目錄</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/unit-test/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/classlib/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-17 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>28</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

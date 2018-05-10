@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入探討 dotnet restore | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="NuGet 特有的管理機制">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="NuGet 特有的管理機制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探討 dotnet restore">
+<meta property="og:url" content="http://oomusou.io/netcore/restore/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="NuGet 特有的管理機制">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-19T02:12:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入探討 dotnet restore">
+<meta name="twitter:description" content="NuGet 特有的管理機制">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入探討 dotnet restore</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> NuGet 特有的管理機制			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#NuGet_vs-_NPM"><span class="toc-article-text">NuGet vs. NPM</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#觀察_Console_App"><span class="toc-article-text">觀察 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#刪除_obj_目錄"><span class="toc-article-text">刪除 obj 目錄</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#dotnet_restore"><span class="toc-article-text">dotnet restore</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#-NET_Core_2-0"><span class="toc-article-text">.NET Core 2.0</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>.NET Core SDK 提供了 <code>dotnet restore</code> 指令，但官網的說明很簡單，只說明了他是 <code>restore dependency</code>，到底什麼是 <code>restore dependency</code> 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Node.js 8.9.4<br>NPM 5.7.1</p>
+<h2 id="NuGet_vs-_NPM">NuGet vs. NPM</h2><hr>
+<p>NuGet 與 NPM 都是為了解決 package dependency 的問題</p>
+<p>相同之處 :</p>
+<ul>
+<li><strong>NuGet</strong> : 採用 <code>csproj</code> 紀錄所使用 package</li>
+<li><strong>NPM</strong> : 使用 <code>package.json</code> 紀錄所使用 package</li>
+</ul>
+<p>相異之處 :</p>
+<ul>
+<li><strong>NuGet</strong> : 將 package 統一放在 <code>~/.nuget/packages</code>，若該 package 有多個版本，則以版本當目錄</li>
+<li><strong>NPM</strong> : 多專案共用的 global package 統一放在 <code>/usr/local/lib/node_modules/npm/node_modules</code>，但若專案自己用的 package 則放在專案目錄的 <code>node_modules</code></li>
+</ul>
+<blockquote>
+<p>PHP Composer 哲學與 NPM 類似，也分成 global package 與 local package</p>
+</blockquote>
+<p><strong>NuGet 優點</strong></p>
+<ul>
+<li>整個系統只有一份 package，省硬碟空間，而不像 NPM 每個專案都有重複的 package。</li>
+</ul>
+<p><strong>NuGet 缺點</strong></p>
+<ul>
+<li>當你刪除專案，系統可能會留著沒用到的 package</li>
+<li>必須要有一份 mapping 檔案，讓 compiler 在 build 時，知道 package 放在哪裡，因為 package 不是放在專案目錄下。</li>
+</ul>
+<p>第 2 點就是 dotnet restore 要解決的。</p>
+<h2 id="觀察_Console_App">觀察 Console App</h2><hr>
+<p><img src="/images/netcore/restore/restore000.png" alt="estore00"></p>
+<ol>
+<li>當使用 <code>dotnet new console</code> 時，事實上只是建立了 <code>csproj</code></li>
+<li>自動執行 <code>dotnet restore</code>，根據 <code>csproj</code> 建立了 <code>nuget.g.props</code> 與 <code>nuget.g.targets</code></li>
+</ol>
+<p><img src="/images/netcore/restore/restore001.png" alt="estore00"></p>
+<ol>
+<li>觀察 <code>nuget.g.props</code>，雖然很多資訊看不懂，但最少看到 <code>&lt;NuGetPackageRoot&gt;</code> 記載著 NuGet 目錄放在 <code>/Users/oomusou/.nuget/packages</code>，這樣 compiler 就可以從這個目錄抓到 NuGet package 放哪裡</li>
+</ol>
+<blockquote>
+<p>之所以沒用 VS Code 開啟專案，是因為 VS Code 還會自動建立其他目錄與檔案，怕模糊焦點，所以這裡選擇 Sublime Text</p>
+</blockquote>
+<h2 id="刪除_obj_目錄">刪除 obj 目錄</h2><hr>
+<p><img src="/images/netcore/restore/restore002.png" alt="estore00"></p>
+<ol>
+<li>選擇 <code>obj</code> 目錄</li>
+<li>刪除 <code>obj</code> 目錄</li>
+</ol>
+<h2 id="dotnet_restore">dotnet restore</h2><hr>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="built_in">restore</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet restore</code> 重新建立 <code>obj</code> 目錄。</p>
+<p><img src="/images/netcore/restore/restore003.png" alt="estore00"></p>
+<ol>
+<li>輸入 <code>dotnet restore</code></li>
+<li>根據 <code>csproj</code> 重新建立 <code>nuget.g.props</code> 與 <code>nuget.g.targets</code> </li>
+</ol>
+<p><img src="/images/netcore/restore/restore004.png" alt="estore00"></p>
+<ol>
+<li><code>obj</code> 目錄被 <code>restore</code> 回來了</li>
+</ol>
+<h2 id="-NET_Core_2-0">.NET Core 2.0</h2><hr>
+<p>在 .NET Core 1.x 時代，還常常需要自己下 <code>dotnet restore</code>，但從 .NET Core 2.0 開始，當你使用以下 command 時，都會自動執行 <code>dotnet restore</code>。</p>
+<ul>
+<li><code>dotnet new</code></li>
+<li><code>dotnet build</code></li>
+<li><code>dotnet run</code></li>
+<li><code>dotnet test</code></li>
+<li><code>dotnet publish</code></li>
+<li><code>dotnet pack</code></li>
+</ul>
+<p>所以在實務上已經幾乎不用自己下 <code>dotnet restore</code> 了，只要有觀念即可，為了相容，目前 .NET Core SDK 還是有留下 <code>dotnet restore</code> 指令。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>dotnet restore</code> 是根據 <code>csproj</code> 建立 package 與實際位置的 mapping 檔案</li>
+<li>.NET Core 2 之後幾乎不用再自己下 <code>dotnet restore</code> 指令，只要有觀念即可</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/classlib/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/project-template/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-16 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>28</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

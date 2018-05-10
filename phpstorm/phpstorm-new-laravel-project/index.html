@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用PhpStorm建立Laravel專案? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="完全使用圖形介面，不需打任何指令">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="完全使用圖形介面，不需打任何指令">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用PhpStorm建立Laravel專案?">
+<meta property="og:url" content="http://oomusou.io/phpstorm/phpstorm-new-laravel-project/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="完全使用圖形介面，不需打任何指令">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用PhpStorm建立Laravel專案?">
+<meta name="twitter:description" content="完全使用圖形介面，不需打任何指令">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用PhpStorm建立Laravel專案?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 完全使用圖形介面，不需打任何指令			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立新專案"><span class="toc-article-text">建立新專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#選擇Composer_Project"><span class="toc-article-text">選擇Composer Project</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝Laravel中"><span class="toc-article-text">安裝Laravel中</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定Namespace_Roots"><span class="toc-article-text">設定Namespace Roots</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定Excluded目錄"><span class="toc-article-text">設定Excluded目錄</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定Sources目錄"><span class="toc-article-text">設定Sources目錄</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定Resource_Root目錄"><span class="toc-article-text">設定Resource Root目錄</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定Tests目錄"><span class="toc-article-text">設定Tests目錄</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>很羨慕Visual Studio可以在IDE內建立ASP.NET MVC專案嗎？事實上我們也可以在PhpStorm內建立Laravel專案，完全不需要打任何指令。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PhpStorm 10.0.2<br>Laravel 5.2.5</p>
+<h2 id="建立新專案">建立新專案</h2><hr>
+<p>啟動PhpStorm之後，直接選擇<strong>Create New Project</strong>。<br><img src="/images/phpstorm/phpstorm-new-laravel-project/new000.png" alt=""></p>
+<h2 id="選擇Composer_Project">選擇Composer Project</h2><hr>
+<ul>
+<li><strong>Project Type</strong> : <code>Composer Project</code></li>
+<li><strong>Location</strong> : 專案位置與名稱</li>
+<li><strong>composer.phar</strong> : 若composer已經在本機安裝過，可選擇<code>Use existing composer.phar</code>，並指定路徑。若從來沒安裝過composer，可選擇<code>Download composer.phar from getcomposer.org</code>，PhpStorm會自動將composer下載在專案目錄下。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>預設全域的composer是安裝在<code>/usr/local/bin/</code>目錄下。</span></span></span></li>
+<li><strong>Package</strong> : <code>laravel/laravel</code>。</li>
+</ul>
+<p><img src="/images/phpstorm/phpstorm-new-laravel-project/new001.png" alt=""></p>
+<ul>
+<li><strong>Version to install</strong> : 選擇Laravel版本，<code>&lt;default&gt;</code>是安裝最新版本。</li>
+<li><strong>Page to PHP executable</strong> : 指定PHP位置。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>這裡的設定有2個目的 : 1. 讓composer可以執行。2. 設定<strong><em>PhpStorm -&gt; Preferences -&gt; Language &amp; Frameworks -&gt; PHP</em></strong>，讓PhpStorm在執行PhpUnit與debug時，知道PHP的位置。</span></span></span></li>
+</ul>
+<p><img src="/images/phpstorm/phpstorm-new-laravel-project/new002.png" alt=""></p>
+<h2 id="安裝Laravel中">安裝Laravel中</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-new-laravel-project/new003.png" alt=""></p>
+<h2 id="設定Namespace_Roots">設定Namespace Roots</h2><hr>
+<p>Laravel安裝完後，會出現以下訊息 :</p>
+<ul>
+<li><strong>Composer</strong> : 因為Laravel安裝了新的package在<code>vendor</code>目錄下，導致<code>PHP include paths</code>更新，可以不用理會。</li>
+<li><strong>Detect PSR-0 namespace roots</strong> : 由於剛剛安裝完，PhpStorm會要求你設定Laravel目錄，按<code>automatically</code>自動偵測namespace roots。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>若日後想要改變namespace roots與目錄設定，有兩個方式 : 1. <strong><em>PhpStorm -&gt; Preferences… -&gt; Project:xxx -&gt; Directories</em></strong> 2. <strong><em>Code -&gt; Detect PRS-0 Namespace Roots</em></strong></span></span></span><br><img src="/images/phpstorm/phpstorm-new-laravel-project/new004.png" alt=""></li>
+</ul>
+<h3 id="設定Excluded目錄">設定Excluded目錄</h3><p><code>automatically</code>會自動幫我們將<code>vendor</code>目錄設定為<strong>Excluded</strong>目錄。</p>
+<p>因為<code>vendor</code>目錄下放的為framework與package，而我們的程式不會去改<code>vendor</code>目錄，因此不用去做index，可加速搜尋。</p>
+<p><img src="/images/phpstorm/phpstorm-new-laravel-project/new005.png" alt=""></p>
+<h3 id="設定Sources目錄">設定Sources目錄</h3><p><code>automatically</code>會自動幫我們將<code>.</code>目錄設定為<strong>Sources</strong>目錄。</p>
+<p>但是Laravel預設的<strong>Sources</strong>目錄為<code>app</code>。</p>
+<p>因為Laravel的namespace是從<code>app</code>目錄開始，所以要將<code>app</code>目錄設定為Laravel namespace root。</p>
+<p>選擇<code>app</code>目錄，按下<code>source</code>，右側將出現<code>Source Folders : app</code>。<br><img src="/images/phpstorm/phpstorm-new-laravel-project/new006.png" alt=""></p>
+<p>按下<code>P</code>，設定prefix。</p>
+<p>根據PSR-4，我們可以有很多namespace root，因此可以對目錄設定prefix，將<code>app</code>目錄的prefix設定為<code>App</code>。<span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>這個步驟非常重要，設定好namespace root後，將來只要建立class，PhpStorm都會幫你管理namespace，不用再對namespace操心。</span></span></span><br><img src="/images/phpstorm/phpstorm-new-laravel-project/new007.png" alt=""></p>
+<h3 id="設定Resource_Root目錄">設定Resource Root目錄</h3><p>Laravel預設的<strong>Resource Root</strong>目錄為<code>resources</code>。</p>
+<p>選擇<code>resources</code>目錄，按下<code>Resource Root</code>。<br><img src="/images/phpstorm/phpstorm-new-laravel-project/new008.png" alt=""></p>
+<h3 id="設定Tests目錄">設定Tests目錄</h3><p>Laravel預設的<strong>Tests</strong>目錄為<code>tests</code>。</p>
+<p>選擇<code>tests</code>目錄，按下<code>Tests</code>，右側將出現<code>Test Source Folders : tests</code>。<br><img src="/images/phpstorm/phpstorm-new-laravel-project/new009.png" alt=""></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>PhpStorm也可以幫我們自動建立Laravel專案，完全不用輸入任何composer或laravel installer指令。</li>
+<li>設定<strong>Namespace Roots</strong>非常重要，但很多人因為不知道如何設定而忽略。只要設定好之後，以後建立class時，PhpStorm都會幫你管理namespace，不用再擔心namespace打錯的問題。</li>
+<li>使用PhpStorm建立Laravel專案的流程，會自動幫我們設定<code>Excluded</code>目錄，非常方便。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/laravel/model-factory-relation/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/phpstorm-navigate-method/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-12-29 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>F# 的特色與歷史簡介 | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="千年傳統，全新感受">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="千年傳統，全新感受">
+<meta property="og:type" content="article">
+<meta property="og:title" content="F# 的特色與歷史簡介">
+<meta property="og:url" content="http://oomusou.io/fsharp/intro/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="千年傳統，全新感受">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-01T23:38:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="F# 的特色與歷史簡介">
+<meta name="twitter:description" content="千年傳統，全新感受">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> F# 的特色與歷史簡介</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 千年傳統，全新感受			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FSharp_的歷史"><span class="toc-article-text">FSharp 的歷史</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Functional_Programming_定義"><span class="toc-article-text">Functional Programming 定義</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Higher_Order_Function"><span class="toc-article-text">Higher Order Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Pipeline_與_Currying"><span class="toc-article-text">Pipeline 與 Currying</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Compose"><span class="toc-article-text">Compose</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Q&A"><span class="toc-article-text">Q&A</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>F# 並不是一個新語言，早在 2005 年就已經發行 1.0，隨著 .NET Core 的跨平台，也將 F# 帶進了 .NET Core，既然在 .NET Core 我們已經有了 C#，為什麼要關注 F# 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core 2.1.4<br>F# 4.1</p>
+<h2 id="FSharp_的歷史">FSharp 的歷史</h2><hr>
+<p>F# 並不像 C-style 語言，反而比較像 Python，事實上 F# 是從 ML、OCaml、Python、Haskell、Scala、Erlang … 等語言獲得靈感，除了 Python  大家較為熟悉外，剩下的都是 Functional Programming Language，由此可見 F# 的 F 就是 <code>F</code>untional，所以 F# 號稱是 function first language，也就是 F# 雖然也支援 OOP，但 FP 是其主要特色。</p>
+<p>個人大概在 2010 年曾經接觸過 F#，當初的感覺 F# 是個 <code>外星語言</code>，很難體會 F# 的優點在哪裡，學沒多久就放棄了，但經過這幾年 Laravel Collection、JavaScript 、Linq 、Rx.js 與 AWS Lambda 的轟炸，越來越覺得 FP 的可愛，OOP 也能藉由 FP 手法，產生出現更優雅的實作方式。</p>
+<p>這幾年一直想尋找一個 FP 語言來練習，期間摸過 Elixir 、Scala、Clojure，但成效一直有限，一直到最近複習 F#，才發現 F# 是一個很簡單的 FP 語言，以前看不懂的地方，瞬間都看懂了，只是當年還無法欣賞 F#。</p>
+<h2 id="Functional_Programming_定義">Functional Programming 定義</h2><hr>
+<p>一個語言要能實現 FP，必須有 4 個條件：</p>
+<ul>
+<li>能將 function 指定為變數</li>
+<li>能將 function 存到 collection 內</li>
+<li>能將 function 以參數型式傳入 function</li>
+<li>能在 function 回傳 function</li>
+</ul>
+<p>簡單來說，function 要能如一般變數與 object 一樣使用。</p>
+<p><code>能將 function 以參數型式傳入 function</code> 導致了 Higher Order Function 的觀念出現，如 Rx.js 一堆 operator，就是 Higher Order Function。</p>
+<p><code>能在 function 回傳 function</code> 則導致了 Pipeline、Compose 與 Currying 的觀念出現。</p>
+<p>一般 OOP 語言都會某種程度的支援 FP，如 Higher Order Function 在 C#、JavaScript、PHP … 都可以實現。</p>
+<p>但 Pipeline、Compose 與 Currying 在一般 OOP 語言則沒有，或者要另外安裝其他 package 才能實現，但這些觀念在 F# 都是原生支援。</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>我們想將陣列 <code>1, 2, 3, 4, 5</code> 的資料中，將所 <code>奇數</code> 平方再加 <code>1</code>。</p>
+<h2 id="Task">Task</h2><hr>
+<p>根據 JavaScript、Linq 、Rx.js 的經驗，我們不再使用迴圈，而會使用 Higher Order Function 來解決問題。</p>
+<h2 id="Higher_Order_Function">Higher Order Function</h2><hr>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        <span class="keyword">let</span> odds = List.filter isOdd values</span><br><span class="line">        <span class="keyword">let</span> squares = List.map square odds</span><br><span class="line">        <span class="keyword">let</span> result = List.map addOne squares</span><br><span class="line">        result</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> odds = List.<span class="built_in">filter</span> isOdd <span class="built_in">values</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>List.filter</code> 先找出所有 <code>奇數</code> 。</p>
+<ul>
+<li><code>isOdd</code> : 傳入 <code>判斷奇數</code> 的 function</li>
+<li><code>values</code> : 傳入欲處理資料</li>
+<li><code>odds</code> : 回傳所有 <code>奇數</code> </li>
+</ul>
+<p>第 7 行</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">let isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>定義 <code>isOdd</code>，當 <code>% 2</code> 餘數不為 <code>0</code> 時為 <code>奇數</code> 。</p>
+<blockquote>
+<p>在 F#，因為已經將 function 視為一般變數，所以無論是 value 或 function，都統一使用 <code>let</code></p>
+</blockquote>
+<p>13 行</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> squares = <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square odds</span><br></pre></td></tr></table></figure>
+<p>既然已經找出所有 <code>奇數</code>，接下來就是使用 <code>List.map</code> 計算 <code>平方</code>。</p>
+<ul>
+<li><code>square</code> : 傳入 <code>計算平方</code> 的 function</li>
+<li><code>odds</code> : 傳入所有<code>奇數</code></li>
+<li><code>squares</code> : 回傳所有 <code>平方</code></li>
+</ul>
+<p>第 8 行</p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">let</span> <span class="built_in">square</span> x = x <span class="built_in">*</span> x</span><br></pre></td></tr></table></figure>
+<p>定義 <code>square</code>，計算平方。</p>
+<p>14 行</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="literal">result</span> = <span class="type">List</span>.map addOne squares</span><br></pre></td></tr></table></figure>
+<p>既然已經計算出所有 <code>奇數的平方</code>，接下來就是使用 <code>List.map</code> 計算 <code>+1</code>。</p>
+<ul>
+<li><code>square</code> : 傳入 <code>計算+1</code> 的 function</li>
+<li><code>odds</code> : 傳入所有<code>奇數的平方</code></li>
+<li><code>squares</code> : 回傳所有 <code>平方+1</code></li>
+</ul>
+<p>第 9 行</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">let</span> <span class="keyword">addOne </span>x = x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>定義 <code>addOne</code>，計算 <code>+1</code>。</p>
+<p>15 行</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="literal">result</span></span><br></pre></td></tr></table></figure>
+<p>要回傳的變數， F# 不用寫 <code>return</code>。</p>
+<blockquote>
+<p>相對於 C-style 語言，我們發現 F# 有幾個特色</p>
+<ol>
+<li>沒有 <code>{}</code>，完全用縮排表示，類似 Python</li>
+<li>Function 傳入參數不需 <code>()</code>，只需空白隔開即可</li>
+<li>變數與 function 統一使用 <code>let</code></li>
+<li>回傳值不需要 <code>return</code></li>
+</ol>
+<p>這些只是語法的差異，只要習慣即可，不過平心而論，C-style 語言寫久，會發現 code 都一堆 <code>()</code> <code>{}</code> 與 <code>return</code> 都是贅字，F# 這種 coding style 乾淨很多</p>
+</blockquote>
+<h2 id="Pipeline_與_Currying">Pipeline 與 Currying</h2><hr>
+<p>由於 <code>List.filter</code>、<code>List.map</code> 與 <code>List.map</code> 是依序處理，因此我們要不斷定義中繼變數 : <code>odds</code> 與 <code>squares</code> 傳入，事實上這些也是多餘的，若能省略則更好，這就是 Pipeline。</p>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func values =</span><br><span class="line">        values </span><br><span class="line">        |&gt; List.filter isOdd</span><br><span class="line">        |&gt; List.map square</span><br><span class="line">        |&gt; List.map addOne</span><br><span class="line">        </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">values </span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span>filter isOdd</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> square</span><br><span class="line">|&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> addOne</span><br></pre></td></tr></table></figure>
+<p><code>|&gt;</code> 為 F# 的 Pipeline 符號，表示將 function 的 output 作為下一個 function 的 input。</p>
+<p>因此我們可以透過 <code>|&gt;</code> 表示先執行 <code>List.flter</code>，然後再將結果傳入 <code>List.map</code>，最後再將結果傳入 <code>List.map</code>，這樣可以很清楚的表示流程，語意比 imperative 寫法更清楚。</p>
+<blockquote>
+<p> Q : 可以明明 <code>List.map</code> 與 <code>List.filter</code> 是 2 個參數，第 1 個參數是 function，第 2 個參數是 value，但為什麼 value 都不用傳呢 ?</p>
+</blockquote>
+<p>當 function 參數沒有傳完全時，F# 將回傳一個新的 function，新的 function 只要傳入剩下的參數即可，這稱為 Currying。</p>
+<p>當 <code>List.filter isOdd</code> 只傳入 1 個參數時，由於參數沒有傳完整，將回傳一個新的  function，然後 <code>|&gt;</code> 再將 <code>values</code> 傳入新的 function，如此 <code>List.filter</code> 才算完整，才能回傳 <code>所有奇數</code>，最後再將 <code>所有奇數</code>透過 <code>|&gt;</code> 傳給下一個 <code>List.map</code>，剩下以此類推。</p>
+<h2 id="Compose">Compose</h2><hr>
+<p>Pipeline 雖然已經夠清楚，但 pipeline 基本上仍然是回傳 value，若我們能將所有 function 先組合好，最後統一透過一個 function 執行，那就更好了，這就是 Compose。</p>
+<p><strong>Program.fs</strong><br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> numbers = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>; <span class="number">4</span>; <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> isOdd x = x % <span class="number">2</span> &lt;&gt; <span class="number">0</span></span><br><span class="line">    <span class="keyword">let</span> square x = x * x</span><br><span class="line">    <span class="keyword">let</span> addOne x = x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">let</span> sqaureAddOne = square &gt;&gt; addOne</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> func = List.filter isOdd &gt;&gt; List.map sqaureAddOne</span><br><span class="line">    </span><br><span class="line">    printfn <span class="string">"%A"</span> (func numbers)</span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure></p>
+<p>12 行</p>
+<figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> func = <span class="built_in">List</span><span class="built_in">.</span>filter isOdd &gt;&gt; <span class="built_in">List</span><span class="built_in">.</span><span class="built_in">map</span> sqaureAddOne</span><br></pre></td></tr></table></figure>
+<p><code>&gt;&gt;</code> 為 F# 的 compose 符號，專門負責組合 function。</p>
+<p>因為連續兩個 <code>List.map</code>，因此我們先將 square 與 addOne 組合成新的 <code>sqaureAddOne</code> function，再交給 <code>List.map</code> 執行。</p>
+<p>由於是先執行 <code>List.fiter</code> ，再執行 <code>List.map</code>，因此使用 <code>List.filter &gt;&gt; List.map</code>。</p>
+<p><code>&gt;&gt;</code> 不只代表 compose，也代表執行方向，所以也有 <code>&lt;&lt;</code>。</p>
+<h2 id="Q&amp;A">Q&amp;A</h2><hr>
+<blockquote>
+<p>Q : 學 F# 目前能做什麼 ?</p>
+</blockquote>
+<ol>
+<li>F# 可跑在 .NET Core，所以能用 F# 寫 ASP.NET MVC、ASP.NET Web API、UWP 與 Console App</li>
+<li>F# 可用來寫 Azure Function</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>本文簡單的展示 F# 最關鍵的 Pipeline、Currying 與 Compose，這些都是 OOP 語言很難見到的強悍功能，透過 F# 的簡單實作，讓我們在練習 FP 時更加方便</li>
+<li><p>F# 並不是要取代 C#，事實上在 .NET Core，C# 仍是必學的語言，只是透過學習 F#，能訓練自己 FP 的思維，進而用在 C# 與 TypeScript 上</p>
+</li>
+<li><p>若語言間的 paradigm 相同，只是 syntax 不同，則沒有學習新語言的必要；但若透過更好的 syntax，讓你學到不同的 paradigm，這就有意義了，這就是學習 F# 的原因</p>
+</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/MyFirstFSharp" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tour" target="_blank" rel="external">Tour of F#</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/slack/bibucket/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/docker/jenkins/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-01 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>20</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

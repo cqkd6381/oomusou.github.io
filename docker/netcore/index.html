@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 Docker 安裝 .NET Core ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="不用污染 host 環境，直接使用 Docker">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="不用污染 host 環境，直接使用 Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 Docker 安裝 .NET Core ?">
+<meta property="og:url" content="http://oomusou.io/docker/netcore/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="不用污染 host 環境，直接使用 Docker">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-29T14:06:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 Docker 安裝 .NET Core ?">
+<meta name="twitter:description" content="不用污染 host 環境，直接使用 Docker">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 Docker 安裝 .NET Core ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 不用污染 host 環境，直接使用 Docker			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載_-NET_Core_Image"><span class="toc-article-text">下載 .NET Core Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Container"><span class="toc-article-text">建立 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#啟動_Container"><span class="toc-article-text">啟動 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#進入_-NET_Core_的_Terminal"><span class="toc-article-text">進入 .NET Core 的 Terminal</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#停止_Container"><span class="toc-article-text">停止 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#刪除_Container"><span class="toc-article-text">刪除 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#刪除_Image"><span class="toc-article-text">刪除 Image</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>除了在 Windows、Mac、Linux 安裝原生的 .NET Core 外，也可以使用 Docker 的方式安裝 .NET Core。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>.NET Core 2.1.4</p>
+<h2 id="下載_-NET_Core_Image">下載 .NET Core Image</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker pull microsoft/dotnet</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker pull</code> 下載最新版 .NET Core image 到本機。</p>
+<p><img src="/images/docker/netcore101/netcore000.png" alt="netcore000"></p>
+<ol>
+<li>輸入 <code>docker pull microsoft/dotnet</code> 下載 .NET Core image，其中 <code>microsoft/dotnet</code> 是 Microsoft 所維護的 image，適合 console app 使用</li>
+<li>下載最新版 image 成功</li>
+</ol>
+<h2 id="建立_Container">建立 Container</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyNetCore -dt microsoft/dotnet</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 .NET Core image 建立 container 並執行之。</p>
+<ul>
+<li><strong>—name</strong> : 替 container 取一個人能夠識別的名字 <code>MyNetCore</code> (若省略，Docker 將隨機命名，將來不易維護)</li>
+<li><strong>-d</strong> : <code>d</code> etach，建立 container 後，就脫離目前 process</li>
+<li><strong>-t</strong> : <code>t</code> terminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
+<li><strong>microsoft/dotnet</strong> : 為 .NET Core 官方 image</li>
+</ul>
+<p><img src="/images/docker/netcore101/netcore001.png" alt="netcore001"></p>
+<ol>
+<li>輸入 <code>docker run</code> 建立 container 外，還會順便直執行 container</li>
+</ol>
+<h2 id="啟動_Container">啟動 Container</h2><hr>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">start</span> MyNetCore</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker start</code> 啟動 .NET Core container</p>
+<blockquote>
+<p>既然 container 已經建立在硬碟，將來要在執行 container 就不必透過 <code>docker run</code>，直接執行 <code>docker start</code> 啟動 .NET Core container 即可</p>
+</blockquote>
+<p><img src="/images/docker/netcore101/netcore002.png" alt="netcore002"></p>
+<ol>
+<li>輸入 <code>docker start MyNetCore</code> 啟動 <code>MyNetCore</code> container</li>
+</ol>
+<h2 id="進入_-NET_Core_的_Terminal">進入 .NET Core 的 Terminal</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyNetCore bash</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker exec -it</code> 對 .NET Core 下指令。</p>
+<blockquote>
+<p>要對 container 內部的 Linux 下指令，必須先將 Bash 包起來</p>
+</blockquote>
+<ul>
+<li><strong>exec</strong> : 執行 Container 內的的 Linux 指令</li>
+<li><strong>-i</strong> : <code>i</code> teractive，可對 terminal 輸入資料</li>
+<li><strong>-t</strong> : <code>t</code> terminal，可對 terminal 顯示資料</li>
+<li><strong>MyNetCore</strong> : container 名稱</li>
+<li><code>bash</code> : 對 container 下的指令</li>
+</ul>
+<p><img src="/images/docker/netcore101/netcore003.png" alt="netcore003"></p>
+<ol>
+<li>輸入 <code>docker exec -it MyNetCore bash</code> 執行 <code>MyNetCore</code> container 的 Bash</li>
+<li>輸入 <code>dotnet —version</code>，顯示 container 內已經安裝 .NET Core SDK </li>
+<li>輸入 <code>exit</code> 離開 container 的 terminal</li>
+</ol>
+<h2 id="停止_Container">停止 Container</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker stop <span class="constant">MyNetCore</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker stop</code> 停止 .NET Core container。</p>
+<p><img src="/images/docker/netcore101/netcore004.png" alt="netcore004"></p>
+<ol>
+<li>輸入 <code>docker stop MyNetCore</code> 停止 <code>MyNetCore</code> container</li>
+</ol>
+<h2 id="刪除_Container">刪除 Container</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rm <span class="constant">MyNetCore</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker rm</code> 刪除未執行的 .NET Core container。</p>
+<blockquote>
+<p>Container 儘管不執行，但仍存在於硬碟中，若想徹底移除 .NET Core，必須先刪除 .NET Core container，然後再刪除 .NET Core image</p>
+</blockquote>
+<p><img src="/images/docker/netcore101/netcore005.png" alt="netcore005"></p>
+<ol>
+<li>輸入 <code>docker rm MyNetCore</code> 刪除 <code>MyNetCore</code> container</li>
+</ol>
+<h2 id="刪除_Image">刪除 Image</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rmi microsoft/dotnet</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker rmi</code> 刪除 .NET Core image。</p>
+<blockquote>
+<p>只要刪除 container 與 image，就可以徹底移除 app，這也是 Docker 受歡迎的原因，不再因為安裝任何 app 而污染 host 環境</p>
+</blockquote>
+<p><img src="/images/docker/netcore101/netcore006.png" alt="netcore006"></p>
+<ol>
+<li>輸入 <code>docker rmi microsoft/dotnet</code> 刪除 .NET Core image</li>
+</ol>
+<h2 id="Summary">Summary</h2><hr>
+<p><img src="/images/docker/netcore101/netcore007.svg" alt="netcore007"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>本文為 Docker 最基本操作，都是使用 Docker 一定要會的基本指令</li>
+<li>若有 .NET Core app 包成 Docker image，也是使用類似的方式安裝執行之</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/build-docker/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/setup/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-02-25 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>28</span></a></li> <li><a href="/tags/Docker/">Docker<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

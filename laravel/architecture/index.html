@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Laravel 的中大型專案架構 | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel 的中大型專案架構">
+<meta property="og:url" content="http://oomusou.io/laravel/architecture/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-02T05:11:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel 的中大型專案架構">
+<meta name="twitter:description" content="只有 MVC 是不夠的，我們需要更完整的專案架構">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Laravel 的中大型專案架構</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 只有 MVC 是不夠的，我們需要更完整的專案架構			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Controller_過於肥大"><span class="toc-article-text">Controller 過於肥大</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Model_過於肥大"><span class="toc-article-text">Model 過於肥大</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#中大型專案架構"><span class="toc-article-text">中大型專案架構</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立目錄"><span class="toc-article-text">建立目錄</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Repository"><span class="toc-article-text">Repository</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Service"><span class="toc-article-text">Service</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Presenter"><span class="toc-article-text">Presenter</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#單元測試"><span class="toc-article-text">單元測試</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>初學者學習 Laravel 時分兩種，一種是乖乖的將程式填入 MVC 架構內，導致 controller 與 model 異常的肥大，日後一樣很難維護；一種是常常不知道程式該寫在哪一個 class 內而猶豫不決，畢竟傳統 PHP 都是一個頁面一個檔案。本文整理出最適合 Laravel 的中大型專案架構，兼具<strong>容易維護</strong>、<strong>容易擴充</strong>與<strong>容易重複使用</strong>的特點，並且<strong>容易測試</strong>。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.1.24</p>
+<h2 id="Controller_過於肥大">Controller 過於肥大</h2><hr>
+<p>受RoR的影響，初學者常認為 MVC 架構就是 <code>model</code>, <code>view</code>, <code>controller</code> : </p>
+<ul>
+<li>Model 就是資料庫。</li>
+<li>Controller 負責與 HTTP 溝通，調用 model 與 view。</li>
+<li>View 就是 HTML。</li>
+</ul>
+<p>假如依照這個定義，以下這些需求該寫在哪裡呢？</p>
+<ol>
+<li>發送 Email，使用外部 API。</li>
+<li>使用 PHP 寫的邏輯。</li>
+<li>依需求將顯示格式作轉換。</li>
+<li>依需求是否顯示某些資料。</li>
+<li>依需求顯示不同資料。</li>
+</ol>
+<p>其中 1, 2 屬於商業邏輯，而 3, 4, 5 屬於顯示邏輯，若依照一般人對  MVC 的定義，model 是資料庫，而 view 又是 HTML，以上這些需求都不能寫在 model 與 view，只能勉強寫在 controller。</p>
+<p>因此初學者開始將大量程式寫在 controller，造成 controller 的肥大難以維護。</p>
+<h2 id="Model_過於肥大">Model 過於肥大</h2><hr>
+<div class="alert alert-info"><i class="fa fa-info"></i>  既然邏輯寫在 controller 不方便維護，那我將邏輯都寫在 model 就好了？</div>
+<p>當你將邏輯從 controller 搬到 model 後，雖然 controller 變瘦了，但卻肥了 model，model 從原本代表資料庫，現在變成還要負擔商業邏輯與顯示邏輯，結果更慘。</p>
+<p>Model 代表資料庫嗎？把它想成是 <code>Eloquent class</code>就好，資料庫邏輯應該寫在 repository 裡，這也是為什麼 Laravel 5 已經沒有 <code>models</code>目錄，Eloquent class 僅僅是放在 <code>app</code> 根目錄下而已。</p>
+<h2 id="中大型專案架構">中大型專案架構</h2><hr>
+<p>那我們該怎麼寫呢？別將我們的思維侷限在 MVC 內 : </p>
+<ol>
+<li><strong>Model</strong> : 僅當成 Eloquent class。</li>
+<li><strong>Repository</strong> : 輔助 model，處理資料庫邏輯，然後注入到 service。</li>
+<li><strong>Service</strong> : 輔助 controller，處理商業邏輯，然後注入到 controller。</li>
+<li><strong>Controller</strong> : 接收 HTTP request，調用其他 service。</li>
+<li><strong>Presenter</strong> : 處理顯示邏輯，然後注入到 view。</li>
+<li><strong>View</strong> : 使用 blade 將資料 binding 到 HTML。</li>
+</ol>
+<img src="/images/laravel/laravel-architecture/arch002.svg" width="700">
+<p>其中藍色為原本的 MVC，而紫色為本文要介紹的的重點 : <strong>Repository</strong> 模式，<strong>Service</strong> 模式與 <strong>Presenter</strong> 模式。</p>
+<p>箭頭表示物件<strong>依賴注入</strong>的方向。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於依賴注入，詳細請參考<a href="/tdd/tdd-di/">深入探討依賴注入</a></span></span></span></p>
+<p>我們可以發現 MVC 架構還在，由於 <strong>SOLID</strong> 的<strong>單一職責</strong>原則與<strong>依賴反轉</strong>原則 : </p>
+<ol>
+<li>我們將資料庫邏輯從 model 分離出來，由 repository 輔助 model，將 model 依賴注入進 repository。</li>
+<li>我們將商業邏輯從 controller 分離出來，由 service 輔助 controller，將 service 依賴注入進 controller。</li>
+<li>我們將顯示邏輯從 view 分離出來，由 presenter 輔助 view，將 presenter 依賴注入進 view。</li>
+</ol>
+<h3 id="建立目錄">建立目錄</h3><p>在 <code>app</code> 目錄下建立 <code>Repositories</code>，<code>Services</code> 與 <code>Presenters</code> 目錄。<br><img src="/images/laravel/laravel-architecture/arch001.png" alt=""></p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  別害怕建立目錄！！</div>
+<p>別害怕在 Laravel 預設目錄以外建立的<strong>其他目錄</strong>，根據 <strong>SOLID</strong> 的<strong>單一職責</strong>原則，class  功能越多，責任也越多，因此越違反<strong>單一職責</strong>原則，所以你應該將你的程式分割成更小的部分，每個部分都有它專屬的功能，而不是一個 class 功能包山包海，也就是所謂的<strong>萬能類別</strong>，所以整個專案不應該只有 MVC 三個部分，放手根據你的需求建立適當的目錄，並將適當的 class 放到該目錄下，只要我們的 class 有 namespace 幫我們分類即可。</p>
+<h3 id="Repository">Repository</h3><p>由於篇幅的關係，將 repository 獨立成專文討論，請參考<a href="/laravel/repository/">如何使用 Repository 模式?</a></p>
+<h3 id="Service">Service</h3><p>由於篇幅的關係，將 service 獨立成專文討論，請參考<a href="/laravel/service/">如何使用 Service 模式?</a></p>
+<h3 id="Presenter">Presenter</h3><p>由於篇幅的關係，將 presenter 獨立成專文討論，請參考<a href="/laravel/presenter/">如何使用 Presenter 模式?</a></p>
+<h2 id="單元測試">單元測試</h2><hr>
+<p>由於現在 model、view、controller 的相依物件都已經拆開，也都使用依賴注入，因此每個部分都可以單獨的做單元測試，如要測試 service，就將 repository 加以 mock，也可以將其他 service 加以 mock。</p>
+<p>Presenter 也可以單獨跑單元測試，將其他 service 加以 mock，不一定要跑驗收測試才能測顯示邏輯。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><p>本文談到的架構只是開始，你可以依照實際需求增加更多的目錄與 class，當你發現你的 MVC 違反 <strong>SOLID</strong> 原則時，就大膽的將 class 從 MVC 拆開重構，然後依照以下手法 : </p>
+<ol>
+<li>建立新的 class 或 interface。</li>
+<li>將相依物件依賴注入到 class。</li>
+<li>在 class 內處理他的職責。</li>
+<li>將 class 或 interface 注入到 controller 或 view。</li>
+</ol>
+</li>
+<li><p>最後搭配單元測試，測試重構後的架構是否與原來的需求結果相同。</p>
+</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/laravel/repository/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/git/remove-stage/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-12-19 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/LaraDiner/">LaraDiner<span>14</span></a></li> <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

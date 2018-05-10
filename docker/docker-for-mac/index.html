@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何安裝 Docker for Mac ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 Homebrew 即可簡單的安裝 Docker">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 Homebrew 即可簡單的安裝 Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何安裝 Docker for Mac ?">
+<meta property="og:url" content="http://oomusou.io/docker/docker-for-mac/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 Homebrew 即可簡單的安裝 Docker">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-16T12:44:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何安裝 Docker for Mac ?">
+<meta name="twitter:description" content="使用 Homebrew 即可簡單的安裝 Docker">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何安裝 Docker for Mac ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 Homebrew 即可簡單的安裝 Docker			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Prerequisite"><span class="toc-article-text">Prerequisite</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Docker_for_Mac"><span class="toc-article-text">Docker for Mac</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#安裝_Docker"><span class="toc-article-text">安裝 Docker</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#執行_Docker"><span class="toc-article-text">執行 Docker</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Appendix"><span class="toc-article-text">Appendix</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#清除_Cache"><span class="toc-article-text">清除 Cache</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#開機啟動_Docker"><span class="toc-article-text">開機啟動 Docker</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#移除_Docker_for_Mac"><span class="toc-article-text">移除 Docker for Mac</span></a></li></ol></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>由於 Docker 在本質上仍是個 Linux，只是多個 container 跑在同一個 Linux 上，因此若要將 Docker 跑在 macOS，仍然需要一個 VM 在背景跑 Linux。Docker for Mac 讓我們不用安裝其他 VM，就可以將 container 跑在 Docker 上。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Homebrew 1.6.0<br>Docker for Mac 18.03.0.ce (23751)</p>
+<h2 id="Prerequisite">Prerequisite</h2><hr>
+<p>在 macOS 先安裝好 Homebrew。</p>
+<h2 id="Docker_for_Mac">Docker for Mac</h2><hr>
+<h3 id="安裝_Docker">安裝 Docker</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>update</span><br><span class="line">$ <span class="keyword">brew </span>cask install docker</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew cask 安裝 Docker。</p>
+<p><img src="/images/docker/docker-for-mac/mac000.png" alt="mac000"></p>
+<ol>
+<li>輸入 <code>brew cask install docker</code> 安裝 Docker</li>
+<li>Homebrew cask 從官網下載 <code>Docker.dmg</code></li>
+<li>安裝 Docker</li>
+<li>將 <code>Docker.app</code> 安裝在 <code>Applications</code> 目錄下</li>
+</ol>
+<h3 id="執行_Docker">執行 Docker</h3><p><img src="/images/docker/docker-for-mac/mac001.png" alt="mac001"></p>
+<ol>
+<li>在 <code>Applications</code> 顯示 <code>Docker</code></li>
+</ol>
+<p><img src="/images/docker/docker-for-mac/mac002.png" alt="mac002"></p>
+<p>第一次執行會要求管理者權限，按 <code>OK</code> 後會要求輸入管理者密碼。</p>
+<p><img src="/images/docker/docker-for-mac/mac003.png" alt="mac003"></p>
+<p>Docker 啟動中，會在右上角顯示 Docker icon。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker -v</span><br></pre></td></tr></table></figure>
+<p>等 Docker 啟動完畢，在 terminal 輸入 <code>docker -v</code>，若能正確顯示版本，表示 Docker 已經安裝成功。</p>
+<p><img src="/images/docker/docker-for-mac/mac004.png" alt="mac004"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>安裝 Docker for Mac 之後，就可以安裝各種 image，並執行各種 container</li>
+</ul>
+<h2 id="Appendix">Appendix</h2><hr>
+<h3 id="清除_Cache">清除 Cache</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>cask cleanup</span><br></pre></td></tr></table></figure>
+<p>清除 Homebrew cask 的 cache。</p>
+<blockquote>
+<p>Homebrew cask 下載了 <code>Docker.dmg</code> 安裝 Docker，預設會下載到 <code>~/Library/Caches/Homebrew/Cask</code> 目錄下，必須下 <code>brew cask cleanup</code> 才會刪除 <code>Docker.dmg</code></p>
+</blockquote>
+<p><img src="/images/docker/docker-for-mac/mac005.png" alt="mac005"></p>
+<ol>
+<li>輸入 <code>brew cask cleanup</code> </li>
+<li>刪除在 <code>~/Library/Caches/Homebrew/Cask</code> 目錄下的 <code>Docker.dmg</code></li>
+</ol>
+<h3 id="開機啟動_Docker">開機啟動 Docker</h3><p><img src="/images/docker/docker-for-mac/mac006.png" alt="mac006"></p>
+<p><strong><em>Preferences -&gt; General</em></strong></p>
+<ol>
+<li>預設 Docker 安裝後，下次會 Mac 開機也會自動啟動 Docker，可視需求決定是否要自動啟動 Docker</li>
+</ol>
+<blockquote>
+<p>Docker 雖然比 Vagrant 省電，但本質還是 VM，所以若沒用卻開著，還是會耗電，若是 desktop 可能無感，但若是 notebook 且在乎電池續航力，建議只有要使用時才啟動 Docker</p>
+</blockquote>
+<h3 id="移除_Docker_for_Mac">移除 Docker for Mac</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>cask uninstall docker</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew cask 移除 Docker。</p>
+<blockquote>
+<p>不必事先關閉 Docker</p>
+</blockquote>
+<p><img src="/images/docker/docker-for-mac/mac007.png" alt="mac007"></p>
+<ol>
+<li>輸入 <code>brew cask uninstall docker</code></li>
+<li>刪除 Docker</li>
+<li>刪除 <code>Applications/Docker.app</code></li>
+</ol>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/docker/ubuntu/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/closure-encapsulation/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-16 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Docker/">Docker<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

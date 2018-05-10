@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何安裝 Docker for Windows ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="Docker 在 Windows 的安裝越來越簡單了">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="Docker 在 Windows 的安裝越來越簡單了">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何安裝 Docker for Windows ?">
+<meta property="og:url" content="http://oomusou.io/docker/docker-for-windows/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="Docker 在 Windows 的安裝越來越簡單了">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-14T12:30:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何安裝 Docker for Windows ?">
+<meta name="twitter:description" content="Docker 在 Windows 的安裝越來越簡單了">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何安裝 Docker for Windows ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> Docker 在 Windows 的安裝越來越簡單了			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Docker_for_Windows"><span class="toc-article-text">Docker for Windows</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#下載_Docker_for_Windows"><span class="toc-article-text">下載 Docker for Windows</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#執行_Installer"><span class="toc-article-text">執行 Installer</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Configuration"><span class="toc-article-text">Configuration</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hyper-V"><span class="toc-article-text">Hyper-V</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Appendix"><span class="toc-article-text">Appendix</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>由於 Docker 在本質上仍是個 Linux，只是多個 container 跑在同一個 Linux 上，因此若要將 Docker 跑在 Windows，仍然需要一個 VM 在背景跑 Linux。Docker for Windws 內建支援 Windows 的 Hyper-V，只會在 Hyper-V 內跑一個極小的 Linux，如此其他 container 就能跑在 Docker 上。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Parallel Desktop 13 for Mac Pro Edition 13.3.0 (43321)<br>Windows 10 Pro 1709 16299.371<br>Docker for Windows 18.03.0.ce (0520e24)</p>
+<h2 id="Docker_for_Windows">Docker for Windows</h2><hr>
+<p>要能在 Windows 執行 Docker，首先必須安裝 Docker for Windows。</p>
+<h3 id="下載_Docker_for_Windows">下載 Docker for Windows</h3><p><img src="/images/docker/docker-for-windows/win000.png" alt="win000"></p>
+<ol>
+<li>到 <a href="https://store.docker.com/editions/community/docker-ce-desktop-windows" target="_blank" rel="external">Docker 官網</a></li>
+<li>按 <code>Get Docker</code> 下載 Docker</li>
+</ol>
+<h3 id="執行_Installer">執行 Installer</h3><p><img src="/images/docker/docker-for-windows/win002.png" alt="win002"></p>
+<ol>
+<li>預設將 <code>Docker for Windows Installer</code> 下載到 <code>Downloads</code> 目錄</li>
+<li>執行 <code>Docker for Windows Installer</code></li>
+</ol>
+<h3 id="Configuration">Configuration</h3><p><img src="/images/docker/docker-for-windows/win003.png" alt="win003"></p>
+<ol>
+<li>可選擇是否在 desktop 增加 shortcut</li>
+<li>不要勾選 <code>Use Windows containers instead of Linux containers</code></li>
+</ol>
+<blockquote>
+<p>Windows container 與 Linux container 正在整合中，同時只能 <code>單獨使用</code> Windows container 或 Linux container，目前只有 Edge 版可以 <code>同時使用</code> Windows container 與 Linux container</p>
+</blockquote>
+<p><img src="/images/docker/docker-for-windows/win004.png" alt="win004"></p>
+<p>安裝 Docker for Windows 中。</p>
+<p><img src="/images/docker/docker-for-windows/win005.png" alt="win005"></p>
+<ol>
+<li>按 <code>Close and log out</code>，即將登出 Windows 並重新登入</li>
+</ol>
+<h2 id="Hyper-V">Hyper-V</h2><p><img src="/images/docker/docker-for-windows/win006.png" alt="win006"></p>
+<ol>
+<li>重新登入後，Docker 發現 Hyper-V 沒有啟動而無法執行</li>
+<li>按 <code>Ok</code> 後 Windows 將重新啟動並自動安裝 <code>Hyper-V</code></li>
+</ol>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker -v</span><br></pre></td></tr></table></figure>
+<p>預設 Windows 10 每次啟動都會執行 Docker，在 Command Prompt 輸入 <code>docker -v</code>，若出現 Docker 版本編號，則表示 Docker 安裝成功。</p>
+<p><img src="/images/docker/docker-for-windows/win007.png" alt="win007"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>安裝 Docker for Windows 之後，就可以安裝各種 image，並執行各種 container</li>
+</ul>
+<h2 id="Appendix">Appendix</h2><hr>
+<p>由於 Docker for Windows 會使用 Hyper-V，若在 Parallel Desktop 中的 Windows 10 執行 Docker，等於是在 VM 中執行 VM，必須在 Parallel Desktop 做額外的設定：</p>
+<p><img src="/images/docker/docker-for-windows/win001.png" alt="win001"></p>
+<ol>
+<li>選擇 <code>Hardware</code></li>
+<li>選擇 <code>CPU &amp; Memory</code></li>
+<li>將 <code>Enable nested virtualization</code> 打勾</li>
+</ol>
+<blockquote>
+<p>實務上不建議這樣使用 Docker，由於兩層 VM，效率並不好，建議直接使用 Docker for Mac</p>
+</blockquote>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/closure-encapsulation/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/proxy/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-14 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Docker/">Docker<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

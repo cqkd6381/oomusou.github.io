@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用Travis CI自動測試? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="每次對GitHub push之後，Travis CI就會自動執行unit test">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="每次對GitHub push之後，Travis CI就會自動執行unit test">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用Travis CI自動測試?">
+<meta property="og:url" content="http://oomusou.io/ci/travis-ci-setup/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="每次對GitHub push之後，Travis CI就會自動執行unit test">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用Travis CI自動測試?">
+<meta name="twitter:description" content="每次對GitHub push之後，Travis CI就會自動執行unit test">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用Travis CI自動測試?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 每次對GitHub push之後，Travis CI就會自動執行unit test			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Travis_CI的運作原理"><span class="toc-article-text">Travis CI的運作原理</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立-travis-yml"><span class="toc-article-text">建立.travis.yml</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將專案push到GitHub"><span class="toc-article-text">將專案push到GitHub</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#到Travis_CI註冊帳號"><span class="toc-article-text">到Travis CI註冊帳號</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#新增欲使用Travis_CI的Repository"><span class="toc-article-text">新增欲使用Travis CI的Repository</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Push到GitHub"><span class="toc-article-text">Push到GitHub</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#收到Travis_CI寄的Email"><span class="toc-article-text">收到Travis CI寄的Email</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>若一個專案由多人共同開發，你可能相依到別人的class，自己在local本機unit test測試通過，並不代表上線之後沒問題，因為很可能別人class的修改導致你的class 執行失敗。<br>Travis CI與GitHub高度整合，只要你對GitHub push之後，Travis CI就能自動從GitHub抓最新版的code，並執行PHPUnit，最後將測試結果email給你。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.1.22</p>
+<h2 id="Travis_CI的運作原理">Travis CI的運作原理</h2><hr>
+<img src="/images/ci/travis-ci-setup/travis000.svg" width="750">
+<h2 id="建立-travis-yml">建立.travis.yml</h2><hr>
+<figure class="highlight php"><figcaption><span>.travis.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">language: php</span><br><span class="line"></span><br><span class="line">php:</span><br><span class="line">  - <span class="number">5.5</span></span><br><span class="line">  - <span class="number">5.6</span></span><br><span class="line"></span><br><span class="line">install:</span><br><span class="line">  - composer install --prefer-dist --no-dev --optimize-autoloader --quiet</span><br><span class="line"></span><br><span class="line">notifications:</span><br><span class="line">  email:</span><br><span class="line">    recipients:</span><br><span class="line">      - oomusou@gmail.com</span><br><span class="line">    on_success: always</span><br><span class="line">    on_failure: always</span><br><span class="line"></span><br><span class="line">script: phpunit -c phpunit.xml --coverage-text</span><br></pre></td></tr></table></figure> 
+<p>在專案根目錄建立<code>.travis.yml</code>，這是Travis CI設定檔。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>事實上它如同<code>Homestead.yaml</code>一樣，是yaml格式檔案。</span></span></span></p>
+<p>第1行<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">language: php</span><br></pre></td></tr></table></figure></p>
+<p>Travis CI支援很很多程式語言，要特別設定我們想用的PHP。</p>
+<div class="alert alert-danger"><i class="fa fa-bug"></i>  注意php必須用小寫。</div>
+<p>第3行<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php:&#10;  - 5.5&#10;  - 5.6</span><br></pre></td></tr></table></figure></p>
+<p>設定PHP所使用的版本，Travis CI允許我們同時測試多個PHP版本。</p>
+<p>以Laravel 5.1為例，若使用PHP 5.4測試會失敗，只能測試PHP 5.5以上。</p>
+<p>第7行<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">install:&#10;  - composer install --prefer-dist --no-dev --optimize-autoloader --quiet</span><br></pre></td></tr></table></figure></p>
+<p>在Travis CI執行PHPUnit之前會做的事情。因為現在<code>vendor</code>目錄並沒有進GitHub，所以必須使用<code>composer install</code>重建<code>vendor</code>目錄。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>這裏composer的寫法遵循<a href="https://www.facebook.com/shengyoufan" target="_blank" rel="external">聖佑</a>的<a href="http://www.slideshare.net/shengyou/modern-web-conf-2015-php-composer" target="_blank" rel="external">給PHP開發者的Composer錦囊</a>所建議的寫法，後面再加上–quiet而已，表示不顯示任何訊息。</span></span></span></p>
+<p>10行<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">notifications:&#10;  email:&#10;    recipients:&#10;      - oomusou@gmail.com&#10;    on_success: always&#10;    on_failure: always</span><br></pre></td></tr></table></figure></p>
+<p>Travis CI自動執行PHPUnit之後，可以自動email出testing report，可以在recipients設定成員的email address。<br>至於何時才寄出email，可自行設定<code>always</code>、<code>never</code>與<code>change</code>。</p>
+<p><code>on_success</code>預設是<code>change</code>。</p>
+<p><code>on_failure</code>預設是<code>always</code>。</p>
+<p>17行<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">script: phpunit -c phpunit.xml --coverage-text</span><br></pre></td></tr></table></figure></p>
+<p>設定Travis CI執行phpunit。-C可以指定自己的phpunit.xml設定檔，–coverage-text則設定產生普通文字形式的Coverage報表即可。</p>
+<h2 id="將專案push到GitHub">將專案push到GitHub</h2><hr>
+<p>(略)</p>
+<h2 id="到Travis_CI註冊帳號">到Travis CI註冊帳號</h2><hr>
+<p>公開Repository到<a href="https://travis-ci.org" target="_blank" rel="external">https://travis-ci.org</a>，私人Repository到<a href="https://travis-ci.com" target="_blank" rel="external">https://travis-ci.com</a>，直接使用GitHub帳號登入即可。</p>
+<h2 id="新增欲使用Travis_CI的Repository">新增欲使用Travis CI的Repository</h2><hr>
+<p>登入後，在「My Repository」旁的「+」新增欲使用Travis CI的Repository。<br><img src="/images/ci/travis-ci-setup/travis001.png" alt=""></p>
+<p>將要使用的Repository switch on。<br><img src="/images/ci/travis-ci-setup/travis002.png" alt=""></p>
+<h2 id="Push到GitHub">Push到GitHub</h2><hr>
+<p>之後只要每次對GitHub做push，Travis CI都會自動執行PHPUnit。若要Travis CI重新執行PHPUnit，可以按右上角的「Restart Build」。<br><img src="/images/ci/travis-ci-setup/travis003.png" alt=""></p>
+<h2 id="收到Travis_CI寄的Email">收到Travis CI寄的Email</h2><hr>
+<p><img src="/images/ci/travis-ci-setup/travis004.png" alt=""></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>由多人一起開發的專案，若擔心改A壞B，傳統只能在testing server<code>合體</code>後才能測試，若透過<strong>CI (Continuous Integration)</strong>，只要在每天push到GitHub時，Travis CI就會在背後不斷地持續幫你<code>測試</code>，提早發現<code>合體</code>之後所發現的問題，進而提早修正，不過前提是必須要寫<code>測試</code>，否則CI也幫不了你。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的<a href="https://github.com/oomusou/Laravel51TravisCI_demo" target="_blank" rel="external">GitHub</a>上找到。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/laravel/laravel-service-provider/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/phpstorm-markdown/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-11-01 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/GitHub/">GitHub<span>4</span></a></li> <li><a href="/tags/LaraDiner/">LaraDiner<span>14</span></a></li> <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/PHPUnit/">PHPUnit<span>15</span></a></li> <li><a href="/tags/Travis-CI/">Travis CI<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

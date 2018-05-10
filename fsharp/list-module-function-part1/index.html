@@ -1,0 +1,566 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入探討 F# List Module 所提供的 Function (A ~ F) | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="FP 的基本功">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="FP 的基本功">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探討 F# List Module 所提供的 Function (A ~ F)">
+<meta property="og:url" content="http://oomusou.io/fsharp/list-module-function-part1/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="FP 的基本功">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-22T02:17:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入探討 F# List Module 所提供的 Function (A ~ F)">
+<meta name="twitter:description" content="FP 的基本功">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入探討 F# List Module 所提供的 Function (A ~ F)</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> FP 的基本功			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-allPairs"><span class="toc-article-text">List.allPairs</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-append"><span class="toc-article-text">List.append</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-average"><span class="toc-article-text">List.average</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-averageBy"><span class="toc-article-text">List.averageBy</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-choose"><span class="toc-article-text">List.choose</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-chunkBySize"><span class="toc-article-text">List.chunkBySize</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-collect"><span class="toc-article-text">List.collect</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-compareWith"><span class="toc-article-text">List.compareWith</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-concat"><span class="toc-article-text">List.concat</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-contains"><span class="toc-article-text">List.contains</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-countBy"><span class="toc-article-text">List.countBy</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-distinct"><span class="toc-article-text">List.distinct</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-distinctBy"><span class="toc-article-text">List.distinctBy</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-empty"><span class="toc-article-text">List.empty</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-exactlyOne"><span class="toc-article-text">List.exactlyOne</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-except"><span class="toc-article-text">List.except</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-exists"><span class="toc-article-text">List.exists</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-exists2"><span class="toc-article-text">List.exists2</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-filter"><span class="toc-article-text">List.filter</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-find"><span class="toc-article-text">List.find</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-findBack"><span class="toc-article-text">List.findBack</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-findIndex"><span class="toc-article-text">List.findIndex</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-findIndexBack"><span class="toc-article-text">List.findIndexBack</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-fold"><span class="toc-article-text">List.fold</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-folder2"><span class="toc-article-text">List.folder2</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-foldBack"><span class="toc-article-text">List.foldBack</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-foldBack2"><span class="toc-article-text">List.foldBack2</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-forall"><span class="toc-article-text">List.forall</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#List-forall2"><span class="toc-article-text">List.forall2</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>F# 的 List module 提供眾多 <code>List</code> 常用的 Higher Order Function，要能發揮 FP 的威力，首先必須能活用內建 function。</p>
+<p>本文探討英文字母 A ~ F 開頭的 function。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="List-allPairs">List.allPairs</h2><hr>
+<blockquote>
+<p>將兩個 list 的 element 取 cartesian product</p>
+<p><code>list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; (&#39;T1 * &#39;T2) list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.allPairs [ <span class="number">4</span> .. <span class="number">6</span> ]</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(4, 1); (4, 2); (4, 3); (5, 1); (5, 2); (5, 3); (6, 1); (6, 2); (6, 3)]</span></span><br></pre></td></tr></table></figure>
+<p>兩個 list 可以不同型別，反正最後會以 tuple 形式呈現。</p>
+<h2 id="List-append">List.append</h2><hr>
+<blockquote>
+<p>傳入兩個 list，第 2 個 list 會 append 到第 1 個 list 之後，相當於 <code>list1@list2</code></p>
+<p><code>list1 : &#39;T list -&gt; list2 : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.append [ <span class="number">4</span> .. <span class="number">6</span>]</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [4; 5; 6; 1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-average">List.average</h2><hr>
+<blockquote>
+<p>計算 list 中所有 element 的平均值</p>
+<p><code>list : &#39;T list -&gt; T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1.0</span> .. <span class="number">10.0</span> ]</span><br><span class="line">|&gt; List.average</span><br><span class="line">|&gt; printf <span class="string">"%f"</span></span><br><span class="line"><span class="comment">// 5.500000</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-averageBy">List.averageBy</h2><hr>
+<blockquote>
+<p>將 list 所有 element 先經過 project funtion 計算後，再取平均值</p>
+<p><code>project : (&#39;T -&gt; &#39;U) -&gt; list : &#39;T list -&gt; &#39;U</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.averageBy (<span class="keyword">fun</span> elm -&gt; float elm)</span><br><span class="line">|&gt; printf <span class="string">"%f"</span></span><br></pre></td></tr></table></figure>
+<p><code>[ 1..3 ]</code> 無法透過 <code>List.average()</code> 取平均值，先透過 <code>List.averageBy()</code> 轉成 float，再取平均值。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1.0</span> .. <span class="number">3.0</span> ]</span><br><span class="line">|&gt; List.averageBy (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line">|&gt; printf <span class="string">"%f"</span></span><br><span class="line"><span class="comment">// 4.666667</span></span><br></pre></td></tr></table></figure>
+<p>先將 <code>[1.0; 2.0; 3.0]</code> project 成 <code>[1.0; 4.0; 9.0]</code> 之後，再取平均值。</p>
+<h2 id="List-choose">List.choose</h2><hr>
+<blockquote>
+<p>將 list 所有 element 經過 chooser function 塞選過，傳回 option 型別的 list</p>
+<p><code>chooser : (&#39;T -&gt; &#39;U option) -&gt; list : &#39;T list -&gt; &#39;U list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line">|&gt; List.filter (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elm -&gt; elm + <span class="number">1</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 5; 7; 9; 11]</span></span><br></pre></td></tr></table></figure>
+<p>先找出偶數，在每個 element + 1。</p>
+<p>傳統須先使用 <code>List.filter()</code> 找出 <code>偶數</code>，在用 <code>List.map()</code> 計算 <code>+1</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> chooser elm = </span><br><span class="line">    <span class="keyword">match</span> elm % <span class="number">2</span> <span class="keyword">with</span></span><br><span class="line">    | <span class="number">0</span> -&gt; Some (elm + <span class="number">1</span>)</span><br><span class="line">    | _ -&gt; None</span><br><span class="line"></span><br><span class="line">[ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line">|&gt; List.choose chooser</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 5; 7; 9; 11]</span></span><br></pre></td></tr></table></figure>
+<p>若使用 <code>List.choose()</code>，則可在 chooser function 使用 Pattern Matching：</p>
+<ul>
+<li>在 pattern 與 when 完成 <code>List.filter()</code> 該做的事情</li>
+<li>在 <code>-&gt;</code> 之後完成 <code>List.map()</code> 該做的事情</li>
+</ul>
+<p>也就是 <code>List.choose()</code> = <code>List.filter()</code> + <code>List.map()</code>。</p>
+<h2 id="List-chunkBySize">List.chunkBySize</h2><hr>
+<blockquote>
+<p>將 list 根據 size 切成小 list</p>
+<p><code>chunkSize : int -&gt; list : &#39;T list -&gt; &#39;T list list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line">|&gt; List.chunkBySize <span class="number">3</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [[1; 2; 3]; [4; 5; 6]; [7; 8; 9]; [10]]</span></span><br></pre></td></tr></table></figure>
+<p>注意 <code>List.chunkBySize()</code> 的回傳型態為 <code>&#39;T list list</code>，表示回傳為 list，其 element 型態為 <code>&#39;T list</code>。</p>
+<h2 id="List-collect">List.collect</h2><hr>
+<blockquote>
+<p>將 list 所有 element 經過 mapping function 轉換，其中 mapping function 會回傳新的 list，最後再將所有 list 攤平成新的 list</p>
+<p><code>mapping : (&#39;T -&gt; &#39;U list) -&gt; list : &#39;T list -&gt; &#39;U list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mapping elm = [</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="number">1</span> .. <span class="number">3</span> -&gt; elm * i</span><br><span class="line">]     </span><br><span class="line">    </span><br><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.collect mapping</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 2; 4; 6; 3; 6; 9]</span></span><br></pre></td></tr></table></figure>
+<p><code>mapping()</code> 會為每個 element 產生新的 list，最後再打平成單一 list。</p>
+<blockquote>
+<p>Q : <code>List.collect()</code> 與 <code>List.map()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都需使用 mapping function</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.map()</code> 的 mapping function 傳回 value；但  <code>List.collect()</code> 的 mapping function 傳回 list</li>
+<li><code>List.map()</code> 產生的 list ，其 element 個數與原本 list 一樣大；但 <code>List.collect()</code> 產生的 list，其 element 個數大於等於原本 list</li>
+</ul>
+<h2 id="List-compareWith">List.compareWith</h2><hr>
+<blockquote>
+<p>自行定義 comparer function 比較兩個 list</p>
+<p><code>comparer : (&#39;T -&gt; &#39;T -&gt; int) -&gt; list1 : &#39;T list -&gt; list2 : &#39;T list -&gt; int</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">4</span> .. <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> comparer elm1 elm2 = elm1 - elm2</span><br><span class="line">    </span><br><span class="line"><span class="keyword">let</span> compareList list1 list2 =</span><br><span class="line">    <span class="keyword">match</span> (List.compareWith comparer list1 list2) <span class="keyword">with</span> </span><br><span class="line">    | x <span class="keyword">when</span> x &gt; <span class="number">0</span> -&gt; printfn <span class="string">"list1 is larget than list2"</span></span><br><span class="line">    | x <span class="keyword">when</span> x &lt; <span class="number">0</span> -&gt; printfn <span class="string">"list2 is larger than list1"</span></span><br><span class="line">    | _            -&gt; printfn <span class="string">"list1 and list2 are equal"</span>    </span><br><span class="line">    </span><br><span class="line">compareList list1 list2</span><br><span class="line"><span class="comment">// list1 is larger than list2</span></span><br></pre></td></tr></table></figure>
+<p><code>comparer()</code> 定義 element 間的比較方式：</p>
+<ul>
+<li>若 <code>elm1</code> 大於 <code>elm2</code>，則傳回 <code>正數</code></li>
+<li>若 <code>elm1</code> 等於 <code>elm2</code>，則傳回 <code>0</code></li>
+<li>若 <code>elm1</code> 小於 <code>elm2</code>，則傳回 <code>負數</code></li>
+</ul>
+<blockquote>
+<p>若簡單的比較，可使用數學的 <code>兩數相減</code> 即可</p>
+</blockquote>
+<p><code>List.compareWith()</code> 將回傳第一個 comparer function 所傳回的 <code>非零之數</code>，可使用 Pattern Matching 對回傳值做判斷。</p>
+<h2 id="List-concat">List.concat</h2><hr>
+<blockquote>
+<p>將 n 個 list 合併為 1 個 list</p>
+<p><code>lists : seq&lt;&#39;T list&gt; -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">4</span> .. <span class="number">6</span> ]</span><br><span class="line"><span class="keyword">let</span> list3 = [ <span class="number">7</span> .. <span class="number">9</span> ]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myList = List.concat [list1; list2; list3]</span><br><span class="line"></span><br><span class="line">myList</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4; 5; 6; 7; 8; 9]</span></span><br></pre></td></tr></table></figure>
+<p><code>List.concat()</code> 可合併 n 個 list，但必須將 n 個 list 包在同一個 list 傳入。</p>
+<blockquote>
+<p>Q：<code>List.append()</code> 與 <code>List.map()</code> 有何差異？</p>
+</blockquote>
+<ul>
+<li><code>List.append()</code> 只能合併 2 個 list</li>
+<li><code>List.concat()</code> 能合併 n 個 list</li>
+</ul>
+<h2 id="List-contains">List.contains</h2><hr>
+<blockquote>
+<p>判斷 list 的 element 是否包含某一 value</p>
+<p><code>value : &#39;T -&gt; source : &#39;T list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">3</span> ]</span><br><span class="line">|&gt; List.contains <span class="number">4</span></span><br><span class="line">|&gt; printfn <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-countBy">List.countBy</h2><hr>
+<blockquote>
+<p>將 list 根據 projection function 分組後，各自計算分組後 element 個數，類似 SQL 的 <code>GROUP BY</code> + <code>count(*)</code></p>
+<p><code>projection : (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; (&#39;Key * int) list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">100</span> ]</span><br><span class="line">|&gt; List.countBy (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">3</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [(1, 34); (2, 33); (0, 33)]</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>[ 1 .. 100 ]</code> % 3 分成三組，餘數為 1 有 34 個，餘數為 2 有 33 個，餘數為 0 有 33 個。</p>
+<h2 id="List-distinct">List.distinct</h2><hr>
+<blockquote>
+<p>將 list 中重複的 element 去除</p>
+<p><code>list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> ; <span class="number">2</span>; <span class="number">2</span>; <span class="number">3</span>]</span><br><span class="line">|&gt; List.distinct</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-distinctBy">List.distinctBy</h2><hr>
+<blockquote>
+<p>將 list 所有 element 經過 projection function 產生新 key 後，將重複 key 的去除</p>
+<p><code>projection (&#39;T -&gt; &#39;Key) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">100</span> ]</span><br><span class="line">|&gt; List.distinctBy (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">3</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 3]</span></span><br></pre></td></tr></table></figure>
+<p>經過 projection function  <code>fun elm -&gt; elm % 3</code> 之後的  key 為 <code>[ 0; 1; 2; 0; 1; 2 …]</code>，其不重複的 key 為 <code>[ 0; 1; 2 ]</code>，但其對應的 element 為 <code>[ 1; 2; 3]</code>。</p>
+<blockquote>
+<p>Q：<code>List.distinctBy()</code> 與 <code>List.map()</code> 後再 <code>List.distinct()</code> 有什麼不同？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">100</span>]</span><br><span class="line">|&gt; List.map (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">3</span>)</span><br><span class="line">|&gt; List.distinct</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [1; 2; 0]</span></span><br></pre></td></tr></table></figure>
+<p>經過 mapping function <code>fun elm -&gt; elm % 3</code> 之後的 element 為 <code>[ 0; 1; 2; 0; 1; 2 …]</code>，其不重複的 element 為 <code>[ 0; 1; 2 ]</code>。</p>
+<ul>
+<li>Project function 是產生新的 key；mapping function 是產生新的 element</li>
+<li><code>List.distinctBy()</code> 是排除重複的 key；<code>List.map()</code> + <code>List.distinct()</code> 是排除重複的 element</li>
+</ul>
+<h2 id="List-empty">List.empty</h2><hr>
+<blockquote>
+<p>由泛型傳回指定 element 型別的 empty list</p>
+<p><code>empty&lt;&#39;T&gt; : &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List.empty&lt;int&gt;</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : List.Empty 與 List.empty 有何差異？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">myListType</span> </span>= int list</span><br><span class="line"></span><br><span class="line">myListType.Empty</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// []</span></span><br></pre></td></tr></table></figure>
+<p><strong>相同</strong></p>
+<ul>
+<li>均回傳 empty list</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.Empty</code> 為 <code>List</code> type 的 static method；<code>List.empty()</code> 定義在 List module</li>
+<li><code>List.Empty</code> 須先定義 type；<code>List.empty()</code> 可由泛型直接指定 element type</li>
+</ul>
+<h2 id="List-exactlyOne">List.exactlyOne</h2><hr>
+<blockquote>
+<p>從 list 回傳單一 value</p>
+<p><code>list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> ]</span><br><span class="line">|&gt; List.exactlyOne</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>若 list 的 <code>Length</code> 不為 <code>1</code>，將拋出 <code>ArgumentException</code>。</p>
+<h2 id="List-except">List.except</h2><hr>
+<blockquote>
+<p>從 list 中排出另一個 list 中的 element</p>
+<p><code>seq&lt;&#39;T&gt; -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.except [ <span class="number">1</span> .. <span class="number">2</span> ]</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [3; 4; 5; 6; 7; 8; 9; 10]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-exists">List.exists</h2><hr>
+<blockquote>
+<p>判斷符合 predicate function 條件的 element 是否存在</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.exists (<span class="keyword">fun</span> elm -&gt; elm = <span class="number">2</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-exists2">List.exists2</h2><hr>
+<blockquote>
+<p>判斷兩個 list 是的相同位置，至少有一個 element 相等，須自行提供 predicate function 作為判斷的依據</p>
+<p><code>predicate : (&#39;T1 -&gt; &#39;T2 -&gt; bool) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">3</span>; <span class="number">2</span>; <span class="number">1</span> ]</span><br><span class="line"><span class="keyword">let</span> predicate elm1 elm2 = elm1 = elm2 </span><br><span class="line">    </span><br><span class="line">List.exists2 predicate list1 list2</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p><code>[ 1; 2; 3 ]</code> 與 <code>[ 3; 2; 1 ]</code> 中，至少第 1 個 element 都是 <code>2</code>，只要有一個 element 是相等的就為 <code>true</code>，否則為 <code>false</code>。</p>
+<p>若 <code>list1</code> 與  <code>list2</code> 的 <code>Length</code> 不同，會拋出 <code>ArgumentException</code>。 </p>
+<h2 id="List-filter">List.filter</h2><hr>
+<blockquote>
+<p>過濾出符合 predicate function 條件的 list</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T list</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.filter (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// [2; 4; 6; 8; 10]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-find">List.find</h2><hr>
+<blockquote>
+<p>找出 list 中符合 predicate function 條件的第一個 element</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.find (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>若找不到 element，會拋出 <code>KeyNotFoundException</code>。</p>
+<blockquote>
+<p>Q：<code>List.find()</code> 與 <code>List.pick()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li><p>都用來找資料</p>
+</li>
+<li><p>找不到資料都會拋出 <code>KeyNotFoundException</code></p>
+</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.find()</code> 的 predicate function 為 <code>&#39;T -&gt; bool</code></li>
+<li><code>List.pick()</code> 的 chooser function 為 <code>&#39;T -&gt; &#39;U option</code></li>
+</ul>
+<blockquote>
+<p>若 fuction 回傳為 <code>option</code>，則適合用 <code>List.pick()</code>，否則使用 <code>List.find()</code></p>
+<p> <code>List.find()</code> 與 <code>List.tryFind()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.find()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryFind()</code> 傳回 <code>&#39;T option</code></li>
+<li>若找不到資料，<code>List.find()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFind()</code> 只會回傳 <code>None</code></li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFind()</code> 取代 <code>List.find()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-findBack">List.findBack</h2><hr>
+<blockquote>
+<p>從 list 尾部找出符合 predicate function 條件的第一個 element</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; &#39;T</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.findBack (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
+<p>若找不到 element，會拋出 <code>KeyNotFoundException</code>。</p>
+<blockquote>
+<p>Q：<code>List.findBack()</code> 與 <code>List.tryFindBack()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.findBack()</code> 傳回 <code>&#39;T</code>；而 <code>List.tryFindBack()</code> 傳回 <code>&#39;T option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.findBack()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindBack()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFindBack()</code> 取代 <code>List.findBack()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-findIndex">List.findIndex</h2><hr>
+<blockquote>
+<p>找出 list 中符合 predicate function 條件的第一 element 的 index</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.findIndex (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>若找不到 element，會拋出 <code>KeyNotFoundException</code>。</p>
+<blockquote>
+<p>Q：<code>List.findIndex()</code> 與 <code>List.tryFindIndex()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.findIndex()</code> 傳回 <code>int</code>；而 <code>List.tryFindIndex()</code> 傳回 <code>int option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.findIndex()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindIndex()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFindIndex()</code> 取代 <code>List.findIndex()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-findIndexBack">List.findIndexBack</h2><hr>
+<blockquote>
+<p>從 list 尾部找出符合 predicate function 條件的第一 element 的 index</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; int</code> </p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">1</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.findIndexBack (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<p>若找不到 element，會拋出 <code>KeyNotFoundException</code>。</p>
+<blockquote>
+<p>Q：<code>List.findIndexBack()</code> 與 <code>List.tryFindIndexBack()</code> 有何差異？</p>
+</blockquote>
+<p><strong>相同</strong></p>
+<ul>
+<li>都使用 predicate function 為搜尋條件</li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><p><code>List.findIndexBack()</code> 傳回 <code>int</code>；而 <code>List.tryFindIndexBack()</code> 傳回 <code>int option</code></p>
+</li>
+<li><p>若找不到資料，<code>List.findIndexBack()</code> 會拋出 <code>KeyNotFoundException</code>；但 <code>List.tryFindIndexBack()</code> 只會回傳 <code>None</code></p>
+</li>
+</ul>
+<blockquote>
+<p>實務上建議使用 <code>List.tryFindIndexBack()</code> 取代 <code>List.findIndexBack()</code>，較為安全</p>
+</blockquote>
+<h2 id="List-fold">List.fold</h2><hr>
+<blockquote>
+<p><code>List.reduce()</code> 的進階版，將 list 中每個 element 的值經過 folder function 累加</p>
+<p><code>folder : (&#39;State -&gt; &#39;T -&gt; &#39;State) -&gt; state : &#39;State -&gt; list : &#39;T list -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[ </span><br><span class="line">    (<span class="string">"Cats"</span>, <span class="number">4</span>)</span><br><span class="line">    (<span class="string">"Dogs"</span>, <span class="number">5</span>)</span><br><span class="line">    (<span class="string">"Mice"</span>, <span class="number">3</span>)</span><br><span class="line">    (<span class="string">"Elephants"</span>, <span class="number">2</span>) </span><br><span class="line">]</span><br><span class="line">|&gt; List.fold (<span class="keyword">fun</span> acc (_, num) -&gt; acc + num) <span class="number">0</span> </span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Q : <code>List.fold()</code> 與 <code>List.reduce()</code> 有何差異？</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">4</span>; <span class="number">5</span>; <span class="number">3</span>; <span class="number">2</span> ]</span><br><span class="line">|&gt; List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 14</span></span><br></pre></td></tr></table></figure>
+<p><strong>相同</strong></p>
+<ul>
+<li>都是 <code>累加</code></li>
+</ul>
+<p><strong>相異</strong></p>
+<ul>
+<li><code>List.fold()</code> 可以設定初始值；<code>List.reduce()</code> 不能設定初始值</li>
+<li><code>List.fold()</code> 可以不同型別，如 <code>(string * int) list</code> -&gt; int；<code>List.reduce()</code> 從頭到尾必須相同型別，如 <code>int lint -&gt; int</code></li>
+</ul>
+<h2 id="List-folder2">List.folder2</h2><hr>
+<blockquote>
+<p>將兩個 list 透過 folder function 累加</p>
+<p><code>folder : (&#39;State -&gt; &#39;T1 -&gt; &#39;T2 -&gt; &#39;State) -&gt; state : &#39;State -&gt; list1 : &#39;T list -&gt; list2 : &#39;T list -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ </span><br><span class="line">    (<span class="string">"Cats"</span>, <span class="number">1</span>)</span><br><span class="line">    (<span class="string">"Dogs"</span>, <span class="number">2</span>)</span><br><span class="line">    (<span class="string">"Mice"</span>, <span class="number">3</span>)</span><br><span class="line">    (<span class="string">"Elephants"</span>, <span class="number">4</span>) </span><br><span class="line">] </span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> list2 = [ </span><br><span class="line">    (<span class="string">"Cats"</span>, <span class="number">4</span>)</span><br><span class="line">    (<span class="string">"Dogs"</span>, <span class="number">5</span>)</span><br><span class="line">    (<span class="string">"Mice"</span>, <span class="number">3</span>)</span><br><span class="line">    (<span class="string">"Elephants"</span>, <span class="number">2</span>) </span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> folder acc (_, num1) (_, num2) = </span><br><span class="line">    acc + num1 + num2</span><br><span class="line"></span><br><span class="line">list1</span><br><span class="line">|&gt; List.fold2 folder <span class="number">0</span> list2 </span><br><span class="line">|&gt; printf <span class="string">"%d"</span></span><br><span class="line"><span class="comment">// 24</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-foldBack">List.foldBack</h2><hr>
+<blockquote>
+<p><code>List.reduce()</code> 的進階版，將 list 中每個 element 的值從尾部經過 folder function 累加</p>
+<p><code>folder : (&#39;T -&gt; &#39;State -&gt; State) -&gt; list : &#39;T list -&gt; state : &#39;State -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line"></span><br><span class="line">List.fold (<span class="keyword">fun</span> acc elm -&gt; elm::acc) [] list1</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line">List.foldBack (<span class="keyword">fun</span> elm acc -&gt; elm::acc) list1 []</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// [5; 4; 3; 2; 1]</span></span><br><span class="line"><span class="comment">// [1; 2; 3; 4; 5]</span></span><br></pre></td></tr></table></figure>
+<p>數值累加，從頭加到尾，或尾加到頭都一樣，有有些運算，不同方向累加結果會不一樣，此時就必須使用 <code>List.foldBack()</code> 了。</p>
+<p>注意 signature 也不太一樣。</p>
+<h2 id="List-foldBack2">List.foldBack2</h2><hr>
+<blockquote>
+<p>將兩個 list 透過 folder function 從尾部累加</p>
+<p><code>folder : (&#39;T1 -&gt; &#39;T2 -&gt; &#39;State -&gt; &#39;State) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; state : &#39;State -&gt; &#39;State</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">1</span> .. <span class="number">5</span> ]</span><br><span class="line"></span><br><span class="line">List.fold2 (<span class="keyword">fun</span> acc elm1 elm2 -&gt; elm1::elm2::acc) [] list1 list2</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line">List.foldBack2 (<span class="keyword">fun</span> elm1 elm2 acc -&gt; elm1::elm2::acc) list1 list2 []</span><br><span class="line">|&gt; printfn <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// [5; 5; 4; 4; 3; 3; 2; 2; 1; 1]</span></span><br><span class="line"><span class="comment">// [1; 1; 2; 2; 3; 3; 4; 4; 5; 5]</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-forall">List.forall</h2><hr>
+<blockquote>
+<p>判斷是否 list 的所有 element 都通過 predicate function 條件</p>
+<p><code>predicate : (&#39;T -&gt; bool) -&gt; list : &#39;T list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[ <span class="number">0</span> .. <span class="number">2</span> .. <span class="number">10</span> ]</span><br><span class="line">|&gt; List.forall (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">0</span>)</span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="List-forall2">List.forall2</h2><hr>
+<blockquote>
+<p>判斷是否兩個 list 的所有 element 都通過 predicate function 條件</p>
+<p><code>predicate : (&#39;T1 -&gt; &#39;T2 -&gt; bool) -&gt; list1 : &#39;T1 list -&gt; list2 : &#39;T2 list -&gt; bool</code></p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> list1 = [ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line"><span class="keyword">let</span> list2 = [ <span class="number">1</span> .. <span class="number">10</span>]</span><br><span class="line"></span><br><span class="line">List.forall2 (<span class="keyword">fun</span> elm1 elm2 -&gt; (elm1 + elm2) % <span class="number">2</span> = <span class="number">0</span>) list1 list2 </span><br><span class="line">|&gt; printf <span class="string">"%b"</span></span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>List module 所提供的 function 都必須非常熟練，因為這些都是常用的 Higher Order Function，算是 FP 的基本功</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://msdn.microsoft.com/en-us/" target="_blank" rel="external">MSDN</a>, <a href="https://msdn.microsoft.com/en-us/visualfsharpdocs/conceptual/collections.list-module-%5bfsharp%5d" target="_blank" rel="external">Collection.List Module (F#)</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/list-module-function-part2/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/list/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-06 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>20</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

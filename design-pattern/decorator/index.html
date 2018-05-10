@@ -1,0 +1,463 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 C# 實現 Decorator Pattern ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 FP 將有不同的實現方式">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 FP 將有不同的實現方式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 C# 實現 Decorator Pattern ?">
+<meta property="og:url" content="http://oomusou.io/design-pattern/decorator/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 FP 將有不同的實現方式">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-29T05:16:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 C# 實現 Decorator Pattern ?">
+<meta name="twitter:description" content="使用 FP 將有不同的實現方式">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 C# 實現 Decorator Pattern ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 FP 將有不同的實現方式			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Architecture"><span class="toc-article-text">Architecture</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Implementation"><span class="toc-article-text">Implementation</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#If_Else"><span class="toc-article-text">If Else</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Unit_Test"><span class="toc-article-text">Unit Test</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Decorator_Pattern"><span class="toc-article-text">Decorator Pattern</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Dependency_Injection"><span class="toc-article-text">Dependency Injection</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Delegate"><span class="toc-article-text">Delegate</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Func"><span class="toc-article-text">Func</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Decorator Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，動態對原有物件增加功能，隨著 FP 逐漸受到重視，Decorator Pattern 在實作上也有了新的面貌。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>JetBrains Rider 2017.3.1<br>C# 7.2</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
+<ul>
+<li>超過 1000 元，則 <code>全館八折</code> 再 <code>滿千送百</code></li>
+<li>不到 1000 元，則 <code>全館八折</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>先使用一般 <code>if else</code> 寫法完全需求，最後再分別以 OOP 與 FP 手法重構成 Decorator Pattern。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Decorator Pattern</p>
+<p>在不改變原有 interface 的前提下，動態增加原有的功能</p>
+</blockquote>
+<p><img src="/images/design-pattern/decorator/decorator001.svg" alt="ecorator00"></p>
+<ul>
+<li><strong>Client</strong>：<code>Context</code> 的 user，實務上可能是 component 或 controller</li>
+<li><strong>Context</strong>：提供 client 呼叫的 class，實務上可能是 service</li>
+<li><strong>ComponentInterface</strong>：定義 <code>ConcreteComponent</code> 與 <code>ConcreteDecorator</code> 的共同 interface，只有 <code>Operation()</code> </li>
+<li><strong>AbstractDecorator</strong>：負責處理 <code>ConcreteDecorator</code> 間共用的 constructor</li>
+<li><strong>ConcreteDecorator</strong>：實際要 decorate 的功能</li>
+</ul>
+<p><strong>適用時機</strong></p>
+<ul>
+<li>在不改變原有 interface 的前提下，動態增加原有的功能</li>
+<li>Decorator 的功能常會排列組合變動</li>
+</ul>
+<p><strong>優點</strong></p>
+<ul>
+<li>無論怎麼增加新功能，interface 都不會改變</li>
+<li>可以隨意的組合 decorator，方便維護</li>
+</ul>
+<p><strong>缺點</strong></p>
+<ul>
+<li>若 decorator 過多，容易造成 decorator class 數量爆炸</li>
+</ul>
+<h2 id="Architecture">Architecture</h2><hr>
+<p><img src="/images/design-pattern/decorator/decorator002.svg" alt="ecorator00"></p>
+<ul>
+<li><code>OrderService</code> 相當於 <code>Context</code></li>
+<li><code>PriceInterface</code> 相當於 <code>ComponentInterface</code>，定義 <code>DiscountComponent</code> 與 <code>RebateDecorator</code> 的共同 interface</li>
+<li><code>DiscountComponent</code> 相當於 <code>ConcreteComponent</code>，實作 <code>全館八折</code> 功能</li>
+<li><code>AbstractDecorator</code> 實作 <code>ConcreteComponent</code> 間共用的 constructor</li>
+<li><code>RebateDecorator</code> 相當於 <code>ConcreteDecorator</code>，實作 <code>滿千送百</code> 功能</li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><img src="/images/design-pattern/decorator/decorator003.svg" alt="ecorator00"></p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> OrderLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line">            <span class="keyword">var</span> originalPrice = <span class="number">1200</span>;</span><br><span class="line">            <span class="keyword">var</span> realPrice = orderService.GetPrice(originalPrice);</span><br><span class="line">            Console.WriteLine(<span class="string">"Original price:&#123;0&#125;, Real price:&#123;1&#125;"</span>, originalPrice, realPrice);</span><br><span class="line"></span><br><span class="line">            originalPrice = <span class="number">800</span>;</span><br><span class="line">            realPrice = orderService.GetPrice(originalPrice);</span><br><span class="line">            Console.WriteLine(<span class="string">"Original price:&#123;0&#125;, Real price:&#123;1&#125;"</span>, originalPrice, realPrice);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> orderService = <span class="keyword">new</span> OrderService();</span><br><span class="line"><span class="keyword">var</span> originalPrice = <span class="number">1200</span>;</span><br><span class="line"><span class="keyword">var</span> realPrice = orderService.GetPrice(originalPrice);</span><br></pre></td></tr></table></figure>
+<p>將商業邏輯都寫在 <code>OrderService</code>，當 <code>originalPrice</code> 傳入 <code>GetPrice()</code> 後，應回傳 <code>滿千送百</code> 或 <code>全館八折</code> 後的 <code>realPrice</code>。</p>
+<h3 id="If_Else">If Else</h3><p><img src="/images/design-pattern/decorator/decorator004.svg" alt="ecorator00"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (price &lt; <span class="number">1000</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> price * <span class="number">0.8</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">return</span> price * <span class="number">0.8</span> - <span class="number">100</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>if else</code> 很直覺的寫出程式碼，在不同 price 條件下，會有不同的計算 price 商業邏輯。</p>
+<p>在以上的程式碼我們發現了幾件事情：</p>
+<ul>
+<li>無論任何價錢都是 <code>全館八折</code>，所以 <code>price * 0.8</code> 已經重複</li>
+<li><code>- 100</code> 只有發生在 <code>超過 1000</code></li>
+</ul>
+<p>事實上在電子商務領域，所有的促銷折扣都可能根據需求而排列組合動態調整，目前看起來 <code>全館八折</code> 算是基本，但 <code>滿千送百</code> 算是附加上去的促銷折扣，且隨時可能調整。</p>
+<p>對於 <code>滿千送百</code>來說，算是由 <code>全館八折</code> 附加上去的，因此我們可以將 <code>滿千送百</code> 看成是 <code>全館八折</code> 的 decorator，也就是在原有的 <code>全館八折</code> 的基礎下，附加 <code>滿千送百</code> 的功能，這就是 Decorator Pattern。</p>
+<h3 id="Unit_Test">Unit Test</h3><p>在重構之前，必須要有測試保護，才能確保沒把原本的商業邏輯重構壞，因此我們先準備好 <code>OrderService</code> 的 Unit Test，確保每個 <code>if else</code> 的 path 都有測到。</p>
+<p><strong>UnitTest1.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.VisualStudio.TestTools.UnitTesting;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary.Tests</span></span><br><span class="line">&#123;</span><br><span class="line">    [TestClass]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UnitTest1</span></span><br><span class="line">    &#123;</span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> 當價錢為<span class="number">1200</span>打八折再送百後為<span class="number">860</span>()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> OrderService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.GetPrice(<span class="number">1200</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">860</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        [TestMethod]</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> 當價錢為<span class="number">800</span>送百後為<span class="number">640</span>()</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">// Arrange</span></span><br><span class="line">            <span class="keyword">var</span> target = <span class="keyword">new</span> OrderService();</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// Act</span></span><br><span class="line">            <span class="keyword">var</span> actual = target.GetPrice(<span class="number">800</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Assert</span></span><br><span class="line">            <span class="keyword">var</span> expected = <span class="number">640</span>;</span><br><span class="line">            Assert.AreEqual(expected, actual);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於本文重點不是在講 Unit Test，因此就不浪費篇幅解釋以上程式碼。</p>
+<p><img src="/images/design-pattern/decorator/decorator000.png" alt="ecorator00"></p>
+<h3 id="Decorator_Pattern">Decorator Pattern</h3><p><strong>PriceInterface</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator005.svg" alt="ecorator00"></p>
+<p><strong>PriceInterface.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">calculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>PriceInterface</code> 必須有 <code>CalculatePrice()</code>，將來其他 component 與 decorator 必須遵守此 interface。</p>
+<p><strong>DiscountComponent</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator006.svg" alt="ecorator00"></p>
+<p><strong>DiscountComponent.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DiscountComponent</span> : <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">calculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price * <span class="number">0.8</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>遵守 <code>PriceInterface</code> 下的 <code>DiscountComponent</code>，實現 <code>全館八折</code>。</p>
+<p><strong>AbstractDecorator</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator007.svg" alt="ecorator00"></p>
+<p><strong>AbstractDecorator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">AbstractDecorator</span>: <span class="title">PriceInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">protected</span> PriceInterface _component;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="title">AbstractDecorator</span>(<span class="params">PriceInterface component</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _component = component;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">AbstractDecorator</span>: <span class="title">PriceInterface</span></span><br></pre></td></tr></table></figure>
+<p><code>Decorator</code> 也要遵守 <code>PriceInterface</code>，因此對 client 而言，無論是 <code>DiscountComponent</code> 或 <code>RebateDecorator</code> ，都視為 <code>PriceInterface</code> 物件，這樣 client 就可以在 interface 沒有變動的前提下，替 component 增加 decorator 功能，符合 <code>開放封閉原則</code> 要求。</p>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> PriceInterface _component;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">AbstractDecorator</span>(<span class="params">PriceInterface component</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    _component = component;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所有 decorator 必須由其 constructor 傳入 component 或 decorator，但因為這兩個 class 都是實作 <code>PriceInterface</code>， 可以抽象化視為 <code>PriceInterface</code> 型別物件。</p>
+<p>由於每個 decorator 都會使用相同的 constructor 處理 <code>PriceInterface</code> 型別物件，所以特別抽出來寫在 <code>AbstractDecorator</code>。</p>
+<blockquote>
+<p>Decorator Pattern 之所以會特別有 <code>AbstractDecorator</code> 設計，主要也是要避免各 decorator 的 constructor 程式碼重複問題</p>
+</blockquote>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span>;</span><br></pre></td></tr></table></figure>
+<p><code>caluculatePrice()</code> 為 <code>PriceInterface</code> 所定義，因為各 <code>Decorator</code> 會有自己的 <code>calculatePrice()</code> 方式，因此不需由 <code>AbstractDecorator</code> 實作，宣告為 <code>abstract</code> 即可，交由 <code>ConcreateDecorator</code> 自行實作。</p>
+<p><strong>RebateDecorator</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator008.svg" alt="rchitectur"></p>
+<p><strong>RebateDecorator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RebateDecorator</span>: <span class="title">AbstractDecorator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">RebateDecorator</span>(<span class="params">PriceInterface component</span>) : <span class="title">base</span>(<span class="params">component</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _component.calculatePrice(price) - <span class="number">100</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RebateDecorator</span>: <span class="title">AbstractDecorator</span></span><br></pre></td></tr></table></figure>
+<p>因為 <code>AbstractDecorator</code> 已經幫我們處理共用 constructor 部分，因此要繼承 <code>AbstractDecorator</code>，但別忘了 <code>AbstractDecorator</code> 也是實作 <code>PriceInterface</code>，根據 <code>里式替換原則</code>，因此 <code>RebateDecorator</code> 也還是 <code>PriceInterface</code> 型別。</p>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">RebateDecorator</span>(<span class="params">PriceInterface component</span>) : <span class="title">base</span>(<span class="params">component</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>當 component 或 decorator 透過 constructor 傳入時，再透過 <code>base</code> 傳入 <code>AbstractDecorator</code> 的 constructor，因為共用的 constructor 已經抽到 <code>AbstractDecorator</code> 了。</p>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _component.calculatePrice(price) - <span class="number">100</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>真正實現 <code>滿千送百</code> 部分，但別忘 <code>滿千送百</code> 是 decorator，是依附在 <code>全館八折</code> 下，因此必須先執行 <code>_component.calculatePrice(price)</code>，也就是先計算 <code>全館八折</code> 後，再 <code>-100</code> 實現 <code>滿千送百</code>。</p>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator004.svg" alt="ecorator00"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (price &lt; <span class="number">1000</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line">                <span class="keyword">return</span> discountComponent.CalculatePrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line">                PriceInterface rebateDecorator = <span class="keyword">new</span> RebateDecorator(discountComponent);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">return</span> rebateDecorator.CalculatePrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line"><span class="keyword">return</span> discountComponent.CalculatePrice(price);</span><br></pre></td></tr></table></figure>
+<p>計算 <code>全館八折</code>。</p>
+<p>建立 <code>DiscountComponent</code> 物件，並執行 <code>CalculatePrice()</code> 計算。</p>
+<p>值得注意 <code>discountComponent</code> 的型別為 <code>PriceInterface</code>。</p>
+<blockquote>
+<p>Q : <code>PriceInterface</code> 可用 <code>var</code> 取代嗎？</p>
+</blockquote>
+<p>這裏 <code>var</code> 會將 <code>discountComponent</code> 推導為 <code>DiscountComponent</code> 型別，雖然不會執行錯誤，但 intention 不對。</p>
+<p>因為這裡所要表現的就是 <code>ConcreteComponent</code> 與 <code>ConcreteDecorator</code> 都是相同的 <code>ComponentInterface</code>，也就是物件導向的 <code>多型</code>，但卻被 <code>var</code> 的 Type Inference 推導為 <code>PriceInterface</code>，與我們預期不合。</p>
+<blockquote>
+<p><code>var</code> 適合用在 primitive type，如 (<code>int</code>、<code>string</code> …)，或具體的 <code>class</code> type，這些都能被 Type Inference 所正確推導，但不適合用在使用 <code>interface</code> 與 <code>abstract class</code> 展現<code>多型</code> 時，就算執行不會錯，但 intention 與 <code>語意</code> 不佳</p>
+</blockquote>
+<p>14 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line">PriceInterface rebateDecorator = <span class="keyword">new</span> RebateDecorator(discountComponent);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> rebateDecorator.CalculatePrice(price);</span><br></pre></td></tr></table></figure>
+<p>計算 <code>全館八折</code> + <code>滿千送百</code>。</p>
+<p>先建立 <code>DiscountComponent</code>，此為 <code>全館八折</code>。</p>
+<p>再建立 <code>RebateDecorator</code>，並將 <code>DiscountComponent</code> 傳入，此為以 <code>全館八折</code> 為基底，再附加 <code>滿千送百</code> 計算。</p>
+<p>值得注意的是無論怎麼 decorate，最後都還是 <code>PriceInterface</code> 型別，因此可使用相同的 <code>CalculatePrice()</code> 繼續計算。</p>
+<blockquote>
+<p>Decorator Pattern 可貴之處就在於沒破壞原本 interface，就能增加新功能，如可以將 component  與經過 decorator 裝飾過的物件都放在 <code>List</code> 內，因為 interface 都相同，所以型別也相同，可抽象化廣義是為 <code>同型別</code> 物件加以操作，符合 <code>開放封閉原則</code> 要求</p>
+</blockquote>
+<h3 id="Dependency_Injection">Dependency Injection</h3><p>很多 Design Pattern 都是以 constructor 作為傳入 <code>初始值</code>，在 Decorator Pattern 也不例外，直接將 component 或 decorator 傳入 <code>ConcreteDecorator</code>。</p>
+<p>但在目前 DI 的世界則面臨挑戰，Decorator Pattern 不再適合使用 constructor 傳入任何物件，而必須將 constructor 讓給 DI。</p>
+<p><img src="/images/design-pattern/decorator/decorator009.svg" alt="ecorator00"></p>
+<p>新增 <code>DecoratorInterface</code>描述 <code>Decorator()</code>，<code>AbstractDecorator</code> 必須同時實現 <code>PriceInterface</code> 與  <code>DecoratorInterface</code> 兩個 interface。</p>
+<p><strong>DecoratorInterface</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator010.svg" alt="ecorator01"></p>
+<p><strong>DecoratorInterface.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">DecoratorInterface</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">PriceInterface <span class="title">Decorate</span>(<span class="params">PriceInterface component</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>DecoratorInterface</code> 必須有 <code>Decorate()</code>，將來其他 decorator 必須遵守此 interface。</p>
+<p>原本 Decorator Pattern 是透過 constructor 傳入原有物件，現在要改透過 <code>Decorate()</code>。</p>
+<p>值得注意的是 <code>Decorate()</code> 的 input 為 <code>PriceInterface</code> 型別，回傳也是 <code>PriceInterface</code> 型別，也就是經過 decorate 的物件，仍然有相同的 interface，不會改變型別，可順便做 fluent interface 操作。</p>
+<blockquote>
+<p>Q : 為什麼不在 <code>PriceInterface</code> 新增 <code>Decorate()</code> 即可，還要新增 <code>DecorateInterface</code>？</p>
+</blockquote>
+<p>由於 <code>DiscountComponent</code> 與 <code>RebateDecorator</code> 共用 <code>PriceInterface</code>，且 <code>Decorate()</code> 主要是為了 decorator 所用，加在 <code>PriceInterface</code> 會造成 <code>DiscountComponent</code> 有 <code>Decorate()</code> 的空實作，這違反了 <code>介面隔離原則</code> ，所以必須另外開新的 interface。</p>
+<p><strong>AbstractDecorator</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator011.svg" alt="ecorator01"></p>
+<p><strong>AbstractDecorator.cs</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">namespace OrderLibrary</span><br><span class="line">&#123;</span><br><span class="line">    public abstract class AbstractDecorator: PriceInterface, DecoratorInterface</span><br><span class="line">    &#123;</span><br><span class="line">        protected PriceInterface _component;</span><br><span class="line"></span><br><span class="line">        public PriceInterface Decorate(PriceInterface component)</span><br><span class="line">        &#123;</span><br><span class="line">            _component = component;</span><br><span class="line">            return this;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        public abstract double calculatePrice(double price);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public abstract class AbstractDecorator: PriceInterface, DecoratorInterface</span><br></pre></td></tr></table></figure>
+<p><code>AbstractDecorator</code> 除了必須實作原有的 <code>PriceInterface</code> 外，為了解決 DI 問題，還必須同時實作 <code>DecoratorInterface</code>。</p>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> PriceInterface _component;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> PriceInterface <span class="title">Decorate</span>(<span class="params">PriceInterface component</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    _component = component;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>PriceInterface</code> 物件由原本的 constructor 傳入，改透過 <code>Decorate()</code> 傳入，最後傳回 <code>this</code>，可順便做 fluent interface 操作。</p>
+<p><strong>RebateDecorator</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator012.svg" alt="ecorator01"></p>
+<p><strong>RebateDecorator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RebateDecorator</span>: <span class="title">AbstractDecorator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">calculatePrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _component.calculatePrice(price) - <span class="number">100</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因為已經改由 <code>Decorate()</code> 傳入物件，將原有的 constructor 刪除。</p>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator013.svg" alt="ecorator01"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (price &lt; <span class="number">1000</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line">                <span class="keyword">return</span> discountComponent.calculatePrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line">                <span class="keyword">var</span> rebateDecorator = <span class="keyword">new</span> RebateDecorator().Decorate(discountComponent);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> rebateDecorator.calculatePrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>16 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PriceInterface discountComponent = <span class="keyword">new</span> DiscountComponent();</span><br><span class="line"><span class="keyword">var</span> rebateDecorator = <span class="keyword">new</span> RebateDecorator().Decorate(discountComponent);</span><br><span class="line">                </span><br><span class="line"><span class="keyword">return</span> rebateDecorator.calculatePrice(price);</span><br></pre></td></tr></table></figure>
+<p>原本 <code>DiccountComponent</code> 是由 <code>RebateDecorator</code> 的 constructor 傳入，現在改由 <code>Decorate()</code> 傳入。</p>
+<h3 id="Delegate">Delegate</h3><p>從 Decorator Pattern，我們看到了 OOP 幾個缺點：</p>
+<ul>
+<li>原本簡單的 <code>if ... else</code> 被拆成很多檔案，導致 class 爆炸</li>
+<li><code>ComponentInterface</code>、<code>DecoratorInterface</code>、<code>AbstractDecorator</code> 等新增的 class 與需求無關，算是因為使用 Decorator Pattern 所產生的額外 class</li>
+<li><code>interface</code> 雖然有制定 spec 與 compiler 編譯檢查的優點，但是只有一個 method 的 interface，是否有有開 <code>interface</code> 的需要？</li>
+</ul>
+<p>雖然 <code>PriceInterface</code> 定義了 <code>CalculatePrice()</code>，但整個 <code>interface</code> 只有一個 method，顯然使用 <code>interface</code> 有殺雞用牛刀之嫌，此時可將 <code>interface</code> 退化成 <code>delegate</code>。</p>
+<p><img src="/images/design-pattern/decorator/decorator014.svg" alt="ecorator01"></p>
+<p><strong>PriceDelegate</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator015.svg" alt="ecorator01"></p>
+<p><strong>PriceDelegate.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">double</span> <span class="title">PriceDelegate</span>(<span class="params"><span class="keyword">double</span> price</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>PriceDelegate</code> delegate，其 signature 為 <code>double =&gt; double</code>，也就是 input 為 <code>double</code>，return 為 <code>double</code>。</p>
+<blockquote>
+<p>實務上 Decorator Pattern 通常只有一個 method，所以就很適合將 interface 退化成 delegate</p>
+</blockquote>
+<p><strong>PriceComponent</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator016.svg" alt="ecorator01"></p>
+<p><strong>PriceComponent.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">PriceComponent</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">double</span> <span class="title">CalculateDiscountPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price * <span class="number">0.8</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>從 <code>DiscountComponent</code> 退化成 <code>PriceComponent</code>，將 <code>CalculatePrice()</code> 改成 <code>CalculateDiscountPrice()</code>。</p>
+<p>將每個 <code>ConcreteComponent</code> 改用 function 表示，也由於當 pure function 用，此時使用 static 即可。</p>
+<p><strong>PriceDecorator</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator017.svg" alt="ecorator01"></p>
+<p><strong>PriceDecorator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">PriceDecorator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> PriceDelegate <span class="title">CalculateRebatePrice</span>(<span class="params">PriceDelegate originalFn</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> price =&gt; orginalFn(price) - <span class="number">100</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將每個 decorator 以 function 表示，此時改用 static function 即可。</p>
+<p><code>orginalFn</code> 即為原本的 function，<code>CalculateRebatePrice()</code> 則為 Higher Order Function。</p>
+<p><code>CalculateRebatePrice()</code> 回傳的是 <code>PriceDelegate</code>，所以要 return Lambda。</p>
+<blockquote>
+<p>一般來說，OOP 都建議不要使用 <code>static</code>，但這裡是例外，此時是將 class 當成 module 看待，<code>static function</code> 是當成 FP 的 <code>pure function</code> 使用，也就是這種 class 將沒有 field，也不使用 OOP 的 <code>繼承</code> 與 <code>組合</code>。</p>
+</blockquote>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator018.svg" alt="ecorator01"></p>
+<p><strong>OrderService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (price &lt; <span class="number">1000</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                PriceDelegate calculateDiscountPrice = PriceComponent.CalculateDiscountPrice; </span><br><span class="line">                <span class="keyword">return</span> calculateDiscountPrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                PriceDelegate calculateDiscountPrice = PriceComponent.CalculateDiscountPrice;</span><br><span class="line">                PriceDelegate calculateRebatePrice = PriceDecorator.CalculateRebatePrice(calculateDiscountPrice);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> calculateRebatePrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>14 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PriceDelegate calculateDiscountPrice = PriceComponent.CalculateDiscountPrice;</span><br><span class="line">PriceDelegate calculateRebatePrice = PriceDecorator.CalculateRebatePrice(calculateDiscountPrice);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> calculateRebatePrice(price);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在 OOP 是 <code>ConcreteComponent</code> 與 <code>ConcreteDecorator</code>  的型別都是 <code>ComponentInterface</code> </li>
+<li>在 FP 化之後，<code>CalculateDiscountPrice()</code>  與 <code>CalculateRebatePrice()</code> 的型別都是 <code>PriceDelegate</code> </li>
+</ul>
+<p>將原來的 <code>CalculateDiscountPrice</code> 傳入 <code>CalculateRebatePrice()</code> 後，就相當於以 <code>CalculateRebatePrice()</code> 去 decorate 原來的 <code>CalculateDiscountPrice()</code>。</p>
+<blockquote>
+<p>我們可以發現 OOP 的 Decorator Pattern，對於 FP 本質來說只是 Higher Order Function  的應用；將 function 傳入 Higher Order Function，就相當於以 Higher Order Function 加以 decorate。</p>
+</blockquote>
+<h3 id="Func">Func<t></t></h3><p>雖然 <code>PriceDelegate</code> 定義 function 的 spec 的理念很不錯，若 <code>delegate</code> 只使用一遍，真的需要開一個檔案建立 <code>delegate</code> 嗎 ?</p>
+<p><img src="/images/design-pattern/decorator/decorator019.svg" alt="ecorator01"></p>
+<p>將 <code>PriceDelegate</code> 刪除。</p>
+<p><strong>PriceDecorator</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator020.svg" alt="ecorator01"></p>
+<p><strong>PriceDecorator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">PriceDecorator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; CalculateRebatePrice(Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; fn)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> price =&gt; fn(price) - <span class="number">100</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接以 <code>Func&lt;double, double&gt;</code> 取代 <code>PriceDelegate</code>，其餘不變。</p>
+<p><strong>OrderService</strong></p>
+<p><img src="/images/design-pattern/decorator/decorator021.svg" alt="ecorator01"></p>
+<p><strong>OrderService.ts</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">OrderLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"><span class="keyword">double</span> price</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (price &lt; <span class="number">1000</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; calculateDiscountPrice = PriceComponent.CalculateDiscountPrice; </span><br><span class="line">                <span class="keyword">return</span> calculateDiscountPrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; calculateDiscountPrice = PriceComponent.CalculateDiscountPrice;</span><br><span class="line">                Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; calculateRebatePrice = PriceDecorator.CalculateRebatePrice(calculateDiscountPrice);</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> calculateRebatePrice(price);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接以 <code>Func&lt;double, double&gt;</code> 取代 <code>PriceDelegate</code>，其餘不變。</p>
+<blockquote>
+<p>我們可以發現 FP 化的 Decorator Pattern，基本上已經沒有 interface，所有的 <code>ConcreteComponent</code> 都簡化成 <code>PriceComponent</code>；而所有的 <code>ConcreteComponent</code> 都簡化成 <code>PriceDecorator</code>，而且也沒用到什麼高深的技巧，就只有 FP 的基本招式：Higher Order Function。</p>
+<p>也就是 function 的組合遠比 object 組合容易，因此並不需要動用到 interface 與 abstract class 等複雜的機制。</p>
+</blockquote>
+<h2 id="Summary">Summary</h2><hr>
+<p>以 SOLID 角度重新審視經過 FP 二次重構後的 Decorator Pattern：</p>
+<ul>
+<li><strong>單一職責原則</strong>：將所有的 decorator function 統一整理在 <code>PriceDecorator</code>，符合 SRP</li>
+<li><strong>開放封閉原則</strong>：將來若有新的 decorator function，只要統一加在 <code>PriceDecorator</code> 即可，符合 OCP</li>
+<li><strong>里氏替換原則</strong>：因為沒用到繼承，所以沒有違反 LSP 問題</li>
+<li><strong>最小知識原則</strong>：decorator function 並沒有暴露到 client，符合 LKP</li>
+<li><strong>介面隔離原則</strong>：因為從 <code>interface</code> 退化成 <code>delegate</code>，FP 天生符合 ISP</li>
+<li><strong>依賴反轉原則</strong>：service 與 decorator 之間的耦合僅限於 <code>delegate</code> 與 <code>Func&lt;T&gt;</code>，而不是直接耦合與特定 function，符合 DIP</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Decorator 本質就是 object 的組合，但 object 的組合沒 function 簡單直覺，所以需要搭配 interface 與 abstract class，但若純 function，只要使用 Higher Order Function 即可簡單完成</li>
+<li>FP 的出現，讓 Design Pattern 的實踐方式，不再只有 OOP 一途，可視實際需求決定該使用 OOP 或 FP</li>
+<li>OOP 讓我們以 <code>抽象設計</code> 的角度看系統，但 FP 讓我們以 <code>簡化設計</code> 的角度看系統，實務上建議以 OOP 做第一階段的重構，再輔以 FP 做第二階段的重構，可解決 OOP 容易 Over Design 的問題</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Core2OrderDecorator" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/sonarqube/docker/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/porting/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-28 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/C/">C#<span>7</span></a></li> <li><a href="/tags/Design-Pattern/">Design Pattern<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
