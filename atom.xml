@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-12T16:29:40.312Z</updated>
+  <updated>2018-05-12T16:34:46.590Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/javascript/currying/"/>
     <id>http://oomusou.io/javascript/currying/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-05-12T16:29:40.312Z</updated>
+    <updated>2018-05-12T16:34:46.590Z</updated>
     <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
 <p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援 Currying，但因為 JavaScript 支援 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
 <a id="more"></a>
@@ -32,7 +32,7 @@
 <p>將一個多 argument 的 function 改寫成多個只有一個 argument 的 function，稱為 <strong>currying</strong></p>
 <p><strong><em>Haskell B. Curry</em></strong></p>
 </blockquote>
-<p>Haskell B. Curry 是為數學家，為了紀念他，Haskell 語言是使用其 <code>名</code>，而 Curry 概念則是使用其 <code>姓</code>。</p>
+<p>Haskell B. Curry 是位數學家，為了紀念他，Haskell 語言是使用其 <code>名</code>，而 Curry 概念則是使用其 <code>姓</code>。</p>
 <h2 id="Simple_Currying">Simple Currying</h2><hr>
 <p><strong>NonCurrying.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = <span class="function"><span class="keyword">function</span> (<span class="params">hi, target, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> words = greeting(<span class="string">'Hello'</span>, <span class="string">'World'</span>, <span class="string">'Sam'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(words);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>

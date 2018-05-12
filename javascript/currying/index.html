@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="FP 最常用的設計模式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-05-12T16:29:40.312Z">
+<meta property="og:updated_time" content="2018-05-12T16:34:46.590Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入淺出 FP 之設計模式：Currying">
 <meta name="twitter:description" content="FP 最常用的設計模式">
@@ -119,7 +119,7 @@
 <p>將一個多 argument 的 function 改寫成多個只有一個 argument 的 function，稱為 <strong>currying</strong></p>
 <p><strong><em>Haskell B. Curry</em></strong></p>
 </blockquote>
-<p>Haskell B. Curry 是為數學家，為了紀念他，Haskell 語言是使用其 <code>名</code>，而 Curry 概念則是使用其 <code>姓</code>。</p>
+<p>Haskell B. Curry 是位數學家，為了紀念他，Haskell 語言是使用其 <code>名</code>，而 Curry 概念則是使用其 <code>姓</code>。</p>
 <h2 id="Simple_Currying">Simple Currying</h2><hr>
 <p><strong>NonCurrying.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = <span class="function"><span class="keyword">function</span> (<span class="params">hi, target, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> words = greeting(<span class="string">'Hello'</span>, <span class="string">'World'</span>, <span class="string">'Sam'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(words);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
