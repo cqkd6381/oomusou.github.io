@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-10T06:28:39.219Z</updated>
+  <updated>2018-05-12T16:28:11.995Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,172 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[深入淺出 FP 之設計模式：Currying]]></title>
+    <link href="http://oomusou.io/javascript/currying/"/>
+    <id>http://oomusou.io/javascript/currying/</id>
+    <published>2018-08-13T12:23:43.000Z</published>
+    <updated>2018-05-12T16:28:11.995Z</updated>
+    <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
+<p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援 Currying，但因為 JavaScript 支援 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p><strong>Currying</strong></p>
+<p>There is a way to reduce functions of more than one argument to functions of one argument, a way called <strong>currying</strong></p>
+<p>將一個多 argument 的 function 改寫成多個只有一個 argument 的 function，稱為 <strong>currying</strong></p>
+<p><strong><em>Haskell B. Curry</em></strong></p>
+</blockquote>
+<p>Haskell B. Curry 是為數學家，為了紀念他，Haskell 語言是使用其 <code>名</code>，而 Curry 概念則是使用其 <code>姓</code>。</p>
+<h2 id="Simple_Currying">Simple Currying</h2><hr>
+<p><strong>NonCurrying.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = <span class="function"><span class="keyword">function</span> (<span class="params">hi, target, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> words = greeting(<span class="string">'Hello'</span>, <span class="string">'World'</span>, <span class="string">'Sam'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(words);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
+<p>我們以最簡單的 Hello World 為例，傳統 function 都會有多個 argument，在 <code>greeting()</code> 我們分別有 <code>hi</code>、<code>target</code> 與 <code>name</code> 3 個 argument。</p>
+<p>根據 Currying 的定義，我們可將一個 function 有 3 個 argument，改寫成 3 個 function  各有 1 個 argument 。</p>
+<p><strong>CurryingES5.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = <span class="function"><span class="keyword">function</span> (<span class="params">hi</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">target</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> words = greeting(<span class="string">'Hello'</span>)(<span class="string">'World'</span>)(<span class="string">'Sam'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(words);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = <span class="function"><span class="keyword">function</span> (<span class="params">hi</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">target</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>由於 Currying 要求每個 function 都只能有 1 個 argument，因此我們必須 <code>return</code> 兩次 function，直到最後一個 <code>return</code> 才會真正回傳值。</p>
+<p>為什麼最內層的 <code>function (name)</code> 可以抓到 <code>hi</code> 與 <code>target</code> 呢 ? 拜 JavaScript 的 Closure 之賜：<code>內層 function 可以直接 reference 到 funtion 之外的變數，而不必靠 parameter 傳入</code>，因此 <code>function (name)</code> 可直接使用 <code>hi</code> 與 <code>target</code>。</p>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> words = greeting(<span class="string">'Hello'</span>)(<span class="string">'World'</span>)(<span class="string">'Sam'</span>);</span><br></pre></td></tr></table></figure>
+<p>因此 <code>greeting(&#39;Hello&#39;)</code> 為只有 1 個 argument 的 function，可再傳入 <code>World</code>。</p>
+<p>而 <code>greeting(&#39;Hello&#39;)(&#39;World&#39;)</code> 亦為一只有 1 個 argument 的 function，可再傳入 <code>Sam</code>。</p>
+<p>所以 <code>greeting(&#39;Hello&#39;)(&#39;World&#39;)(&#39;Sam&#39;)</code> 其實相當於 <code>greeting(&#39;Hello&#39;, &#39;World&#39;, &#39;Sam&#39;)</code>，我們將原本 1 個 function 有 3 個 argument，變成 3 個 function 各有 1 個 argument。</p>
+<p><strong>CurryingES6.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = hi =&gt; target =&gt; name =&gt; </span><br><span class="line">   hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> words = greeting(<span class="string">'Hello'</span>)(<span class="string">'World'</span>)(<span class="string">'Sam'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(words);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
+<p>拜 ECMAScript 2015 之賜，我們有了 Arrow Function，就不必再使用 <code>巢狀 function</code> 的寫法，程式碼更簡潔，可讀性也變高，這也使得 Currying 的實用性更高。</p>
+<p>在此亂入一下 F# 的 Currying，與 JavaScript 的 Currying 比較：</p>
+<p><strong>CurryingFSharp.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> greeting hi target name =</span><br><span class="line">   hi + <span class="string">" "</span> + target + <span class="string">" "</span> + name</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> words = greeting <span class="string">"Hello"</span> <span class="string">"World"</span> <span class="string">"Sam"</span></span><br><span class="line">printfn <span class="string">"%s"</span> words</span><br><span class="line"></span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
+<p>JavaScript 的 <code>const</code> 相當於 F# 的 <code>let</code>。</p>
+<p>JavaScript 的 argument 寫在 <code>=</code> 之後，每個參數以 <code>=&gt;</code> 隔開；而 F# 只要在 function 名稱之後以 space 隔開即可。</p>
+<p>JavaScript 的 parameter 須以 <code>()</code> 一一傳入；而 F# 只要在 function 名稱之後以 space 隔開即可。</p>
+<p>ECMAScript 2015 有了 Arrow Function 之後，可讀性與簡潔性已經與正統 FP 的 F# 差距不大了。</p>
+<blockquote>
+<p>Q：將傳統 function 改寫成 Currying 不難，但為什麼要這樣寫呢 ?</p>
+</blockquote>
+<p>的確，要改寫成 Currying 並不難，尤其在 ECMAScript 2015 之後，Arrow Function 使得 Currying 寫法非常精簡，也沒有必要再因為 <code>巢狀 function</code> 可讀性不高而排斥 Currying。</p>
+<p>但回到一個更基本的問題，為什麼要使用 Currying 這種設計模式呢 ? 請耐心看下去，我將一一說明。</p>
+<h2 id="Why_Currying_?">Why Currying ?</h2><hr>
+<h3 id="Reuse_Small_Function">Reuse Small Function</h3><blockquote>
+<p>拆成眾多的小 function，以利後續 code reuse</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = <span class="function"><span class="keyword">function</span> (<span class="params">hi, target, name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>若一次得傳入 3 個 parameter，我們只有一個  <code>greeting()</code> function 可用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = hi =&gt; target =&gt; name =&gt; </span><br><span class="line">   hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br></pre></td></tr></table></figure>
+<p>若改用 Currying  寫法，我們總共有 3 個 function 可用：</p>
+<ul>
+<li><code>greeting()</code></li>
+<li><code>greeting()()</code></li>
+<li><code>greeting()()()</code> </li>
+</ul>
+<p>在原本 <code>greeting()</code>，我們要用 reuse，一次就得提供 3 個  argument，否則就無法重複使用。</p>
+<p>但 Currying 過的 <code>greeting()</code>，變成了 3 個 function，我們可以依實際需求取用 <code>greeting()</code>，儘管只有 1 個  parameter，也一樣能夠使用 <code>greeting()</code>。</p>
+<p>假設我們有個 function，只有 <code>name</code> 為 argument，回傳為 <code>Hello World Sam</code> 或 <code>Hello World Kevin</code>，原本 3 個 argument 的 <code>greeting()</code> 就無法被重複使用，但 Currying 過的 <code>greeting()</code> 就能被重複使用。</p>
+<p><strong>ReuseSmallFunction.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> greeting = hi =&gt; target =&gt; name =&gt;</span><br><span class="line">    hi + <span class="string">' '</span> + target + <span class="string">' '</span> + name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> helloWorld = greeting(<span class="string">'Hello'</span>)(<span class="string">'World'</span>);</span><br><span class="line"><span class="keyword">const</span> words = helloWorld(<span class="string">'Sam'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(words);</span><br></pre></td></tr></table></figure>
+<p>第 4 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> helloWorld = greeting(<span class="string">'Hello'</span>)(<span class="string">'World'</span>);</span><br></pre></td></tr></table></figure>
+<p>藉由 <code>greeting(&#39;Hello&#39;)(&#39;World&#39;)</code> 輕鬆建立新的 <code>helloWorld()</code> ，將來只接受 1 個  argument。</p>
+<p>Currying 過的 <code>greeting()</code>，因為顆粒變小，因此能被 reuse 的機會就更高了。</p>
+<blockquote>
+<p>回想小時候玩樂高積木，哪一種積木最好用 ?</p>
+<p>就是顆粒最小的積木最好用，可以說是百搭。Currying 就是把 function 都切成顆粒最小的單一 argument function，因此可藉由 argument 的組合，由一個 function 不斷地組合出新的 function</p>
+</blockquote>
+<h3 id="Higher_Order_Function">Higher Order Function</h3><blockquote>
+<p><strong>Higher Order Function</strong></p>
+<p>可以傳入 function 或傳回 function 的 function，通常會將 <code>重複部分</code> 抽成 higher order function，將 <code>不同部分</code> 以 arrow function 傳入</p>
+</blockquote>
+<p>要支援 Higher Order Function 有個前提，語言必須支援 First-Class Function，這在 JavaScript 很早就支援，所以沒有問題。</p>
+<p><strong>BeforeRefactoring.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prices = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> calculatePrice1 = prices =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> sum = prices  =&gt;</span><br><span class="line">        prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum(prices) - <span class="number">10</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> calculatePrice2 = prices =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> sum = prices  =&gt;</span><br><span class="line">        prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum(prices) * <span class="number">0.9</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(calculatePrice1(prices));</span><br><span class="line"><span class="built_in">console</span>.log(calculatePrice2(prices));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 50</span></span><br><span class="line"><span class="comment">// 54</span></span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calculatePrice1 = prices =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> sum = prices  =&gt;</span><br><span class="line">        prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum(prices) - <span class="number">10</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>與</p>
+<p>10 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calculatePrice2 = prices =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> sum = prices  =&gt;</span><br><span class="line">        prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum(prices) * <span class="number">0.9</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>非常類似，最少已經看到以下這部分重複：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sum = prices  =&gt;</span><br><span class="line">    prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> sum(prices)</span><br></pre></td></tr></table></figure>
+<p>所以想將這部分抽成 Higher Order Function。</p>
+<p><strong>HigherOrderFunction.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prices = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sum = prices =&gt;</span><br><span class="line">    prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> calculate = prices =&gt; action =&gt;</span><br><span class="line">    action(sum(prices));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> calculatePrice = calculate(prices);</span><br><span class="line"><span class="built_in">console</span>.log(calculatePrice(sum =&gt; sum - <span class="number">10</span>));</span><br><span class="line"><span class="built_in">console</span>.log(calculatePrice(sum =&gt; sum * <span class="number">0.9</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 50</span></span><br><span class="line"><span class="comment">// 54</span></span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sum = prices =&gt;</span><br><span class="line">    prices.reduce((acc, elm) =&gt; acc + elm);</span><br></pre></td></tr></table></figure>
+<p>將 <code>sum()</code> 先抽成 function。</p>
+<p>第 6 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calculate = prices =&gt; action =&gt;</span><br><span class="line">    action(sum(prices));</span><br></pre></td></tr></table></figure>
+<p>將共用部分抽成 <code>calculate()</code> higher order function，argument 除了原本的 <code>prices</code> 外，還多了 <code>action</code>，其中 <code>action</code> 正是 <code>不同部分</code>。</p>
+<p>將 <code>sum(prices)</code> 運算結果傳給 <code>action()</code>。</p>
+<p> 第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calculatePrice = calculate(prices);</span><br></pre></td></tr></table></figure>
+<p>由於 <code>calculate()</code> 已經 currying 過，因此 <code>calculate(prices)</code> 回傳為 funciton。</p>
+<p>第 10 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(calculatePrice(sum =&gt; sum - <span class="number">10</span>));</span><br><span class="line"><span class="built_in">console</span>.log(calculatePrice(sum =&gt; sum * <span class="number">0.9</span>));</span><br></pre></td></tr></table></figure>
+<p>將 <code>不同部分</code> 分別以 <code>sum =&gt; sum -10</code> 與 <code>sum =&gt; sum * 0.9</code> 帶入 <code>calculate()</code> higher order function，正式計算其值。</p>
+<blockquote>
+<p>若我們不將 <code>calculate()</code> curry 化，則無法傳回 function，只能回傳值，如此就無法將 <code>不同部分</code> 以 arrow function 傳入</p>
+</blockquote>
+<h3 id="Function_Composition">Function Composition</h3><blockquote>
+<p>將小 function 組合成功能強大的新 function</p>
+</blockquote>
+<p><strong>ComposeFailed.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prices = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> discount = (rate, prices) =&gt;</span><br><span class="line">    prices.map(elm =&gt; elm * rate);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sum = prices =&gt;</span><br><span class="line">    prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> compose = (...fns) =&gt;</span><br><span class="line">    fns.reduce((f, g) =&gt; (...args) =&gt; f(g(...args)));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> action = compose(sum, discount(<span class="number">0.8</span>));</span><br><span class="line"><span class="built_in">console</span>.log(action(prices));</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> discount = (rate, prices) =&gt;</span><br><span class="line">    prices.map(elm =&gt; elm * rate);</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>discount()</code> ，使用傳統 2 個 argument 的寫法。</p>
+<p>第 6 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sum = prices =&gt;</span><br><span class="line">    prices.reduce((acc, elm) =&gt; acc + elm);</span><br></pre></td></tr></table></figure>
+<p>宣告 <code>sum()</code>，使用 <code>reduce()</code> 計算 array 的總和。</p>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> compose = (...fns) =&gt;</span><br><span class="line">    fns.reduce((f, g) =&gt; (...args) =&gt; f(g(...args)));</span><br></pre></td></tr></table></figure>
+<p>自己寫一個 <code>compose()</code> ，目的將所有 function 組合成一個新的 function。</p>
+<blockquote>
+<p>實務上可以使用 Ramda.js 的 <code>R.compose()</code> 將 function 組合</p>
+</blockquote>
+<p>12 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> action = compose(sum, discount(<span class="number">0.8</span>));</span><br><span class="line"><span class="built_in">console</span>.log(action(prices));</span><br></pre></td></tr></table></figure>
+<p>這裡會出問題，因為 <code>discount()</code> 尚未 currying，必須一次提供 2 個 argument，無法單獨只提供 <code>0.8</code> 一個 argument。</p>
+<blockquote>
+<p>在純 FP 語言如 Haskell、F# 會自動 currying，所以不是問題，但 JavaScript 必須手動 currying，或者使用 Ramda.js 的 <code>R.curry()</code> 將原本的 function 加以 currying</p>
+</blockquote>
+<p><strong>CurryingCompose.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> prices = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> discount = rate =&gt; prices =&gt;</span><br><span class="line">    prices.map(elm =&gt; elm * rate);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sum = prices =&gt;</span><br><span class="line">    prices.reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> compose = (...fns) =&gt;</span><br><span class="line">    fns.reduce((f, g) =&gt; (...args) =&gt; f(g(...args)));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> action = compose(sum, discount(<span class="number">0.8</span>));</span><br><span class="line"><span class="built_in">console</span>.log(action(prices));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 48</span></span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> discount = rate =&gt; prices =&gt;</span><br><span class="line">    prices.map(elm =&gt; elm * rate);</span><br></pre></td></tr></table></figure>
+<p>將 <code>discount()</code> 改成 currying 寫法後，就可以使用 <code>compose()</code> 將 <code>sum()</code> 與 <code>discount()</code> 組合成一個新的 <code>action()</code>。</p>
+<blockquote>
+<p>為了使用 Function Composition，我們會將多個 argument 的 function，currying 成眾多單一 argument 的 function，然後再加以組合</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>JavaScript 不像其他 FP 語言支援自動 currying，但所幸 JavaScript 支援 First-Class Function 與 Closure，因此仍然可以手動將 function 加以 currying，或者使用 Ramda.js 的 <code>R.compose()</code></li>
+<li>Currying 會將 function 的顆粒拆成更小，更有利於 reuse 與 compose，亦可透過 currying 組成 Higher Order Function，避免程式碼重複</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/JavaScriptCurrying" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p>歐陽繼超，<a href="http://www.books.com.tw/products/CN11381868" target="_blank" rel="external">前端函數式攻城指南</a><br><a href="https://medium.com/@martinnovk_22870" target="_blank" rel="external">Martin Novak</a>, <a href="https://medium.com/front-end-hacking/javascript-es6-curry-functions-with-practical-examples-6ba2ced003b1" target="_blank" rel="external">JavaScript ES6 curry functions with practical examples</a><br><a href="https://blog.benestudio.co/@adambene" target="_blank" rel="external">Adam Beme</a>, <a href="https://blog.benestudio.co/currying-in-javascript-es6-540d2ad09400" target="_blank" rel="external">Currying in JavaScript ES6</a><br><a href="https://www.youtube.com/channel/UCbGZKLIHpox2l0whz6_RYyg" target="_blank" rel="external">techsith</a>, <a href="https://www.youtube.com/watch?v=oU3LzOO0OGA&amp;t=592s" target="_blank" rel="external">JavaScript Currying function (method) explained Tutorial</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[FP 最常用的設計模式]]>
+    
+    </summary>
+    
+      <category term="FP" scheme="http://oomusou.io/tags/FP/"/>
+    
+      <category term="JavaScript" scheme="http://oomusou.io/tags/JavaScript/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何將 .NET Core 發佈到 Linux ?]]></title>
     <link href="http://oomusou.io/netcore/linux-deployment/"/>
     <id>http://oomusou.io/netcore/linux-deployment/</id>
     <published>2018-05-07T12:23:43.000Z</published>
-    <updated>2018-05-10T06:28:39.219Z</updated>
+    <updated>2018-05-11T08:52:56.943Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 為跨平台解決方案，我們可在 macOS 或 Windows 開發 .NET Core App，最後再發佈到 Linux 主機上。</p>
 <p>.NET Core 提供 FDD 與 SCD 兩種發佈方式。</p>
 <a id="more"></a>
@@ -63,7 +224,7 @@
 <li>顯示 Ubuntu command prompt</li>
 </ol>
 <p><strong>安裝 Linux Library</strong></p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@<span class="number">0677</span>c0f17607 $ apt-get update</span><br><span class="line">root@<span class="number">0677</span>c0f17607 $ apt-get install -y libunwind8 liblttng-ust0 libcurl3 libssl1<span class="number">.0</span><span class="number">.0</span> libuuid1 libkrb5-<span class="number">3</span> zlib1g libicu55 curl</span><br><span class="line">root@<span class="number">0677</span>c0f17607 $ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@<span class="number">0677</span>c0f17607 $ apt-get update</span><br><span class="line">root@<span class="number">0677</span>c0f17607 $ apt-get install -y libunwind8 liblttng-ust0 libcurl3 libssl1<span class="number">.0</span><span class="number">.0</span> libuuid1 libkrb5-<span class="number">3</span> zlib1g libicu55</span><br><span class="line">root@<span class="number">0677</span>c0f17607 $ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>注意指令是下在 container 內，不是 host os</p>
 </blockquote>
@@ -2073,103 +2234,6 @@
     </summary>
     
       <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 F# 實現 Proxy Pattern？]]></title>
-    <link href="http://oomusou.io/fsharp/proxy/"/>
-    <id>http://oomusou.io/fsharp/proxy/</id>
-    <published>2018-04-13T12:23:43.000Z</published>
-    <updated>2018-04-22T02:15:45.000Z</updated>
-    <content type="html"><![CDATA[<p>Proxy Pattern 是 OOP 中著名的 Design Pattern，尤其可在不改變 interface 的前提下，就能控制該物件的使用，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Proxy Pattern。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>假設你在處理訂單，只有會員才能享受 <code>全館八折</code>，其他人都只能原價購買。</p>
-<ul>
-<li>目前已經有 <code>MemberService.isMember()</code> 判斷是否為會員</li>
-<li>目前已經有 <code>OrderService.getPrice()</code> 可根據折購計算售價</li>
-<li>在 <code>MemberService.isMember()</code> 與 <code>OrderService.getPrice()</code> 不修改的前提下 (<code>開放封閉原則</code>)，計算出售價</li>
-</ul>
-<h2 id="Task">Task</h2><hr>
-<p>直接使用 FP 的思維完成需求。</p>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p>Proxy Pattern</p>
-<p>在不改變原有 interface 的前提下，控制 service 的使用</p>
-</blockquote>
-<p><img src="/images/fsharp/proxy/proxy000.svg" alt="ecorator00"></p>
-<p>首先思考 Proxy Pattern 的本質：</p>
-<ol>
-<li>Proxy 與 RealSubject 之間的 interface 必須相同</li>
-<li>Client 藉由 Proxy 控制 RealSubject 的使用</li>
-</ol>
-<p>只要能達到這兩個目標，就算完成了 Proxy Pattern。</p>
-<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
-<ul>
-<li>為了讓 Proxy 與 RealSubject 的 interface 要相同，所以必須訂出共同的 interface</li>
-<li>Proxy 必須以 state 記住 RealSubject，client 才能透過 Proxy 使用 RealSubject</li>
-<li>Proxy 可以加上邏輯，控制 RealSubject 的使用</li>
-</ul>
-<h2 id="FP_思考方式">FP 思考方式</h2><hr>
-<ul>
-<li>Proxy 與 RealSubject 都是 function，不用事先定義 interface，反正只要 interface 不同，在 <code>if … else</code>、 <code>Pattern Matching</code> 或 <code>try catch</code> 一定會錯</li>
-<li>Proxy 與 RealSubject 都是 function，既然 interface 都相同，由 RealSubject 切換到 Proxy 就不用修改程式碼</li>
-<li>Proxy function 可加上邏輯，控制 RealSubject function 的使用</li>
-</ul>
-<h2 id="Implementation">Implementation</h2><hr>
-<p><strong>MemberService.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> MemberLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> MemberService =</span><br><span class="line">    <span class="keyword">let</span> isMember account = account = <span class="string">"Sam"</span></span><br></pre></td></tr></table></figure>
-<p><code>isMember()</code> 判斷是否為 <code>會員</code>。</p>
-<blockquote>
-<p>實務上判斷 <code>是否為會員</code> 與資料庫有關，本文主要是談 Proxy Pattern，就只簡單的判斷會員是否為 <code>Sam</code> 即可。</p>
-</blockquote>
-<p><strong>OrderService.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> getPrice discount price = price * discount * <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
-<p>計算 <code>全館八折</code>，之所以加上 <code>* 1.0</code>，是為了讓 Type Inference 推導出 <code>discount</code> 與 <code>price</code> 的型別為 <code>float</code>。</p>
-<blockquote>
-<p>當使用 function pipeline 時，最後一個參數可以自動被 pipeline，所以設計 function parameter 時，將要使用 pipeline 的 value 放在最後一個 parameter，才能發揮 pipeline 的優勢</p>
-</blockquote>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> MemberLibrary</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"><span class="keyword">open</span> System</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="keyword">let</span> account = <span class="string">"Sam"</span></span><br><span class="line">    <span class="keyword">let</span> originalPrice = <span class="number">800.0</span></span><br><span class="line">    <span class="keyword">let</span> discount = <span class="number">0.8</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> isMember = MemberService.isMember account</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> orderProxy =</span><br><span class="line">        <span class="keyword">match</span> isMember <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span>  -&gt; OrderService.getPrice</span><br><span class="line">        | <span class="keyword">false</span> -&gt; <span class="keyword">fun</span> _ price -&gt; price </span><br><span class="line">    </span><br><span class="line">    originalPrice</span><br><span class="line">    |&gt; orderProxy discount</span><br><span class="line">    |&gt; printf <span class="string">"Real price : %0.0f"</span>        </span><br><span class="line"></span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Real price : 640</span></span><br></pre></td></tr></table></figure>
-<p>11 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> isMember = MemberService.isMember account</span><br></pre></td></tr></table></figure>
-<p>由於會由 <code>MemberService.isMember()</code> 判斷是否為會員，先判斷並將結果 binding 到 <code>isMember</code>。</p>
-<p>13 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> orderProxy =</span><br><span class="line">    <span class="keyword">match</span> isMember <span class="keyword">with</span></span><br><span class="line">    | <span class="keyword">true</span>  -&gt; OrderService.getPrice</span><br><span class="line">    | <span class="keyword">false</span> -&gt; <span class="keyword">fun</span> _ price -&gt; price</span><br></pre></td></tr></table></figure>
-<p>將 <code>OrderProxy</code> class 退化成 <code>orderProxy()</code> function，其 interface 仍然為 <code>float -&gt; float -&gt; float</code>，Type Inference 會自動推導，若有違反，Pattern Matching 就會報錯。</p>
-<p><code>orderProxy()</code> 本質為 function，由於 closure 機制，可以自然使用到 function 外面的 <code>isMember</code>，因此不必使用 parameter 方式傳入。</p>
-<p>Pattern Matching 根據  <code>isMember</code> 結果回傳 <code>OrderService.getPrice()</code>，或者全新的 Lambda function。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">| <span class="keyword">false</span> -&gt; <span class="keyword">fun</span> _ price -&gt; price</span><br></pre></td></tr></table></figure>
-<p>由於要 return 的 Lambda function 並沒有使用到 <code>discount</code> 計算，使用 <code>_</code> 代表即可。</p>
-<p>16 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">originalPrice</span><br><span class="line">|&gt; orderProxy discount</span><br><span class="line">|&gt; printf <span class="string">"Real price : %0.0f"</span></span><br></pre></td></tr></table></figure>
-<p>將 <code>originalPrice</code> 傳給 <code>orderProxy()</code> 計算，這是個已經考慮 <code>是否為會員</code> 的 <code>orderService()</code>，最後再傳給  <code>printf()</code> 顯示。</p>
-<h2 id="Summary">Summary</h2><hr>
-<p>回想 Proxy Pattern 的本質：</p>
-<ol>
-<li>Proxy 與 RealSubject 之間的 interface 必須相同</li>
-<li>Client 藉由 Proxy 控制 RealSubject 的使用</li>
-</ol>
-<p>雖然沒有特別定義 interface，但 <code>orderProxy()</code> 與 <code>OrderService.getPrice()</code> 的 signature 都是 <code>float -&gt; float -&gt; float</code>，若 function 的 signature 不同，在 Pattern Matching 就會編譯錯誤，與原本 Proxy Pattern 定義 interface 的本質相同。</p>
-<p>FP 則藉由 Proxy Function 控制 RealSubject function 的使用，與原本 Proxy Pattern 藉由 Proxy 控制 RealSubject 使用的本質相同。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Proxy Pattern 本質就是 delegation，但 object 的 delegation 沒 function 簡單直覺，所以才需要搭配 interface；但若純 function，連 interface 都不需要，而且也能享受 strong type 的編譯檢查</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderProxy" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以 FP 重新思考 Proxy Pattern]]>
-    
-    </summary>
-    
-      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
