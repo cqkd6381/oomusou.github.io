@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-12T18:14:32.368Z</updated>
+  <updated>2018-05-12T18:16:35.543Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/javascript/currying/"/>
     <id>http://oomusou.io/javascript/currying/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-05-12T18:14:32.368Z</updated>
+    <updated>2018-05-12T18:16:35.543Z</updated>
     <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
 <p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援，但因為 JavaScript 有 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
 <a id="more"></a>
@@ -164,7 +164,7 @@
 <p>歐陽繼超，<a href="http://www.books.com.tw/products/CN11381868" target="_blank" rel="external">前端函數式攻城指南</a><br><a href="https://medium.com/@martinnovk_22870" target="_blank" rel="external">Martin Novak</a>, <a href="https://medium.com/front-end-hacking/javascript-es6-curry-functions-with-practical-examples-6ba2ced003b1" target="_blank" rel="external">JavaScript ES6 curry functions with practical examples</a><br><a href="https://blog.benestudio.co/@adambene" target="_blank" rel="external">Adam Beme</a>, <a href="https://blog.benestudio.co/currying-in-javascript-es6-540d2ad09400" target="_blank" rel="external">Currying in JavaScript ES6</a><br><a href="https://www.youtube.com/channel/UCbGZKLIHpox2l0whz6_RYyg" target="_blank" rel="external">techsith</a>, <a href="https://www.youtube.com/watch?v=oU3LzOO0OGA&amp;t=592s" target="_blank" rel="external">JavaScript Currying function (method) explained Tutorial</a></p>
 ]]></content>
     <summary type="html">
-    <![CDATA[FP 最常用的設計模式]]>
+    <![CDATA[Currying 是 FP 最常用的設計模式]]>
     
     </summary>
     
