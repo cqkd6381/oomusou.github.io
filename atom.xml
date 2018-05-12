@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-12T16:28:11.995Z</updated>
+  <updated>2018-05-12T16:29:40.312Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/javascript/currying/"/>
     <id>http://oomusou.io/javascript/currying/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-05-12T16:28:11.995Z</updated>
+    <updated>2018-05-12T16:29:40.312Z</updated>
     <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
 <p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援 Currying，但因為 JavaScript 支援 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
 <a id="more"></a>
@@ -157,7 +157,7 @@
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>JavaScript 不像其他 FP 語言支援自動 currying，但所幸 JavaScript 支援 First-Class Function 與 Closure，因此仍然可以手動將 function 加以 currying，或者使用 Ramda.js 的 <code>R.compose()</code></li>
-<li>Currying 會將 function 的顆粒拆成更小，更有利於 reuse 與 compose，亦可透過 currying 組成 Higher Order Function，避免程式碼重複</li>
+<li>Currying 會將 function 的顆粒拆成更小，更有利於 reuse 與 compose，亦可透過 currying 回傳 Higher Order Function，避免程式碼重複</li>
 </ul>
 <h2 id="Sample_Code">Sample Code</h2><hr>
 <p>完整的範例可以在我的 <a href="https://github.com/oomusou/JavaScriptCurrying" target="_blank" rel="external">GitHub</a> 上找到</p>
