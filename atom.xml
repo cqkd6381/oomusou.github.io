@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-12T16:36:24.793Z</updated>
+  <updated>2018-05-12T18:14:32.368Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/javascript/currying/"/>
     <id>http://oomusou.io/javascript/currying/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-05-12T16:36:24.793Z</updated>
+    <updated>2018-05-12T18:14:32.368Z</updated>
     <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
 <p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援，但因為 JavaScript 有 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
 <a id="more"></a>
@@ -58,7 +58,7 @@
 <p>JavaScript 的 <code>const</code> 相當於 F# 的 <code>let</code>。</p>
 <p>JavaScript 的 argument 寫在 <code>=</code> 之後，每個參數以 <code>=&gt;</code> 隔開；而 F# 只要在 function 名稱之後以 space 隔開即可。</p>
 <p>JavaScript 的 parameter 須以 <code>()</code> 一一傳入；而 F# 只要在 function 名稱之後以 space 隔開即可。</p>
-<p>ECMAScript 2015 有了 Arrow Function 之後，可讀性與簡潔性已經與正統 FP 的 F# 差距不大了。</p>
+<p>ECMAScript 2015 有了 Arrow Function 之後，可讀性與簡潔性已經與正統 FP 的 F# 差距不遠。</p>
 <blockquote>
 <p>Q：將傳統 function 改寫成 Currying 不難，但為什麼要這樣寫呢 ?</p>
 </blockquote>
@@ -91,7 +91,6 @@
 <p>就是顆粒最小的積木最好用，可以說是百搭。Currying 就是把 function 都切成顆粒最小的單一 argument function，因此可藉由 argument 的組合，由一個 function 不斷地組合出新的 function</p>
 </blockquote>
 <h3 id="Higher_Order_Function">Higher Order Function</h3><blockquote>
-<p><strong>Higher Order Function</strong></p>
 <p>可以傳入 function 或傳回 function 的 function，通常會將 <code>重複部分</code> 抽成 higher order function，將 <code>不同部分</code> 以 arrow function 傳入</p>
 </blockquote>
 <p>要支援 Higher Order Function 有個前提，語言必須支援 First-Class Function，這在 JavaScript 很早就支援，所以沒有問題。</p>
@@ -156,7 +155,7 @@
 </blockquote>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>JavaScript 不像其他 FP 語言支援自動 currying，但所幸 JavaScript 支援 First-Class Function 與 Closure，因此仍然可以手動將 function 加以 currying，或者使用 Ramda.js 的 <code>R.compose()</code></li>
+<li>JavaScript 不像其他 FP 語言支援自動 currying，但所幸 JavaScript 支援 First-Class Function 與 Closure，因此仍然可以手動將 function 加以 currying，或者使用 Ramda.js 的 <code>R.curry()</code></li>
 <li>Currying 會將 function 的顆粒拆成更小，更有利於 reuse 與 compose，亦可透過 currying 回傳 Higher Order Function，避免程式碼重複</li>
 </ul>
 <h2 id="Sample_Code">Sample Code</h2><hr>
