@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-12T18:31:34.379Z</updated>
+  <updated>2018-05-13T11:30:11.678Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/javascript/currying/"/>
     <id>http://oomusou.io/javascript/currying/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-05-12T18:31:34.379Z</updated>
+    <updated>2018-05-13T11:30:11.678Z</updated>
     <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
 <p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援，但因為 JavaScript 有 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
 <a id="more"></a>
@@ -120,7 +120,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(calculatePrice(sum =&gt; sum - <span class="number">10</span>));</span><br><span class="line"><span class="built_in">console</span>.log(calculatePrice(sum =&gt; sum * <span class="number">0.9</span>));</span><br></pre></td></tr></table></figure>
 <p>將 <code>不同部分</code> 分別以 <code>sum =&gt; sum -10</code> 與 <code>sum =&gt; sum * 0.9</code> 帶入 <code>calculate()</code> higher order function，正式計算其值。</p>
 <blockquote>
-<p>若我們不將 <code>calculate()</code> curry 化，則無法傳回 function，只能回傳值，如此就無法將 <code>不同部分</code> 以 arrow function 傳入</p>
+<p>若我們不將 <code>calculate()</code> currying 過，則無法傳回 function，只能回傳值，如此就無法將 <code>不同部分</code> 以 arrow function 傳入</p>
 </blockquote>
 <h3 id="Function_Composition">Function Composition</h3><blockquote>
 <p>將小 function 組合成功能強大的新 function</p>
