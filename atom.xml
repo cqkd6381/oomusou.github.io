@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-13T11:30:11.678Z</updated>
+  <updated>2018-05-14T01:46:00.177Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -18,8 +18,8 @@
     <title><![CDATA[深入淺出 FP 設計模式：Currying]]></title>
     <link href="http://oomusou.io/javascript/currying/"/>
     <id>http://oomusou.io/javascript/currying/</id>
-    <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-05-13T11:30:11.678Z</updated>
+    <published>2018-05-13T12:23:43.000Z</published>
+    <updated>2018-05-14T01:46:00.177Z</updated>
     <content type="html"><![CDATA[<p>不只 OOP 有 Design Pattern，事實上 FP 也有不少 Pattern，而 Currying 算是 FP 最基礎、且用的最多的 Pattern。</p>
 <p>一些正統 FP 語言，如 Haskell、Clojure、F#、ReasonML … 都在語言內直接支援 Currying；JavaScript 雖然沒有直接支援，但因為 JavaScript 有 First-class Function 與 Closure，使得 Currying 在 JavaScript 中使用成為可能。</p>
 <a id="more"></a>
