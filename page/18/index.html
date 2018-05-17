@@ -99,6 +99,74 @@
 	<!-- display as entry -->	
 		<h3 class="title">
 			
+			<div class="article-title"><a href="/design-pattern/nullobject/" title="使用 Null Object 模式將符合 Tell, don&#39;t Ask 原則">如何實現 Null Object Pattern ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/design-pattern/nullobject/"><img src="/images/feature/dp.png" alt="如何實現 Null Object Pattern ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>當我們透過 Eloquent 對資料庫抓資料時，由於 <code>where()</code> 的條件可能撈不到資料，導致 <code>first()</code> 傳會 <code>null</code>，若再對 <code>null</code> 物件的欄位屬性做存取，會出現 <code>Trying to get property of non-object</code> 的錯誤訊息，當然有各種方法避開這個錯誤，但比較理想的方式是引入 <code>Null Object</code> 模式。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/design-pattern/nullobject/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
+			<div class="article-title"><a href="/laravel/collection-assertion/" title="介紹兩種方法對 Collection 做 Assertion">如何對 Collection 做 Assertion?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/laravel/collection-assertion/"><img src="/images/feature/laravel.png" alt="如何對 Collection 做 Assertion?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p><code>Collection</code> 並非 PHP 原生的型別，是 Laravel 所擴充，因此 PHPUnit 並無法直接對其做 assertion，本文介紹兩種方式，一種是使用 PHPUnit 的 <code>assertArraySubset()</code>，一種是自己寫 collection macro，各有其優缺點，可視需求決定要使用哪種方法。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/laravel/collection-assertion/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
 			<div class="article-title"><a href="/phpstorm/phpstorm-refactor-di/" title="快速快速將 Legacy Code 重構成依賴注入">如何使用 PhpStorm 將 new 重構成依賴注入?</a></div>						
 		</h3>
 	
@@ -361,74 +429,6 @@
     <div class="col-md-10"></div>
     <div class="col-md-2">
 	  <a type="button" href="/javascript/variable-property/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/tdd/tdd-factory-ocp/" title="將邏輯改用 LUT 表示，可將 LUT 改放到 app.php 設定檔">如何對工廠模式開放封閉?</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/tdd/tdd-factory-ocp/"><img src="/images/feature/dp.png" alt="如何對工廠模式開放封閉?"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>將建構物件的邏輯封裝在工廠模式，已經達到 90% 的開放封閉，最少其他 class 都已經開放封閉，將來所有的邏輯修改只剩下工廠模式，若能將工廠模式也開放封閉，那就太好了。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/tdd/tdd-factory-ocp/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/php/closure-practice/" title="將 Closure 內化到自己的程式碼中">實務上如何活用 Closure?</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/php/closure-practice/"><img src="/images/feature/php.png" alt="實務上如何活用 Closure?"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>PHP 5.3 正式將 closure 帶入 PHP，到了 Laravel 5，我們看到了 Laravel 大量使用 closure，除了在配合 Laravel 的地方使用 closure 外，我們該如何將 closure 加以內化，進而活用在自己的程式碼中呢? 我們將實際探索 Laravel 原始碼，學習 Taylor Otwell 如何使用 closure。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/php/closure-practice/#more" class="btn btn-default more">Read More</a>
     </div>
   </div>
 </div>
