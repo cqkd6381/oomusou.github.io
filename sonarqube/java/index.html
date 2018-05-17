@@ -1,0 +1,406 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 SonarQube 檢查 Java 專案 ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="持續檢查 Java 程式碼品質">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="持續檢查 Java 程式碼品質">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 SonarQube 檢查 Java 專案 ?">
+<meta property="og:url" content="http://oomusou.io/sonarqube/java/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="持續檢查 Java 程式碼品質">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-05-17T10:09:07.338Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 SonarQube 檢查 Java 專案 ?">
+<meta name="twitter:description" content="持續檢查 Java 程式碼品質">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 SonarQube 檢查 Java 專案 ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 持續檢查 Java 程式碼品質			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GitHub"><span class="toc-article-text">GitHub</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Gradle"><span class="toc-article-text">Gradle</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Eclipse"><span class="toc-article-text">Eclipse</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube"><span class="toc-article-text">SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner"><span class="toc-article-text">SonarQube Scanner</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarLint"><span class="toc-article-text">SonarLint</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Appendix"><span class="toc-article-text">Appendix</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>SonarQube 已經內建 SonarJava，可以直接對  Java 進行檢查，本文將以 Java + Gradle 為例，並在 Eclipse 中使用 SonarLint 對  Java 專案進行檢查。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>SonarQube 7.1<br>SonarQube Scanner 3.1.0.1141<br>Eclipse Oxygen.3a (4.7 3a)<br>Java SE 1.8.0_171</p>
+<h2 id="GitHub">GitHub</h2><hr>
+<p><img src="/images/sonarqube/java/java000.png" alt="java000"></p>
+<ol>
+<li>本文將 Java 專案放在 <code>https://github.com/oomusou/javasonarqube</code></li>
+</ol>
+<h2 id="Gradle">Gradle</h2><p><strong>安裝 Gradle</strong><br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install gradle</span><br></pre></td></tr></table></figure></p>
+<p>Gradle 類似 JavaScript 世界的 Webpack，負責整個專案的編譯管理，使用 Homebrew 安裝。</p>
+<p><strong>專案初始化</strong><br><figure class="highlight xquery"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject <span class="variable">$gradle</span> init --type java-application</span><br></pre></td></tr></table></figure></p>
+<p>下載範例後，進入專案目錄，使用 Gradle 對專案初始化。</p>
+<p><img src="/images/sonarqube/java/java001.png" alt="java001"></p>
+<p><strong>建置專案</strong><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyProject $ ./gradlew</span> build</span><br></pre></td></tr></table></figure></p>
+<p>使用 Gradle 第一次 build 專案。</p>
+<p><img src="/images/sonarqube/java/java002.png" alt="java002"></p>
+<h2 id="Eclipse">Eclipse</h2><hr>
+<p><strong>安裝 Plugin</strong></p>
+<p><img src="/images/sonarqube/java/java003.png" alt="java003"></p>
+<p><strong><em>Help -&gt; Eclipse Marketplace…</em></strong></p>
+<p><img src="/images/sonarqube/java/java004.png" alt="java004"></p>
+<p>請安裝以下兩個套件：</p>
+<ol>
+<li><strong>Buildship Gradle Integration 2.0</strong>：在 Eclipse 使用 Gradle 建置專案</li>
+<li><strong>SonarLint 3.5</strong>：讓 Eclipse 能即時執行 SonarQube 檢查</li>
+</ol>
+<p><strong>匯入專案</strong></p>
+<p><img src="/images/sonarqube/java/java005.png" alt="java005"></p>
+<p><strong><em>File -&gt; Import</em></strong></p>
+<p><img src="/images/sonarqube/java/java006.png" alt="java006"></p>
+<ol>
+<li>選擇 <strong><em>Gradle -&gt; Existing Gradle Project</em></strong></li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java007.png" alt="java007"></p>
+<ol>
+<li>選擇專案目錄</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java008.png" alt="java008"></p>
+<ol>
+<li>按 <code>Finish</code> 結束</li>
+</ol>
+<p><strong>新增 SonarQube Plugin</strong></p>
+<p><strong>build.gradle</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span><br><span class="line"> * This file was generated by the Gradle 'init' task.</span><br><span class="line"> *</span><br><span class="line"> * This generated file contains a sample Java project to get you started.</span><br><span class="line"> * For more details take a look at the Java Quickstart chapter in the Gradle</span><br><span class="line"> * user guide available at https://docs.gradle.org/4.7/userguide/tutorial_java_projects.html</span><br><span class="line"> */</span></span><br><span class="line"></span><br><span class="line">plugins &#123;</span><br><span class="line">    <span class="comment">// Apply the java plugin to add support for Java</span></span><br><span class="line">    id <span class="string">'java'</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Gradle plugin to help analyzing projects with SonarQube</span></span><br><span class="line">    id <span class="string">'org.sonarqube'</span> version <span class="string">'2.6.2'</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Apply the application plugin to add support for building an application</span></span><br><span class="line">    id <span class="string">'application'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Define the main class for the application</span></span><br><span class="line">mainClassName = <span class="string">'App'</span></span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    <span class="comment">// This dependency is found on compile classpath of this component and consumers.</span></span><br><span class="line">    compile <span class="string">'com.google.guava:guava:23.0'</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// Use JUnit test framework</span></span><br><span class="line">    testCompile <span class="string">'junit:junit:4.12'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// In this section you declare where to find the dependencies of your project</span></span><br><span class="line">repositories &#123;</span><br><span class="line">    <span class="comment">// Use jcenter for resolving your dependencies.</span></span><br><span class="line">    <span class="comment">// You can declare any Maven/Ivy/file repository here.</span></span><br><span class="line">    jcenter()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>13  行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Gradle plugin to help analyzing projects with SonarQube</span></span><br><span class="line">id <span class="string">'org.sonarqube'</span> version <span class="string">'2.6.2'</span></span><br></pre></td></tr></table></figure>
+<p>在 Gradle 新增 SonarQube plugin，將來可透過 Gradle 執行 SonarQube。</p>
+<p><img src="/images/sonarqube/java/java009.png" alt="java009"></p>
+<ol>
+<li>開啟 <code>build.gradle</code> 檔案</li>
+<li>新增 SonarQube plugin</li>
+</ol>
+<p><strong>建置專案</strong></p>
+<p><img src="/images/sonarqube/java/java010.png" alt="java010"></p>
+<ol>
+<li>右側 <code>Gradle Tasks</code></li>
+<li>將 <code>build</code> 展開，執行 <code>build</code></li>
+<li>在 Console 出現 <code>BUILD SUCCESSFUL</code> 表示建置成功</li>
+</ol>
+<blockquote>
+<p>目前為止，Gradle 在 Eclipse 已經正常執行，接下來要設定 SonarQube</p>
+</blockquote>
+<h2 id="SonarQube">SonarQube</h2><hr>
+<p><strong>安裝 SonarQube</strong><br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install sonarqube</span><br></pre></td></tr></table></figure></p>
+<p>使用 Homebrew 安裝 SonarQube。</p>
+<p><strong>啟動 SonarQube</strong><br><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sonar <span class="built_in">console</span></span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>sonar console</code> 自行啟動 SonarQube。</p>
+<p><img src="/images/sonarqube/java/java011.png" alt="java011"></p>
+<p><strong>測試 SonarQube</strong></p>
+<p><img src="/images/sonarqube/java/java012.png" alt="java012"></p>
+<ol>
+<li>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功</li>
+<li>右上角 <code>Log in</code> 可登入管理設定 SonarQube，預設為 <code>admin/admin</code></li>
+</ol>
+<h2 id="SonarQube_Scanner">SonarQube Scanner</h2><hr>
+<p>SonarQube 雖然已經包含 SonarJava，但必須靠 SonarQube Scanner 才能執行，預設 SonarQube 並沒有包含 Scanner，必須自行安裝。</p>
+<p><strong>安裝 SonarQube Scanner</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install sonar-scanner</span><br></pre></td></tr></table></figure>
+<p><strong>設定 SonarQube Server</strong></p>
+<p><strong>sonar-scanner.properties</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="id">#Configure</span> here general information about the environment, such as SonarQube server connection <span class="tag">details</span> <span class="keyword">for</span> example</span><br><span class="line"><span class="id">#No</span> information about specific project should appear here</span><br><span class="line"></span><br><span class="line">#----- Default SonarQube server</span><br><span class="line">sonar<span class="class">.host</span><span class="class">.url</span>=http:<span class="comment">//localhost:9000</span></span><br><span class="line"></span><br><span class="line">#----- Default source <span class="tag">code</span> encoding</span><br><span class="line"><span class="id">#sonar</span>.sourceEncoding=UTF-<span class="number">8</span></span><br></pre></td></tr></table></figure>
+<p>將第 5 行的 <code>#</code> 拿掉，設定 SonarQube server 的 URL 位址。</p>
+<p><img src="/images/sonarqube/java/java013.png" alt="java013"></p>
+<ol>
+<li>將目錄移到 <code>/usr/local/Cellar/sonar-scanner/3.1.0.1141/libexec/conf</code></li>
+<li>開啟 <code>sonar-scanner.properties</code></li>
+<li>使用 <code>vim</code> 開啟 <code>sonar-scanner.properties</code></li>
+</ol>
+<p><img src="/images/sonarqube/java/java014.png" alt="java014"></p>
+<ol>
+<li>設定 SonarQube server</li>
+</ol>
+<p><strong>測試 SonarQube Scanner</strong></p>
+<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="class">MyProject</span> <span class="char">$ </span>gradle sonarqube</span><br></pre></td></tr></table></figure>
+<p>使用 Gradle 執行 SonarQube 檢查。</p>
+<p><img src="/images/sonarqube/java/java015.png" alt="java015"></p>
+<p><strong>SonarQube 顯示結果</strong></p>
+<p><img src="/images/sonarqube/java/java016.png" alt="java016"></p>
+<p>進入 SonarQube 網頁，就可看到 <code>JavaSonarQube</code> 專案已經出現 SonarQube。</p>
+<blockquote>
+<p>目前為止，SonarQube 已經可以正常透過 Gradle 執行，實務上可以透過 Jenkins 執行 Gradle，就可透過 CI 自動執行 SonarQube，但這種方式較被動，若發現有任何 issue，還要開 ticket 要求修改，一來一回可能好幾天，若能在開發階段就即時 SonarQube 檢查，就能「及早發現，及早治療」。</p>
+</blockquote>
+<h2 id="SonarLint">SonarLint</h2><hr>
+<p><img src="/images/sonarqube/java/java017.png" alt="java017"></p>
+<p>在 Code Smell 部分，SonarQube 已經檢查出：</p>
+<ul>
+<li>Move this file to a named package</li>
+<li>Remove this method and declare a constant for this variable</li>
+<li>Replace this use of System.out or System.err by a logger</li>
+</ul>
+<p>若能在 Eclipse 也能顯示這些警告訊息，那就太好了。</p>
+<p><strong>連接 SonarQube Server</strong></p>
+<p><img src="/images/sonarqube/java/java018.png" alt="java018"></p>
+<ol>
+<li>選擇專案按滑鼠右鍵</li>
+<li>選擇 <code>SonarLint</code></li>
+<li>選擇 <code>Bind to a SonarQube project…</code></li>
+</ol>
+<p><img src="/images/sonarqube/java/java019.png" alt="java019"></p>
+<ol>
+<li>按 <code>Connect to a SonarQube server…</code></li>
+</ol>
+<p><img src="/images/sonarqube/java/java020.png" alt="java020"></p>
+<ol>
+<li>選擇 <code>sonarqube</code></li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java021.png" alt="java021"></p>
+<ol>
+<li>輸入 SonarQube server 網址</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java022.png" alt="java022"></p>
+<ol>
+<li>選擇 <code>Username + Password</code></li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java023.png" alt="java023"></p>
+<ol>
+<li>輸入 SonarQube 帳號與密碼</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java024.png" alt="java024"></p>
+<ol>
+<li>輸入 connection 名稱</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/sonarqube/java/java025.png" alt="java025"></p>
+<ol>
+<li>按 <code>Finish</code> 完成設定</li>
+</ol>
+<p><img src="/images/sonarqube/java/java026.png" alt="java026"></p>
+<ol>
+<li>是否要 Eclipse 提供 Password hint，選 <code>No</code> 或 <code>Yes</code> 都可以</li>
+</ol>
+<p><img src="/images/sonarqube/java/java027.png" alt="java027"></p>
+<ol>
+<li>按 <code>Finish</code> 完成連接 SonarQube server 動作</li>
+</ol>
+<p><img src="/images/sonarqube/java/java028.png" alt="java028"></p>
+<ol>
+<li>顯示 SonarQube 連線正常</li>
+</ol>
+<p><strong>執行 SonarQube 檢查</strong></p>
+<p><img src="/images/sonarqube/java/java029.png" alt="java029"></p>
+<ol>
+<li>選擇專案按滑鼠右鍵</li>
+<li>選擇 <code>SonarLint</code></li>
+<li>選擇 <code>Analyze</code></li>
+</ol>
+<p><img src="/images/sonarqube/java/java030.png" alt="java030"></p>
+<ol>
+<li>下方顯示了與 SonarQube 網頁完全相同的警告，因此 developer 在開發階段，就可以完全獲得 SonarQube 的支援</li>
+</ol>
+<p><img src="/images/sonarqube/java/java031.png" alt="java031"></p>
+<ol>
+<li>在 editor 也會即時警告</li>
+<li>將滑鼠放在警告之上，也會顯示與 SonarQube 相同的警告訊息</li>
+</ol>
+<p><img src="/images/sonarqube/java/java032.png" alt="java032"></p>
+<ol>
+<li>點選 SonarLint Rule Description，會顯示該警告更詳細的解釋，甚至還有範例說明</li>
+</ol>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/javasonarqube" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>我對 Java 與 Gradle 完全不熟，本篇要感謝 Carl Su 的友情幫助，才能在 Eclipse 順利執行 SonarLint</li>
+<li>有了 SonarLint，developer 就能更即時的獲得 SonarQube 的建議，養成寫出 clean code 的好習慣</li>
+</ul>
+<h2 id="Appendix">Appendix</h2><hr>
+<p><strong>JAVA_HOME</strong><br><strong>~/.bash_profile</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> JAVA_HOME=$(/usr/libexec/java_home)</span><br></pre></td></tr></table></figure>
+<p>這裡在執行 Gradle 時遇到一個雷，由於 Gradle 與 Eclipse 都會依賴系統變數 <code>$JAVA_HOME</code>，必須在 <code>bash_profile</code> 設定 <code>$JAVA_HOME</code> 才會讓 Gradle 與 Eclipse 順利抓到，而不能只設定在 <code>.zshrc</code> ，所以不要覺得在 iTerm 2 能 <code>echo $JAVA_HOME</code> 就沒事，畢竟 Gradle 與 Eclipse 不是吃 <code>.zshrc</code>，而是吃 <code>.bash_profile</code>。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/javascript/currying/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-05-17 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Java/">Java<span>1</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>9</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
