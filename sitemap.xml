@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/ramda/point-free/</loc>
+    <lastmod>2018-05-21T15:09:51.260Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/sonarqube/java/</loc>
     <lastmod>2018-05-18T01:46:52.605Z</lastmod>
   </url>
