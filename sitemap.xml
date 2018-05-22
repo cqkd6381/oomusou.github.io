@@ -2,6 +2,21 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/datagrip/postgresql/</loc>
+    <lastmod>2018-05-22T11:03:19.584Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/rider/postgresql/</loc>
+    <lastmod>2018-05-22T10:53:52.931Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/docker/postgres/</loc>
+    <lastmod>2018-05-22T10:48:05.664Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/ramda/point-free/</loc>
     <lastmod>2018-05-21T15:09:51.260Z</lastmod>
   </url>
@@ -79,11 +94,6 @@
   <url>
     <loc>http://oomusou.io/sonarqube/sonarlint-phpstorm/</loc>
     <lastmod>2018-04-24T06:53:10.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/docker/postgres/</loc>
-    <lastmod>2018-04-22T15:33:04.000Z</lastmod>
   </url>
   
   <url>

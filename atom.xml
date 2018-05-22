@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-21T15:09:51.260Z</updated>
+  <updated>2018-05-22T11:03:19.584Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,172 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 DataGrip 連接 PostgreSQL ?]]></title>
+    <link href="http://oomusou.io/datagrip/postgresql/"/>
+    <id>http://oomusou.io/datagrip/postgresql/</id>
+    <published>2018-05-22T00:23:43.000Z</published>
+    <updated>2018-05-22T11:03:19.584Z</updated>
+    <content type="html"><![CDATA[<p>DataGrip 是 JetBrains 專業的資料庫連線工具，可以直接連上任何資料庫，當然也包含 PostgreSQL。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3<br>DataGrip 2018.1</p>
+<h2 id="DataGrip">DataGrip</h2><hr>
+<p><img src="/images/datagrip/postgresql/grip000.png" alt="post009"></p>
+<p><strong><em>View -&gt; Tool Windows -&gt; Database</em></strong></p>
+<p>或熱鍵：<code>⌘ + 1</code></p>
+<p><img src="/images/datagrip/postgresql/grip001.png" alt="post001"></p>
+<p>左側顯示 Database View。</p>
+<p><img src="/images/datagrip/postgresql/grip002.png" alt="post002"></p>
+<p>DataGrip 連進 PostgreSQL。</p>
+<ol>
+<li>按 <code>+</code>，選擇 <code>Data Source</code></li>
+<li>選擇 <code>PostgreSQL</code></li>
+</ol>
+<p><img src="/images/datagrip/postgresql/grip003.png" alt="post003"></p>
+<p>DataGrip 支援 PostgreSQL，不過預設並沒有安裝 PostgreSQL 驅動程式。</p>
+<ol>
+<li>按 <code>Download</code> 下載 <code>PostgreSQL</code> 驅動程式。</li>
+</ol>
+<p><img src="/images/datagrip/postgresql/grip004.png" alt="post004"></p>
+<ol>
+<li><code>User</code> : <code>admin</code></li>
+<li><code>Password</code> : <code>12345</code></li>
+<li>按 <code>Test Connection</code> 測試連接，顯示 Successful</li>
+</ol>
+<p><img src="/images/datagrip/postgresql/grip005.png" alt="post005"></p>
+<p>DataGrip 預設不會顯示所有 table。</p>
+<ol>
+<li>選 <code>Shemas...</code></li>
+<li>勾選 <code>All schemas</code></li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/datagrip/postgresql/grip006.png" alt="post006"></p>
+<ol>
+<li>展開 <code>tables</code>，選擇 <code>sql_features</code> table</li>
+<li>按 <code>Data Editor</code> 顯示資料</li>
+</ol>
+<p>如此 DataGrip 已經正確連上 PostgreSQL。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>DataGrip 為專業的資料庫管理工具，也包含各資料庫的 driver，可輕鬆連上各種資料庫</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[直接在 DataGrip 連接到 PostgreSQL]]>
+    
+    </summary>
+    
+      <category term="DataGrip" scheme="http://oomusou.io/tags/DataGrip/"/>
+    
+      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何使用 Rider 連接 PostgreSQL ?]]></title>
+    <link href="http://oomusou.io/rider/postgresql/"/>
+    <id>http://oomusou.io/rider/postgresql/</id>
+    <published>2018-05-21T23:23:43.000Z</published>
+    <updated>2018-05-22T10:53:52.931Z</updated>
+    <content type="html"><![CDATA[<p>Rider 內建資料庫連線工具，可以直接連上任何資料庫，當然也包含 PostgreSQL。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.1-ce-mac60 (24312)<br>PostgreSQL 10.3<br>Rider 2018.1</p>
+<h2 id="Rider">Rider</h2><hr>
+<p><img src="/images/rider/postgresql/rider000.png" alt="post010"></p>
+<p><strong><em>View -&gt; Tool Windows -&gt; Database</em></strong></p>
+<p><img src="/images/rider/postgresql/rider001.png" alt="post011"></p>
+<p>右側顯示 Database View。</p>
+<p><img src="/images/rider/postgresql/rider002.png" alt="post012"></p>
+<p>Rider 連進 PostgreSQL。</p>
+<ol>
+<li>按 <code>+</code>，選擇 <code>Data Source</code></li>
+<li>選擇 <code>PostgreSQL</code></li>
+</ol>
+<p><img src="/images/rider/postgresql/rider003.png" alt="post013"></p>
+<p>Rider 支援 PostgreSQL，不過預設並沒有安裝 PostgreSQL 驅動程式。</p>
+<ol>
+<li>按 <code>Download</code> 下載 <code>PostgreSQL</code> 驅動程式。</li>
+</ol>
+<p><img src="/images/rider/postgresql/rider004.png" alt="post014"></p>
+<ol>
+<li><code>User</code> : <code>admin</code></li>
+<li><code>Password</code> : <code>12345</code></li>
+<li>按 <code>Test Connection</code> 測試連接，顯示 Successful</li>
+</ol>
+<p><img src="/images/rider/postgresql/rider005.png" alt="post015"></p>
+<p>Rider 預設不會顯示所有 table。</p>
+<ol>
+<li>選 <code>Shemas...</code></li>
+<li>勾選 <code>All schemas</code></li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/rider/postgresql/rider006.png" alt="post016"></p>
+<ol>
+<li>展開 <code>tables</code>，選擇 <code>sql_features</code> table</li>
+<li>按 <code>Data Editor</code> 顯示資料</li>
+</ol>
+<p>如此 Rider 已經正確連上 PostgreSQL。</p>
+<h2 id="Conclusion">Conclusion</h2><ul>
+<li>Rider 已經自帶資料庫連線工具，也包含各資料庫的 driver，可輕鬆連上各種資料庫</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[直接在 Rider 內連接到 PostgreSQL]]>
+    
+    </summary>
+    
+      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
+    
+      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
+    <link href="http://oomusou.io/docker/postgres/"/>
+    <id>http://oomusou.io/docker/postgres/</id>
+    <published>2018-05-21T22:23:43.000Z</published>
+    <updated>2018-05-22T10:48:05.664Z</updated>
+    <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 安裝。本文除了安裝 PostgreSQL 外，還分別使用 DataGrip 與 Rider 連接 PostgreSQL。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3</p>
+<h2 id="建立_Container##_建立_Container">建立 Container## 建立 Container</h2><hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyPostgres <span class="operator">-d</span> -p <span class="number">5432</span>:<span class="number">5432</span> <span class="operator">-e</span> POSTGRES_USER=admin <span class="operator">-e</span> POSTGRES_PASSWORD=<span class="string">'12345'</span> postgres</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
+<blockquote>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process<br><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker ) </p>
+<p><code>-p</code> : <code>p</code>ort mapping，host port : container port</p>
+<p><code>-e</code> : 設定環境變數 (<code>e</code>nvironment)，使用 <code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 設定 PostgreSQL 帳號與密碼</p>
+<p><code>postgress</code> : image 名稱</p>
+</blockquote>
+<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
+<h2 id="使用_Terminal_連進_PostgreSQL">使用 Terminal 連進 PostgreSQL</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyPostgres bash</span><br></pre></td></tr></table></figure>
+<ol>
+<li><code>exec</code> : 執行 container 的 command</li>
+<li><code>-it</code> : <code>i</code> : interactive，<code>t</code> : terminal</li>
+<li><code>bash</code> : <code>exec</code> 執行 bash</li>
+</ol>
+<p><img src="/images/docker/postgres/post001.png" alt="post012"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[在 Mac 最簡單使用 PostgreSQL 方式]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 FP 的 Point-Free Style]]></title>
@@ -1714,125 +1880,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
-    <link href="http://oomusou.io/docker/postgres/"/>
-    <id>http://oomusou.io/docker/postgres/</id>
-    <published>2018-04-22T13:23:43.000Z</published>
-    <updated>2018-04-22T15:33:04.000Z</updated>
-    <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 安裝。本文除了安裝 PostgreSQL 外，還分別使用 DataGrip 與 Rider 連接 PostgreSQL。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3<br>DataGrip 2018.1<br>Rider 2018.1</p>
-<h2 id="建立_Container">建立 Container</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyPostgres <span class="operator">-d</span> -p <span class="number">5432</span>:<span class="number">5432</span> <span class="operator">-e</span> POSTGRES_USER=admin <span class="operator">-e</span> POSTGRES_PASSWORD=<span class="string">'12345'</span> postgres</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
-<blockquote>
-<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process<br><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker ) </p>
-<p><code>-p</code> : <code>p</code>ort mapping，host port : container port</p>
-<p><code>-e</code> : 設定環境變數 (<code>e</code>nvironment)，使用 <code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 設定 PostgreSQL 帳號與密碼</p>
-<p><code>postgress</code> : image 名稱</p>
-</blockquote>
-<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
-<h2 id="DataGrip_連接_PostgreSQL">DataGrip 連接 PostgreSQL</h2><hr>
-<p><img src="/images/docker/postgres/post009.png" alt="post009"></p>
-<p><strong><em>View -&gt; Tool Windows -&gt; Database</em></strong></p>
-<p>或熱鍵：<code>⌘ + 1</code></p>
-<p><img src="/images/docker/postgres/post001.png" alt="post001"></p>
-<p>左側顯示 Database View。</p>
-<p><img src="/images/docker/postgres/post002.png" alt="post002"></p>
-<p>DataGrip 連進 PostgreSQL。</p>
-<ol>
-<li>按 <code>+</code>，選擇 <code>Data Source</code></li>
-<li>選擇 <code>PostgreSQL</code></li>
-</ol>
-<p><img src="/images/docker/postgres/post003.png" alt="post003"></p>
-<p>DataGrip 支援 PostgreSQL，不過預設並沒有安裝 PostgreSQL 驅動程式。</p>
-<ol>
-<li>按 <code>Download</code> 下載 <code>PostgreSQL</code> 驅動程式。</li>
-</ol>
-<p><img src="/images/docker/postgres/post004.png" alt="post004"></p>
-<ol>
-<li><code>User</code> : <code>admin</code></li>
-<li><code>Password</code> : <code>12345</code></li>
-<li>按 <code>Test Connection</code> 測試連接，顯示 Successful</li>
-</ol>
-<p><img src="/images/docker/postgres/post005.png" alt="post005"></p>
-<p>DataGrip 預設不會顯示所有 table。</p>
-<ol>
-<li>選 <code>Shemas...</code></li>
-<li>勾選 <code>All schemas</code></li>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<p><img src="/images/docker/postgres/post006.png" alt="post006"></p>
-<ol>
-<li>展開 <code>tables</code>，選擇 <code>sql_features</code> table</li>
-<li>按 <code>Data Editor</code> 顯示資料</li>
-</ol>
-<p>如此 DataGrip 已經正確連上 PostgreSQL。</p>
-<h2 id="Rider_連接_PostgreSQL">Rider 連接 PostgreSQL</h2><hr>
-<p><img src="/images/docker/postgres/post010.png" alt="post010"></p>
-<p><strong><em>View -&gt; Tool Windows -&gt; Database</em></strong></p>
-<p><img src="/images/docker/postgres/post011.png" alt="post011"></p>
-<p>右側顯示 Database View。</p>
-<p><img src="/images/docker/postgres/post012.png" alt="post012"></p>
-<p>Rider 連進 PostgreSQL。</p>
-<ol>
-<li>按 <code>+</code>，選擇 <code>Data Source</code></li>
-<li>選擇 <code>PostgreSQL</code></li>
-</ol>
-<p><img src="/images/docker/postgres/post013.png" alt="post013"></p>
-<p>Rider 支援 PostgreSQL，不過預設並沒有安裝 PostgreSQL 驅動程式。</p>
-<ol>
-<li>按 <code>Download</code> 下載 <code>PostgreSQL</code> 驅動程式。</li>
-</ol>
-<p><img src="/images/docker/postgres/post014.png" alt="post014"></p>
-<ol>
-<li><code>User</code> : <code>admin</code></li>
-<li><code>Password</code> : <code>12345</code></li>
-<li>按 <code>Test Connection</code> 測試連接，顯示 Successful</li>
-</ol>
-<p><img src="/images/docker/postgres/post015.png" alt="post015"></p>
-<p>Rider 預設不會顯示所有 table。</p>
-<ol>
-<li>選 <code>Shemas...</code></li>
-<li>勾選 <code>All schemas</code></li>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<p><img src="/images/docker/postgres/post016.png" alt="post016"></p>
-<ol>
-<li>展開 <code>tables</code>，選擇 <code>sql_features</code> table</li>
-<li>按 <code>Data Editor</code> 顯示資料</li>
-</ol>
-<p>如此 Rider 已經正確連上 PostgreSQL。</p>
-<h2 id="使用_Terminal_連進_PostgreSQL">使用 Terminal 連進 PostgreSQL</h2><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyPostgres bash</span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>exec</code> : 執行 container 的 command</li>
-<li><code>-it</code> : <code>i</code> : interactive，<code>t</code> : terminal</li>
-<li><code>bash</code> : <code>exec</code> 執行 bash</li>
-</ol>
-<p><img src="/images/docker/postgres/post008.png" alt="post012"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
-<li>DataGrip 與 Rider 的設定方式類似，畢竟都是 JetBrains 的產品</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[在 Mac 最簡單使用 PostgreSQL 方式]]>
-    
-    </summary>
-    
-      <category term="DataGrip" scheme="http://oomusou.io/tags/DataGrip/"/>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
-    
-      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[深入探討 Rider 的 Refactoring：Change Signature]]></title>
     <link href="http://oomusou.io/rider/change-signature/"/>
     <id>http://oomusou.io/rider/change-signature/</id>
@@ -2068,369 +2115,6 @@
       <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
     
       <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 C# 實現 Composite Pattern ?]]></title>
-    <link href="http://oomusou.io/design-pattern/composite/"/>
-    <id>http://oomusou.io/design-pattern/composite/</id>
-    <published>2018-04-18T12:23:43.000Z</published>
-    <updated>2018-04-22T02:14:44.000Z</updated>
-    <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>C# 7.2</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>由購物車計算商品價錢，但在活動期間，Apple 產品組合有特惠 ：</p>
-<ul>
-<li><strong>MacBook Pro 15”</strong>：6 萬</li>
-<li><strong>iPad Air</strong>：1 萬</li>
-<li><strong>Apple Watch</strong>：1 萬</li>
-<li><strong>Apple 套餐組合</strong> : (Macbook Pro + iPad Air + Apple Watch) 總價打九折：<code>(6 + 1 + 1) * 0.9</code> = 7.2 萬</li>
-</ul>
-<p><img src="/images/design-pattern/composite/composite011.svg" alt="composite011"></p>
-<p>若同時買 MacBook Pro + iPad Air + Apple Watch + Apple 套餐為 15.2 萬。</p>
-<h2 id="Task">Task</h2><hr>
-<p>在不改變產品 interface 的原則下，計算購物車價錢。</p>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p>Composite Pattern</p>
-<p>當 <code>單一資料</code> 與 <code>整體資料</code> 同時存在時，讓 client 有一致性的操作方式</p>
-</blockquote>
-<p><img src="/images/design-pattern/composite/composite008.svg" alt="composite008"></p>
-<ul>
-<li><p><strong>Client</strong>：<code>Leaf</code> 與 <code>Composite</code> 的 user，實務上可能是 component 或 controller</p>
-</li>
-<li><p><strong>Component</strong>：定義 <code>Leaf</code> 與 <code>Composite</code> 的共用 interface</p>
-</li>
-<li><p><strong>Leaf</strong>：表示 <code>單一資料</code></p>
-</li>
-<li><p><strong>Composite</strong>：表示 <code>整體資料</code></p>
-</li>
-</ul>
-<p><img src="/images/design-pattern/composite/composite009.svg" alt="composite009"></p>
-<p>由於 <code>Composite</code> 表示 <code>整體資料</code>，實務上可能還包含其他 <code>Composite</code>，而產生類似 tree 的結構。</p>
-<blockquote>
-<p>Composite Pattern 的確可以處理 tree 結構，但 tree 並非必要條件</p>
-</blockquote>
-<p><strong>適用時機</strong></p>
-<ul>
-<li>同時存在 <code>單一資料</code> 與 <code>整體資料</code> 時</li>
-<li>想讓 client 不需分辨 <code>單一資料</code> 與 <code>整體資料</code>，都以相同的方式操作資料</li>
-<li>不想使用 <code>繼承</code> 來描述 <code>樹狀結構</code></li>
-</ul>
-<p><strong>優點</strong></p>
-<ul>
-<li>​ Client 程式碼精簡，不需寫一堆 <code>if else</code> 判斷是 <code>單一資料</code> 或 <code>整體資料</code>，完全發揮 OOP 的 <code>多型</code></li>
-<li>增加新的 <code>Leaf</code> 或 <code>Composite</code>，也不用修改 client 程式碼，符合 <code>開放封閉原則</code></li>
-</ul>
-<h2 id="Architecture">Architecture</h2><hr>
-<p><img src="/images/design-pattern/composite/composite000.svg" alt="composite000"></p>
-<ul>
-<li><p><strong>ShoppingService</strong>：相當於 <code>Client</code></p>
-</li>
-<li><p><strong>IPrice</strong>：定義 <code>MabookPro</code>、<code>IPadAir</code>、<code>AppleWatch</code> 與 <code>AppleCombo</code> 的共用 interface，相當於 <code>Component</code> interface</p>
-</li>
-<li><p><strong>MacbookPro</strong>：單一產品，相當於 <code>Leaf</code></p>
-</li>
-<li><p><strong>IPadAir</strong>：單一產品，相當於 <code>Leaf</code></p>
-</li>
-<li><p><strong>AppleWatch</strong>：單一產品，相當於 <code>Leaf</code></p>
-</li>
-<li><p><strong>AppleCombo</strong>：套餐組合，相當於 <code>Composite</code></p>
-</li>
-</ul>
-<h2 id="Implementation">Implementation</h2><hr>
-<p><img src="/images/design-pattern/composite/composite001.svg" alt="composite001"></p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ShoppingCartLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> shoppingCartService = <span class="keyword">new</span> ShoppingCartService();</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> MacBookPro());</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> IPadAir());</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> AppleWatch());</span><br><span class="line">            shoppingCartService.AddCart(<span class="keyword">new</span> AppleCombo());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> result = shoppingCartService.CalculatePrice();</span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>無論是 MacBook Pro、IPad Air、Apple Watch 或 AppleCombo 套餐組合，都統一用 <code>AddCart()</code> 新增。</p>
-<p>且無論是 <code>單一產品</code> 或 <code>套餐組合</code>，都使用 <code>CalculatePrice()</code> 統一計算。</p>
-<blockquote>
-<p>可以猜想 <code>AddCart()</code> 與 <code>CalculatePrice()</code> 應該遵循特定 interface 使用，且 <code>單一產品</code> 與 <code>套餐組合</code> 也應該遵循特定 interface 實踐，client 才有可能這麼漂亮的實作</p>
-</blockquote>
-<h3 id="Composite_Pattern">Composite Pattern</h3><p><strong>IPrice</strong></p>
-<p><img src="/images/design-pattern/composite/composite002.svg" alt="composite002"></p>
-<p><strong>IPrice.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>訂定 <code>單一產品</code> 與 <code>套餐組合</code> 所遵守的共同 interface，這也是 Composite Pattern 的關鍵。</p>
-<p><strong>MacBookPro</strong></p>
-<p><img src="/images/design-pattern/composite/composite003.svg" alt="composite003"></p>
-<p><strong>MacBookPro.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MacBookPro</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">60000.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>單一產品 MacBookPro 實踐 <code>IPrice</code>。</p>
-<p><strong>IPadAir</strong></p>
-<p><img src="/images/design-pattern/composite/composite004.svg" alt="composite004"></p>
-<p><strong>IPadAir.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">IPadAir</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10000.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>單一產品 IPadAir 實踐 <code>IPrice</code>。</p>
-<blockquote>
-<p>在 C# 世界習慣 interface 以 <code>I</code> 為 prefix，理論上 class name 不建議以 <code>I</code> 為開頭，這裡是因為 Apple 產品就叫做 <code>I</code> PadAir</p>
-</blockquote>
-<p><strong>AppleWatch</strong></p>
-<p><img src="/images/design-pattern/composite/composite005.svg" alt="composite005"></p>
-<p><strong>AppleWatch.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleWatch</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">10000.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>單一產品 AppleWatch 實踐 <code>IPrice</code>。</p>
-<p><strong>AppleCombo</strong></p>
-<p><img src="/images/design-pattern/composite/composite006.svg" alt="composite006"></p>
-<p><strong>AppleCombo.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleCombo</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AppleCombo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> IPadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _products)</span><br><span class="line">            &#123;</span><br><span class="line">                sum += product.GetPrice();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.9</span> * sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 5 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleCombo</span> : <span class="title">IPrice</span></span><br></pre></td></tr></table></figure>
-<p>Apple <code>套餐組合</code> 也要實踐 <code>IPrice</code>，重點在於不再是 <code>單一產品</code> 要實踐 interface，而是連 <code>套餐組合</code> 也要實踐 interface。</p>
-<p>也就是在將來，我們會將 <code>單一產品</code> 與 <code>套餐組合</code> 都一視同仁使用，也就是 OOP 的 <code>多型</code> 的實踐。</p>
-<p>第 7 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br></pre></td></tr></table></figure>
-<p>將套餐中所有產品 <code>封裝</code> 在 <code>_products</code> field，注意 <code>List</code> 的泛型為 <code>IPrice</code> interface，也就是只有實踐 <code>IPrice</code> 的單一產品才能加入，若該產品沒有實踐 <code>IPrice</code>，compiler 在編譯階段就可以擋掉。</p>
-<blockquote>
-<p>這也是 OOP 處理 side effect 方式，使用 private field 封裝在 class 內，避免資料被外界修改</p>
-</blockquote>
-<p>第 9 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">AppleCombo</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">        <span class="keyword">new</span> IPadAir(),</span><br><span class="line">        <span class="keyword">new</span> AppleWatch()</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>因為 Apple 套餐組合同時包含 MacBook Pro、iPad Air 與 Apple Watch，因此在 constructor 同時將產品建立好。</p>
-<p>19 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _products)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += product.GetPrice();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0.9</span> * sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將所有產品加總，並打九折。</p>
-<p>也因為所有產品都遵守 <code>IPrice()</code> interface 的 <code>GetPrice()</code>，因此可以使用 <code>foreach()</code> 一視同仁以 <code>GetPrice()</code> 計算，這就是 interface 與 OOP <code>多型</code> 的優點。</p>
-<p><strong>ShoppingCartService</strong></p>
-<p><img src="/images/design-pattern/composite/composite007.svg" alt="composite007"></p>
-<p><strong>ShoppingCartService.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ShoppingCartService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _carts = <span class="keyword">new</span> List&lt;IPrice&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddCart</span>(<span class="params">IPrice product</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _carts.Add(product);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _carts)</span><br><span class="line">            &#123;</span><br><span class="line">                sum += product.GetPrice();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> sum;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 7 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _carts = <span class="keyword">new</span> List&lt;IPrice&gt;();</span><br></pre></td></tr></table></figure>
-<p>將購物車的購物資料封裝在 <code>_carts</code> field，注意 List 的泛型為 <code>IPrice</code> interface，也就是無論是 <code>單一產品</code> 或者 <code>套餐組合</code>，只要實踐 <code>IPrice</code> interface 就一視同仁，只要任何產品或套餐沒實踐 interface 而加入 List，compiler 在 compile-time 就會報錯。</p>
-<p>第 9 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddCart</span>(<span class="params">IPrice product</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    _carts.Add(product);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>AddCart()</code> 新增至購物車，只要實踐 <code>IPrice</code> 的 <code>單一產品</code> 或 <code>套餐組合</code> 都可加入購物車。</p>
-<p>14 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> sum = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> product <span class="keyword">in</span> _carts)</span><br><span class="line">    &#123;</span><br><span class="line">        sum += product.GetPrice();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>CalculatePrice()</code> 計算購物車內的產品總金額，也由於 <code>單一產品</code> 與 <code>套餐組合</code> 都實踐 <code>IPrice</code> interface，因此可以安心用 <code>foreach()</code> 一視同仁的使用 <code>GetPrice()</code> 計算。</p>
-<blockquote>
-<p>這就是 Composite Pattern 的關鍵，也因為都有實踐 <code>IPrice</code> interface，我們能安心使用 <code>IPrice</code> 的 <code>GetPrice()</code>，且 IDE 的 intellisense 也能顯示</p>
-</blockquote>
-<h3 id="Refactoring">Refactoring</h3><p>目前為止 Composite Pattern 已經完成，但我們發現有不少 code smell，需要進一步的重構。</p>
-<p><strong>MacBookPro</strong></p>
-<p><img src="/images/design-pattern/composite/composite003.svg" alt="composite003"></p>
-<p><strong>MacBookPro.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MacBookPro</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Price = <span class="number">60000.0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>之前將 <code>60000.0</code> hardcode 在 <code>GetPrice()</code>，這樣會造成將來維護上的困然，應該使用 <code>Introduce Field</code> 重構到 field。</p>
-<p><strong>IPadAir</strong></p>
-<p><img src="/images/design-pattern/composite/composite004.svg" alt="composite004"></p>
-<p><strong>IPadAir.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">IPadAir</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Price = <span class="number">10000.0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>之前將 <code>10000.0</code> hardcode 在 <code>GetPrice()</code>，這樣會造成將來維護上的困然，應該使用 <code>Introduce Field</code> 重構到 field。</p>
-<p><strong>AppleWatch</strong></p>
-<p><img src="/images/design-pattern/composite/composite005.svg" alt="composite005"></p>
-<p><strong>AppleWatch.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleWatch</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Price = <span class="number">10000.0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Price;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>之前將 <code>10000.0</code> hardcode 在 <code>GetPrice()</code>，這樣會造成將來維護上的困然，應該使用 <code>Introduce Field</code> 重構到 field。</p>
-<p><strong>AppleCombo</strong></p>
-<p><img src="/images/design-pattern/composite/composite006.svg" alt="composite006"></p>
-<p><strong>AppleCombo.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AppleCombo</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">double</span> Discount = <span class="number">0.9</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">AppleCombo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> IPadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>21 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p> 將 <code>0.9</code> 使用 <code>Introduce Field</code> 重構到 field，並將 for loop 重構成 LINQ 的 <code>Sum()</code> 。</p>
-<blockquote>
-<p>實務上若搭配 List，使用 <code>foreach()</code> 的機率幾乎為 0，因為 LINQ 對 <code>IEnumerable</code> 的支援已經很完整，可以使用 FP 的方式使用 List，更加精簡，可讀性也更高</p>
-</blockquote>
-<p><strong>ShoppingCartService</strong></p>
-<p><img src="/images/design-pattern/composite/composite007.svg" alt="composite007"></p>
-<p><strong>ShoppingCartService.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ShoppingCartLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ShoppingCartService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _carts = <span class="keyword">new</span> List&lt;IPrice&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">AddCart</span>(<span class="params">IPrice product</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _carts.Add(product);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _carts.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>15 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">CalculatePrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _carts.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將 for loop 重構成 LINQ 的 <code>Sum()</code> 。</p>
-<h2 id="Summary">Summary</h2><hr>
-<blockquote>
-<p>Q：Proxy Pattern、Decorator Pattern 與 Composite Pattern 有何差異？</p>
-</blockquote>
-<p><strong>Proxy Pattern</strong><br><img src="/images/design-pattern/composite/composite014.svg" alt="composite014"></p>
-<p><strong>Decorator Pattern</strong><br><img src="/images/design-pattern/composite/composite013.svg" alt="composite014"></p>
-<p><strong>Composite Pattern</strong><br><img src="/images/design-pattern/composite/composite008.svg" alt="composite008"></p>
-<p>以 class diagram 角度，Proxy Pattern、Decorator Pattern 與 Composite Pattern 的確非常類似。</p>
-<blockquote>
-<p>學 Design Pattern 不能以 class diagram 的角度去思考，而要以他要解決什麼問題來思考</p>
-</blockquote>
-<h3 id="Similarity">Similarity</h3><ul>
-<li>都在解決 <code>繼承濫用</code>，將原本 <code>垂直結構</code> 變成 <code>水平結構</code></li>
-<li>Interface 都不會改變</li>
-</ul>
-<h3 id="Difference">Difference</h3><ul>
-<li>Proxy 目的在對 service 做 <code>控制存取</code></li>
-<li>Decorator 目的在對 service <code>增加功能</code></li>
-<li>Composite 目的在於對單一 model/DTO 與套餐組合 model/DTO <code>一視同仁</code></li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li><code>單一產品</code> 與 <code>套餐組合</code>，原本是完全不同的東西，但藉由實踐相同的 interface，在邏輯上視為相同的物件，因此可藉由 OOP 的 <code>多型</code> 加以操作，而不須在 client 做任何判斷，將來新增任何 <code>單一產品</code> 或 <code>套餐組合</code>，也不用修改 client，符合 <code>開放封閉原則</code> 的要求</li>
-<li>計算 List 的總和可使用 LINQ 的 <code>Sum()</code>，可讀性更高也更精簡</li>
-<li>大部分書籍資料都將 Composite Pattern 用來實作 tree 資料結構，因此很多初學者以為此 pattern 就是為了用來實作 tree，但 tree 並非 Composite Pattern 的必要條件，事實上只要同時需要處理 <code>單一資料</code> 與 <code>整體資料</code>，就適合使用 Composite Pattern，因此也稱為 Part-Whole Pattern，<code>讓單一資料與整體資料有一致操作方式</code>，這就是 Composite Pattern 的本質</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpComposite" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[將物件與容器一視同仁操作]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
-    
-      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Docker 安裝 Ubuntu ?]]></title>
-    <link href="http://oomusou.io/docker/ubuntu/"/>
-    <id>http://oomusou.io/docker/ubuntu/</id>
-    <published>2018-04-16T13:23:43.000Z</published>
-    <updated>2018-05-07T03:03:47.387Z</updated>
-    <content type="html"><![CDATA[<p>以前在 macOS 安裝 Ubuntu 都要先安裝 Parallel Desktop，然後再將 Ubuntu 安裝在 Parallel Desktop 上，安裝了 Docker for Mac 後，只要下載 Ubuntu 的 Docker image，Ubuntu 就能以 container 形式跑在 Docker 上。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 17.20.0-ce-mac49 (21995)<br>Ubuntu 16.04.4 LTS</p>
-<h2 id="搜尋_Ubuntu_Image">搜尋 Ubuntu Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker search ubuntu</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker search</code> 搜尋 Docker Hub 的 image。</p>
-<p><img src="/images/docker/ubuntu/ubuntu000.png" alt="ubuntu000"></p>
-<ol>
-<li>使用 Docker 第一步就是使用 <code>docker search</code> 到 Docker Hub 搜尋 image 下載</li>
-<li>找到 <code>ubuntu</code> image</li>
-<li>7234 star</li>
-<li>為 official image</li>
-</ol>
-<blockquote>
-<p>下載 Docker image 時，盡量使用 official  image，而不要使用別人包過的 image，因為可能會有後門或木馬</p>
-</blockquote>
-<h2 id="下載並建立_Container">下載並建立 Container</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--name MyUbuntu -dt ubuntu</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
-<ul>
-<li><strong>–name</strong> : 替 container 取一個人能夠識別的名字 <code>MyUbuntu</code> ( 若省略，Docker 將隨機命名 )</li>
-<li><strong>-d</strong> : <code>d</code>etach，建立 container 後，就脫離目前 process</li>
-<li><strong>-t</strong> : <code>t</code>erminal，預設執行 <code>/bin/bash</code> process，為了讓 container 啟動後不會立即停止</li>
-<li><strong>ubuntu</strong> : Ubuntu 的官方 image 名稱</li>
-</ul>
-<blockquote>
-<p>Docker container  重要觀念</p>
-<p>One process per container</p>
-<ul>
-<li>一個 container 應該只有 process</li>
-<li>若有多個 process，就應該有多個 container</li>
-<li>process 執行完，container 則釋放停止執行</li>
-</ul>
-<p>當 process 執行完，container 會自動釋放，<code>ubuntu</code> image 預設並沒有執行任何 process，所以 <code>start</code> 完後會自動釋放，為了讓 container 不會執行完立即釋放，因此特別加上 <code>-t</code>，讓此 container 預設執行 <code>bash</code>，使的 container 不會釋放</p>
-</blockquote>
-<p><img src="/images/docker/ubuntu/ubuntu002.png" alt="ubuntu002"></p>
-<ol>
-<li>使用 <code>docker run</code> 建立 container 並執行 bash</li>
-</ol>
-<h2 id="觀察_Container">觀察 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker ps</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>ps</strong> : <code>p</code> resent <code>s</code>tate，使用 <code>docker ps</code> 顯示 <code>正在執行</code> 的 container。</li>
-</ul>
-<p><img src="/images/docker/ubuntu/ubuntu005.png" alt="ubuntu005"></p>
-<ol>
-<li>輸入 <code>docker ps</code></li>
-<li><code>MyUbuntu</code> container 正在執行中</li>
-</ol>
-<h2 id="進入_Ubuntu">進入 Ubuntu</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyUbuntu bash</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker exec</code> 對已經執行中的 container 下指令。</p>
-<ul>
-<li><strong>-i</strong> :  <code>i</code>nteractive，可對 terminal 輸入資料</li>
-<li><strong>-t</strong> : <code>t</code>erminal，可對 terminal 顯示資料</li>
-<li><strong>MyUbuntu</strong> : Container 名稱</li>
-<li><strong>bash</strong> : 對 container 下的指令</li>
-</ul>
-<p><img src="/images/docker/ubuntu/ubuntu007.png" alt="ubuntu007"></p>
-<ol>
-<li>輸入 <code>docker exec -it</code> 進入 container 的 terminal</li>
-<li>輸入 <code>ll</code></li>
-<li>顯示 Ubuntu 內的目錄結構</li>
-</ol>
-<blockquote>
-<p>如此可證明 Ubuntu 已經正常啟動</p>
-</blockquote>
-<h2 id="離開_Ubuntu">離開 Ubuntu</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">exit</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>exit</code> 離開 Ubuntu 的 terminal。</p>
-<p><img src="/images/docker/ubuntu/ubuntu008.png" alt="ubuntu008"></p>
-<h2 id="停止_Container">停止 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker stop <span class="constant">MyUbuntu</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker stop</code> 停止 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu010.png" alt="ubuntu010"></p>
-<ol>
-<li>輸入 <code>docker stop MyUbuntu</code> 停止 <code>MyUbuntu</code> container</li>
-<li>輸入 <code>docker ps</code> 顯示目前執行中的 container</li>
-</ol>
-<blockquote>
-<p>目前已經沒有執行中的 container，表示 Ubuntu 已經停止執行</p>
-</blockquote>
-<h2 id="啟動_Container">啟動 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker start <span class="constant">MyUbuntu</span></span><br><span class="line"><span class="variable">$ </span>docker ps</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker start</code> 重新啟動已經在硬碟，但還沒有執行的 container。</p>
-<p>使用 <code>docker ps</code> 顯示目前執行中的 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu006.png" alt="ubuntu006"></p>
-<ol>
-<li>輸入 <code>docker start MyUbuntu</code> 啟動 <code>MyUbuntu</code> container</li>
-<li>輸入 <code>docker ps</code> 顯示目前執行中的 container</li>
-<li><code>MyUbuntu</code> container 執行中。</li>
-</ol>
-<h2 id="刪除_Container">刪除 Container</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rm <span class="constant">MyUbuntu</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker rm</code> 刪除在硬碟中的 container。</p>
-<p><img src="/images/docker/ubuntu/ubuntu011.png" alt="ubuntu011"></p>
-<ol>
-<li>輸入 <code>docker rm MyUbuntu</code> 刪除 <code>MyUbuntu</code> container，由於 container 正在執行中，無法刪除</li>
-<li>輸入  <code>docker stop MyUbuntu</code> 停止 <code>MyUbuntu</code> container</li>
-<li>再次輸入 <code>docker rm MyUbuntu</code> 刪除 <code>MyUbuntu</code> container，此次刪除成功</li>
-<li>輸入 <code>docker ps -a</code> 顯示所有在硬碟的 container，確認已經沒有任何 container</li>
-</ol>
-<blockquote>
-<p>要刪除 container 之前，必須先停止 container，才能加以刪除。</p>
-</blockquote>
-<h2 id="顯示所有_Image">顯示所有 Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker images</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker images</code> 顯示目前在硬碟所有的 image。</p>
-<p><img src="/images/docker/ubuntu/ubuntu012.png" alt="ubuntu012"></p>
-<ol>
-<li>輸入 <code>docker images</code> 顯示目前在硬碟的所有 image</li>
-<li>目前有 <code>ubuntu</code> image</li>
-</ol>
-<h2 id="刪除_Image">刪除 Image</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker rmi ubuntu</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker rmi</code> 刪除 image。</p>
-<ul>
-<li><strong>rm</strong> : 刪除</li>
-<li><strong>i</strong> : <code>i</code>mage</li>
-</ul>
-<p><img src="/images/docker/ubuntu/ubuntu013.png" alt="ubuntu013"></p>
-<ol>
-<li>輸入 <code>docker rmi ubuntu</code> 刪除 <code>ubuntu</code> image</li>
-<li>輸入 <code>docker images</code> 確認是否 image 已被刪除</li>
-</ol>
-<h2 id="Summary">Summary</h2><hr>
-<p><img src="/images/docker/ubuntu/ubuntu014.svg" alt="ubuntu014"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>使用 Docker 快速建立 Ubuntu 測試環境</li>
-<li>本文為 Docker 最基本的操作，是使用 Docker 一定要會的基本指令</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 Docker 快速建立 Ubuntu 測試環境]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
     
   </entry>
   
