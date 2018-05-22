@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-22T11:03:19.584Z</updated>
+  <updated>2018-05-22T14:20:02.244Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,67 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 DataGrip 連接 PostgreSQL ?]]></title>
+    <link href="http://oomusou.io/aa/"/>
+    <id>http://oomusou.io/aa/</id>
+    <published>2018-05-23T12:23:43.000Z</published>
+    <updated>2018-05-22T14:20:02.244Z</updated>
+    <content type="html"><![CDATA[<p>DataGrip 是 JetBrains 專業的資料庫連線工具，可以直接連上任何資料庫，當然也包含 PostgreSQL。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3<br>DataGrip 2018.1</p>
+<h2 id="DataGrip">DataGrip</h2><hr>
+<p><img src="/images/datagrip/aa/grip000.png" alt="post009"></p>
+<p><strong><em>View -&gt; Tool Windows -&gt; Database</em></strong></p>
+<p>或熱鍵：<code>⌘ + 1</code></p>
+<p><img src="/images/datagrip/aa/grip001.png" alt="post001"></p>
+<p>左側顯示 Database View。</p>
+<p><img src="/images/datagrip/aa/grip002.png" alt="post002"></p>
+<p>DataGrip 連進 PostgreSQL。</p>
+<ol>
+<li>按 <code>+</code>，選擇 <code>Data Source</code></li>
+<li>選擇 <code>PostgreSQL</code></li>
+</ol>
+<p><img src="/images/datagrip/aa/grip003.png" alt="post003"></p>
+<p>DataGrip 支援 PostgreSQL，不過預設並沒有安裝 PostgreSQL 驅動程式。</p>
+<ol>
+<li>按 <code>Download</code> 下載 <code>PostgreSQL</code> 驅動程式。</li>
+</ol>
+<p><img src="/images/datagrip/aa/grip004.png" alt="post004"></p>
+<ol>
+<li><code>User</code> : <code>admin</code></li>
+<li><code>Password</code> : <code>12345</code></li>
+<li>按 <code>Test Connection</code> 測試連接，顯示 Successful</li>
+</ol>
+<p><img src="/images/datagrip/aa/grip005.png" alt="post005"></p>
+<p>DataGrip 預設不會顯示所有 table。</p>
+<ol>
+<li>選 <code>Shemas...</code></li>
+<li>勾選 <code>All schemas</code></li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/datagrip/aa/grip006.png" alt="post006"></p>
+<ol>
+<li>展開 <code>tables</code>，選擇 <code>sql_features</code> table</li>
+<li>按 <code>Data Editor</code> 顯示資料</li>
+</ol>
+<p>如此 DataGrip 已經正確連上 PostgreSQL。</p>
+<h2 id="Conclusion">Conclusion</h2><ul>
+<li>DataGrip 為專業的資料庫管理工具，也包含各資料庫的 driver，可輕鬆連上各種資料庫</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[標題描述]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
+    
+      <category term="PHP" scheme="http://oomusou.io/tags/PHP/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 DataGrip 連接 PostgreSQL ?]]></title>
@@ -2009,112 +2070,6 @@
       <category term="Refactoring" scheme="http://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 F# 實現 Composite Pattern？]]></title>
-    <link href="http://oomusou.io/fsharp/composite/"/>
-    <id>http://oomusou.io/fsharp/composite/</id>
-    <published>2018-04-21T12:23:43.000Z</published>
-    <updated>2018-04-22T02:14:24.000Z</updated>
-    <content type="html"><![CDATA[<p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Composite Pattern。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2018.1<br>F# 4.1</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p>由購物車計算商品價錢，但在活動期間，Apple 產品組合有特惠 ：</p>
-<ul>
-<li><strong>MacBook Pro 15”</strong>：6 萬</li>
-<li><strong>iPad Air</strong>：1 萬</li>
-<li><strong>Apple Watch</strong>：1 萬</li>
-<li><strong>Apple 套餐組合</strong> : (Macbook Pro + iPad Air + Apple Watch) 總價打九折：<code>(6 + 1 + 1) * 0.9</code> = 7.2 萬</li>
-</ul>
-<p><img src="/images/fsharp/composite/composite000.svg" alt="composite000"></p>
-<p>若同時買 MacBook Pro + iPad Air + Apple Watch + Apple 套餐為 15.2 萬。</p>
-<h2 id="Task">Task</h2><hr>
-<p>直接使用 FP 的思維完成需求。</p>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p>Composite Pattern</p>
-<p>當 <code>單一資料</code> 與 <code>組合資料</code> 同時存在時，讓 client 有一致性的操作方式</p>
-</blockquote>
-<p><img src="/images/fsharp/composite/composite002.svg" alt="composite002"></p>
-<p>首先思考 Composite Pattern 的本質：</p>
-<ol>
-<li>Leaf 與 Composite 之間的 interface 必須相同</li>
-<li>Client 操作 Leaf 與 Composite 都一視同仁</li>
-</ol>
-<p>只要能達到這兩個目標，就算完成了 Composite Pattern。</p>
-<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
-<ul>
-<li>為了讓 Leaf 與 Composite 的 interface 要相同，所以必須訂出共同的 interface</li>
-<li>Composite 必須以 state 記住 Leaf，並根據 state 加以操作</li>
-<li>Client 以相同方式操作 Composite 與 Leaf</li>
-</ul>
-<h2 id="FP_思考方式">FP 思考方式</h2><hr>
-<ul>
-<li>Data 與 function 分開</li>
-<li>將 Leaf 與 Composite 都設定成 type</li>
-<li>Composite 無需以 state 記住 Leaf，在建立 data 時就建立 Leaf</li>
-<li>只要建立單一 function 操作所有 data 即可，如此 Composite 與 Leaf 很自然地 interface 都相同</li>
-<li>由於 Composite 與 Leaf 的 interface 都相同，所以 Composite 會以 recursive 方式呼叫 Leaf 的 function</li>
-</ul>
-<h2 id="Implementation">Implementation</h2><hr>
-<p><strong>Product.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> ClassLibrary</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Apple</span> </span>= </span><br><span class="line">    | MacBookPro <span class="keyword">of</span> double</span><br><span class="line">    | IPadAir <span class="keyword">of</span> double</span><br><span class="line">    | AppleWatch <span class="keyword">of</span> double</span><br><span class="line">    | AppleCombo <span class="keyword">of</span> Apple List</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> Product =</span><br><span class="line">    <span class="keyword">let</span> macbookPro = MacBookPro <span class="number">60000.0</span></span><br><span class="line">    <span class="keyword">let</span> ipadAir = IPadAir <span class="number">10000.0</span></span><br><span class="line">    <span class="keyword">let</span> appleWatch = AppleWatch <span class="number">10000.0</span></span><br><span class="line">    <span class="keyword">let</span> appleCombo = (AppleCombo) [ macbookPro; ipadAir; appleWatch ]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">rec</span> getPrice product = </span><br><span class="line">        <span class="keyword">match</span> product <span class="keyword">with</span></span><br><span class="line">        | MacBookPro(price) </span><br><span class="line">        | IPadAir(price) </span><br><span class="line">        | AppleWatch(price)    -&gt; price</span><br><span class="line">        | AppleCombo(products) -&gt; products</span><br><span class="line">                                  |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; getPrice elm)</span><br><span class="line">                                  |&gt; (<span class="keyword">fun</span> elm -&gt; elm * <span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
-<p>第 3 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Apple</span> </span>= </span><br><span class="line">    | MacBookPro <span class="keyword">of</span> double</span><br><span class="line">    | IPadAir <span class="keyword">of</span> double</span><br><span class="line">    | AppleWatch <span class="keyword">of</span> double</span><br><span class="line">    | AppleCombo <span class="keyword">of</span> Apple List</span><br></pre></td></tr></table></figure>
-<p>將各產品都設定成 type，其中 <code>AppleCombo of Apple List</code> 表示 <code>AppleCombo</code> 為各種 Apple 產品的組合。</p>
-<p>10 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> macbookPro = MacBookPro <span class="number">60000.0</span></span><br><span class="line"><span class="keyword">let</span> ipadAir = IPadAir <span class="number">10000.0</span></span><br><span class="line"><span class="keyword">let</span> appleWatch = AppleWatch <span class="number">10000.0</span></span><br></pre></td></tr></table></figure>
-<p>設定各產品的定價。</p>
-<p>13 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> appleCombo = (AppleCombo) [ macbookPro; ipadAir; appleWatch ]</span><br></pre></td></tr></table></figure>
-<p>設定 Apple 套餐該包含哪些產品，<code>(AppleCombo)</code> 轉型是必要的，若沒有轉型，Type Inference 會推斷成 <code>Apple list</code>，導致編譯錯誤，我們實際需要的型別為 <code>Apple</code>。</p>
-<p><img src="/images/fsharp/composite/composite001.png" alt="composite001"></p>
-<p>再次證明 F# 寫程式不需要型別，但型別的檢查依然非常嚴格，這就是 Type Inference 優越的地方。</p>
-<p>16 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">rec</span> getPrice product = </span><br><span class="line">        <span class="keyword">match</span> product <span class="keyword">with</span></span><br><span class="line">        | MacBookPro(price) </span><br><span class="line">        | IPadAir(price) </span><br><span class="line">        | AppleWatch(price)    -&gt; price</span><br><span class="line">        | AppleCombo(products) -&gt; products</span><br><span class="line">                                  |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; getPrice elm)</span><br><span class="line">                                  |&gt; (<span class="keyword">fun</span> elm -&gt; elm * <span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
-<p><code>getPrice()</code> 計算單一商品與 Apple 套餐。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> product <span class="keyword">with</span></span><br><span class="line">      | MacBookPro(price) </span><br><span class="line">      | IPadAir(price) </span><br><span class="line">      | AppleWatch(price)    -&gt; price</span><br></pre></td></tr></table></figure>
-<p>Pattern Matching 會使用型別判斷，且將該型別的值 price 直接 extract 出來。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">| AppleCombo(products) -&gt; products</span><br><span class="line">                          |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; getPrice elm)</span><br><span class="line">                          |&gt; (<span class="keyword">fun</span> elm -&gt; elm * <span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
-<p>由 <code>AppleCombo</code> extract 出 <code>products</code>，其型別為 <code>List</code>，可由 <code>List.sumBy()</code> 去計算總和，值得注意的是再度使用 <code>getPrice()</code> 計算每個產品的價錢，因此 <code>getPrice()</code> 必須宣告成 <code>rec</code>。</p>
-<p> 最後再將 <code>List.sumBy()</code> 的結果打九折。</p>
-<blockquote>
-<p>我們可以發現在處理 <code>多型</code> 的議題上，OOP 與 FP 採用不同的方式，由於 OOP 是 data 與 function 合一，因此 <code>getPrice()</code> 會寫在各 data class 上，然後用 interface 強迫各 class 都要實作 <code>getPrice()</code>；但 FP 是 data 與 function 分開，因此只要一個 <code>getPrice()</code>，然後使用 Pattern Matching 根據不同型別有相對應的處理。</p>
-<p>但無論 OOP 或 FP，儘管處理方式不同，但對於 client 來說，只要是 <code>Apple</code> 型別，都使用相同的 <code>getPrice()</code>，符合 <code>開放封閉原則</code> 的要求。</p>
-</blockquote>
-<p><strong>ShoppingCart.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> ClassLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> ShoppingCart =</span><br><span class="line">    <span class="keyword">let</span> calculatePrice products = </span><br><span class="line">        products</span><br><span class="line">        |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; Product.getPrice elm)</span><br></pre></td></tr></table></figure>
-<p><code>products</code> 的型別為 <code>Apple list</code>，因此每個 element 都是 <code>Apple</code> 型別，都可放心使用 <code>getPrice()</code>，這就是 Composite Pattern 的精華。</p>
-<p><strong>Program.fs</strong></p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Learn more about F# at http://fsharp.org</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> ClassLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    [ </span><br><span class="line">        Product.macbookPro</span><br><span class="line">        Product.ipadAir</span><br><span class="line">        Product.appleWatch</span><br><span class="line">        Product.appleCombo </span><br><span class="line">    ]</span><br><span class="line">    |&gt; ShoppingCart.calculatePrice </span><br><span class="line">    |&gt; printf <span class="string">"%.0f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
-<p>Client 呼叫 <code>ShoppingCart.calculatePrice()</code> 計算購物車內所有商品。</p>
-<h2 id="Summary">Summary</h2><hr>
-<p>回想 Composite Pattern 的本質：</p>
-<ol>
-<li>Leaf 與 Composite 之間的 interface 必須相同</li>
-<li>Client 操作 Leaf 與 Composite 都一視同仁</li>
-</ol>
-<p>FP 雖然沒有特別定義 interface，但所有 <code>Apple</code> type 的 data 統一都適用於 <code>getPrice()</code> function，由於在 <code>getPrice()</code> 內使用了 Pattern Matching，只要其中有一個 type 回傳型別不同，compiler 編譯就會報錯，與原本 Composite Pattern 定義 interface 本質相同。</p>
-<p>對於 <code>Apple</code> type，統一使用 <code>getPrice()</code> function 處理，與原本 Composite Pattern 在 <code>Component</code> interface 下的 <code>Leaf</code> 與 <code>Composite</code> 都一視同仁的本質相同。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Composite Pattern 本質就是 <code>多型</code>，OOP 使用 interface 讓 <code>物件</code> 與 <code>容器</code> 實踐相同 interface，讓兩者能使用相同的方式操作；FP 使用單一 function，再配合 Pattern Matching 對相同 type 的各種物件有不同的實作。雖然方式不同，但讓 client 以相同方式操作的本質都相同，也符合 <code>開放封閉原則</code> 的要求</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpComposite" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以 FP 重新思考 Composite Pattern]]>
-    
-    </summary>
-    
-      <category term="Design Pattern" scheme="http://oomusou.io/tags/Design-Pattern/"/>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
     
   </entry>
   
