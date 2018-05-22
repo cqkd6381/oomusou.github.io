@@ -2,11 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://oomusou.io/aa/</loc>
-    <lastmod>2018-05-22T14:20:02.244Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/datagrip/postgresql/</loc>
     <lastmod>2018-05-22T11:03:19.584Z</lastmod>
   </url>
@@ -1027,7 +1022,7 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/homestead/homestead-per-project/</loc>
+    <loc>http://oomusou.io/laravel/repository/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -1037,12 +1032,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/repository/</loc>
+    <loc>http://oomusou.io/laravel/service/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/laravel/service/</loc>
+    <loc>http://oomusou.io/laravel/homestead/homestead-per-project/</loc>
     <lastmod>2016-10-18T06:13:35.000Z</lastmod>
   </url>
   
@@ -1157,12 +1152,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/phpstorm/phpstorm-navigate-method/</loc>
+    <loc>http://oomusou.io/refactor/refactor-remove-assignments-to-parameters/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/refactor/refactor-remove-assignments-to-parameters/</loc>
+    <loc>http://oomusou.io/phpstorm/phpstorm-navigate-method/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
@@ -1187,12 +1182,12 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/php/php-trait/</loc>
+    <loc>http://oomusou.io/tdd/tdd-phpunit-native-function/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/tdd/tdd-phpunit-native-function/</loc>
+    <loc>http://oomusou.io/php/php-trait/</loc>
     <lastmod>2016-03-22T14:03:51.000Z</lastmod>
   </url>
   
