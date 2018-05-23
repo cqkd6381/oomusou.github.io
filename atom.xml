@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-23T10:47:11.744Z</updated>
+  <updated>2018-05-23T10:54:00.087Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/docker/toolbox/"/>
     <id>http://oomusou.io/docker/toolbox/</id>
     <published>2018-05-23T12:23:43.000Z</published>
-    <updated>2018-05-23T10:47:11.744Z</updated>
+    <updated>2018-05-23T10:54:00.087Z</updated>
     <content type="html"><![CDATA[<p>由於 Docker for Windows 底層用的是 Hyper-V，這必須在 Windows 10 Professional 才提供，因此無法安裝在 Windows 10 Home。</p>
 <p>若要在 Windows 10 Home 使用 Docker，就要改走 Docker Toolbox 這條路。</p>
 <a id="more"></a>
@@ -105,9 +105,6 @@
 <p>日後要執行 Docker，就啟動 <code>Docker Quickstart Terminal</code> 即可</p>
 </blockquote>
 <h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>雖然 Windows 10 Home 沒有 Hyper-V，但透過 VirtualBox + Docker Toolbox，也能夠在 Windows 10 Home 跑 Docker</li>
-</ul>
 ]]></content>
     <summary type="html">
     <![CDATA[透過 VirtualBox + Docker Toolbox]]>
