@@ -2,6 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/cli/</loc>
+    <lastmod>2018-05-23T06:48:37.128Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/project-template/</loc>
+    <lastmod>2018-05-23T06:47:25.269Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/classlib/</loc>
+    <lastmod>2018-05-23T06:46:33.836Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/console/</loc>
+    <lastmod>2018-05-23T06:45:43.984Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/unit-test/</loc>
+    <lastmod>2018-05-23T06:44:40.972Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/solution/</loc>
+    <lastmod>2018-05-23T06:44:04.475Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/package-reference/</loc>
+    <lastmod>2018-05-23T06:42:43.973Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/basic-cli/</loc>
+    <lastmod>2018-05-23T06:41:10.920Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/datagrip/postgresql/</loc>
     <lastmod>2018-05-22T11:03:19.584Z</lastmod>
   </url>
@@ -297,33 +337,8 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/netcore/unit-test/</loc>
-    <lastmod>2018-03-19T02:13:03.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/solution/</loc>
-    <lastmod>2018-03-19T02:12:57.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/sdk/</loc>
-    <lastmod>2018-03-19T02:12:51.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/netcore/restore/</loc>
     <lastmod>2018-03-19T02:12:42.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/project-template/</loc>
-    <lastmod>2018-03-19T02:12:37.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/package-reference/</loc>
-    <lastmod>2018-03-19T02:12:29.000Z</lastmod>
   </url>
   
   <url>
@@ -344,21 +359,6 @@
   <url>
     <loc>http://oomusou.io/netcore/di/</loc>
     <lastmod>2018-03-19T02:08:21.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/console/</loc>
-    <lastmod>2018-03-19T02:08:07.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/classlib/</loc>
-    <lastmod>2018-03-19T02:07:58.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/basic-sdk/</loc>
-    <lastmod>2018-03-19T02:07:33.000Z</lastmod>
   </url>
   
   <url>
