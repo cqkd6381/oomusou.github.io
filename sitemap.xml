@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/docker/toolbox/</loc>
+    <lastmod>2018-05-23T10:47:11.744Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/cli/</loc>
     <lastmod>2018-05-23T06:48:37.128Z</lastmod>
   </url>
