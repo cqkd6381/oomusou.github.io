@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-23T12:59:30.596Z</updated>
+  <updated>2018-05-24T07:02:10.726Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,120 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何以 .NET Core CLI 建立並上傳 NuGet 套件 ?]]></title>
+    <link href="http://oomusou.io/netcore/nuget/create/"/>
+    <id>http://oomusou.io/netcore/nuget/create/</id>
+    <published>2018-05-24T12:23:43.000Z</published>
+    <updated>2018-05-24T07:02:10.726Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core 一樣使用 NuGet 管理 package，本文將使用 VS Code 與 .NET Core CLI 建立 package，並上傳到 NuGet server。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core 2.0.7<br>VS Code 1.23.1</p>
+<h2 id="建立_Class_Library">建立 Class Library</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> classlib -o MyClassLib</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>classlib</strong>：建立 class library 類型專案</li>
+<li><strong>-o</strong>：<code>o</code> utput，建立在 <code>MyCalculator</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/nuget/create/nuget000.png" alt="nuget000"></p>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyClassLib</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接欲開啟的 <code>目錄名稱</code>。</p>
+<p><img src="/images/netcore/nuget/create/nuget001.png" alt="nuget001"></p>
+<h2 id="編輯_MyCalculator">編輯 MyCalculator</h2><hr>
+<p><strong>MyCalculator.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyClassLib</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyCalculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立 <code>MyCalculator</code> class，有只有一個 <code>Sum()</code> method。</p>
+<p><img src="/images/netcore/nuget/create/nuget002.png" alt="nuget002"></p>
+<h2 id="新增_Package_Metadata">新增 Package Metadata</h2><hr>
+<p><strong>MyClassLib.csproj</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Project</span> <span class="attribute">Sdk</span>=<span class="value">"Microsoft.NET.Sdk"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TargetFramework</span>&gt;</span>netstandard2.0<span class="tag">&lt;/<span class="title">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageId</span>&gt;</span>OomusouCalculator<span class="tag">&lt;/<span class="title">PackageId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="title">Version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Authors</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Authors</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Company</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Company</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">GeneratePackageOnBuild</span>&gt;</span>true<span class="tag">&lt;/<span class="title">GeneratePackageOnBuild</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Content</span> <span class="attribute">Include</span>=<span class="value">"MyCalculator.cs"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>第 5 行</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">PackageId</span>&gt;</span>OomusouCalculator<span class="tag">&lt;/<span class="title">PackageId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="title">Version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Authors</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Authors</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Company</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Company</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">GeneratePackageOnBuild</span>&gt;</span>true<span class="tag">&lt;/<span class="title">GeneratePackageOnBuild</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>每個 NuGet package 除了 <code>.nupkg</code> 外，另外還有 <code>.nuspec</code>，用來描述 package 資訊與其所需的 dependency，而這些資訊都來自於 <code>.csproj</code>。</p>
+<ul>
+<li><strong>PackageId</strong>：Package 唯一識別的 id，若是要發佈到 <code>nuget.org</code>，則必須是 <code>nuget.org</code> 唯一；若是發佈到公司內部自己的 NuGet server，則必須是該 server 的唯一</li>
+<li><strong>Version</strong>：套件版本編號</li>
+<li><strong>Authors</strong>：套件作者</li>
+<li><strong>Company</strong>：套件公司</li>
+<li><strong>GeneratePackageOnBuild</strong>：當 <code>dotnet build</code> 時，自動執行 <code>dotnet pack</code> 建立 <code>.nupkg</code></li>
+</ul>
+<p><img src="/images/netcore/nuget/create/nuget003.png" alt="nuget003"></p>
+<h2 id="編譯同時建置_Package">編譯同時建置 Package</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 編譯專案。</p>
+<ul>
+<li><strong>-c</strong>：<code>c</code> onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要搭配 <code>-c</code> 參數</li>
+</ul>
+<blockquote>
+<p>由於剛剛已經在 <code>.csproj</code> 增加 <code>GeneratePackageOnBuild</code>，所以只要 <code>dotnet build</code> 就會一起產生 <code>.nupkg</code></p>
+</blockquote>
+<p><img src="/images/netcore/nuget/create/nuget004.png" alt="nuget004"></p>
+<h2 id="獲得_API_Key">獲得 API Key</h2><hr>
+<p>NuGet Package 分兩種，一種是對外公開的 package，一種是公司內部用的 package，本文先討論公開的 NuGet package。</p>
+<p>要發佈到 NuGet server，必須知道兩件事：</p>
+<ol>
+<li><strong>API Key</strong>：相當於你個人資訊憑證</li>
+<li><strong>NuGet server URL</strong>：NuGet server 位址</li>
+</ol>
+<p><img src="/images/netcore/nuget/create/nuget005.png" alt="nuget005"></p>
+<ol>
+<li>到 <code>https://www.nuget.org</code>，這是公開 NuGet package 的集散地</li>
+<li>以個人帳號 Sign in，將 Microsoft 帳號登入</li>
+</ol>
+<p><img src="/images/netcore/nuget/create/nuget006.png" alt="nuget006"></p>
+<ol>
+<li>右上角會顯示登入帳號</li>
+<li>選擇 <code>API Keys</code></li>
+</ol>
+<p><img src="/images/netcore/nuget/create/nuget007.png" alt="nuget007"></p>
+<ol>
+<li>按 <code>Create</code> 建立 API Key</li>
+<li><strong>Key Name</strong>：這是給自己識別的名字，代表某個 API Key</li>
+<li><strong>Glob Patten</strong>：適用的 pattern，<code>*</code> 代表適用所有 package</li>
+</ol>
+<p>最後按 <code>Create</code> 建立 API Key。</p>
+<p><img src="/images/netcore/nuget/create/nuget008.png" alt="nuget008"></p>
+<ol>
+<li>建立新的 API Key 成功</li>
+<li>按 <code>Copy</code> 將 API Key 複製到 clipboard</li>
+</ol>
+<h2 id="發佈_Package">發佈 Package</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject/bin/Release $ dotnet nuget push OomusouCalculator<span class="number">.1</span><span class="number">.0</span><span class="number">.0</span>.nupkg -k oy2mskdm2daf7i7wersaxtwvssc6oebutgtywbhljl5tcw -s https:<span class="comment">//api.nuget.org/v3/index.json</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet nuget push</code> 發佈 NuGet package 到公開的 NuGet server。</p>
+<ul>
+<li><strong>-k</strong>：將剛剛複製的 API Key 貼上</li>
+<li><strong>-s</strong>：公開 NuGet server 的網址為 <code>https://api.nuget.org/v3/index.json</code></li>
+</ul>
+<blockquote>
+<p>API Key 請用自己的，上面的 API Key 只是 <code>示意</code> 用</p>
+</blockquote>
+<p><img src="/images/netcore/nuget/create/nuget009.png" alt="nuget009"></p>
+<ol>
+<li>將目錄切到 <code>.nupkg</code> 所在的 <code>bin/Release</code> 目錄下</li>
+<li>使用 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到公開的 NuGet server</li>
+</ol>
+<blockquote>
+<p>常見的 <code>dotnet nuget push</code> 失敗，都在於 <code>PackageId</code> 重複，請記得取一個 <code>不重複的</code> PackageId</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>上傳 NuGet package 到 NuGet server 已經變得非常簡單，在 <code>dotnet build</code> 已經順便 <code>dotnet pack</code>，配合 <code>dotnet nuget push</code> 即可上傳到公開的 NuGet server</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli" target="_blank" rel="external">Quickstart: Create and publish a package (dotnet CLI)</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[建立 NuGet 套件越來越簡單]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何在 Windows 10 Home 安裝 Docker ?]]></title>
@@ -1980,139 +2094,6 @@
       <category term="SonarLint" scheme="http://oomusou.io/tags/SonarLint/"/>
     
       <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 Rider 的 Refactoring：Change Signature]]></title>
-    <link href="http://oomusou.io/rider/change-signature/"/>
-    <id>http://oomusou.io/rider/change-signature/</id>
-    <published>2018-04-22T12:23:43.000Z</published>
-    <updated>2018-04-22T15:24:13.000Z</updated>
-    <content type="html"><![CDATA[<p>Rider 相當於 IntelliJ + Resharper，除了保有 IntelliJ 平台的特色外，還包含 Resharper 強悍的功能，本文將討論其 Refactoring 中的 Change Signature。 </p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Rider 2018.1</p>
-<h2 id="Change_Signature">Change Signature</h2><hr>
-<p>實務上常在通過單元測試後，在重構階段才發現 method 的 parameter 需要重構，此時就該使用 Change Signature。</p>
-<ul>
-<li><strong>重構 method 名稱</strong>：Method、Property、Indexer</li>
-<li><strong>重構 method 回傳型別</strong>：Method、Property</li>
-<li><strong>重構 parameter 名稱與型別</strong>：Method、Constructor、Indexer</li>
-<li><strong>新增或刪除 parameter</strong>：Method、Constructor、Indexer</li>
-<li><strong>重構 parameter 順序</strong>：Method、Constructor、Indexer</li>
-</ul>
-<h2 id="重構_Signature_並修改_Client">重構 Signature 並修改 Client</h2><hr>
-<p><strong>Calculator.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> calculator = <span class="keyword">new</span> Calculator();</span><br><span class="line">            <span class="keyword">var</span> result = calculator.Add(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>欲將 <code>Calculator.Add()</code> 加以 Change Signature。</p>
-<p><img src="/images/rider/change-signature/sig000.png" alt="sig000"></p>
-<ol>
-<li>將游標放到 <code>Add()</code></li>
-<li>按熱鍵：<code>⌃ + T</code>，選擇 Change Signature</li>
-</ol>
-<p><img src="/images/rider/change-signature/sig001.png" alt="sig001"></p>
-<ol>
-<li>將 method 名稱重構成 <code>Add3</code></li>
-<li>增加 parameter <code>int x</code></li>
-<li>對原本呼叫的 function 選擇直接 <code>Modify</code> (稍後會介紹 <code>Delegate via overloading method</code>)</li>
-<li>按 <code>Next</code> 下一步</li>
-</ol>
-<p><img src="/images/rider/change-signature/sig002.png" alt="sig002"></p>
-<p>對於新增的 parameter，Rider 提供 4 種重構方式</p>
-<ol>
-<li><code>Leave code non-compatible, I&#39;ll correct calls my selft</code>：也就是 Rider 不做任何修改</li>
-<li><code>Use 0</code>：Rider 會對新的參數傳入 <code>0</code></li>
-<li><code>Resolve with call tree</code>：Rider 會對每個呼叫的 method 停下來，讓我們決定該如何修改 (稍後會介紹)</li>
-<li><code>Use the following value</code>：統一給定指定值傳入</li>
-</ol>
-<p>在此選擇 <code>Use 0</code> 。</p>
-<p><img src="/images/rider/change-signature/sig003.png" alt="sig003"></p>
-<ol>
-<li>Rider 替我們將 method 名稱改成 <code>Add3()</code></li>
-<li>Rider 替我們增加了 parameter <code>int z</code></li>
-</ol>
-<p><img src="/images/rider/change-signature/sig004.png" alt="sig004"></p>
-<ol>
-<li>Client 也改成 <code>Add3</code></li>
-<li>Argument 多傳了 <code>0</code> </li>
-</ol>
-<h2 id="重構_Signature_但不修改_Client">重構 Signature 但不修改 Client</h2><hr>
-<p><img src="/images/rider/change-signature/sig005.png" alt="sig005"></p>
-<ol>
-<li>選擇 <code>Delegate via overloading method</code>，將以 Overloading 方式重構</li>
-</ol>
-<p><img src="/images/rider/change-signature/sig002.png" alt="sig002"></p>
-<p>對於 client，一樣有 4 種重構方式。</p>
-<p><img src="/images/rider/change-signature/sig006.png" alt="sig006"></p>
-<ol>
-<li>原本的 <code>Add()</code> 重構成 <code>Add3()</code>，也增加了 parameter <code>int z</code></li>
-<li>另外新增一個 <code>Add()</code> 呼叫 <code>Add3()</code>，如此可在不修改 Client 的情況下，改變 signature</li>
-</ol>
-<blockquote>
-<p>如 class library 已經正式發佈，有其他的 client 使用中，這種重構方式可使的 client 不用修改程式碼，也能達到 Change Signature 的目的</p>
-</blockquote>
-<h2 id="直接修改_Client_的_Argument">直接修改 Client 的 Argument</h2><hr>
-<p><img src="/images/rider/change-signature/sig007.png" alt="sig007"></p>
-<ol>
-<li>直接在 client 新增 argument <code>2</code></li>
-<li>按熱鍵 <code>⌥ + ↩</code>，顯示了多種重構方式，甚至可以新增 Overloading Method</li>
-</ol>
-<p><img src="/images/rider/change-signature/sig008.png" alt="sig008"></p>
-<ol>
-<li>Rider 幫我們增加了新 parameter <code>int i</code></li>
-</ol>
-<h2 id="根據_Call_Tree_逐步修改_Client">根據 Call Tree 逐步修改 Client</h2><hr>
-<p><strong>Calculator.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Calculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Add</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Multiply</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x * y;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Calculate</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Multiply(Add(x, y), z);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>新增 <code>Multiply()</code> 與 <code>Calculate()</code> 。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> calculator = <span class="keyword">new</span> Calculator();</span><br><span class="line">            <span class="keyword">var</span> result = calculator.Calculate(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(<span class="string">"&#123;0&#125;"</span>, result);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Client 改呼叫 <code>Calculate()</code>。</p>
-<p><img src="/images/rider/change-signature/sig009.png" alt="sig009"></p>
-<p>一樣針對 <code>Add()</code> 加以重構。</p>
-<p><img src="/images/rider/change-signature/sig001.png" alt="sig001"></p>
-<p>一樣重構 method name 與增加 parameter。</p>
-<p><img src="/images/rider/change-signature/sig010.png" alt="sig010"></p>
-<ol>
-<li>選擇 <code>Resolve with call tree</code></li>
-</ol>
-<p><img src="/images/rider/change-signature/sig011.png" alt="sig011"></p>
-<ol>
-<li>Rider 會逐一根據 call tree 一步一步重構，首先遇到呼叫 <code>Add3()</code> 之處，會詢問你該如何重構，內建提供多種方法，選擇 <code>Create field _z in type Calculator</code></li>
-</ol>
-<p><img src="/images/rider/change-signature/sig012.png" alt="sig012"></p>
-<ol>
-<li>Rider 自動幫我們加上 field 與 Constructor</li>
-</ol>
-<p><img src="/images/rider/change-signature/sig013.png" alt="sig013"></p>
-<p>既然 <code>Calculator</code> 新增了 constructor，接下來就是針對 constructor 加以重構。</p>
-<ol>
-<li>針對 constructor 也提供了眾多重構方式，選擇 User edit</li>
-</ol>
-<p><img src="/images/rider/change-signature/sig014.png" alt="sig014"></p>
-<ol>
-<li>自行在 constructor 輸入 <code>4</code></li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Rider 針對 Change Signature 提供多種重構方式，甚至還可以根據 call tree，一步一步提供客製化的重構</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/RiderChangeSignature" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://www.jetbrains.com/help/rider" target="_blank" rel="external">JetBrains Rider</a>, <a href="https://www.jetbrains.com/help/rider/Refactorings__Change_Signature.html?keymap=rider_osx#delegating" target="_blank" rel="external">Change Signature refactoring</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[針對 Method 的 Signature 加以重構]]>
-    
-    </summary>
-    
-      <category term="Refactoring" scheme="http://oomusou.io/tags/Refactoring/"/>
-    
-      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
     
   </entry>
   

@@ -99,6 +99,74 @@
 	<!-- display as entry -->	
 		<h3 class="title">
 			
+			<div class="article-title"><a href="/phpstorm/collection-debug/" title="使用 Watches 替 Collection 除錯">如何使用 PhpStorm 對 Collection 除錯 ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/phpstorm/collection-debug/"><img src="/images/feature/phpstorm.png" alt="如何使用 PhpStorm 對 Collection 除錯 ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>Laravel 的 <code>Collection</code> 在實務上非常好用，除了 Eloquent 直接回傳 <code>Collection</code> 外，還擴充了很多 method，讓我們可以使用 higher order function 與 fluent 風格開發，讓程式可讀性更高。不過 <code>Collection</code> 的除錯就比較麻煩，本文使用 PhpStorm 內建的 <strong>Watches</strong>，讓我們可以在不用修改程式碼的前提下，快速對 <code>Collection</code> 除錯。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/phpstorm/collection-debug/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
+			<div class="article-title"><a href="/phpstorm/refactor-namespace/" title="使用 PhpStorm 自動幫我們重構 Namespace">如何使用 PhpStorm 重構 Namespace ?</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/phpstorm/refactor-namespace/"><img src="/images/feature/phpstorm.png" alt="如何使用 PhpStorm 重構 Namespace ?"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>在 TDD 開發流程，為了第一個 <span class="label label-success">綠燈</span>，一開始可能在同一個 namespace 下只有一個 class，但隨著重構的進行，可能重構出更多的 class 與 interface，為了更加的<strong>高內聚，低耦合</strong>，我們可能會將更相關的 class 與 interface 重構到其他 namespace，導致相依的 class 也必須修改，在重構 namepsace 時，PhpStorm 可以幫我們將相依的 class 一併修改，非常方便。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/phpstorm/refactor-namespace/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
 			<div class="article-title"><a href="/phpstorm/phpstorm-xdebug/" title="以中斷點方式替 Laravel 除錯">如何使用 PhpStorm 對 Laravel 除錯?</a></div>						
 		</h3>
 	
@@ -361,75 +429,6 @@
     <div class="col-md-10"></div>
     <div class="col-md-2">
 	  <a type="button" href="/laravel/browsersync/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/tdd/tdd-repository-testing-mysql/" title="直接使用 MySQL 與 Test Factory Generator 測試 Repository">如何測試 Repository 模式 (使用 MySQL)?</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/tdd/tdd-repository-testing-mysql/"><img src="/images/feature/tdd.png" alt="如何測試 Repository 模式 (使用 MySQL)?"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>使用 SQLite In-Memory 的方式雖然又快又方便，但若使用了 <code>DB::raw</code> 或 <code>whereRaw()</code> 的寫法，由於直接使用了 MySQL 的函式，可能 SQLite 並不支援，就必須直接在 MySQL 跑測試。</p>
-<p>雖然我們會另外開一個資料庫做測試，但也有可能我們想直接對正式有資料的資料庫做測試，我們該怎麼快速無痛切換呢?</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/tdd/tdd-repository-testing-mysql/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/tdd/tdd-di/" title="從可測試性角度探討依賴注入">深入探討依賴注入</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/tdd/tdd-di/"><img src="/images/feature/tdd.png" alt="深入探討依賴注入"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>依賴反轉原則是 SOLID 中最難理解的原則，而依賴注入則是單元測試的基石，本文將從可測試性角度探討依賴反轉與依賴注入，並將 Laravel 的 service container、constructor injection 與 method injection 應用在實務上。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/tdd/tdd-di/#more" class="btn btn-default more">Read More</a>
     </div>
   </div>
 </div>
