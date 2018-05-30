@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-30T05:08:59.755Z</updated>
+  <updated>2018-05-30T05:16:38.411Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://oomusou.io/netcore/docker-dev/"/>
     <id>http://oomusou.io/netcore/docker-dev/</id>
     <published>2018-05-30T12:23:43.000Z</published>
-    <updated>2018-05-30T05:08:59.755Z</updated>
-    <content type="html"><![CDATA[<p>雖然可以在 Windows 或 macOS 開發 .NET Core，但畢竟 production server 是 Linux，因此在 Windows 或 macOS 測試成功，也不代表真正上 Linux 沒有問題。</p>
+    <updated>2018-05-30T05:16:38.411Z</updated>
+    <content type="html"><![CDATA[<p>雖然可以在 Windows 或 macOS 開發 .NET Core，但畢竟 production 環境是 Linux，因此在 Windows 或 macOS 測試成功，也不代表真正上 Linux 沒有問題。</p>
 <p>透過 Docker，我們可以在開發階段就測試 Linux 環境，及早發現可能的問題。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
