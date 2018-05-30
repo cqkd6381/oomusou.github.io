@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-30T05:16:38.411Z</updated>
+  <updated>2018-05-30T06:14:52.098Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/netcore/docker-dev/"/>
     <id>http://oomusou.io/netcore/docker-dev/</id>
     <published>2018-05-30T12:23:43.000Z</published>
-    <updated>2018-05-30T05:16:38.411Z</updated>
+    <updated>2018-05-30T06:14:52.098Z</updated>
     <content type="html"><![CDATA[<p>雖然可以在 Windows 或 macOS 開發 .NET Core，但畢竟 production 環境是 Linux，因此在 Windows 或 macOS 測試成功，也不代表真正上 Linux 沒有問題。</p>
 <p>透過 Docker，我們可以在開發階段就測試 Linux 環境，及早發現可能的問題。</p>
 <a id="more"></a>
@@ -76,6 +76,11 @@
 <h2 id="建立_-NET_Core_App">建立 .NET Core App</h2><hr>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
 <p>使用  <code>dotnet new</code> 建立 .NET Core App。</p>
+<ul>
+<li>new : 建立 project</li>
+<li>console : 建立 console 類型 project</li>
+<li>-o : 以 MyConsole 為專案名稱並建立目錄</li>
+</ul>
 <p><img src="/images/netcore/docker-dev/DockerDev004.png" alt="DockerDev004"></p>
 <h2 id="執行_-NET_Core_App">執行 .NET Core App</h2><hr>
 <figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd <span class="class">MyConsole</span></span><br><span class="line">~/<span class="class">MyConsole</span> <span class="char">$ </span>dotnet run</span><br></pre></td></tr></table></figure>

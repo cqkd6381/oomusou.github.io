@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="在開發階段可即時測試 Linux 環境">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-05-30T05:16:38.411Z">
+<meta property="og:updated_time" content="2018-05-30T06:14:52.098Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 打造 .NET Core 開發環境 ?">
 <meta name="twitter:description" content="在開發階段可即時測試 Linux 環境">
@@ -163,6 +163,11 @@
 <h2 id="建立_-NET_Core_App">建立 .NET Core App</h2><hr>
 <figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
 <p>使用  <code>dotnet new</code> 建立 .NET Core App。</p>
+<ul>
+<li>new : 建立 project</li>
+<li>console : 建立 console 類型 project</li>
+<li>-o : 以 MyConsole 為專案名稱並建立目錄</li>
+</ul>
 <p><img src="/images/netcore/docker-dev/DockerDev004.png" alt="DockerDev004"></p>
 <h2 id="執行_-NET_Core_App">執行 .NET Core App</h2><hr>
 <figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd <span class="class">MyConsole</span></span><br><span class="line">~/<span class="class">MyConsole</span> <span class="char">$ </span>dotnet run</span><br></pre></td></tr></table></figure>
