@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://oomusou.io/netcore/build-docker/</loc>
-    <lastmod>2018-05-30T07:52:15.271Z</lastmod>
+    <loc>http://oomusou.io/netcore/docker-dev/</loc>
+    <lastmod>2018-05-31T15:25:22.594Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/netcore/docker-dev/</loc>
-    <lastmod>2018-05-30T06:14:52.098Z</lastmod>
+    <loc>http://oomusou.io/netcore/build-docker/</loc>
+    <lastmod>2018-05-30T07:52:15.271Z</lastmod>
   </url>
   
   <url>

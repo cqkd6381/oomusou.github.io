@@ -134,15 +134,35 @@
     <link href="http://oomusou.io/netcore/docker-dev/"/>
     <id>http://oomusou.io/netcore/docker-dev/</id>
     <published>2018-05-30T12:23:43.000Z</published>
-    <updated>2018-05-30T06:14:52.098Z</updated>
+    <updated>2018-05-31T15:25:22.594Z</updated>
     <content type="html"><![CDATA[<p>雖然可以在 Windows 或 macOS 開發 .NET Core，但畢竟 production 環境是 Linux，因此在 Windows 或 macOS 測試成功，也不代表真正上 Linux 沒有問題。</p>
 <p>透過 Docker，我們可以在開發階段就測試 Linux 環境，及早發現可能的問題。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>.NET Core 2.0.7<br>VS Code 1.23.1</p>
-<h2 id="建立_Docker_Compose">建立 Docker Compose</h2><hr>
-<p><strong>docker-compose.yml</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  net-core:&#10;    image: microsoft/dotnet&#10;    container_name: MyCore&#10;    volumes:&#10;      - &#34;$&#123;HOST_DIR&#125;:/var/Code/&#34;&#10;    tty: true</span><br></pre></td></tr></table></figure>
+<h2 id="建立_-NET_Core_App">建立 .NET Core App</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用  <code>dotnet new</code> 建立 .NET Core App。</p>
+<ul>
+<li><strong>new</strong> : 建立 project</li>
+<li><strong>console</strong> : 建立 console 類型 project</li>
+<li><strong>-o</strong> : 以 <code>MyConsole</code> 為專案名稱並建立目錄</li>
+</ul>
+<p><img src="/images/netcore/docker-dev/DockerDev004.png" alt="DockerDev004"></p>
+<h2 id="執行_-NET_Core_App">執行 .NET Core App</h2><hr>
+<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd <span class="class">MyConsole</span></span><br><span class="line">~/<span class="class">MyConsole</span> <span class="char">$ </span>dotnet run</span><br></pre></td></tr></table></figure>
+<p>進入 <code>MyConsole</code> 目錄，並在 Host OS 執行 .NET Core App。</p>
+<p><img src="/images/netcore/docker-dev/DockerDev005.png" alt="DockerDev005"></p>
+<p>目前 .NET Core App  是跑在 Host OS，也就是 macOS，但並不保證在 Linux 也正常，因此我們必須進一步在 Linux 環境下測試。</p>
+<p>實務上有兩種測試方式：</p>
+<ul>
+<li>在 Container 內測試</li>
+<li>在 Container 外測試</li>
+</ul>
+<h2 id="在_Container_內測試">在 Container 內測試</h2><hr>
+<p>我們先將 container 執行起來，然後連進 container 內部，以 Linux 環境執行 app。</p>
+<h3 id="建立_Docker_Compose">建立 Docker Compose</h3><p><strong>docker-compose.yml</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  net-core:&#10;    image: microsoft/dotnet&#10;    container_name: MyCore&#10;    volumes:&#10;      - &#34;$&#123;HOST_DIR&#125;:/home/&#34;&#10;    tty: true</span><br></pre></td></tr></table></figure>
 <p>第 5 行</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image: microsoft/dotnet</span><br></pre></td></tr></table></figure>
 <p>其基底的 image 為 <code>microsoft/dotnet</code>，此為 Micrsoft 所發布的 official .NET Core docker image。</p>
@@ -156,8 +176,8 @@
 <p><code>container_name</code> 相當於 <code>docker run</code> 的 <code>--name</code> </p>
 </blockquote>
 <p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;      - &#34;$&#123;HOST_DIR&#125;:/var/Code/&#34;</span><br></pre></td></tr></table></figure>
-<p>設定 Host OS 與 container 所共享的目錄，將來 Host OS 所分享的目錄，相當於 container 內的 <code>/var/Code</code> 目錄。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - &#34;$&#123;HOST_DIR&#125;:/home/&#34;</span><br></pre></td></tr></table></figure>
+<p>設定 Host OS 與 container 所共享的目錄，將來 Host OS 所分享的目錄，相當於 container 內的 <code>/home</code> 目錄。</p>
 <p>由於每個人 Host OS 要分享的目錄都不一樣，因此設定成 <code>HOST_DIR</code> 變數，稍後自行在 <code>.env</code> 設定。</p>
 <blockquote>
 <p><code>volumns</code> 相當於 <code>docker run</code> 的 <code>-v</code></p>
@@ -171,15 +191,14 @@
 </blockquote>
 <p><img src="/images/netcore/docker-dev/DockerDev000.png" alt="DockerDev000"></p>
 <p><strong>.env</strong></p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">HOST_DIR</span>=~/<span class="preprocessor">Code</span>/CSharp</span><br></pre></td></tr></table></figure>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="label">HOST_DIR</span>=~/<span class="preprocessor">Code</span>/CSharp/MyConsole</span><br></pre></td></tr></table></figure>
 <p>設定 Host OS 要與 container 共享的目錄。</p>
 <p>注意 <code>=</code> 前後都沒有空格，否則 <code>docker-compose</code> 會執行錯誤。</p>
 <blockquote>
 <p>設計 <code>docker-compose.yml</code> 時，要盡量保持 <code>.yml</code> 不要修改，也就是 <code>開放封閉原則</code>，而將要修改客製化的部分搬到 <code>.env</code>，將來 <code>docker-compose.yml</code> 會進 git，但 <code>.env</code> 則不進 git</p>
 </blockquote>
 <p><img src="/images/netcore/docker-dev/DockerDev001.png" alt="DockerDev001"></p>
-<h2 id="執行_Docker_Compose">執行 Docker Compose</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
+<h3 id="執行_Docker_Compose">執行 Docker Compose</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
 <p>進入 <code>docker-compose.yml</code> 所在的目錄，執行 <code>docker-compose up</code> 執行 container。</p>
 <ul>
 <li><strong>-d</strong>：<code>d</code> etatch，表示 <code>docker-compose</code> 執行後將離開 container 的 process，讓 container 在背景執行</li>
@@ -188,22 +207,7 @@
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker ps</span><br></pre></td></tr></table></figure>
 <p>可以發現 <code>MyCore</code> container 正在背景執行中，沒有被釋放。</p>
 <p><img src="/images/netcore/docker-dev/DockerDev003.png" alt="DockerDev003"></p>
-<h2 id="建立_-NET_Core_App">建立 .NET Core App</h2><hr>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
-<p>使用  <code>dotnet new</code> 建立 .NET Core App。</p>
-<ul>
-<li>new : 建立 project</li>
-<li>console : 建立 console 類型 project</li>
-<li>-o : 以 MyConsole 為專案名稱並建立目錄</li>
-</ul>
-<p><img src="/images/netcore/docker-dev/DockerDev004.png" alt="DockerDev004"></p>
-<h2 id="執行_-NET_Core_App">執行 .NET Core App</h2><hr>
-<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd <span class="class">MyConsole</span></span><br><span class="line">~/<span class="class">MyConsole</span> <span class="char">$ </span>dotnet run</span><br></pre></td></tr></table></figure>
-<p>進入 <code>MyConsole</code> 目錄，並在 Host OS 執行 .NET Core App。</p>
-<p><img src="/images/netcore/docker-dev/DockerDev005.png" alt="DockerDev005"></p>
-<p>目前 .NET Core App  是跑在 Host OS，也就是 macOS，但並不保證在 Linux 也正常，因此我們必須進一步在 Linux 環境下測試。</p>
-<h2 id="在_Container_內執行">在 Container 內執行</h2><hr>
-<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ docker exec -it MyCore bash</span><br><span class="line">root<span class="constant">@83aeee036235</span>:/<span class="preprocessor"># cd /var/Code/MyConsole/</span></span><br><span class="line">root<span class="constant">@83aeee036235</span>:/var/Code/MyConsole<span class="preprocessor"># dotnet run</span></span><br></pre></td></tr></table></figure>
+<h3 id="連進_Container_內">連進 Container 內</h3><figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ docker exec -it MyCore bash</span><br><span class="line">root<span class="constant">@83aeee036235</span>:/<span class="preprocessor"># cd /home/</span></span><br><span class="line">root<span class="constant">@83aeee036235</span>:/home<span class="preprocessor"># dotnet run</span></span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker exec -it MyCore bash</code> 進入 container。</p>
 <ul>
 <li><strong>exec</strong>：執行 container 內的 Linux 指令</li>
@@ -212,12 +216,11 @@
 <li><strong>MyCore</strong>：container 名稱</li>
 <li><strong>bash</strong>：在 container 執行 <code>bash</code>，讓我們可以對 Linux 下指令</li>
 </ul>
-<p>進入 <code>var/Code/MyConsole</code>，<code>var/Code</code> 為剛剛我們在 <code>.env</code> 設定的共享目錄。</p>
+<p>進入 <code>/home</code>，此為剛剛我們在 <code>.env</code> 所設定的共享目錄。</p>
 <p>使用 <code>dotnet run</code> 執行 .NET Core App。</p>
 <p><img src="/images/netcore/docker-dev/DockerDev006.png" alt="DockerDev006"></p>
 <p>目前是同一份 code 真正跑在 Linux，因此可藉由 Docker 在開發階段，測試 app 是否真正能跑在 Linux。</p>
-<h2 id="結束_Docker_Compose">結束 Docker Compose</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
+<h3 id="結束_Docker_Compose">結束 Docker Compose</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
 <p>進入 <code>docker-compose.yml</code> 所在的目錄，執行 <code>docker-compose down</code> 結束 container。</p>
 <p><img src="/images/netcore/docker-dev/DockerDev007.png" alt="DockerDev007"></p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker ps</span><br></pre></td></tr></table></figure>
@@ -229,10 +232,38 @@
 <p>若使用 <code>docker run</code>，儘管使用 <code>docker stop</code> 停止 container，但 container 仍然存在於硬碟，必須手動使用 <code>docker rm</code> 刪除 container，但若使用 <code>docker-compose down</code>，會一併從硬碟刪除 container</p>
 </blockquote>
 <p><img src="/images/netcore/docker-dev/DockerDev009.png" alt="DockerDev009"></p>
+<h2 id="在_Container_外測試">在 Container 外測試</h2><hr>
+<p>直接在 container 外部使用 <code>docker run</code> 執行 container，並在 container 內執行 <code>dotnet run</code>。</p>
+<h3 id="建立_Bash">建立 Bash</h3><p><strong>RunDocker.sh</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">HOST_DIR=~/Code/CSharp/MyConsole</span><br><span class="line"></span><br><span class="line">docker run --rm -v <span class="variable">$HOST_DIR</span>:/home -w /home microsoft/dotnet dotnet run</span><br></pre></td></tr></table></figure>
+<p>第 2 行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOST_DIR=~/Code/CSharp/MyConsole</span><br></pre></td></tr></table></figure>
+<p>設定 Host OS 與 container 所共享的目錄，將來 Host OS 所分享的目錄，相當於 container 內的 <code>/home</code> 目錄。</p>
+<p>由於每個人 Host OS 要分享的目錄都不一樣，因此設定成 <code>HOST_DIR</code> 變數，可自行設定。</p>
+<p>第 4 行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --rm -v <span class="variable">$HOST_DIR</span>:/home -w /home microsoft/dotnet dotnet run</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 直接執行 container。</p>
+<ul>
+<li><strong>–rm</strong>：執行完 app 之後立即刪除 container，避免執行完的 container 留在硬碟內，除了佔空間，日後還必須手動刪除</li>
+<li><strong>-v</strong>：<code>v</code> olumn，設定 Host OS 與 container 所共享的目錄，<code>:</code> 左側為 Host OS 目錄，右側為 container 內目錄</li>
+<li><strong>-w</strong>：<code>w</code> orking directory，避免自己下 <code>cd</code> 指令切換目錄</li>
+<li><strong>microsoft/dotnet</strong>：Microsoft 官方最新的 .NET Core Docker image</li>
+<li><strong>dotnet run</strong>：container 建立後，要在 container 內執行的指令就是 <code>dotnet run</code></li>
+</ul>
+<p><img src="/images/netcore/docker-dev/DockerDev010.png" alt="DockerDev010"></p>
+<h3 id="設定執行權限">設定執行權限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">～MyConsole $ chmod +x RunDocker.sh</span><br></pre></td></tr></table></figure>
+<p>使用 <code>chmod</code> 讓  <code>RunDocker.sh</code> 能夠有 <code>被執行</code> 權限。</p>
+<p><img src="/images/netcore/docker-dev/DockerDev011.png" alt="DockerDev011"></p>
+<h3 id="執行_Bash">執行 Bash</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ ./RunDocker.sh</span><br></pre></td></tr></table></figure>
+<p>執行 <code>RunDocker.sh</code> ，建立 container，並在 container 內執行 app。</p>
+<p><img src="/images/netcore/docker-dev/DockerDev012.png" alt="DockerDev012"></p>
+<p>目前是同一份 code 在 Docker 內執行，由於 Docker 內就是 Linux，因此可藉由 Docker 在開發階段，測試 app 是否真正能跑在 Linux。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>.NET Core 雖然號稱跨平台，但也不保證真正執行在 Linux 沒問題，透過 Docker，我們在開發階段就能很簡單測試 Linux 環境是否正常</li>
-<li>這種方式只適合開發階段測試用，若要上 production，則要將 .NET Core App 整個包進 Docker image，將以專文另外討論之</li>
+<li>第一種方式比較接近傳統 VM，直接進 container 內測試 app</li>
+<li>第二種方式比較接近正統 Docker，是直接使用 <code>docker run</code> 執行 container 內的 app</li>
+<li>以上兩種方式都只適合開發階段測試用，若要上 production，則要將 .NET Core App 整個包進 Docker image，將以專文另外討論之</li>
 </ul>
 <h2 id="Sample_Code">Sample Code</h2><hr>
 <p>完整的範例可以在我的 <a href="https://github.com/oomusou/netcore-dockerdev" target="_blank" rel="external">GitHub</a> 上找到</p>
