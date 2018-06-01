@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/docker/ubuntu1804-core21/</loc>
+    <lastmod>2018-06-01T05:08:25.504Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/ubuntu1804-core21/</loc>
+    <lastmod>2018-06-01T05:02:47.985Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/docker-dev/</loc>
     <lastmod>2018-05-31T15:25:22.594Z</lastmod>
   </url>

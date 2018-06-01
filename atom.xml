@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-05-30T07:52:15.271Z</updated>
+  <updated>2018-06-01T05:08:25.504Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,84 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何建立 Ubuntu 18.04 + .NET Core 2.1 的 Docker Image ?]]></title>
+    <link href="http://oomusou.io/docker/ubuntu1804-core21/"/>
+    <id>http://oomusou.io/docker/ubuntu1804-core21/</id>
+    <published>2018-06-01T12:23:43.000Z</published>
+    <updated>2018-06-01T05:08:25.504Z</updated>
+    <content type="html"><![CDATA[<p>實務上我們會直接使用 .NET Core 2.1 的 <code>microsoft/netcore</code> Docker image，但我們也可以使用 Ubuntu 18.04 為基底，自行撰寫 Dockerfile，練習建立包含 .NET Core 2.1 的 Docker image。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>Ubuntu 18.04<br>.NET Core 2.1</p>
+<h2 id="建立_Dockerfile">建立 Dockerfile</h2><hr>
+<p><strong>Dockerfile</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Linux library dependency</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget apt-transport-https gpg</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install microsoft.gpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://packages.microsoft.com/config/ubuntu/<span class="number">18.04</span>/prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv prod.list /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install .NET Core SDK</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">3</span></span></span><br></pre></td></tr></table></figure>
+<p>根據 .NET Core 官方文件 <a href="https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 18.04</a>，若要在 Ubuntu 18.04 安裝 .NET Core 2.1，必須依照這些步驟。</p>
+<p>將這些步驟改寫在 Dockerfile 內。</p>
+<p>第 1 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br></pre></td></tr></table></figure>
+<p>根據最新版 ubuntu 為基底 image。</p>
+<p>第 3 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install Linux library dependency</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget apt-transport-https gpg</span></span><br></pre></td></tr></table></figure>
+<p>根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 18.04</a> 所描述，若要在 Ubuntu 18.04 安裝 .NET Core，在 Ubuntu 還必須安裝以下 dependency：</p>
+<ul>
+<li>wget</li>
+<li>apt-transport-https</li>
+<li>gpg</li>
+</ul>
+<p>第 7 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install microsoft.gpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://packages.microsoft.com/config/ubuntu/<span class="number">18.04</span>/prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv prod.list /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/sources.list.d/microsoft-prod.list</span></span><br></pre></td></tr></table></figure>
+<p>根據官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 18.04</a> 所描述，要安裝 .NET Core SDK 前，必須先將 <code>microsoft.gpg</code> 裝好。</p>
+<p> 15 行</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Install .NET Core SDK</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span>.<span class="number">3</span></span></span><br></pre></td></tr></table></figure>
+<p>所有的 dependency 與  <code>microsoft.gpg</code> 都裝好後，就可以正式安裝 .NET Core SDK 了。</p>
+<p><img src="/images/docker/ubuntu1804-core21/core000.png" alt="core000"></p>
+<h2 id="建立自己的_Image">建立自己的 Image</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/UbuntuCore $ docker <span class="keyword">build </span>-t ubuntu1804-core21 .</span><br></pre></td></tr></table></figure>
+<p>進入 <code>Dockerfile</code> 所在的目錄，使用 <code>docker build</code> 建立自己的 image。</p>
+<ul>
+<li><strong>-t</strong> : Docker image 的名稱</li>
+<li><strong>.</strong> : 將目前目錄的 <code>Dockerfile</code> 建立成 image</li>
+</ul>
+<p><img src="/images/docker/ubuntu1804-core21/core001.png" alt="core001"></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker images</span><br></pre></td></tr></table></figure>
+<p><code>docker build</code> 的確幫我們建立了新的 <code>ubuntu1804-core21</code> Docker image。</p>
+<p><img src="/images/docker/ubuntu1804-core21/core002.png" alt="core002"></p>
+<h2 id="顯示_Ubuntu_版本">顯示 Ubuntu 版本</h2><hr>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="keyword">run</span> --<span class="keyword">rm</span> ubuntu1804-core21 <span class="keyword">cat</span> /etc/lsb-release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 執行剛剛建立的 image，並執行 <code>cat /etc/lsb-release</code> 顯示 Ubuntu 版本。</p>
+<ul>
+<li><strong>–rm</strong>：執行完 container 後立即刪除，避免日後還要手動刪除 container</li>
+</ul>
+<p><img src="/images/docker/ubuntu1804-core21/core003.png" alt="core003"></p>
+<h2 id="顯示_-NET_Core_版本">顯示 .NET Core 版本</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="command">run</span> <span class="comment">--rm ubuntu1804-core21 dotnet --info</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 執行剛剛建立的 image，並執行 <code>dotnet --info</code> 顯示 .NET Core 版本。</p>
+<p><img src="/images/docker/ubuntu1804-core21/core004.png" alt="core004"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>以前使用 VM 時，若要自建 VM，最後會 export 出一大包 image，除了很佔空間外，還無法 git 版控；但若改用 Dockerfile 後，由於都是文字檔，檔案非常小，也可以很輕鬆 git 版控</li>
+<li>實務上雖然會直接使用 <code>microsoft/dotnet</code> Docker image，不過藉由此方式練習寫 Dockerfile 也很不錯，畢竟實務上會有很多機會要自己建立 Dockerfile</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/ubuntu1804-core21" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://www.microsoft.com/net/" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/rhel/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 18.04</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[練習自己寫 Dockerfile 很好的機會]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+      <category term="Ubuntu" scheme="http://oomusou.io/tags/Ubuntu/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何將 .NET Core 打包成 Docker Image ?]]></title>
@@ -1949,91 +2027,6 @@
       <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
     
       <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Visual Studio 使用 SonarLint ?]]></title>
-    <link href="http://oomusou.io/sonarqube/sonarlint-vs/"/>
-    <id>http://oomusou.io/sonarqube/sonarlint-vs/</id>
-    <published>2018-04-29T13:23:43.000Z</published>
-    <updated>2018-04-29T14:24:35.311Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 除了搭配 Jenkins 檢查程式碼品質外，還可以在 IDE 中使用 SonarLint，讓 developer 在程式開發階段就及早發現可能的 bugs、vulenrability、code smell 與 duplication，本文將介紹 SonarLint + Visual Studio。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>Windows 10 Pro 1709 16299.371<br>SonarQube 6.7.2 LTS<br>Visual Studio Enterprise 2017 15.6.6<br>SonarLint 3.10.0.3095<br>C# 7.2<br>.NET Framework 4.6.1</p>
-<h2 id="安裝_SonarLint">安裝 SonarLint</h2><hr>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint000.png" alt="sonarlint000"></p>
-<p><strong><em>Tools -&gt; Extensions and Update…</em></strong></p>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint001.png" alt="sonarlint001"></p>
-<ol>
-<li><p>選擇 <code>Online</code></p>
-</li>
-<li><p>輸入 <code>SonarLint</code></p>
-</li>
-<li><p>選擇 <code>SonarLint for Visual Studio</code> 下載</p>
-</li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint002.png" alt="sonarlint002"></p>
-<ol>
-<li>關閉 Visual Studio 後，按 <code>Modify</code> 安裝 SonarLint for Visual Studio</li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint003.png" alt="sonarlint003"></p>
-<p>安裝完第一次進入 Visual Studio 後</p>
-<ol>
-<li>SonarLint 即將下載其他語言的 scanner，如 JavaScript，將 <code>Don&#39;t show this message again</code> 打勾</li>
-<li>按 <code>Yes</code> 繼續</li>
-</ol>
-<h2 id="連接_SonarQube_Server">連接 SonarQube Server</h2><hr>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint004.png" alt="sonarlint004"></p>
-<p>先開啟 solution。</p>
-<p><strong><em>Analyze -&gt; Manage SonarQube Connections…</em></strong></p>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint005.png" alt="sonarlint005"></p>
-<ol>
-<li>按 <code>Connect...</code> 連接 SonarQube server</li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint006.png" alt="sonarlint006"></p>
-<ol>
-<li>輸入 SonarQube server 網址</li>
-<li>Login / Password 填預設的 <code>admin/admin</code></li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint007.png" alt="sonarlint007"></p>
-<p>連上 SonarQube server 後，會出現目前 server 上所有的 project，選擇你要綁定的專案。</p>
-<blockquote>
-<p>綁定後會從 server 下載 profile 與 rule 到本機</p>
-</blockquote>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint008.png" alt="sonarlint008"></p>
-<p>與 SonarQube 綁定後，在 solution 下會出現 <code>SonarQube</code>。</p>
-<h2 id="Automatic_Analysis">Automatic Analysis</h2><hr>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint009.png" alt="sonarlint009"></p>
-<p>SonarQube 檢查出 <code>IPadAir.cs</code> 有 code smell，class 不該使用 <code>I</code> 開頭。</p>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint010.png" alt="sonarlint010"></p>
-<p>SonarLint 能在 Visual Studio 內即時的檢查出目前檔案的 issue。</p>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint011.png" alt="sonarlint011"></p>
-<p>點擊左側的小燈泡，SonarLint 會解釋該 rule 檢查的理由。</p>
-<h2 id="Manual_Analysis">Manual Analysis</h2><hr>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint012.png" alt="sonarlint012"></p>
-<p>SonarLint 亦可手動檢查整個 solution。</p>
-<ol>
-<li>點擊 solution 右鍵，選 <code>Analyze -&gt; Run Code Analysis on Solution</code></li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-vs/sonarlint013.png" alt="sonarlint013"></p>
-<p>SonarLint 會將所有檢查到的 issue 顯示在下方。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>有了 SonarLint，developer 就能更即時的獲得 SonarQube 的建議，養成寫出 clean code 的好習慣</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[讓 SonarQube 即時在 Visual Studio 內檢查]]>
-    
-    </summary>
-    
-      <category term="SonarLint" scheme="http://oomusou.io/tags/SonarLint/"/>
-    
-      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
-    
-      <category term="Visual Studio" scheme="http://oomusou.io/tags/Visual-Studio/"/>
     
   </entry>
   
