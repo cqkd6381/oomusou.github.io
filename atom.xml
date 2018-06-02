@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-01T05:08:25.504Z</updated>
+  <updated>2018-06-02T01:10:57.648Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,187 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何建立企業內部 NuGet 與 NPM Server ?]]></title>
+    <link href="http://oomusou.io/docker/proget/"/>
+    <id>http://oomusou.io/docker/proget/</id>
+    <published>2018-06-02T12:23:43.000Z</published>
+    <updated>2018-06-02T01:10:57.648Z</updated>
+    <content type="html"><![CDATA[<p>企業若以 .NET Core API + Angular 為解決方案，不免需要在企業內部自建 NuGet 與 NPM server，透過 Docker 安裝 ProGet，讓我們只要安裝一套系統，就同時滿足 NuGet 與 NPM 需求。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>ProGet 5.0.12<br>ProsgreSQL 9.5</p>
+<h2 id="建立_Docker_Compose">建立 Docker Compose</h2><hr>
+<p>由於 ProGet 需要搭配 PostgreSQL 才能正常運作，對於這種一次需要同時使用多個 service 的情境，特別適合使用 Docker Compose。</p>
+<p><strong>docker-compose.yml</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#39;3&#39;&#10;services:&#10;  proget-postgres:&#10;    image: postgres:9.5&#10;    container_name: proget-postgres&#10;    volumes:&#10;      - ./localtime:/etc/localtime:ro&#10;      - ~/proget/data:/var/lib/postgresql/data&#10;    restart: unless-stopped&#10;&#10;  proget:&#10;    image: inedo/proget:latest&#10;    container_name: proget&#10;    volumes:&#10;      - ./localtime:/etc/localtime:ro&#10;      - ~/proget/packages:/var/proget/packages&#10;      - ~/proget/extensions:/var/proget/extensions&#10;    expose:&#10;      - &#34;80&#34;&#10;    ports:&#10;      - &#34;8624:80&#34;&#10;    restart: unless-stopped</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proget-postgres:&#10;  image: postgres:9.5&#10;  container_name: proget-postgres&#10;  volumes:&#10;    - ./localtime:/etc/localtime:ro&#10;    - ~/proget/data:/var/lib/postgresql/data&#10;  restart: unless-stopped</span><br></pre></td></tr></table></figure>
+<p>由於同時要啟動 PostgreSQL 與 ProGet 兩個 service，因此先建立 <code>proget-postgres</code> service。</p>
+<blockquote>
+<p>當可以可以取名為 <code>postgres</code>，但考量自己 .NET Core 已經在使用 PostgreSQL，而這個 container 又只被 ProGet 使用，故取名為 <code>project-postgres</code>，避免與原本 <code>postgres</code> container 衝突</p>
+</blockquote>
+<p>11 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proget:&#10;  image: inedo/proget:latest&#10;  container_name: proget&#10;  volumes:&#10;    - ./localtime:/etc/localtime:ro&#10;    - ~/proget/packages:/var/proget/packages&#10;    - ~/proget/extensions:/var/proget/extensions&#10;  links:&#10;    - proget-postgres&#10;  expose:&#10;    - &#34;80&#34;&#10;  ports:&#10;    - &#34;8624:80&#34;&#10;  restart: unless-stopped</span><br></pre></td></tr></table></figure>
+<p>ProGet 本身的 service。</p>
+<p>第 4 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image: postgres:9.5</span><br></pre></td></tr></table></figure>
+<p>使用 <code>image</code> 設定所使用的 Docker image。</p>
+<p>根據 ProGet 官方文件  <a href="https://inedo.com/support/documentation/proget/installation/installation-guide/linux-docker" target="_blank" rel="external">ProGet Linux Installation Guide</a>，特別指定要使用 ProsgreSQL 9.5，因此就依照 ProGet 官方建議。</p>
+<p>第 5 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: proget-postgres</span><br></pre></td></tr></table></figure>
+<p>使用 <code>container_name</code> 設定 container 的名稱。</p>
+<blockquote>
+<p><code>docker-compose.yml</code> 的 <code>container_name</code> 相當於 <code>docker run</code> 的 <code>--name</code></p>
+</blockquote>
+<p>第 6 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - ./localtime:/etc/localtime:ro&#10;  - ~/proget/data:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
+<p>使用 <code>volumns</code> 設定 container 與 Host OS 要共享的目錄。</p>
+<blockquote>
+<p><code>docker-compose.yml</code> 的 <code>volumns</code> 相當於 <code>docker run</code> 的 <code>-v</code></p>
+</blockquote>
+<p>第 7 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- ./localtime:/etc/localtime:ro</span><br></pre></td></tr></table></figure>
+<p>讓 container 內部時間與 Host OS 的 macOS 同步。</p>
+<blockquote>
+<p>Q : 為什麼是 <code>./localtime</code> ? 而不是 <code>/etc/localtime</code> 呢 ?</p>
+</blockquote>
+<p>其實 macOS 也是如 Linux 有 <code>/etc/localtime</code>，不過若寫 <code>/etc/localtime</code>，在 macOS 會出現以下錯誤訊息而啟動失敗。</p>
+<p><img src="/images/docker/proget/proget000.png" alt="proget000"></p>
+<p>Docker 抱怨 <code>/etc/localtime</code> 沒有分享給 Docker。</p>
+<p><img src="/images/docker/proget/proget001.png" alt="proget001"></p>
+<p>若實際由 Docker 去分享 <code>/etc/</code> 目錄，Docker 又會抱怨 <code>/etc</code> 目錄無法分享。</p>
+<p>因此稍後會改用 Bash 將 <code>/etc/localtime</code> 複製到目前目錄，避開 <code>/etc</code> 目錄無法分享問題。</p>
+<blockquote>
+<p>此問題為 Docker for Mac 在某個版本之後才有，在 Linux 則無此問題</p>
+</blockquote>
+<p>第 8 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- ~/proget/data:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
+<p>將 PostgreSQL 資料存到 Host OS 的 <code>~/proget/data</code> 目錄。</p>
+<blockquote>
+<p>使用 Docker 時，不要將資料存到 container 內，而要將資料存到 Host OS，將來若要更新版本，只要更新 image 並換掉 container 即可，不會影響到資料</p>
+</blockquote>
+<p>第 9 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">restart: unless-stopped</span><br></pre></td></tr></table></figure>
+<p>使用 <code>restart</code> 設定如何重新啟動 container。</p>
+<ul>
+<li><strong>unless-stopped</strong>：當 container 當掉時，會自動重新啟動</li>
+</ul>
+<blockquote>
+<p><code>docker-compose.yml</code> 的 <code>restart</code> 相當於 <code>docker run</code> 的 <code>--restart</code></p>
+</blockquote>
+<p>12 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image: inedo/proget:latest</span><br></pre></td></tr></table></figure>
+<p>使用 <code>image</code> 設定所使用的 Docker image。</p>
+<p><code>inedo/proget:latest</code> 為最新的 ProGet Docker image。</p>
+<p>13 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: proget</span><br></pre></td></tr></table></figure>
+<p>使用 <code>container_name</code> 設定 container 的名稱。</p>
+<p>14 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - ./localtime:/etc/localtime:ro&#10;  - ~/proget/packages:/var/proget/packages&#10;  - ~/proget/extensions:/var/proget/extensions</span><br></pre></td></tr></table></figure>
+<p>使用 <code>volumns</code> 設定 container 與 Host OS 要共享的目錄。</p>
+<p><code>localtime</code> 設定與 <code>proget-postgres</code> container 相同，就不再贅述。</p>
+<p><code>packages</code> 與 <code>extensions</code> 亦為 ProGet 儲存資料的目錄，為了避免將資料存到 container 內，一樣改存到 Host OS。</p>
+<blockquote>
+<p><code>~/proget/packages</code> 與 <code>~/proget/extensions</code> 目錄不必事先建立，當 container 啟動時，若發現目錄不存在於 Host OS，會自動建立目錄</p>
+</blockquote>
+<p>18 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - &#34;80&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>expose</code> 設定 container 對外溝通的 port。</p>
+<p><code>proget</code> container 對外將以 port 80 呈現。</p>
+<p>20 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - &#34;8624:80&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>ports</code> 設定 Host OS 與 container 的 port mapping。</p>
+<p>Host OS 的 port : 8624 將對應到 container 的 port 80。</p>
+<blockquote>
+<p><code>docker-compose.yml</code> 的 <code>ports</code> 相當於 <code>docker run</code> 的 <code>-p</code></p>
+</blockquote>
+<p><img src="/images/docker/proget/proget002.png" alt="proget002"></p>
+<h2 id="建立_Bash">建立 Bash</h2><hr>
+<p><strong>dcup.sh</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">cp /etc/localtime .</span><br><span class="line">docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
+<p>由於 <code>/etc/localtime</code> 在 Docker for Mac 無法被分享，因此特別建立 Bash 將 <code>/etc/localtime</code> 複製到目前目錄。</p>
+<p>使用 <code>docker-compose up</code> 啟動 container。</p>
+<ul>
+<li><strong>-d</strong>：<code>d</code> etatch，<code>docker-compose</code> 執行後將脫離 container 的 process，讓 container 在背景執行</li>
+</ul>
+<blockquote>
+<p>實務上常使用 Bash 搭配 <code>Dockerfile</code> 或 <code>docker-compose.yml</code>，若一些在 <code>Dockerfile</code> 或 <code>docker-compose.yml</code> 不方便做的雜工，都會以 Bash 來處理</p>
+</blockquote>
+<h2 id="啟動_Container">啟動 Container</h2><hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/ProGet $ ./dcup.sh</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dcup.sh</code> 啟動 <code>proget-postgres</code> 與 <code>proget</code> 兩個 container。</p>
+<p><img src="/images/docker/proget/proget003.png" alt="proget003"></p>
+<h2 id="使用_ProGet">使用 ProGet</h2><hr>
+<p><img src="/images/docker/proget/proget004.png" alt="proget004"></p>
+<p>在瀏覽器輸入 <code>localhost:8624</code>，若能出現 ProGet Home，表示 ProGet 已經正常啟動。</p>
+<p><img src="/images/docker/proget/proget005.png" alt="proget005"></p>
+<p>按右上角 <code>Log In</code>。</p>
+<p><img src="/images/docker/proget/proget006.png" alt="proget006"></p>
+<p>先按 <code>automatically log in with Admin/Admin</code> 登入 ProGet。</p>
+<p><img src="/images/docker/proget/proget007.png" alt="proget007"></p>
+<p>選擇右上方的 <code>Feeds</code>，會顯示 <code>License key is required</code> 與 <code>The license key has not been activated</code>，在 <code>License key</code> 按 <code>changed</code>。</p>
+<p><img src="/images/docker/proget/proget008.png" alt="proget008"></p>
+<p>按 <code>my.inedo.com</code> 申請新的 license key。</p>
+<p><img src="/images/docker/proget/proget009.png" alt="proget009"></p>
+<p>登入 <code>MyInedo</code> 帳號或者申請新帳號。</p>
+<p><img src="/images/docker/proget/proget011.png" alt="proget011"></p>
+<p>複製 license key。</p>
+<p><img src="/images/docker/proget/proget010.png" alt="proget010"></p>
+<p>將 license key 貼上。</p>
+<p><img src="/images/docker/proget/proget012.png" alt="proget012"></p>
+<p>目前 <code>License key is valid</code>，但尚未啟動。</p>
+<p>按 <code>activate</code> 啟動 license key。</p>
+<p><img src="/images/docker/proget/proget013.png" alt="proget013"></p>
+<p>顯示 <code>Activation completed</code> 。</p>
+<p><img src="/images/docker/proget/proget014.png" alt="proget014"></p>
+<p>當 <code>License key is valid</code> 與 <code>The license key is activated</code> 都出現時，表示 ProGet 已經可以經可全功能使用。</p>
+<h2 id="建立_NuGet_Server">建立 NuGet Server</h2><hr>
+<p><img src="/images/docker/proget/proget015.png" alt="proget015"></p>
+<ol>
+<li>再點一次 <code>Feeds</code>，目前 feeds 都是空的，已經不會出現 license 警告</li>
+<li>按 <code>Create New Feed</code> 建立新 feed</li>
+</ol>
+<p><img src="/images/docker/proget/proget016.png" alt="proget016"></p>
+<ol>
+<li><strong>Feed name</strong>：輸入 feed 名稱</li>
+<li><strong>Feed type</strong>：ProGet 支援多種 package 格式，選擇 <code>NuGet</code></li>
+<li>按 <code>Create Feed</code> 建立 feed</li>
+</ol>
+<p><img src="/images/docker/proget/proget017.png" alt="proget017"></p>
+<p>NuGet Feed 建立成功。</p>
+<h2 id="建立_NPM_Server">建立 NPM Server</h2><hr>
+<p><img src="/images/docker/proget/proget018.png" alt="proget018"></p>
+<p>以相同方式建立 NPM Feed。</p>
+<p><img src="/images/docker/proget/proget019.png" alt="proget019"></p>
+<p>目前 ProGet 已經可同時支援 NuGet 與 NPM 兩種 package 格式。</p>
+<h2 id="結束_Container">結束 Container</h2><hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/ProGet $ docker-compose down</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose down</code> 結束 container。</p>
+<p><img src="/images/docker/proget/proget020.png" alt="proget020"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>使用 Docker 方式，無論是在 Windows Server / Linux 或 macOS，都可用相同的方式使用 ProGet，達到跨平台的目的</li>
+<li>ProGet 支援多種 package 格式，只要安裝一套就可支援 NuGet 與 NPM</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/docker-proget" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://inedo.com/" target="_blank" rel="external">inedo</a>, <a href="https://inedo.com/support/documentation/proget/installation/installation-guide/linux-docker" target="_blank" rel="external">ProGet Linux Installation Guide</a><br><a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a>, <a href="https://docs.docker.com/docker-for-mac/osxfs/#namespaces" target="_blank" rel="external">https://docs.docker.com/docker-for-mac/osxfs/#namespaces</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[一套服務同時支援 NuGet 與 NPM]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="Angular" scheme="http://oomusou.io/tags/Angular/"/>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何建立 Ubuntu 18.04 + .NET Core 2.1 的 Docker Image ?]]></title>
@@ -1977,54 +2158,6 @@
     <![CDATA[因為 APFS 所導致的問題]]>
     
     </summary>
-    
-      <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 macOS 安裝 SonarQube ?]]></title>
-    <link href="http://oomusou.io/sonarqube/macos/"/>
-    <id>http://oomusou.io/sonarqube/macos/</id>
-    <published>2018-04-30T12:23:43.000Z</published>
-    <updated>2018-04-30T02:02:59.400Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
-<p>透過 Homebrew，我們可以很簡單地安裝 SonarQube。<br><a id="more"></a></p>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>Java 10.0.1 2018-04-17<br>SonarQube 7.1</p>
-<h2 id="安裝_SonarQube">安裝 SonarQube</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install sonarqube</span><br></pre></td></tr></table></figure>
-<p>使用 Home-brew 安裝 SonarQube。</p>
-<p><img src="/images/sonarqube/macos/mac000.png" alt="ac00"></p>
-<ol>
-<li>輸入 <code>brew install sonarqube</code> 安裝</li>
-<li>若想在每次 Mac 重開機就自動執行 SonarQube，輸入 <code>brew services start sonarqube</code></li>
-<li>若想自行啟動 SonarQube，輸入 <code>sonar console</code></li>
-</ol>
-<h2 id="啟動_SonarQube">啟動 SonarQube</h2><hr>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sonar <span class="built_in">console</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>sonar console</code> 自行啟動 SonarQube。</p>
-<p><img src="/images/sonarqube/macos/mac001.png" alt="ac00"></p>
-<ol>
-<li>輸入 <code>sonar console</code> 自行啟動 SonarQube</li>
-</ol>
-<h2 id="安裝_SonarQube-1">安裝 SonarQube</h2><hr>
-<p><img src="/images/sonarqube/macos/mac002.png" alt="ac00"></p>
-<ol>
-<li>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功</li>
-<li>右上角 <code>Log in</code> 可登入管理設定 SonarQube，預設為 <code>admin/admin</code></li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>雖然 SonarQube 主要是安裝在 Linux server 上，但透過安裝在 macOS，我們也可以在本機測試 SonarQube</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[直接在 macOS 執行 SonarQube]]>
-    
-    </summary>
-    
-      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
     
       <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
     
