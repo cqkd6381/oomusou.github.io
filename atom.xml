@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-02T01:10:57.648Z</updated>
+  <updated>2018-06-02T01:16:12.742Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="http://oomusou.io/docker/proget/"/>
     <id>http://oomusou.io/docker/proget/</id>
     <published>2018-06-02T12:23:43.000Z</published>
-    <updated>2018-06-02T01:10:57.648Z</updated>
-    <content type="html"><![CDATA[<p>企業若以 .NET Core API + Angular 為解決方案，不免需要在企業內部自建 NuGet 與 NPM server，透過 Docker 安裝 ProGet，讓我們只要安裝一套系統，就同時滿足 NuGet 與 NPM 需求。</p>
+    <updated>2018-06-02T01:16:12.742Z</updated>
+    <content type="html"><![CDATA[<p>企業若以 .NET Core Web API + Angular 為解決方案，不免需要在企業內部自建 NuGet 與 NPM server，透過 Docker 安裝 ProGet，讓我們只要安裝一套系統，就同時滿足 NuGet 與 NPM 需求。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>ProGet 5.0.12<br>ProsgreSQL 9.5</p>
