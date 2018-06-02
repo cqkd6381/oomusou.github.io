@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-02T01:16:12.742Z</updated>
+  <updated>2018-06-02T01:21:05.269Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/docker/proget/"/>
     <id>http://oomusou.io/docker/proget/</id>
     <published>2018-06-02T12:23:43.000Z</published>
-    <updated>2018-06-02T01:16:12.742Z</updated>
+    <updated>2018-06-02T01:21:05.269Z</updated>
     <content type="html"><![CDATA[<p>企業若以 .NET Core Web API + Angular 為解決方案，不免需要在企業內部自建 NuGet 與 NPM server，透過 Docker 安裝 ProGet，讓我們只要安裝一套系統，就同時滿足 NuGet 與 NPM 需求。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -121,6 +121,7 @@
 <blockquote>
 <p>實務上常使用 Bash 搭配 <code>Dockerfile</code> 或 <code>docker-compose.yml</code>，若一些在 <code>Dockerfile</code> 或 <code>docker-compose.yml</code> 不方便做的雜工，都會以 Bash 來處理</p>
 </blockquote>
+<p><img src="/images/docker/proget/proget021.png" alt="proget021"></p>
 <h2 id="啟動_Container">啟動 Container</h2><hr>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/ProGet $ ./dcup.sh</span><br></pre></td></tr></table></figure>
 <p>使用 <code>dcup.sh</code> 啟動 <code>proget-postgres</code> 與 <code>proget</code> 兩個 container。</p>
