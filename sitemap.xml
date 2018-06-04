@@ -2,13 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://oomusou.io/netcore/unit-test/</loc>
-    <lastmod>2018-06-02T05:58:20.998Z</lastmod>
+    <loc>http://oomusou.io/docker/proget/</loc>
+    <lastmod>2018-06-04T05:55:43.554Z</lastmod>
   </url>
   
   <url>
-    <loc>http://oomusou.io/docker/proget/</loc>
-    <lastmod>2018-06-02T01:21:05.269Z</lastmod>
+    <loc>http://oomusou.io/docker/postgres/</loc>
+    <lastmod>2018-06-04T05:54:31.597Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/unit-test/</loc>
+    <lastmod>2018-06-02T05:58:20.998Z</lastmod>
   </url>
   
   <url>
@@ -84,11 +89,6 @@
   <url>
     <loc>http://oomusou.io/rider/postgresql/</loc>
     <lastmod>2018-05-22T10:53:52.931Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/docker/postgres/</loc>
-    <lastmod>2018-05-22T10:48:05.664Z</lastmod>
   </url>
   
   <url>

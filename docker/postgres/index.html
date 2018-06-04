@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="在 Mac 最簡單使用 PostgreSQL 方式">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-05-22T10:48:05.664Z">
+<meta property="og:updated_time" content="2018-06-04T05:54:31.597Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 安裝 PostgreSQL ?">
 <meta name="twitter:description" content="在 Mac 最簡單使用 PostgreSQL 方式">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Container##_建立_Container"><span class="toc-article-text">建立 Container## 建立 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_Terminal_連進_PostgreSQL"><span class="toc-article-text">使用 Terminal 連進 PostgreSQL</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Container"><span class="toc-article-text">建立 Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_Terminal_連進_PostgreSQL"><span class="toc-article-text">使用 Terminal 連進 PostgreSQL</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -111,7 +111,7 @@
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3</p>
-<h2 id="建立_Container##_建立_Container">建立 Container## 建立 Container</h2><hr>
+<h2 id="建立_Container">建立 Container</h2><hr>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyPostgres <span class="operator">-d</span> -p <span class="number">5432</span>:<span class="number">5432</span> <span class="operator">-e</span> POSTGRES_USER=admin <span class="operator">-e</span> POSTGRES_PASSWORD=<span class="string">'12345'</span> postgres</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
 <blockquote>

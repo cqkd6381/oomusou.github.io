@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-02T01:21:05.269Z</updated>
+  <updated>2018-06-04T05:55:43.554Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/docker/proget/"/>
     <id>http://oomusou.io/docker/proget/</id>
     <published>2018-06-02T12:23:43.000Z</published>
-    <updated>2018-06-02T01:21:05.269Z</updated>
+    <updated>2018-06-04T05:55:43.554Z</updated>
     <content type="html"><![CDATA[<p>企業若以 .NET Core Web API + Angular 為解決方案，不免需要在企業內部自建 NuGet 與 NPM server，透過 Docker 安裝 ProGet，讓我們只要安裝一套系統，就同時滿足 NuGet 與 NPM 需求。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -181,7 +181,7 @@
 <h2 id="Sample_Code">Sample Code</h2><hr>
 <p>完整的範例可以在我的 <a href="https://github.com/oomusou/docker-proget" target="_blank" rel="external">GitHub</a> 上找到</p>
 <h2 id="Reference">Reference</h2><hr>
-<p><a href="https://inedo.com/" target="_blank" rel="external">inedo</a>, <a href="https://inedo.com/support/documentation/proget/installation/installation-guide/linux-docker" target="_blank" rel="external">ProGet Linux Installation Guide</a><br><a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a>, <a href="https://docs.docker.com/docker-for-mac/osxfs/#namespaces" target="_blank" rel="external">https://docs.docker.com/docker-for-mac/osxfs/#namespaces</a></p>
+<p><a href="https://inedo.com/" target="_blank" rel="external">inedo</a>, <a href="https://inedo.com/support/documentation/proget/installation/installation-guide/linux-docker" target="_blank" rel="external">ProGet Linux Installation Guide</a><br><a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a>, <a href="https://docs.docker.com/docker-for-mac/osxfs/#namespaces" target="_blank" rel="external">File system sharing</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[一套服務同時支援 NuGet 與 NPM]]>
@@ -884,12 +884,12 @@
     <link href="http://oomusou.io/docker/postgres/"/>
     <id>http://oomusou.io/docker/postgres/</id>
     <published>2018-05-21T22:23:43.000Z</published>
-    <updated>2018-05-22T10:48:05.664Z</updated>
+    <updated>2018-06-04T05:54:31.597Z</updated>
     <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 安裝。本文除了安裝 PostgreSQL 外，還分別使用 DataGrip 與 Rider 連接 PostgreSQL。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3</p>
-<h2 id="建立_Container##_建立_Container">建立 Container## 建立 Container</h2><hr>
+<h2 id="建立_Container">建立 Container</h2><hr>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyPostgres <span class="operator">-d</span> -p <span class="number">5432</span>:<span class="number">5432</span> <span class="operator">-e</span> POSTGRES_USER=admin <span class="operator">-e</span> POSTGRES_PASSWORD=<span class="string">'12345'</span> postgres</span><br></pre></td></tr></table></figure>
 <p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
 <blockquote>
