@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/build-docker/</loc>
+    <lastmod>2018-06-05T03:52:26.110Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/docker/ubuntu1804-core21/</loc>
     <lastmod>2018-06-05T02:56:34.984Z</lastmod>
   </url>
@@ -34,11 +39,6 @@
   <url>
     <loc>http://oomusou.io/netcore/docker-dev/</loc>
     <lastmod>2018-05-31T15:25:22.594Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/build-docker/</loc>
-    <lastmod>2018-05-30T07:52:15.271Z</lastmod>
   </url>
   
   <url>
