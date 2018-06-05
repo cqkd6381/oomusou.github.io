@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-05T06:34:58.155Z</updated>
+  <updated>2018-06-05T07:16:35.824Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,15 +19,16 @@
     <link href="http://oomusou.io/docker/dockerfile-dockercompose/"/>
     <id>http://oomusou.io/docker/dockerfile-dockercompose/</id>
     <published>2018-06-05T12:23:43.000Z</published>
-    <updated>2018-06-05T06:34:58.155Z</updated>
+    <updated>2018-06-05T07:16:35.824Z</updated>
     <content type="html"><![CDATA[<p>Dockerfile 與 Docker Compose 是 Docker 兩個最重要的概念，也是初學者最容易卡關的地方，本文以 <code>使用需求</code> 為觀點解釋這兩者的差異。</p>
 <a id="more"></a>
 <h2 id="Image_與_Container">Image 與 Container</h2><hr>
 <p>在解釋 Dockerfile 與 Docker Compose 之前，先複習兩個更基礎的概念：</p>
 <h3 id="Image">Image</h3><hr>
-<p>將 Service 打包成 image，通常會從 Docker Hub 下載官方的 image 使用，也可以根據官方的 image 再包成自己的 image。</p>
+<p>將 Service 打包成 image，通常會從 Docker Hub 下載官方的 image 使用，也可以根據官方的 image 再包成自己的 image，或者完全自行製作自己的 image。</p>
 <h3 id="Container">Container</h3><hr>
-<p>根據 image 以 container 方式執行，一般會以 Microservice 方式使用 container，也就是會同時啟動多個 container 形成 service。</p>
+<p>Image 類似 template，基於壓好的 image 產生隔離的執行環境，稱之為 container。</p>
+<p>一般會以 Microservice 方式使用 container，也就是會同時啟動多個 container 形成 service。</p>
 <blockquote>
 <p>Image 與 container 都會佔硬碟空間，尤其 container 若執行完畢後，雖然 container 從記憶體釋放，但在硬碟仍然會留一份 container 的 <code>屍體</code> ，需要自行刪除，或者在 <code>docker run</code> 時增加 <code>--rm</code> 參數，在執行完自行從硬碟刪除 container</p>
 </blockquote>
@@ -38,18 +39,18 @@
 <li>Image 可能非常龐大</li>
 <li>安裝步驟無法進 git 版控</li>
 </ul>
-<p>Docker 以 <code>Infrastructure as Code</code> 概念，將 server 以 code 形式描述：</p>
+<p>Docker 以 <code>Infrastructure as Code</code> 概念，將  infrastructure 以 code 形式描述：</p>
 <p><strong>Dockerfile</strong></p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Linux library dependency</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget apt-transport-https gpg</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install microsoft.gpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://packages.microsoft.com/config/ubuntu/<span class="number">18.04</span>/prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv prod.list /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install .NET Core SDK</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Display Greeting</span></span><br><span class="line"><span class="built_in">CMD</span> <span class="bash">[ <span class="string">"echo"</span>, <span class="string">"Ubuntu 18.04 LTS with .NET Core 2.1"</span>]</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu:latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Linux library dependency</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget apt-transport-https gpg</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install microsoft.gpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://packages.microsoft.com/config/ubuntu/<span class="number">18.04</span>/prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv prod.list /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install .NET Core SDK</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Display Greeting</span></span><br><span class="line"><span class="built_in">CMD</span> <span class="bash">[ <span class="string">"echo"</span>, <span class="string">"Ubuntu 18.04 LTS with .NET Core 2.1"</span>]</span></span><br></pre></td></tr></table></figure>
 <p>以上為典型的 <code>Dockerfile</code>，只需一個文字檔，就清楚描述一個 Docker image。</p>
 <p>以前若要在 Ubuntu 安裝其他 dependency，只能透過 Bash 安裝一堆 package，最後再 export 成 image，但 image 可能很龐大，且安裝步驟也無法 git 版控。</p>
-<p>但透過 Dockerfile 之後，整個新的 Ubuntu (server) 都是以 code 形式描述，你只要將 <code>Dockerfile</code> 給其他人，對方只要使用 <code>docker build</code> 就能自行根據 <code>Dockerfile</code> 建立 Docker image，最後再根據 <code>docker run</code> 執行客製化過的 Ubuntu container。</p>
+<p>但透過 Dockerfile 之後，整個新的 Ubuntu 都是以 code 形式描述，你只要將 <code>Dockerfile</code> 給其他人，對方只要使用 <code>docker build</code> 就能自行根據 <code>Dockerfile</code> 建立 Docker image，最後再根據 <code>docker run</code> 執行客製化過的 Ubuntu container。</p>
 <ul>
 <li><code>Dockerfile</code> 檔案很小，只是文字檔而已</li>
 <li>由於 <code>Dockerfile</code> 是文字檔，可以 git 版控</li>
 </ul>
 <blockquote>
-<p>簡單的說，<code>Dockerfile 就是客製化的 image</code>，只是採用 code 形式描述</p>
+<p>簡單的說，<code>Dockerfile 就是描述如何產生客製化的 image</code>，只是採用 code 形式描述</p>
 </blockquote>
 <h2 id="Docker_Compose">Docker Compose</h2><hr>
 <p>實務上一個服務，一定由眾多 service 共同運作。如一個典型的 Web 服務，最少就必須有</p>
@@ -78,14 +79,14 @@
 <p>Q：<code>Dockerfile</code> 與 <code>docker-compose.yml</code> 看起來很像，都是在描述 server，有什麼差別呢 ?</p>
 </blockquote>
 <ul>
-<li><code>Dockerfile</code> 是用來描述 image，也就是建立客製化的 image，通常用來安裝 package，將檔案複製進 image 用</li>
-<li><code>docker-compose.yml</code> 是用來描述 container，也就是描述 container 與 container 之間的關係，通常用來設定 container 參數，設定 container 的網路，設定 container 啟動順序</li>
+<li><code>Dockerfile</code> 是用來描述 image，也就是如何產生客製化的 image，通常用來安裝 package，將檔案複製進 image 用</li>
+<li><code>docker-compose.yml</code> 是用來描述 container，也就是管理一個以上的 container，彼此串連，把同一組架構寫在一起，通常用來設定 container 參數，設定 container 的網路，設定 container 啟動順序 … 等</li>
 </ul>
 <blockquote>
 <p>Q：<code>Dockerfile</code> 是用來描述 image，<code>docker-compose.yml</code> 是用來描述 container，但若我們還有客製化的 <code>邏輯</code> 該怎麼辦 ?</p>
 </blockquote>
 <p>若在使用 <code>Dockerfile</code> 或 <code>docker-compose.yml</code> 時，還必須搭配額外的 <code>if else</code> 或 <code>for loop</code> 邏輯，就必須再搭配 Bash。</p>
-<p><code>Dockerfile</code> 與 <code>docker-composer.yml</code> 只是設計用來描述 infrastructure，並不是描述 <code>邏輯</code>。</p>
+<p><code>Dockerfile</code> 與 <code>docker-composer.yml</code> 只是設計用來描述 <code>infrastructure</code>，並不是描述 <code>邏輯</code>。</p>
 <blockquote>
 <p>Q：單一 service 也適用 <code>docker-compose.yml</code> 嗎 ?</p>
 </blockquote>
