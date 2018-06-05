@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-04T08:32:28.687Z</updated>
+  <updated>2018-06-05T06:34:58.155Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,99 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[深入淺出 Dockerfile 與 Docker Compose]]></title>
+    <link href="http://oomusou.io/docker/dockerfile-dockercompose/"/>
+    <id>http://oomusou.io/docker/dockerfile-dockercompose/</id>
+    <published>2018-06-05T12:23:43.000Z</published>
+    <updated>2018-06-05T06:34:58.155Z</updated>
+    <content type="html"><![CDATA[<p>Dockerfile 與 Docker Compose 是 Docker 兩個最重要的概念，也是初學者最容易卡關的地方，本文以 <code>使用需求</code> 為觀點解釋這兩者的差異。</p>
+<a id="more"></a>
+<h2 id="Image_與_Container">Image 與 Container</h2><hr>
+<p>在解釋 Dockerfile 與 Docker Compose 之前，先複習兩個更基礎的概念：</p>
+<h3 id="Image">Image</h3><hr>
+<p>將 Service 打包成 image，通常會從 Docker Hub 下載官方的 image 使用，也可以根據官方的 image 再包成自己的 image。</p>
+<h3 id="Container">Container</h3><hr>
+<p>根據 image 以 container 方式執行，一般會以 Microservice 方式使用 container，也就是會同時啟動多個 container 形成 service。</p>
+<blockquote>
+<p>Image 與 container 都會佔硬碟空間，尤其 container 若執行完畢後，雖然 container 從記憶體釋放，但在硬碟仍然會留一份 container 的 <code>屍體</code> ，需要自行刪除，或者在 <code>docker run</code> 時增加 <code>--rm</code> 參數，在執行完自行從硬碟刪除 container</p>
+</blockquote>
+<h2 id="Dockerfile">Dockerfile</h2><hr>
+<p>實務上我們會從 Docker Hub 下載官方的 Docker Image 使用，但官方的 image 功能可能過於陽春，我們可能想根據自己的需求，再安裝其他的 app，最後再打包成自己的 Docker image。</p>
+<p>在傳統 VM 時代，要打造自己的 image，必須用 export 方式，但這樣有幾個缺點：</p>
+<ul>
+<li>Image 可能非常龐大</li>
+<li>安裝步驟無法進 git 版控</li>
+</ul>
+<p>Docker 以 <code>Infrastructure as Code</code> 概念，將 server 以 code 形式描述：</p>
+<p><strong>Dockerfile</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Linux library dependency</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget apt-transport-https gpg</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install microsoft.gpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://packages.microsoft.com/config/ubuntu/<span class="number">18.04</span>/prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv prod.list /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install .NET Core SDK</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Display Greeting</span></span><br><span class="line"><span class="built_in">CMD</span> <span class="bash">[ <span class="string">"echo"</span>, <span class="string">"Ubuntu 18.04 LTS with .NET Core 2.1"</span>]</span></span><br></pre></td></tr></table></figure>
+<p>以上為典型的 <code>Dockerfile</code>，只需一個文字檔，就清楚描述一個 Docker image。</p>
+<p>以前若要在 Ubuntu 安裝其他 dependency，只能透過 Bash 安裝一堆 package，最後再 export 成 image，但 image 可能很龐大，且安裝步驟也無法 git 版控。</p>
+<p>但透過 Dockerfile 之後，整個新的 Ubuntu (server) 都是以 code 形式描述，你只要將 <code>Dockerfile</code> 給其他人，對方只要使用 <code>docker build</code> 就能自行根據 <code>Dockerfile</code> 建立 Docker image，最後再根據 <code>docker run</code> 執行客製化過的 Ubuntu container。</p>
+<ul>
+<li><code>Dockerfile</code> 檔案很小，只是文字檔而已</li>
+<li>由於 <code>Dockerfile</code> 是文字檔，可以 git 版控</li>
+</ul>
+<blockquote>
+<p>簡單的說，<code>Dockerfile 就是客製化的 image</code>，只是採用 code 形式描述</p>
+</blockquote>
+<h2 id="Docker_Compose">Docker Compose</h2><hr>
+<p>實務上一個服務，一定由眾多 service 共同運作。如一個典型的 Web 服務，最少就必須有</p>
+<blockquote>
+<p>.NET Core Runtime + Nginx + Redis + PosgreSQL</p>
+</blockquote>
+<p>4 個 service 一起運行，若只使用 <code>docker run</code>，則勢必寫 Bash 來管理 4 個 service，還必須考慮：</p>
+<ul>
+<li>4 個 service 必須在同一個虛擬 network 下</li>
+<li>4 個 service 的啟動順序</li>
+</ul>
+<p>… 等問題。</p>
+<p>Docker 為此提出 Docker Compose 概念，在 <code>docker-compose.yml</code> 檔描述各 service 間的參數與關係：</p>
+<p><strong>docker-compose.yml</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  netcore:&#10;    image: microsoft/dotnet&#10;    container_name: MyNETCore&#10;    volumes:&#10;      - $&#123;NETCORE_HOST_DIR&#125;:/code/&#10;    tty: true&#10;    networks: &#10;      - netcore-dev&#10;    depends_on:&#10;      - postgres&#10;&#10;  postgres:&#10;    image: postgres&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;POSTGRES_HOST_DIR&#125;/data:/var/lib/postgresql/data&#10;    expose:&#10;      - &#34;5432&#34;&#10;    ports:&#10;      - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;&#10;    networks:&#10;      - netcore-dev&#10;&#10;networks:&#10;  netcore-dev:</span><br></pre></td></tr></table></figure>
+<p>以上為典型的 <code>docker-compose.yml</code>，只需一個文字檔，就清楚描述 .NET Core Runtime 與 PostgreSQL 兩個 service，將 <code>docker-compose.yml</code> 拿到任何裝有 Docker 的電腦，都成重現 .NET Core + PostreSQL 的環境，也就是 <code>Infrastructure as Code</code>。</p>
+<ul>
+<li><code>docker-compose.yml</code> 檔案很小，只是文字檔而已</li>
+<li>由於 <code>docker-compose.yml</code> 是文字檔，可以 git 版控</li>
+</ul>
+<blockquote>
+<p>間單的說，<code>docker-compose.yml 就是 container 的管理文件</code>，只是採用 code 形式描述</p>
+</blockquote>
+<h2 id="FAQ">FAQ</h2><hr>
+<blockquote>
+<p>Q：<code>Dockerfile</code> 與 <code>docker-compose.yml</code> 看起來很像，都是在描述 server，有什麼差別呢 ?</p>
+</blockquote>
+<ul>
+<li><code>Dockerfile</code> 是用來描述 image，也就是建立客製化的 image，通常用來安裝 package，將檔案複製進 image 用</li>
+<li><code>docker-compose.yml</code> 是用來描述 container，也就是描述 container 與 container 之間的關係，通常用來設定 container 參數，設定 container 的網路，設定 container 啟動順序</li>
+</ul>
+<blockquote>
+<p>Q：<code>Dockerfile</code> 是用來描述 image，<code>docker-compose.yml</code> 是用來描述 container，但若我們還有客製化的 <code>邏輯</code> 該怎麼辦 ?</p>
+</blockquote>
+<p>若在使用 <code>Dockerfile</code> 或 <code>docker-compose.yml</code> 時，還必須搭配額外的 <code>if else</code> 或 <code>for loop</code> 邏輯，就必須再搭配 Bash。</p>
+<p><code>Dockerfile</code> 與 <code>docker-composer.yml</code> 只是設計用來描述 infrastructure，並不是描述 <code>邏輯</code>。</p>
+<blockquote>
+<p>Q：單一 service 也適用 <code>docker-compose.yml</code> 嗎 ?</p>
+</blockquote>
+<p>由於實務上，儘管是單一 service，如只為了使用 PostgreSQL，也必須在 <code>docker run</code> 搭配一堆參數，但人的腦容量有限，很難記住所有的參數，與其寫在 Bash，建議寫在 <code>docker-compose.yml</code> ，統一由 <code>docker-compose</code> 管理。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>Dockerfile</code> 用來描述 image；而 <code>docker-compose.yml</code> 用來描述 container</li>
+<li>若 <code>Dockerfile</code> 與 <code>docker-compose.yml</code> 還無法達到客製化的需求，就必須搭配 Bash</li>
+<li><code>Dockerfile</code> 與 <code>docker-compose.yml</code> 都是文字檔，因此檔案很小，也容易 git 版控，實現 <code>Infrastructur as Code</code> 理想。</li>
+<li>儘管只有一個 container，也建議使用 <code>docker-compose.yml</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[兩個初學者最容易卡關的概念]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 Docker 建立 .NET Core + PostgreSQL 開發環境 ?]]></title>
@@ -2206,56 +2299,6 @@
     </summary>
     
       <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?]]></title>
-    <link href="http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/"/>
-    <id>http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/</id>
-    <published>2018-04-30T14:23:43.000Z</published>
-    <updated>2018-04-30T02:57:49.875Z</updated>
-    <content type="html"><![CDATA[<p>當在 IntelliJ 平台使用 SonarLint 時，只要在 <code>SonarLint General Settings</code> 下按 <code>Update Binding</code> 就會出現 <code>Analyzer Not Loaded</code> 的錯誤訊息，這該如何解決呢？</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarTS 1.6<br>PhpStorm 2018.1<br>SonarLint 3.3.0.2482</p>
-<h2 id="Sympton">Sympton</h2><hr>
-<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts000.png" alt="sonarts000"></p>
-<p><strong><em>PhpStorm -&gt; Other Settings -&gt; SonarLint General Settings</em></strong></p>
-<ol>
-<li>當按下 <code>Update binding</code>，欲將 SonarQube server 上的 project lists、rules、profile 下載到本機</li>
-<li>出現 <code>Analyzers Not Loaded</code> 錯誤訊息</li>
-</ol>
-<h2 id="Root_Cause">Root Cause</h2><hr>
-<p>SonarLint 3.3.0.2482 必須搭配使用 SonarTS 1.5 以上，但是 SonarQube 6.7.2 LTS 預設提供為 SonarTS 1.1，因此 SonarLint 無法載入 TypeScript analyzer。</p>
-<blockquote>
-<p>SonarQube 7.1 預設就提供 SonarTS 1.6，就不會有這個問題</p>
-</blockquote>
-<h2 id="Recipe">Recipe</h2><p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts001.png" alt="sonarts001"></p>
-<ol>
-<li>到 SonarTS 的 <a href="https://github.com/SonarSource/SonarTS/releases" target="_blank" rel="external">GitHub</a> 下載最新版 SonarTS 1.6</li>
-<li>選擇 <code>.jar</code> 格式下載</li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts002.png" alt="sonarts002"></p>
-<ol>
-<li>到 SonarQube 安裝目錄下的 <code>extensions/plugins</code> </li>
-<li>將原本的 <code>sonar-typescript-plugin-1.1.0.1079.jar</code> 刪除，以 <code>sonar-typescript-plugin-1.6.0.2388.jar</code> 取代之</li>
-<li>重新啟動 SonarQube</li>
-</ol>
-<p>在 PhpStorm 重新 <code>Update binding</code> 就不會出現錯誤訊息了。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>若使用 SonarQube 最新版就不會有這個問題，但若使用 SonarQube LTS，因為 SonarTS 的版本較舊，與 SonarLint 搭配就會有問題</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[SonarTS 版本太舊所導致]]>
-    
-    </summary>
-    
-      <category term="SonarLint" scheme="http://oomusou.io/tags/SonarLint/"/>
-    
-      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
     
   </entry>
   

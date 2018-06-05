@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/docker/dockerfile-dockercompose/</loc>
+    <lastmod>2018-06-05T06:34:58.155Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/build-docker/</loc>
     <lastmod>2018-06-05T03:52:26.110Z</lastmod>
   </url>
