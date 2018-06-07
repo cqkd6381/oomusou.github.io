@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/typora/typora-cli/</loc>
+    <lastmod>2018-06-07T14:54:45.727Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/netcore/nuget/nuget-server/</loc>
-    <lastmod>2018-06-07T10:02:05.932Z</lastmod>
+    <lastmod>2018-06-07T10:09:01.388Z</lastmod>
   </url>
   
   <url>
