@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-05T07:16:35.824Z</updated>
+  <updated>2018-06-07T10:02:05.932Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,97 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何架設企業內部的 NuGet Server ?]]></title>
+    <link href="http://oomusou.io/netcore/nuget/nuget-server/"/>
+    <id>http://oomusou.io/netcore/nuget/nuget-server/</id>
+    <published>2018-06-07T12:23:43.000Z</published>
+    <updated>2018-06-07T10:02:05.932Z</updated>
+    <content type="html"><![CDATA[<p>.NET Core 目前仍延續 .NET Framework 使用 NuGet 為 package，除了使用公用的 NuGet server 外，企業也需要自己內部使用 NuGet Server。</p>
+<p>NuGet Foundation 提供了 <code>NuGet.Server</code> 免費使用，但目前只有 .NET Framework 版本，因此還是只能安裝在 Windows Server 上。<br><a id="more"></a></p>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>Parallel Desktop 13 for Mac Pro Edition 13.3.1 (43365)<br>Windows 10 Pro 1803 17134.81<br>Visual Studio Enterprise 2017 15.7.3<br>NuGet.Server 3.1.2<br>.NET Framework 4.6.1<br>.NET Core 2.1</p>
+<h2 id="建立_NuGet_Server">建立 NuGet Server</h2><hr>
+<p>NuGet.Server 已經被封裝的 NuGet package，只要建立 ASP.NET MVC Application，並且加入 <code>NuGet.Server</code> package，不用寫任何一行 code，編譯後就是可用的 NuGet server。</p>
+<h2 id="建立_ASP-NET_Web_Application">建立 ASP.NET Web Application</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget000.png" alt="nuget000"></p>
+<ol>
+<li>選擇 <code>Web</code></li>
+<li>選擇 <code>ASP.NET Web Application</code> (不是 ASP.NET Core)</li>
+<li><strong>Name</strong>：輸入 project 名稱</li>
+<li><strong>Framework</strong>：注意是 <code>.NET Framework 4.6</code>，不是 .NET Core</li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget001.png" alt="nuget001"></p>
+<ol>
+<li>選擇 <code>Empty</code> ，其餘什麼都不用勾選</li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<h2 id="安裝_NuGet-Server_Package">安裝 NuGet.Server Package</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget002.png" alt="nuget002"></p>
+<p><strong><em>Tools -&gt; NuGet Package Manager -&gt; Manage NuGet Package for Solution</em></strong></p>
+<p><img src="/images/netcore/nuget/nuget-server/nuget003.png" alt="nuget003"></p>
+<ol>
+<li>輸入 <code>NuGet.Server</code></li>
+<li>選擇 <code>NuGet.Server</code></li>
+<li>勾選 <code>NuGetServer</code> project</li>
+<li>按 <code>Install</code> 開始安裝 package</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget004.png" alt="nuget004"></p>
+<ol>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget005.png" alt="nuget005"></p>
+<ol>
+<li>按 <code>I Accept</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget006.png" alt="nuget006"></p>
+<ol>
+<li><code>NuGet.Server</code> package 安裝完成</li>
+</ol>
+<h2 id="編輯_Web-config">編輯 Web.config</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget007.png" alt="nuget007"></p>
+<ol>
+<li>將 18 行的 <code>&lt;compilation debug=&quot;true&quot; targetFramework=&quot;4.6&quot; /&gt;</code> 刪除，這算是 bug，重複兩個相同的 <code>targetFramework</code> 會無法執行</li>
+</ol>
+<h2 id="設定_API_Key">設定 API Key</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget009.png" alt="nuget009"></p>
+<ol>
+<li>當使用 <code>dotnet nuget push</code> 上傳時，會需要指定 API Key，可在 <code>Web.config</code> 內設定。</li>
+</ol>
+<h2 id="測試_NuGet_Server">測試 NuGet Server</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget008.png" alt="nuget008"></p>
+<ol>
+<li>按熱鍵 <code>Alt + Shift + R</code> Start Without Debug，此時會啟動 IIS Express 執行</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet nuget push MyClassLib<span class="number">.1</span><span class="number">.0</span><span class="number">.0</span>.nupkg -k <span class="number">12345</span> -s http:<span class="comment">//localhost:49771/nuget</span></span><br></pre></td></tr></table></figure>
+<p>使用 .NET Core CLI 的 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到 NuGet server。</p>
+<ul>
+<li><strong>-k</strong> : 指定 API Key</li>
+<li><strong>-s</strong> : 指定 NuGet server 網址</li>
+</ul>
+<p><img src="/images/netcore/nuget/nuget-server/nuget010.png" alt="nuget010"></p>
+<p>目前為止，<code>NuGet.Server</code> 已經正常啟動，也可接受 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到 NuGet server，但 IIS Express 會動態選擇 port，只適合開發測試用，最後還是得將 NuGet.Server 安裝到 IIS 上。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>目前 NuGet.Server 還沒有 .NET Core 版本，這也意味著若使用 NuGet.Server，只能搭配 .NET Framework，也就是只能用於 Windows Server，還無法跨平台裝在 Linux 上</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://poychang.github.io" target="_blank" rel="external">Poy Chang</a>, <a href="https://poychang.github.io" target="_blank" rel="external">架設私有的 NuGet 伺服器</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[可惜目前只有 .NET Framework 版本]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term=".NET Framework" scheme="http://oomusou.io/tags/NET-Framework/"/>
+    
+      <category term="NuGet" scheme="http://oomusou.io/tags/NuGet/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入淺出 Dockerfile 與 Docker Compose]]></title>
@@ -615,7 +706,7 @@
     <link href="http://oomusou.io/netcore/nuget/create/"/>
     <id>http://oomusou.io/netcore/nuget/create/</id>
     <published>2018-05-24T12:23:43.000Z</published>
-    <updated>2018-05-24T07:02:10.726Z</updated>
+    <updated>2018-06-07T09:54:20.750Z</updated>
     <content type="html"><![CDATA[<p>.NET Core 一樣使用 NuGet 管理 package，本文將使用 VS Code 與 .NET Core CLI 建立 package，並上傳到 NuGet server。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -721,6 +812,8 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="NuGet" scheme="http://oomusou.io/tags/NuGet/"/>
     
   </entry>
   
@@ -2118,56 +2211,6 @@
     </summary>
     
       <category term="macOS" scheme="http://oomusou.io/tags/macOS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?]]></title>
-    <link href="http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/"/>
-    <id>http://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/</id>
-    <published>2018-04-30T14:23:43.000Z</published>
-    <updated>2018-04-30T02:57:49.875Z</updated>
-    <content type="html"><![CDATA[<p>當在 IntelliJ 平台使用 SonarLint 時，只要在 <code>SonarLint General Settings</code> 下按 <code>Update Binding</code> 就會出現 <code>Analyzer Not Loaded</code> 的錯誤訊息，這該如何解決呢？</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarTS 1.6<br>PhpStorm 2018.1<br>SonarLint 3.3.0.2482</p>
-<h2 id="Sympton">Sympton</h2><hr>
-<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts000.png" alt="sonarts000"></p>
-<p><strong><em>PhpStorm -&gt; Other Settings -&gt; SonarLint General Settings</em></strong></p>
-<ol>
-<li>當按下 <code>Update binding</code>，欲將 SonarQube server 上的 project lists、rules、profile 下載到本機</li>
-<li>出現 <code>Analyzers Not Loaded</code> 錯誤訊息</li>
-</ol>
-<h2 id="Root_Cause">Root Cause</h2><hr>
-<p>SonarLint 3.3.0.2482 必須搭配使用 SonarTS 1.5 以上，但是 SonarQube 6.7.2 LTS 預設提供為 SonarTS 1.1，因此 SonarLint 無法載入 TypeScript analyzer。</p>
-<blockquote>
-<p>SonarQube 7.1 預設就提供 SonarTS 1.6，就不會有這個問題</p>
-</blockquote>
-<h2 id="Recipe">Recipe</h2><p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts001.png" alt="sonarts001"></p>
-<ol>
-<li>到 SonarTS 的 <a href="https://github.com/SonarSource/SonarTS/releases" target="_blank" rel="external">GitHub</a> 下載最新版 SonarTS 1.6</li>
-<li>選擇 <code>.jar</code> 格式下載</li>
-</ol>
-<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts002.png" alt="sonarts002"></p>
-<ol>
-<li>到 SonarQube 安裝目錄下的 <code>extensions/plugins</code> </li>
-<li>將原本的 <code>sonar-typescript-plugin-1.1.0.1079.jar</code> 刪除，以 <code>sonar-typescript-plugin-1.6.0.2388.jar</code> 取代之</li>
-<li>重新啟動 SonarQube</li>
-</ol>
-<p>在 PhpStorm 重新 <code>Update binding</code> 就不會出現錯誤訊息了。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>若使用 SonarQube 最新版就不會有這個問題，但若使用 SonarQube LTS，因為 SonarTS 的版本較舊，與 SonarLint 搭配就會有問題</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[SonarTS 版本太舊所導致]]>
-    
-    </summary>
-    
-      <category term="SonarLint" scheme="http://oomusou.io/tags/SonarLint/"/>
-    
-      <category term="SonarQube" scheme="http://oomusou.io/tags/SonarQube/"/>
     
   </entry>
   

@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/nuget/nuget-server/</loc>
+    <lastmod>2018-06-07T10:02:05.932Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/netcore/nuget/create/</loc>
+    <lastmod>2018-06-07T09:54:20.750Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/docker/dockerfile-dockercompose/</loc>
     <lastmod>2018-06-05T07:16:35.824Z</lastmod>
   </url>
@@ -32,18 +42,8 @@
   </url>
   
   <url>
-    <loc>http://oomusou.io/ubuntu1804-core21/</loc>
-    <lastmod>2018-06-01T05:02:47.985Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://oomusou.io/netcore/docker-dev/</loc>
     <lastmod>2018-05-31T15:25:22.594Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/netcore/nuget/create/</loc>
-    <lastmod>2018-05-24T07:02:10.726Z</lastmod>
   </url>
   
   <url>
