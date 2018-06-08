@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/vscode/cli/</loc>
+    <lastmod>2018-06-08T10:29:28.606Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/docker/dockerfile-dockercompose/</loc>
     <lastmod>2018-06-08T05:19:26.198Z</lastmod>
   </url>
@@ -754,11 +759,6 @@
   <url>
     <loc>http://oomusou.io/vscode/wallaby/</loc>
     <lastmod>2018-02-04T15:35:34.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/vscode/run-by-command/</loc>
-    <lastmod>2018-02-03T12:22:28.000Z</lastmod>
   </url>
   
   <url>
