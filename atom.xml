@@ -148,7 +148,7 @@
     <link href="http://oomusou.io/docker/dockerfile-dockercompose/"/>
     <id>http://oomusou.io/docker/dockerfile-dockercompose/</id>
     <published>2018-06-05T12:23:43.000Z</published>
-    <updated>2018-06-05T07:16:35.824Z</updated>
+    <updated>2018-06-08T05:19:26.198Z</updated>
     <content type="html"><![CDATA[<p>Dockerfile 與 Docker Compose 是 Docker 兩個最重要的概念，也是初學者最容易卡關的地方，本文以 <code>使用需求</code> 為觀點解釋這兩者的差異。</p>
 <a id="more"></a>
 <h2 id="Image_與_Container">Image 與 Container</h2><hr>
@@ -209,7 +209,7 @@
 </blockquote>
 <ul>
 <li><code>Dockerfile</code> 是用來描述 image，也就是如何產生客製化的 image，通常用來安裝 package，將檔案複製進 image 用</li>
-<li><code>docker-compose.yml</code> 是用來描述 container，也就是管理一個以上的 container，彼此串連，把同一組架構寫在一起，通常用來設定 container 參數，設定 container 的網路，設定 container 啟動順序 … 等</li>
+<li><code>docker-compose.yml</code> 是用來描述 container，也就是管理一個以上的 container，彼此串連，把同一組架構寫在一起，通常用來設定 container 參數，設定 container 的網路，設定 container 啟動順序或 service 的環境變數 … 等</li>
 </ul>
 <blockquote>
 <p>Q：<code>Dockerfile</code> 是用來描述 image，<code>docker-compose.yml</code> 是用來描述 container，但若我們還有客製化的 <code>邏輯</code> 該怎麼辦 ?</p>
