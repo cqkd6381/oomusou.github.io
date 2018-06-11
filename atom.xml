@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-11T16:31:25.455Z</updated>
+  <updated>2018-06-11T16:34:23.071Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/rider/extract-higher-order-function/"/>
     <id>http://oomusou.io/rider/extract-higher-order-function/</id>
     <published>2018-06-12T12:23:43.000Z</published>
-    <updated>2018-06-11T16:31:25.455Z</updated>
+    <updated>2018-06-11T16:34:23.071Z</updated>
     <content type="html"><![CDATA[<p>Higher Order Function 是 JavaScript 或 FP 語言常見的語言機制，事實上 C# 也支援某種程度的 FP，如 Func、 Predicate 與 Action。</p>
 <p>透過 Rider，我們也能將既有 method 重構出具 FP 風格的 Higher Order Function。</p>
 <a id="more"></a>
@@ -160,7 +160,7 @@
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[C 也能輕鬆抽出 Higher Order Function]]>
+    <![CDATA[C# 也能輕鬆抽出 Higher Order Function]]>
     
     </summary>
     
