@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-13T08:30:23.348Z</updated>
+  <updated>2018-06-13T08:42:17.318Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/efcore/migration/"/>
     <id>http://oomusou.io/efcore/migration/</id>
     <published>2018-06-13T12:23:43.000Z</published>
-    <updated>2018-06-13T08:30:23.348Z</updated>
+    <updated>2018-06-13T08:42:17.318Z</updated>
     <content type="html"><![CDATA[<p>透過 PostgreSQL 官方提供的 Npgsql EF Core Provider，Entity Framework Core 也能簡單地存取 PostgreSQL。</p>
 <p>本文將使用 Code First 方式對 PostgreSQL 建立 database schema，並解釋 Migration 背後運作原理。</p>
 <a id="more"></a>
@@ -258,6 +258,7 @@
 <blockquote>
 <p>由於 <code>MyMigrate.Designer.cs</code> 與 <code>MyMigrate.cs</code> 都是 C# 檔案，因此可以進入 Git 版控，可藉由 Migration 檔案的變化，得知 database schema 變化的歷程，且若真的 Migration 錯誤，還可以透過 <code>dotnet ef migrations remove</code> 還原 Migration 所變動的 database schema</p>
 <p><code>MyMigrate.Designer.cs</code> 與 <code>MyMigrate.cs</code> 雖然是由 CLI 產生，但並非不能修改，一些進階的Migration 功能，就得自行修改才能實現，如想利用 Migration 建立 Stored Procedure，就必須自行修改 <code>MyMigrate.cs</code> 的 <code>Up()</code></p>
+<p>但 <code>ModelSnapshot.cs</code> 則不應該修改，應該交由 Migration 去維護，否則會發生錯亂</p>
 </blockquote>
 <p>這解釋了 :</p>
 <ul>
