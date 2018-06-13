@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="了解 Migration 的黑魔法">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-06-13T07:48:22.039Z">
+<meta property="og:updated_time" content="2018-06-13T08:30:23.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在 Entity Framework Core 使用 Migration ? (PostgreSQL)">
 <meta name="twitter:description" content="了解 Migration 的黑魔法">
@@ -157,7 +157,7 @@
 <p>其中 Npgsql 為 PostgreSQL 所提供的 EFCore Database Provider。</p>
 <p><img src="/images/efcore/migration/migration006.png" alt="post006"></p>
 <ol>
-<li>使用 <code>dotnet add package</code> 安裝 <code>Npgsql.EntityFrameworkCore.PostgreSQL</code> package。</li>
+<li>使用 <code>dotnet add package</code> 安裝 <code>Npgsql.EntityFrameworkCore.PostgreSQL</code> package</li>
 </ol>
 <p><img src="/images/efcore/migration/migration004.png" alt="post004"></p>
 <ol>
@@ -265,7 +265,6 @@
 <li><code>Customers</code> 則建立 <code>CustomerID</code> 與 <code>Name</code> 兩個 column，並有 <code>PK_Customers</code></li>
 </ol>
 <blockquote>
-<p>若 Migration 沒有建立成功，請確認 Docker 與 PostgreSQL container 已經正常執行</p>
 <p>Q : 為什麼會多了 <code>__EFMigrationHistory</code> table 呢 ?</p>
 </blockquote>
 <p>A : 稍後在 <code>Migration 工作原理</code> 會一併並解釋。</p>
