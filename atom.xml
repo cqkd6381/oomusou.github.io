@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-11T16:34:23.071Z</updated>
+  <updated>2018-06-13T07:03:07.413Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,294 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 Entity Framework Core 使用 Migration ? (PostgreSQL)]]></title>
+    <link href="http://oomusou.io/efcore/migration/"/>
+    <id>http://oomusou.io/efcore/migration/</id>
+    <published>2018-06-13T12:23:43.000Z</published>
+    <updated>2018-06-13T07:03:07.413Z</updated>
+    <content type="html"><![CDATA[<p>透過 PostgreSQL 官方提供的 Npgsql EF Core Provider，Entity Framework Core 也能簡單地存取 PostgreSQL。</p>
+<p>本文將使用 Code First 方式對 PostgreSQL 建立 database schema，並解釋 Migration 背後運作原理。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>.NET Core 2.1<br>Entity Framework 2.1<br>PostgreSQL 10.3<br>Npgsql EF Core Provider 2.1<br>VS Code 1.24.0<br>DataGrip 2018.1.4</p>
+<h2 id="Code_First">Code First</h2><hr>
+<blockquote>
+<p><strong>Code First</strong></p>
+<p>會先在 code 建立 <code>DbContext</code> 與 <code>Entity</code> ，然後透過 Migration 在 database 建立 schema</p>
+<p>Q : 為什麼要使用 Code First 與 Migration ?</p>
+</blockquote>
+<p>A : 傳統都會使用視覺化工具建立 database schema，這種方式雖然直覺，但有以下缺點：</p>
+<ul>
+<li>Schema 建立步驟無法透過 Git 版控</li>
+<li>無法很簡單的同步 development / lab / stage / production 各 server 環境的 database schema</li>
+</ul>
+<p>EF Core 提供以下解決方案：</p>
+<ul>
+<li>透過 Code First，schema 改用 Entity 描述，我們可將 C# 進行 Git 版控，明確地知道 schema 變化過程</li>
+<li>透過 Migration，只要在各 server 執行 <code>dotnet ef database update</code>，就能確保 schema 同步</li>
+</ul>
+<h2 id="建立_Console_App">建立 Console App</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o EFCoreMigration</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 .NET Core App。</p>
+<ul>
+<li><strong>new</strong>：建立 project</li>
+<li><strong>console</strong>：建立 console 類型 project</li>
+<li><strong>-o</strong>：以 <code>EFCorePostgres</code> 為專案名稱並建立目錄</li>
+</ul>
+<p><img src="/images/efcore/migration/migration000.png" alt="post000"></p>
+<h2 id="以_VS_Code_開啟">以 VS Code 開啟</h2><figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="char">$ </span>cd <span class="class">EFCoreMigration</span></span><br><span class="line">~/<span class="class">EFCorrMigration</span> <span class="char">$ </span>code .</span><br></pre></td></tr></table></figure>
+<p>進入專案目錄，呼叫 VS Code 開啟。</p>
+<p><img src="/images/efcore/migration/migration001.png" alt="post001"></p>
+<p><img src="/images/efcore/migration/migration002.png" alt="post002"></p>
+<h2 id="安裝_EF_Core_Package">安裝 EF Core Package</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/EFCoreMigration $ dotnet add package Microsoft<span class="class">.EntityFrameworkCore</span><span class="class">.Design</span></span><br></pre></td></tr></table></figure>
+<p>將來會在 CLI 執行 migration，而 <code>dotnet ef</code> 必須透過 <code>Microsoft.EntityFrameworkCore.Design</code> 才能存取 Entity 與 DbContext，所以必須另外安裝 package。</p>
+<p><img src="/images/efcore/migration/migration005.png" alt="post005"></p>
+<ol>
+<li>輸入 <code>dotnet add package Microsoft.EntityFrameworkCore.Design</code> 安裝 packag</li>
+</ol>
+<p><img src="/images/efcore/migration/migration003.png" alt="post003"></p>
+<ol>
+<li>安裝完 package 會在 <code>.csproj</code> 會增加新的 <code>&lt;PackageReference/&gt;</code></li>
+</ol>
+<h2 id="安裝_PostgreSQL_Database_Provider">安裝 PostgreSQL Database Provider</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/EFCoreMigration $ dotnet add package Npgsql<span class="class">.EntityFrameworkCore</span><span class="class">.PostgreSQL</span></span><br></pre></td></tr></table></figure>
+<p>EF Core 預設提供了 MSSQL、SQLite 與 InMemory 3 個 Database Provider，其餘的 provider 則由原廠 vendor 提供。</p>
+<p>其中 Npgsql 為 PostgreSQL 所提供的 EFCore Database Provider。</p>
+<p><img src="/images/efcore/migration/migration006.png" alt="post006"></p>
+<ol>
+<li>使用 <code>dotnet add package</code> 安裝 <code>Npgsql.EntityFrameworkCore.PostgreSQL</code> package。</li>
+</ol>
+<p><img src="/images/efcore/migration/migration004.png" alt="post004"></p>
+<ol>
+<li>安裝完 package 會在 <code>.csproj</code> 會增加新的 <code>&lt;PackageReference/&gt;</code></li>
+</ol>
+<blockquote>
+<p>目前在 <code>.csproj</code> 一共會看到 <code>Microsoft.EntityFrameworkCore.Design</code> 與 <code>Npgsql.EntityFrameworkCore.PostgreSQL</code> 兩個 package</p>
+</blockquote>
+<h2 id="EF_Core">EF Core</h2><hr>
+<p>在 EF Core，database 在 ORM 中都有相對應的物件：</p>
+<ul>
+<li><strong>Database</strong>：EF Core 的 <code>DbContext</code></li>
+<li><strong>Table</strong>：EF Core 的 <code>Entity</code></li>
+<li><strong>Column</strong>：EF Core 的 <code>Property</code></li>
+</ul>
+<p>我們即將在 PostgreSQL 建立 :</p>
+<ul>
+<li><strong>Database</strong> : <code>eflab</code></li>
+<li><strong>Table</strong>：<code>Customers</code></li>
+<li><strong>Column</strong>：<ul>
+<li><code>CustomerID</code> : int (PK)</li>
+<li><code>Name</code> : string</li>
+</ul>
+</li>
+</ul>
+<h2 id="Code_First-1">Code First</h2><hr>
+<p><strong>建立 DbContext</strong><br><code>DbContext</code> 在 EF Core 中代表 database，我們將繼承 <code>DbContext</code> 建立自己的 database context。</p>
+<p>其中 <code>EFLabDbContext</code> DbContext 代表 <code>eflab</code> database。</p>
+<p><strong>EFLabDbContext.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EFLabDbContext</span>: <span class="title">DbContext</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> DbSet&lt;Customer&gt; Customers &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> DbConnectionString = <span class="string">"Host=localhost;Port=5432;Database=eflab;Username=admin;Password=12345"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnConfiguring</span>(<span class="params">DbContextOptionsBuilder optionsBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            optionsBuilder.UseNpgsql(DbConnectionString);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EFLabDbContext</span>: <span class="title">DbContext</span></span><br></pre></td></tr></table></figure>
+<p>建立自己的 <code>EFLabDbContext</code>，繼承自 <code>DbContext</code>。</p>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> DbSet&lt;Customer&gt; Customers &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br></pre></td></tr></table></figure>
+<p>使用 property 宣告 table，其型別為 <code>DbSet&lt;Customer&gt;</code>，這表示其在 EF Core 為 <code>Customer</code> entity，而在 database 為 <code>Customers</code> table。</p>
+<blockquote>
+<p>Entity 名稱為 <code>單數</code>，而 table 名稱為 <code>複數</code></p>
+</blockquote>
+<p>第 8 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> DbConnectionString = <span class="string">"Host=localhost;Port=5432;Database=eflab;Username=admin;Password=12345"</span>;</span><br></pre></td></tr></table></figure>
+<p>連接 database server 需要基本的資訊，統稱為 database connection string，包含以下資料：</p>
+<ul>
+<li><strong>Host</strong> : 設定 PostgreSQL server 的名稱</li>
+<li><strong>Port</strong> : 設定 PostgreSQL 對外的 port</li>
+<li><strong>Database</strong> : 設定要連接的 database</li>
+<li><strong>Username</strong> : 設定 user name</li>
+<li><strong>Password</strong> : 設定 password</li>
+</ul>
+<blockquote>
+<p> 這些資訊在建立 PostgreSQL 的 <code>docker-compose.yml</code> 時，都已經在 <code>.env</code> 建立</p>
+</blockquote>
+<p>第 10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnConfiguring</span>(<span class="params">DbContextOptionsBuilder optionsBuilder</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    optionsBuilder.UseNpgsql(DbConnectionString);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Override <code>OnConfiguring()</code> 設定 database。</p>
+<p>EF Core 會傳入 <code>DbContextOptionBuider</code>，因為我們要連接的是 PostgreSQL，其 database provider 為 <code>Npgsql</code>， 所以將 connection string 傳入 <code>OptionBuilder.UseNpgsql()</code> 。</p>
+<p><img src="/images/efcore/migration/migration010.png" alt="migration010"></p>
+<p><strong>建立 Entity</strong></p>
+<p><code>Entity</code> 在 EF Core 中代表 table，我們將建立自己的 Entity。</p>
+<p>其中 <code>Customer</code> entity 代表 <code>Customers</code> table。</p>
+<blockquote>
+<p>Entity 名稱為 <code>單數</code>，而 table 名稱為 <code>複數</code></p>
+</blockquote>
+<p><strong>Customer.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Customer</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> CustomerID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 3 行<br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Customer</span></span><br></pre></td></tr></table></figure></p>
+<p>Entity 為 <code>單數</code>，所以使用單數的 <code>Customer</code>。</p>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> CustomerID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br></pre></td></tr></table></figure>
+<p>Column 以 property 呈現。</p>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> CustomerID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br></pre></td></tr></table></figure>
+<p>Table 的 PK，EF Core 規定要以 <code>table name</code> + <code>ID</code> 表示，則 migration 時會自動將該欄位建立成 PK，不需要額外 attribute。</p>
+<p><img src="/images/efcore/migration/migration009.png" alt="migration009"></p>
+<h2 id="Migration">Migration</h2><hr>
+<p>Migration 分兩個階段：</p>
+<ul>
+<li>建立 Migration</li>
+<li>執行 Migration</li>
+</ul>
+<p><strong>建立 Migration</strong><br><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/EFCoreMigration $ dotnet ef migrations <span class="keyword">add </span>Migration00</span><br></pre></td></tr></table></figure></p>
+<p>輸入 <code>dotnet ef migrations add</code> 建立 Migration，其中 <code>Migration00</code> 為 Migration 名稱，請自行建立不重複的名稱。</p>
+<p><img src="/images/efcore/migration/migration007.png" alt="migration007"></p>
+<p><img src="/images/efcore/migration/migration011.png" alt="migration011"></p>
+<ol>
+<li>執行完 <code>dotnet ef migrations add Migration00</code>，會發現新增了 <code>Migrations</code> 目錄，並增加了 <code>3</code> 個檔案</li>
+</ol>
+<blockquote>
+<p>Q : 為什麼需要這 3 個 Migration 檔案 ?</p>
+</blockquote>
+<p>A : 稍後在 <code>Migration 工作原理</code> 會一併並解釋。</p>
+<p><strong>執行 Migration</strong><br><figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">EFCoreMigration</span> $ <span class="keyword">dotnet</span> ef database update</span><br></pre></td></tr></table></figure></p>
+<p>輸入 <code>dotnet ef database update</code> 執行 Migration。</p>
+<blockquote>
+<p>EF Core 將根據剛剛在 <code>Migrations</code> 所建立的 3 個檔案，與 <code>DbContext.OnConfiguration()</code> 的設定，對 PostgreSQL 進行 Migration</p>
+</blockquote>
+<p><img src="/images/efcore/migration/migration008.png" alt="migration008"></p>
+<ol>
+<li>執行了 <code>Migration00</code></li>
+</ol>
+<p><strong>確認 Database Schema</strong><br><img src="/images/efcore/migration/migration012.png" alt="migration012"></p>
+<ol>
+<li>展開 <code>eflab</code> database</li>
+<li>EF Core 的 Migration 在 <code>eflab</code> 建立了 <code>__EFMigrationHistory</code> 與 <code>Customers</code> 兩個 table</li>
+<li><code>Customers</code> 則建立 <code>CustomerID</code> 與 <code>Name</code> 兩個 column，並有 <code>PK_Customers</code></li>
+</ol>
+<blockquote>
+<p>若 Migration 沒有建立成功，請確認 Docker 與 PostgreSQL container 已經正常執行</p>
+<p>Q : 為什麼會多了 <code>__EFMigrationHistory</code> table 呢 ?</p>
+</blockquote>
+<p>A : 稍後在 <code>Migration 工作原理</code> 會一併並解釋。</p>
+<h2 id="Code_First_Again">Code First Again</h2><hr>
+<p><strong>新增 Field</strong></p>
+<p>若只是單純將 Entity 建立成 table，還顯不出 Migration 的威力。</p>
+<p>實務上因為需求的變動，我們會想在 table 新增 column，我們只要繼續在 Entity 新增 property 即可。</p>
+<p><strong>Customer.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Customer</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> CustomerID &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">string</span> Name &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> Age &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br></pre></td></tr></table></figure>
+<p>新增 <code>Age</code> property。</p>
+<p><img src="/images/efcore/migration/migration013.png" alt="migration013"></p>
+<h2 id="Migration_Again">Migration Again</h2><hr>
+<p><strong>建立 Migration</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/EFCoreMigration $ dotnet ef migrations <span class="keyword">add </span>Migration01</span><br></pre></td></tr></table></figure>
+<p>輸入 <code>dotnet ef migrations add</code> 建立 Migration，其中 <code>Migration01</code> 為 Migration 名稱，有別於剛剛建立的 <code>Migration00</code>。</p>
+<p><img src="/images/efcore/migration/migration014.png" alt="migration007"></p>
+<p><img src="/images/efcore/migration/migration017.png" alt="migration017"></p>
+<ol>
+<li>新增兩個 Migration 檔案</li>
+</ol>
+<blockquote>
+<p>Q : 為什麼第二次 Migration 只有兩個檔案 ?</p>
+</blockquote>
+<p>A : 稍後在 <code>Migration 工作原理</code> 會一併並解釋。</p>
+<p><strong>執行 Migration</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">EFCoreMigration</span> $ <span class="keyword">dotnet</span> ef database update</span><br></pre></td></tr></table></figure>
+<p>輸入 <code>dotnet ef database update</code> 執行 Migration。</p>
+<p><img src="/images/efcore/migration/migration015.png" alt="migration015"></p>
+<ol>
+<li>只執行了 <code>Migration01</code>，並沒有執行 <code>Migration00</code></li>
+</ol>
+<blockquote>
+<p>Q : 為什麼 EF Core 知道只執行新的 Migration，而不是全部 Migration 重跑一次 ?</p>
+</blockquote>
+<p>A : 稍後在 <code>Migration 工作原理</code> 會一併並解釋。</p>
+<p><strong>再次確認 Database Schema</strong></p>
+<p><img src="/images/efcore/migration/migration016.png" alt="migration016"></p>
+<ol>
+<li><code>Customers</code> 只新增了 <code>Age</code> column</li>
+</ol>
+<h2 id="Migration_工作原理">Migration 工作原理</h2><hr>
+<p>目前 Migration 已經正常執行，Table 與 Column 也都如預期建立在 PostgreSQL，但我們累積了很多疑問：</p>
+<ul>
+<li>Q : 為什麼需要這 3 個 Migration 檔案 ?</li>
+<li>Q : 為什麼會多了 <code>__EFMigrationHistory</code> table 呢 ?</li>
+<li>Q : 為什麼第二次 Migration 只有兩個檔案 ?</li>
+<li>Q : 為什麼 EF Core 知道只執行新的 Migration，而不是全部 Migration 重跑一次 ?</li>
+</ul>
+<p>這些都是 Migration 的黑魔法，我們必須從 EF Core 的 Migration 工作原理談起。</p>
+<p><strong>建立 Migration</strong><br><figure class="highlight avrasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet ef migrations <span class="keyword">add</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/efcore/migration/migration018.svg" alt="migration018"></p>
+<ol>
+<li>根據 <code>DbContext</code> 與 <code>Entity</code> 蒐集要建立 Migration 的資訊</li>
+<li>比對 <code>ModelSnapshot.cs</code> 與 <code>DbContext</code> 與 <code>Entity</code> 的差異，決定 Migration 檔案要如何建立</li>
+<li><code>MyMigrate.Designer.cs</code> 與 <code>MyMigrate.cs</code> 就是實際的 Migration 檔案</li>
+<li>將新增異動的 schema 寫入 <code>ModelSnapshot.cs</code></li>
+</ol>
+<p><strong>ModelSnapshot.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;auto-generated /&gt;</span></span><br><span class="line"><span class="keyword">using</span> EFCoreMigration;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore.Infrastructure;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore.Storage.ValueConversion;</span><br><span class="line"><span class="keyword">using</span> Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration.Migrations</span></span><br><span class="line">&#123;</span><br><span class="line">    [DbContext(<span class="keyword">typeof</span>(EFLabDbContext))]</span><br><span class="line">    <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">EFLabDbContextModelSnapshot</span> : <span class="title">ModelSnapshot</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">BuildModel</span>(<span class="params">ModelBuilder modelBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> <span class="keyword">warning</span> disable 612, 618</span></span><br><span class="line">            modelBuilder</span><br><span class="line">                .HasAnnotation(<span class="string">"Npgsql:ValueGenerationStrategy"</span>, NpgsqlValueGenerationStrategy.SerialColumn)</span><br><span class="line">                .HasAnnotation(<span class="string">"ProductVersion"</span>, <span class="string">"2.1.0-rtm-30799"</span>)</span><br><span class="line">                .HasAnnotation(<span class="string">"Relational:MaxIdentifierLength"</span>, <span class="number">63</span>);</span><br><span class="line"></span><br><span class="line">            modelBuilder.Entity(<span class="string">"EFCoreMigration.Customer"</span>, b =&gt;</span><br><span class="line">                &#123;</span><br><span class="line">                    b.Property&lt;<span class="keyword">int</span>&gt;(<span class="string">"CustomerID"</span>)</span><br><span class="line">                        .ValueGeneratedOnAdd();</span><br><span class="line"></span><br><span class="line">                    b.Property&lt;<span class="keyword">string</span>&gt;(<span class="string">"Name"</span>);</span><br><span class="line"></span><br><span class="line">                    b.HasKey(<span class="string">"CustomerID"</span>);</span><br><span class="line"></span><br><span class="line">                    b.ToTable(<span class="string">"Customers"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> <span class="keyword">warning</span> restore 612, 618</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>描述了 database schema 該有哪些 table 與 column。</p>
+<blockquote>
+<p><code>ModelSnapshot.cs</code> 可視為前一次 Migration 所產生 database schema 的 golden sample，因此可用目前的 <code>DbContext</code> 、 <code>Entity</code> 與 <code>ModelSnapshot</code> 做比對，產生新的 Migration 檔案</p>
+</blockquote>
+<p><strong>MyMigrate.Designer.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// &lt;auto-generated /&gt;</span></span><br><span class="line"><span class="keyword">using</span> EFCoreMigration;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore.Infrastructure;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore.Migrations;</span><br><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore.Storage.ValueConversion;</span><br><span class="line"><span class="keyword">using</span> Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration.Migrations</span></span><br><span class="line">&#123;</span><br><span class="line">    [DbContext(<span class="keyword">typeof</span>(EFLabDbContext))]</span><br><span class="line">    [Migration(<span class="string">"20180612075028_Migration00"</span>)]</span><br><span class="line">    <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">Migration00</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">BuildTargetModel</span>(<span class="params">ModelBuilder modelBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> <span class="keyword">warning</span> disable 612, 618</span></span><br><span class="line">            modelBuilder</span><br><span class="line">                .HasAnnotation(<span class="string">"Npgsql:ValueGenerationStrategy"</span>, NpgsqlValueGenerationStrategy.SerialColumn)</span><br><span class="line">                .HasAnnotation(<span class="string">"ProductVersion"</span>, <span class="string">"2.1.0-rtm-30799"</span>)</span><br><span class="line">                .HasAnnotation(<span class="string">"Relational:MaxIdentifierLength"</span>, <span class="number">63</span>);</span><br><span class="line"></span><br><span class="line">            modelBuilder.Entity(<span class="string">"EFCoreMigration.Customer"</span>, b =&gt;</span><br><span class="line">                &#123;</span><br><span class="line">                    b.Property&lt;<span class="keyword">int</span>&gt;(<span class="string">"CustomerID"</span>)</span><br><span class="line">                        .ValueGeneratedOnAdd();</span><br><span class="line"></span><br><span class="line">                    b.Property&lt;<span class="keyword">string</span>&gt;(<span class="string">"Name"</span>);</span><br><span class="line"></span><br><span class="line">                    b.HasKey(<span class="string">"CustomerID"</span>);</span><br><span class="line"></span><br><span class="line">                    b.ToTable(<span class="string">"Customers"</span>);</span><br><span class="line">                &#125;);</span><br><span class="line"><span class="preprocessor">#<span class="keyword">pragma</span> <span class="keyword">warning</span> restore 612, 618</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>描述了這次 Migration 需要建立哪些 database schema。</p>
+<p><strong>MyMigrate.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore.Migrations;</span><br><span class="line"><span class="keyword">using</span> Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration.Migrations</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">Migration00</span> : <span class="title">Migration</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Up</span>(<span class="params">MigrationBuilder migrationBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            migrationBuilder.CreateTable(</span><br><span class="line">                name: <span class="string">"Customers"</span>,</span><br><span class="line">                columns: table =&gt; <span class="keyword">new</span></span><br><span class="line">                &#123;</span><br><span class="line">                    CustomerID = table.Column&lt;<span class="keyword">int</span>&gt;(nullable: <span class="keyword">false</span>)</span><br><span class="line">                        .Annotation(<span class="string">"Npgsql:ValueGenerationStrategy"</span>, NpgsqlValueGenerationStrategy.SerialColumn),</span><br><span class="line">                    Name = table.Column&lt;<span class="keyword">string</span>&gt;(nullable: <span class="keyword">true</span>)</span><br><span class="line">                &#125;,</span><br><span class="line">                constraints: table =&gt;</span><br><span class="line">                &#123;</span><br><span class="line">                    table.PrimaryKey(<span class="string">"PK_Customers"</span>, x =&gt; x.CustomerID);</span><br><span class="line">                &#125;);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Down</span>(<span class="params">MigrationBuilder migrationBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            migrationBuilder.DropTable(</span><br><span class="line">                name: <span class="string">"Customers"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>描述了 <code>dotnet ef database update</code> 與 <code>dotnet ef migrations remove</code> 要執行的動作。</p>
+<p>第 8 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Up</span>(<span class="params">MigrationBuilder migrationBuilder</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    migrationBuilder.CreateTable(</span><br><span class="line">        name: <span class="string">"Customers"</span>,</span><br><span class="line">        columns: table =&gt; <span class="keyword">new</span></span><br><span class="line">        &#123;</span><br><span class="line">            CustomerID = table.Column&lt;<span class="keyword">int</span>&gt;(nullable: <span class="keyword">false</span>)</span><br><span class="line">                .Annotation(<span class="string">"Npgsql:ValueGenerationStrategy"</span>,             NpgsqlValueGenerationStrategy.SerialColumn),</span><br><span class="line">            Name = table.Column&lt;<span class="keyword">string</span>&gt;(nullable: <span class="keyword">true</span>)</span><br><span class="line">        &#125;,</span><br><span class="line">        constraints: table =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">           table.PrimaryKey(<span class="string">"PK_Customers"</span>, x =&gt; x.CustomerID);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>當執行 <code>dotnet ef datebase update</code> 時，就會執行 <code>Up()</code>，包含如何建立 database schema。</p>
+<p>24 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">Down</span>(<span class="params">MigrationBuilder migrationBuilder</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    migrationBuilder.DropTable(</span><br><span class="line">        name: <span class="string">"Customers"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>當執行 <code>dotnet ef migrations remove</code> 時，就會執行 <code>Down()</code>，包含如何還原此次 Migration 所需要的動作。</p>
+<blockquote>
+<p>由於 <code>MyMigrate.Designer.cs</code> 與 <code>MyMigrate.cs</code> 都是 C# 檔案，因此可以進入 Git 版控，可藉由 Migration 檔案的變化，得知 database schema 變化的歷程，且若真的 Migration 錯誤，還可以透過 <code>dotnet ef migrations remove</code> 還原 Migration 所變動的 database schema</p>
+<p><code>MyMigrate.Designer.cs</code> 與 <code>MyMigrate.cs</code> 雖然是由 CLI 產生，但並非不能修改，一些進階的Migration 功能，就得自行修改才能實現，如想利用 Migration 建立 Stored Procedure，就必須自行修改 <code>MyMigrate.cs</code> 的 <code>Up()</code></p>
+</blockquote>
+<p>這解釋了 :</p>
+<ul>
+<li>Q : 為什麼需要這 3 個 Migration 檔案 ?</li>
+<li>Q : 為什麼第二次 Migration 只有兩個檔案 ?</li>
+</ul>
+<p><strong>執行 Migration</strong><br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>dotnet ef database update</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/efcore/migration/migration019.svg" alt="migration019"></p>
+<ol>
+<li>檢查是否有 <code>__EFMigrationHistory</code> table，若沒有，表示是第一次執行 Migration</li>
+<li>若是第一次執行 Migration，會建立 <code>__EFMigrationHistory</code> table</li>
+<li>若已經有 <code>__EFMigrationHistory</code>，表示已經執行過 Migration，因此在 <code>__EFMigrationHistory</code> 會有 Migration 紀錄，可查詢已經執行過哪些 Migration</li>
+<li>執行尚未執行過的 Migration</li>
+<li>將執行過的 Migration <code>名稱</code> 寫進 <code>__EFMigrationHistory</code></li>
+</ol>
+<p><img src="/images/efcore/migration/migration020.png" alt="migration020"></p>
+<p><code>__EFMigrationHistory</code> 記載了執行過的 Migration 名稱。</p>
+<p>透過 <code>__EFMigrationHistory</code>，<code>dotnet ef database update</code> 就知道每次該執行哪些沒執行過的 Migration，且在不同環境下，如 development / lab / stage / production，因為各自有各自的 <code>__EFMigrationHistory</code>，也能根據不同環境執行不同的 Migration。</p>
+<p>這解釋了 :</p>
+<ul>
+<li>Q : 為什麼會多了 <code>__EFMigrationHistory</code> table 呢 ?</li>
+<li>Q : 為什麼 EF Core 知道只執行新的 Migration，而不是全部 Migration 重跑一次 ?</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Code First 與 Migration 解決了 database schema 無法 Git 版控與 schema 同步問題，且完全使用開發端技術，而不是資料庫端技術 </li>
+<li>因為不了解 Migration，所以很多人在實務上不敢用 Migration，事實上對於新的技術，只要能充分了解其背後原理與機制，就不再是黑魔法了</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/EFCoreMigration" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="http://www.npgsql.org/doc/index.html" target="_blank" rel="external">Npgsql</a>, <a href="http://www.npgsql.org/efcore/index.html" target="_blank" rel="external">Entity Framework Core</a><br>John P Smith, <a href="https://www.manning.com/books/entity-framework-core-in-action" target="_blank" rel="external">Entity Framework Core in Action</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[了解 Migration 的黑魔法]]>
+    
+    </summary>
+    
+      <category term="EF Core" scheme="http://oomusou.io/tags/EF-Core/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Higher Order Function]]></title>
@@ -2251,106 +2539,6 @@
     </summary>
     
       <category term="JavaScript" scheme="http://oomusou.io/tags/JavaScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Higher Order Function 抽出共用 ?]]></title>
-    <link href="http://oomusou.io/csharp/higer-order-function/"/>
-    <id>http://oomusou.io/csharp/higer-order-function/</id>
-    <published>2018-05-04T13:23:43.000Z</published>
-    <updated>2018-05-04T15:16:52.215Z</updated>
-    <content type="html"><![CDATA[<p>無論使用 TDD 或 Design Pattern，最後一定會經歷 Refactoring 階段，處理程式碼共用部分，避免違反 DRY 原則。</p>
-<p>在傳統 OOP，我們會使用 <code>Pull Member Up</code> 將共用 method 抽到 abstract class；但若使用 FP，我們則有新的武器：將共用部分抽成 Higher Order Function，將不共用部分以 Lambda 傳入。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core 2.0.7<br>C# 7.2</p>
-<h2 id="User_Story">User Story</h2><hr>
-<p><strong>Apple.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Apple;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _discount = <span class="number">0.9</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Apple</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> PadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Nintendo.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Nintendo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Nintendo</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _minus = <span class="number">1000</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Nintendo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            _products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Switch(),</span><br><span class="line">                <span class="keyword">new</span> Zelda()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _products.Sum(product =&gt; product.GetPrice()) - _minus;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Apple.cs</code> 與 <code>Nintendo.cs</code> 都實踐相同的 <code>IPrice</code>，且我們已經看到有兩處程式碼非常相近：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;IPrice&gt; _products;</span><br></pre></td></tr></table></figure>
-<p>都具有 <code>_products</code> List。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _discount * _products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>與</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _products.Sum(product =&gt; product.GetPrice()) - _minus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>也非常相近，都共用 <code>Products.Sum(product =&gt; product.GetPrice())</code>。</p>
-<h2 id="OOP_Refactoring">OOP Refactoring</h2><hr>
-<p><strong>ComboBase.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">ComboBase</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">protected</span> List&lt;IPrice&gt; Products;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> Products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>抽出 <code>ComboBase</code> abstract class，將重複部分全放在 parent class。</p>
-<p>但無論怎麼抽 class，一樣都實踐 <code>IPrice</code> interface，因此對 client 沒有影響，符合 <code>開放封閉原則</code>。</p>
-<p><strong>Apple.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Apple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _discount = <span class="number">0.9</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Apple</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> PadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _discount * <span class="keyword">base</span>.GetPrice();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 8 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">ComboBase</span></span><br></pre></td></tr></table></figure>
-<p>從原本實踐 <code>IPrice</code> interface，改繼承 <code>ComboBase</code>。</p>
-<p>由於 <code>ComboBase</code> 也是實踐 <code>IPrice</code>，因此對 client 沒有影響，符合 <code>開放封閉原則</code>。</p>
-<p>22 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _discount * <span class="keyword">base</span>.GetPrice();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>由於 <code>ComboBase.GetPrice()</code> 已經實作 <code>Products.Sum(product =&gt; product.GetPrice())</code>，因此使用 <code>base.GetPrice()</code> 呼叫 parent class 的 <code>GetPrice()</code>。</p>
-<p><strong>Nintendo.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Nintendo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Nintendo</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _minus = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Nintendo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Switch(),</span><br><span class="line">                <span class="keyword">new</span> Zelda()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">base</span>.GetPrice() - _minus;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>21 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">base</span>.GetPrice() - _minus;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>一樣使用 <code>base.GetPrice()</code> 呼叫 parent class 的 <code>GetPrice()</code>，只是在此是 <code>- _minus</code> 。</p>
-<blockquote>
-<p>這就是 OOP 典型的手法，將共用部分 <code>Pull Member Up</code> 到 parent class，並將 method 開成 <code>virtual</code>，再有 child class 去 <code>override</code> method，且使用 <code>base</code> 去呼叫 parent class 的 method</p>
-</blockquote>
-<h2 id="FP_Refactoring">FP Refactoring</h2><hr>
-<p>在 FP 由於有了 Higher Order Function，解決 DRY 有了新的手法：</p>
-<blockquote>
-<p>將共用部分抽成 Higher Order Function，將不共用部分以 Lambda 傳入</p>
-</blockquote>
-<p><strong>ComboBase.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title">ComboBase</span> : <span class="title">IPrice</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">protected</span> List&lt;IPrice&gt; Products;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>12 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將共用部分抽成 <code>GetSumOfPrice()</code>，<code>action</code> 參數部分則傳入不共用部分。</p>
-<p>將共用的 <code>Products.Sum(product =&gt; product.GetPrice())</code> 傳入 <code>action()</code> 的參數。</p>
-<p>17 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span>;</span><br></pre></td></tr></table></figure>
-<p>原本 <code>GetPrice()</code> 使用 <code>abstract</code> 即可，由 child class 負責實作。</p>
-<p><strong>Apple.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Apple;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Apple</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _discount = <span class="number">0.9</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Apple</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> MacBookPro(),</span><br><span class="line">                <span class="keyword">new</span> PadAir(),</span><br><span class="line">                <span class="keyword">new</span> AppleWatch()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>21 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>呼叫 parent class 的 <code>GetSumOfPrice()</code> ，回傳即為 lambda 的第一個參數 <code>sum</code> ，既然拿到 <code>sum</code>，我們就能在 <code>=&gt;</code> 之後做任何我們想做的運算。</p>
-<p><strong>Nintendo.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Interfaces;</span><br><span class="line"><span class="keyword">using</span> ClassLibrary.Single.Nintendo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ClassLibrary.Combo</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Nintendo</span> : <span class="title">ComboBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">double</span> _minus = <span class="number">1000</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Nintendo</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Products = <span class="keyword">new</span> List&lt;IPrice&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Switch(),</span><br><span class="line">                <span class="keyword">new</span> Zelda()</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> GetSumOfPrice(sum =&gt; sum - _minus);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>一樣呼叫 parent class 的 <code>GetSumOfPrice()</code> ，回傳即為 lambda 的第一個參數 <code>sum</code> ，既然拿到 <code>sum</code>，我們就能在 <code>=&gt;</code> 之後做任何我們想做的運算。</p>
-<h2 id="Summary">Summary</h2><hr>
-<blockquote>
-<p>Q : 兩種抽共用的方式都可行，有什麼差別呢 ?</p>
-</blockquote>
-<p>若以結果論，的確 OOP 與 FP 方法都可行，但 FP 方式語意較佳。</p>
-<h3 id="OOP">OOP</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Products.Sum(product =&gt; product.GetPrice());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>OOP 為了要使用 <code>virtual</code> 與 <code>override</code> ，使用同一個 method 名稱，硬將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 抽到 parent class 的 <code>GetPrice()</code>。</p>
-<p>實務上常會發現，為了抽共用，常將與 method 名稱不符的 code 抽到 parent class。</p>
-<p>如 <code>Products.Sum(product =&gt; product.GetPrice())</code> 與 <code>GetPrice()</code> 並不相符，應該要取名 <code>GetSumOfPrice()</code> 較為恰當。</p>
-<p>此外，將 <code>Products.Sum(product =&gt; product.GetPrice())</code> 放到 parent class 的 <code>GetPrice()</code>，會使得 code 被綁在 <code>IPrice</code> 繼承體系，這段 code 將來幾乎無法再重構。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> _discount * <span class="keyword">base</span>.GetPrice();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Child class 無法藉由 <code>base.GetPrice()</code> 得知語意，一定得 trace 進 parent class 才知道 <code>base.GetPrice()</code> 到底在幹什麼。</p>
-<h3 id="FP">FP</h3><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">double</span> <span class="title">GetSumOfPrice</span>(<span class="params">Func&lt;<span class="keyword">double</span>, <span class="keyword">double</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> action(Products.Sum(product =&gt; product.GetPrice()));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>GetSumOfPrice()</code> 與  <code>Products.Sum(product =&gt; product.GetPrice())</code> 名實相符。</p>
-<p>且 <code>GetSumOfPrice()</code> 並非 <code>IPrice</code> 繼承體系的一員，將來很容易將 <code>GetSumOfPrice()</code> 重構到其他 class，甚至重構到 static helper class，非常靈活。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">double</span> <span class="title">GetPrice</span>(<span class="params"></span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> GetSumOfPrice(sum =&gt; _discount * sum);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Child class 也非常清楚看到 <code>GetSumOfPrice()</code>，且回傳值就是 <code>sum</code>，語意非常清楚，不必 trace 到 parent class。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li><code>Pull Member Up</code> 是典型 OOP 的重構手法，但藉由 FP 的 Higher Order Function，一樣可以實踐 DRY 原則，且更為靈活</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 FP 方式處理共用]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="http://oomusou.io/tags/C/"/>
-    
-      <category term="Refactoring" scheme="http://oomusou.io/tags/Refactoring/"/>
     
   </entry>
   
