@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-06-13T07:19:14.590Z</updated>
+  <updated>2018-06-13T07:48:22.039Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/efcore/migration/"/>
     <id>http://oomusou.io/efcore/migration/</id>
     <published>2018-06-13T12:23:43.000Z</published>
-    <updated>2018-06-13T07:19:14.590Z</updated>
+    <updated>2018-06-13T07:48:22.039Z</updated>
     <content type="html"><![CDATA[<p>透過 PostgreSQL 官方提供的 Npgsql EF Core Provider，Entity Framework Core 也能簡單地存取 PostgreSQL。</p>
 <p>本文將使用 Code First 方式對 PostgreSQL 建立 database schema，並解釋 Migration 背後運作原理。</p>
 <a id="more"></a>
@@ -58,7 +58,7 @@
 <p>將來會在 CLI 執行 migration，而 <code>dotnet ef</code> 必須透過 <code>Microsoft.EntityFrameworkCore.Design</code> 才能存取 Entity 與 DbContext，所以必須另外安裝 package。</p>
 <p><img src="/images/efcore/migration/migration005.png" alt="post005"></p>
 <ol>
-<li>輸入 <code>dotnet add package Microsoft.EntityFrameworkCore.Design</code> 安裝 packag</li>
+<li>輸入 <code>dotnet add package Microsoft.EntityFrameworkCore.Design</code> 安裝 package</li>
 </ol>
 <p><img src="/images/efcore/migration/migration003.png" alt="post003"></p>
 <ol>
