@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/efcore/data-seeding/</loc>
+    <lastmod>2018-06-14T14:29:48.553Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://oomusou.io/data-seeding/</loc>
+    <lastmod>2018-06-14T14:18:43.887Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/rider/change-signature/</loc>
     <lastmod>2018-06-14T06:14:28.071Z</lastmod>
   </url>

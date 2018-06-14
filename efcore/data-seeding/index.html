@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 Entity Framework Core 使用 Data Seeding ? (PostgreSQL) | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="EF Core 2.1 終於支援 Data Seeding">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="EF Core 2.1 終於支援 Data Seeding">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 Entity Framework Core 使用 Data Seeding ? (PostgreSQL)">
+<meta property="og:url" content="http://oomusou.io/efcore/data-seeding/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="EF Core 2.1 終於支援 Data Seeding">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-06-14T14:29:48.553Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 Entity Framework Core 使用 Data Seeding ? (PostgreSQL)">
+<meta name="twitter:description" content="EF Core 2.1 終於支援 Data Seeding">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 Entity Framework Core 使用 Data Seeding ? (PostgreSQL)</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> EF Core 2.1 終於支援 Data Seeding			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立資料"><span class="toc-article-text">建立資料</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Migration"><span class="toc-article-text">建立 Migration</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Migration"><span class="toc-article-text">執行 Migration</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#確認資料"><span class="toc-article-text">確認資料</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>當使用 Code First 與 Migration 後，下一步需要的就是 Data Seeding，讓我們對 table 新增基本的資料。在 EF Core 2.0，Data Seeding 只能自己手動處理，在 EF Core 2.1 已經正式提供 Data Seeding。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>.NET Core 2.1<br>Entity Framework 2.1<br>PostgreSQL 10.3<br>Npgsql EF Core Provider 2.1<br>VS Code 1.24.0<br>DataGrip 2018.4</p>
+<h2 id="建立資料">建立資料</h2><hr>
+<p>我們可以將一些 database 預設的資料寫在 <code>DbContext.OnModelCreating()</code>，這樣在 Migration 時，就會順便將資料寫進 database。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>本文為 <a href="/efcore/migration/">如何在 Entity Framework Core 使用 Migration ? (PostgreSQL)</a> 內容之延續，請搭配參考</span></span></span></p>
+<p><strong>EFLabDbContext.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EFLabDbContext</span>: <span class="title">DbContext</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> DbSet&lt;Customer&gt; Customers &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> DbConnectionString = <span class="string">"Host=localhost;Port=5432;Database=eflab;Username=admin;Password=12345"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnConfiguring</span>(<span class="params">DbContextOptionsBuilder optionsBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            optionsBuilder.UseNpgsql(DbConnectionString);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnModelCreating</span>(<span class="params">ModelBuilder modelBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">                Name = <span class="string">"Sam"</span>,</span><br><span class="line">                Age = <span class="number">18</span>,</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">            modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">                Name = <span class="string">"Kevin"</span>,</span><br><span class="line">                Age = <span class="number">19</span>,</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>15 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnModelCreating</span>(<span class="params">ModelBuilder modelBuilder</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">        Name = <span class="string">"Sam"</span>,</span><br><span class="line">        Age = <span class="number">18</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">            </span><br><span class="line">    modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">        Name = <span class="string">"Kevin"</span>,</span><br><span class="line">        Age = <span class="number">19</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如同設定 connection string 要 override <code>OnConfiguring()</code>，若要使用 Data Seeding 則要 override <code>OnModelCreating()</code>。</p>
+<p>使用 <code>modelBuilder.Entity&lt;T&gt;().HasData()</code> 新增資料，其中 <code>&lt;T&gt;</code> 為要新增的 Entity 型別。</p>
+<p>因為 <code>CustomerID</code> 為 PK，PostgreSQL 會自動處理，所以我們就不特別指定，只設定 <code>Name</code> 與 <code>Age</code> 兩個欄位。</p>
+<p><img src="/images/efcore/data-seeding/seeding000.png" alt="seeding000"></p>
+<h2 id="建立_Migration">建立 Migration</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/EFCoreMigration $ dotnet ef migrations <span class="keyword">add </span>Migration02</span><br></pre></td></tr></table></figure>
+<p>因為我們對 DbContext 做了變動，所以要重新建立 Migration。</p>
+<p>輸入 <code>dotnet ef migrations add</code> 建立新的 Migration。</p>
+<p><img src="/images/efcore/data-seeding/seeding001.png" alt="seeding001"></p>
+<ol>
+<li>建立 Migration 出現錯誤，EF Core 抱怨 <code>CustomerID</code> 沒有提供。</li>
+</ol>
+<p>這目前在 .NET Core 2.1 為 <a href="https://github.com/aspnet/EntityFrameworkCore/issues/11776" target="_blank" rel="external">Known Issue</a>，當使用  <code>modelBuilder.Entity&lt;T&gt;().HasData()</code> 做 Data Seeding 時，目前連 PK 這種 auto-generated 欄位，也必須手動提供。</p>
+<p><strong>EFLabDbContext.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Microsoft.EntityFrameworkCore;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">EFCoreMigration</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">EFLabDbContext</span>: <span class="title">DbContext</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> DbSet&lt;Customer&gt; Customers &#123; <span class="keyword">get</span>; <span class="keyword">set</span>; &#125;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">string</span> DbConnectionString = <span class="string">"Host=localhost;Port=5432;Database=eflab;Username=admin;Password=12345"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnConfiguring</span>(<span class="params">DbContextOptionsBuilder optionsBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            optionsBuilder.UseNpgsql(DbConnectionString);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnModelCreating</span>(<span class="params">ModelBuilder modelBuilder</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> customerID = <span class="number">1</span>;</span><br><span class="line">            </span><br><span class="line">            modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">                CustomerID = customerID++,</span><br><span class="line">                Name = <span class="string">"Sam"</span>,</span><br><span class="line">                Age = <span class="number">18</span>,</span><br><span class="line">            &#125;);</span><br><span class="line">            </span><br><span class="line">            modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">                CustomerID = customerID++,</span><br><span class="line">                Name = <span class="string">"Kevin"</span>,</span><br><span class="line">                Age = <span class="number">19</span>,</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>15 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="title">OnModelCreating</span>(<span class="params">ModelBuilder modelBuilder</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> customerID = <span class="number">1</span>;</span><br><span class="line">    </span><br><span class="line">    modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">        CustomerID = customerID++,</span><br><span class="line">        Name = <span class="string">"Sam"</span>,</span><br><span class="line">        Age = <span class="number">18</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">            </span><br><span class="line">    modelBuilder.Entity&lt;Customer&gt;().HasData(<span class="keyword">new</span> Customer &#123;</span><br><span class="line">        CustomerID = customerID++,</span><br><span class="line">        Name = <span class="string">"Kevin"</span>,</span><br><span class="line">        Age = <span class="number">19</span>,</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 PK 的 <code>CustomerID</code> 加入，並自行使用 <code>customerID++</code> 處理。</p>
+<p><img src="/images/efcore/data-seeding/seeding007.png" alt="seeding007"></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/EFCoreMigration $ dotnet ef migrations <span class="keyword">add </span>Migration02</span><br></pre></td></tr></table></figure>
+<p>再重新建立一次 Migration，這次就成功了。</p>
+<p><img src="/images/efcore/data-seeding/seeding002.png" alt="seeding002"></p>
+<p><strong>Migration02.cs</strong></p>
+<p><img src="/images/efcore/data-seeding/seeding003.png" alt="seeding003"></p>
+<p>觀察 <code>Migration02.Up()</code>，發現我們剛剛使用  <code>modelBuilder.Entity&lt;T&gt;().HasData()</code> 新增的資料，已經成為 Migration 的一部分。</p>
+<p><strong>ModelSnapshot.cs</strong></p>
+<p><img src="/images/efcore/data-seeding/seeding004.png" alt="seeding004"></p>
+<p>觀察 <code>ModelSnapshot.cs</code>，發現我們剛剛使用  <code>modelBuilder.Entity&lt;T&gt;().HasData()</code> 新增的資料也寫入了 <code>ModelSnapshot.cs</code>，因此之後再建立新的 Migration 時，就有了 golden sample 可以比對，不會重複新增 Data Seeding 資料。</p>
+<h2 id="執行_Migration">執行 Migration</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">EFCoreMigration</span> $ <span class="keyword">dotnet</span> ef database update</span><br></pre></td></tr></table></figure>
+<p>輸入 <code>dotnet ef database update</code> 執行 Migration。</p>
+<p><img src="/images/efcore/data-seeding/seeding005.png" alt="seeding005"></p>
+<ol>
+<li>只執行了 <code>Migration02</code></li>
+</ol>
+<h2 id="確認資料">確認資料</h2><hr>
+<p><img src="/images/efcore/data-seeding/seeding006.png" alt="seeding006"></p>
+<ul>
+<li>兩筆資料已經透過 Data Seeding 新增至 database</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>理論上在 Data Seeding 時，PK 欄位應該要省略，但目前 EF Core 2.1 的 <code>HasData()</code> 仍必須自己處理 PK 欄位，是比較可惜的地方</li>
+<li>Data Seeding 最大的用處在於使用 Docker 的 <code>整合測試</code>，當一個測試案例執行時，PostgreSQL 隨著 <code>docker-compose up -d</code> 而跑起來，此時 database 是空的，必須重新執行 Migration 與 Data Seeding，將 schema 與基本資料建立起來，然後才能讓每個測試案例新增測試資料跑測試</li>
+<li>Data Seeding 也可以用在 production 環境，當 production 環境需要一些基本資料才能正常執行時，就適合使用 Data Seeding</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/EFCoreMigration" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/ef/core/modeling/data-seeding" target="_blank" rel="external">Data Seeding</a><br><a href="https://github.com/aspnet/EntityFrameworkCore" target="_blank" rel="external">Entity Framework Core</a>, <a href="https://github.com/aspnet/EntityFrameworkCore/issues/11776" target="_blank" rel="external">Seeding data: The seed entity for entity type ‘X’ cannot be added because there was no value provided for the required property ‘Id’.</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/efcore/migration/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-06-14 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/EF-Core/">EF Core<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
