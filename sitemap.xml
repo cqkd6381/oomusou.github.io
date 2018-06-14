@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/rider/change-signature/</loc>
+    <lastmod>2018-06-14T06:14:28.071Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/efcore/migration/</loc>
     <lastmod>2018-06-13T13:34:29.845Z</lastmod>
   </url>
@@ -9,11 +14,6 @@
   <url>
     <loc>http://oomusou.io/rider/extract-higher-order-function/</loc>
     <lastmod>2018-06-11T16:34:23.071Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/rider/change-signature/</loc>
-    <lastmod>2018-06-11T16:31:51.103Z</lastmod>
   </url>
   
   <url>
