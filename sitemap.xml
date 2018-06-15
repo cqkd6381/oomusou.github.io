@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/efcore/migration/</loc>
+    <lastmod>2018-06-15T13:49:09.989Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/postgres/pgcli/</loc>
     <lastmod>2018-06-14T15:00:24.348Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>http://oomusou.io/rider/change-signature/</loc>
     <lastmod>2018-06-14T06:14:28.071Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/efcore/migration/</loc>
-    <lastmod>2018-06-13T13:34:29.845Z</lastmod>
   </url>
   
   <url>
