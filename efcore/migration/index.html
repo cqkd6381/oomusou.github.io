@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="了解 Migration 的黑魔法">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-06-16T02:05:26.997Z">
+<meta property="og:updated_time" content="2018-06-21T05:43:14.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何在 Entity Framework Core 使用 Migration ? (PostgreSQL)">
 <meta name="twitter:description" content="了解 Migration 的黑魔法">
@@ -417,7 +417,7 @@
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>Code First 與 Migration 解決了 database schema 無法 Git 版控與 schema 同步問題，且完全使用開發端技術，而不是資料庫端技術 </li>
-<li>Migration 另外一個優點就是用在 <code>整合測試</code>，當配合 Docker 時，每個測試案例在執行前先 <code>docker-compose up</code> 建立 PostgreSQL container，接著跑 Migration 建立 schema，然後跑整合測試讀寫 PostgreSQL， 測試完畢後再 <code>docker-compose down</code> 刪除 PostgreSQL container，所有在 PostgreSQL 的測試資料也跟著刪除，下一個測試案例再重新 <code>docker-compose up</code> 建立新的 cotainer，重新跑 Migration …，如此能確保每個整合測試都是全新乾淨的 database，完全沒有任何 side effect</li>
+<li>Migration 另外一個優點就是用在 <code>整合測試</code>，當配合 Docker 時，每個測試案例在執行前先 <code>docker-compose up</code> 建立 PostgreSQL container，接著跑 Migration 建立 schema，然後跑整合測試讀寫 PostgreSQL， 測試完畢後再 <code>docker-compose down</code> 刪除 PostgreSQL container，所有在 PostgreSQL 的測試資料也跟著刪除，下一個測試案例再重新 <code>docker-compose up</code> 建立新的 container，重新跑 Migration …，如此能確保每個整合測試都是全新乾淨的 database，完全沒有任何 side effect</li>
 <li>因為不了解 Migration，所以很多人在實務上不敢用 Migration，事實上對於新的技術，只要能充分了解其背後原理與機制，就不再是黑魔法了</li>
 </ul>
 <h2 id="Sample_Code">Sample Code</h2><hr>
