@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/rider/terminal-esc/</loc>
+    <lastmod>2018-06-27T05:17:07.314Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/efcore/migration/</loc>
     <lastmod>2018-06-21T05:43:14.751Z</lastmod>
   </url>
