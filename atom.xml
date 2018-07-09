@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-07-09T03:01:41.580Z</updated>
+  <updated>2018-07-09T04:13:01.840Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/rider/transform-parameters/"/>
     <id>http://oomusou.io/rider/transform-parameters/</id>
     <published>2018-07-08T12:23:43.000Z</published>
-    <updated>2018-07-09T03:01:41.580Z</updated>
+    <updated>2018-07-09T04:13:01.840Z</updated>
     <content type="html"><![CDATA[<p>在實務上常會發現一些 parameter 總是以 primitive type 一起出現，導致 method 內的 parameter 個數過多，也就是 Code Smell 所謂的 <code>Primitive Obsession</code>，解決方式是將這些 parameter 抽成 class，這在 Refactoring 稱為 <code>Introduce Parameter Object</code>，而在 Rider 則稱為 <code>Transform Parameters</code>，且實務上常常搭配 <code>Make Method Non-Static</code> 一起重構。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -44,7 +44,7 @@
 <p><img src="/images/rider/transform-parameters/tp001.png" alt="tp001"></p>
 <ol>
 <li>選擇要抽出的 parameter</li>
-<li><strong>Method receives</strong> : 選擇要抽成 Property 或 Tuple</li>
+<li><strong>Method receives</strong> : 選擇要抽成 Class 或 Tuple</li>
 <li>輸入 class 名稱</li>
 <li>按 <code>Next</code> 繼續</li>
 </ol>
