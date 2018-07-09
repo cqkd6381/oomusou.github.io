@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/netcore/nunit/</loc>
+    <lastmod>2018-07-09T08:27:27.478Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/rider/transform-parameters/</loc>
     <lastmod>2018-07-09T04:13:01.840Z</lastmod>
   </url>

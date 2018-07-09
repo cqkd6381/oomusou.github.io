@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-07-09T04:13:01.840Z</updated>
+  <updated>2018-07-09T08:27:27.478Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 .NET Core 使用 NUnit ?]]></title>
+    <link href="http://oomusou.io/netcore/nunit/"/>
+    <id>http://oomusou.io/netcore/nunit/</id>
+    <published>2018-07-09T13:23:43.000Z</published>
+    <updated>2018-07-09T08:27:27.478Z</updated>
+    <content type="html"><![CDATA[<p>在 <code>單元測試的藝術</code> 一書中，使用的是 <code>NUnit</code>，但 .NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code>，該如何在 .NET Core 使用我們熟悉的 <code>NUnit</code> 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>NUnit 3.10.1<br>Rider 2018.1.3</p>
+<h2 id="Symptons">Symptons</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
+</ul>
+<p><img src="/images/netcore/nunit/nunit000.png" alt="nunit000"></p>
+<p>.NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code> 的 project template。</p>
+<p><img src="/images/netcore/nunit/nunit001.png" alt="nunit001"></p>
+<ul>
+<li>因為 .NET Core SDK 只有 <code>MSTest</code> 與 <code>XUnit</code>，因此 Rider 也只支援 <code>MSTest</code> 與 <code>xUnit</code></li>
+</ul>
+<h2 id="NUnit">NUnit</h2><hr>
+<p><img src="/images/netcore/nunit/nunit002.png" alt="nunit002"></p>
+<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載，其中也包含了 <code>NUnit</code>。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"NUnit3.DotNetNew.Template::*"</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/netcore/nunit/nunit003.png" alt="nunit003"></p>
+<p><img src="/images/netcore/nunit/nunit004.png" alt="nunit004"></p>
+<ol>
+<li>安裝完就會出現 <code>NUnit 3</code> project template</li>
+</ol>
+<p><img src="/images/netcore/nunit/nunit005.png" alt="nunit005"></p>
+<ol>
+<li>安裝完後，Rider 也會出現 <code>NUnit 3 Test Project</code></li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>.NET Core SDK 預設沒有支援 <code>NUnit</code>，但只要自行透過 <code>dotnet new -i</code>，即可安裝 <code>NUnit</code> project template</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[需要另外安裝 NUnit Project Template]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="NUnit" scheme="http://oomusou.io/tags/NUnit/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Rider Refactoring 之 Transform Parameters]]></title>
@@ -2002,156 +2052,6 @@
       <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
     
       <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 FP 的 Point-Free Style]]></title>
-    <link href="http://oomusou.io/ramda/point-free/"/>
-    <id>http://oomusou.io/ramda/point-free/</id>
-    <published>2018-05-21T12:23:43.000Z</published>
-    <updated>2018-05-21T15:09:51.260Z</updated>
-    <content type="html"><![CDATA[<p>Curry Function 最主要的目的在於 Function Composition，所以儘管是 <code>多</code> 個 argument，最後也可變成多個 <code>單一</code> argument 的 function 方便 composition。</p>
-<p>那 argument 該怎樣的設計才適合 composition 呢 ? 這就是本文的主題：Point-Free Style。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>F# 4.1<br>ECMAScript 6<br>Ramda 0.25</p>
-<h2 id="FSharp">FSharp</h2><hr>
-<p>在學習 F# 時，由於 F# 是純 FP 語言，function 可自動成為 Curry Function，常發現 F# 的 function 會如此設計。</p>
-<blockquote>
-<p><strong>List.map()</strong><br>mapping : (‘T -&gt; ‘U) -&gt; list : ‘T list -&gt; ‘U list</p>
-<p><strong>List.filter()</strong></p>
-<p>predicate : (‘T -&gt; bool) -&gt; list : ‘T list -&gt; ‘T list</p>
-<p><strong>List.reduce()</strong></p>
-<p>reduction : (‘T -&gt; ‘T -&gt; ‘T) -&gt; list : ‘T list -&gt; ‘T</p>
-</blockquote>
-<p>僅管 <code>List.map()</code>、  <code>List.filter()</code> 與 <code>List.reduce()</code> 三個 function 功能都不同，input 與 return 值也不同，但最後一個 argument 一定都是 <code>list : &#39;T list</code>。</p>
-<blockquote>
-<p>Q : 這樣設計 argument 到底有什麼優點呢 ?</p>
-</blockquote>
-<p><strong>Pipeline</strong><br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mapSquare = List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line"><span class="keyword">let</span> filterOdd = List.filter (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">let</span> sum = List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> calculate data = </span><br><span class="line">    data</span><br><span class="line">    |&gt; mapSquare</span><br><span class="line">    |&gt; filterOdd</span><br><span class="line">    |&gt; sum</span><br><span class="line">    </span><br><span class="line">calculate [<span class="number">1</span> .. <span class="number">3</span>] </span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br></pre></td></tr></table></figure></p>
-<p>第 1 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mapSquare = List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line"><span class="keyword">let</span> filterOdd = List.filter (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">let</span> sum = List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br></pre></td></tr></table></figure>
-<p><code>List.map()</code>、<code>List.filter()</code> 與 <code>List.reduce()</code> 都僅提供 1 個 argument，所以 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 都是 function。</p>
-<p>第 5 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> calculate data = </span><br><span class="line">    data</span><br><span class="line">    |&gt; mapSquare</span><br><span class="line">    |&gt; filterOdd</span><br><span class="line">    |&gt; sum</span><br></pre></td></tr></table></figure>
-<p>將 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 透過 Pipeline 處理 data。</p>
-<p>因為 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 的最後一個 argument 都是 <code>list : &#39;T list</code>，在 Pipeline 時，F# 允許省略之。</p>
-<blockquote>
-<p><strong>|&gt;</strong> 為 F# 的 Pipeline，<code>由左至右</code></p>
-</blockquote>
-<p><strong>Function Composition</strong><br><figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mapSquare = List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line"><span class="keyword">let</span> filterOdd = List.filter (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">let</span> sum = List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> calculate = mapSquare &gt;&gt; filterOdd &gt;&gt; sum</span><br><span class="line">    </span><br><span class="line">calculate [<span class="number">1</span> .. <span class="number">3</span>] </span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 10</span></span><br></pre></td></tr></table></figure></p>
-<p>第 1 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> mapSquare = List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br><span class="line"><span class="keyword">let</span> filterOdd = List.filter (<span class="keyword">fun</span> elm -&gt; elm % <span class="number">2</span> = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">let</span> sum = List.reduce (<span class="keyword">fun</span> acc elm -&gt; acc + elm)</span><br></pre></td></tr></table></figure>
-<p><code>List.map()</code>、<code>List.filter()</code> 與 <code>List.reduce()</code> 都僅提供 1 個 argument，所以 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 都是 function。</p>
-<p>第  5 行</p>
- <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> calculate = mapSquare &gt;&gt; filterOdd &gt;&gt; sum</span><br></pre></td></tr></table></figure>
-<p>將 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>filterOdd()</code> 組合成 <code>calculate()</code> 。</p>
-<p>因為 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 的最後一個 argument 都是 <code>list : &#39;T list</code>，在 Composition 時，F# 允許省略之。</p>
-<blockquote>
-<p><strong>&gt;&gt;</strong> 為 F# 的 Function Composition，<code>由左至右</code></p>
-</blockquote>
-<p>我們可以發現  F# 在設計 function 時，會 <code>故意</code> 將要處理的 <code>資料</code> 放在最後一個 argument，將 <code>條件</code> 放在前面的 argument，如此所有 function 無論要做 Pipeline 或 Composition 時，都可省略最後一個 argument，讓程式碼更加簡潔。</p>
-<blockquote>
-<p>Pipeline 與 Function Composition 講的其實是同一件事情，只是 F# 文化較喜歡使用  Pipeline，而 Haskell 較喜歡使用 Function Composition，稍後將統一使用 Function Composition</p>
-</blockquote>
-<p>當初以為這只是 F# 的 syntax sugar，後來在歐陽繼超的 <a href="https://www.tenlong.com.tw/products/9787121297243" target="_blank" rel="external">前端函數式攻城指南</a> 與 <a href="https://www.tenlong.com.tw/products/9787115335593" target="_blank" rel="external">Haskell 趣學指南</a> 這兩本書，才發現這是 FP 特有風格，稱為 <strong>Point-Free Style</strong>。</p>
-<h2 id="Definition">Definition</h2><blockquote>
-<p><strong>Point-Free Style</strong></p>
-<p>Function 不特別將要處理的 data 放進參 argument，因此也不回傳處理過的 data，而是回傳 function，這有助於 Function Composition，也稱為 <strong>Tacit Programming</strong></p>
-</blockquote>
-<hr>
-<blockquote>
-<p>Q：為甚麼 Point-Free Style 能成立呢 ?</p>
-</blockquote>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fn data = List.map (<span class="keyword">fun</span> elm -&gt; elm * elm) data</span><br></pre></td></tr></table></figure>
-<p>若原本 <code>fn()</code> 帶一個 argument，傳入要處理的 <code>data</code>，相當於將 <code>data</code> 傳入 <code>List.map (fun elm -&gt; elm * elm)</code>，並回傳處理過的 <code>data</code>。</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> fn = List.map (<span class="keyword">fun</span> elm -&gt; elm * elm)</span><br></pre></td></tr></table></figure>
-<p>由於 F# 的 function 天生是 Curry Function，<code>fn()</code> 沒有 argument，<code>=</code> 左右將 <code>data</code> 同時消去，就相當於回傳 <code>List.map (fun elm -&gt; elm * elm)</code> function。</p>
-<p>所以一個 function 將 <code>data</code> 放在最後一個 argument 時，提不提供 <code>data</code> 都成立：</p>
-<ul>
-<li>有提供 <code>data</code> 則回傳處理過的 <code>data</code></li>
-<li>不提供 <code>data</code> 則回傳 function</li>
-</ul>
-<p>由於回傳是 function，特別適合做 Function Composition。</p>
-<blockquote>
-<p>Q：為什麼稱為 Point-Free ?</p>
-</blockquote>
-<p><code>Point</code> 所指的就是傳入 <code>data</code> 的 argument，<code>Point-Free</code> 就是指 function 將 <code>data</code> 放在最後一個 argument，要使用時故意將最後一個 <code>data</code> argumet 丟棄 (free)，則變成回傳 function，但若 <code>data</code> 不是最後一個 argument，則無法丟棄，因此也無法變成 function，所以也無法繼續再做 Function Composition。</p>
-<blockquote>
-<p>Q：為什麼 Point-Free Style 適合做 Function Composition ?</p>
-</blockquote>
-<p>Function Composition 事實上來自於數學的 <code>合成函數</code>，也就是 <code>fog(x) = f(g(x))</code>，其中：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">fog</span><span class="params">(x)</span></span> = <span class="function"><span class="title">f</span><span class="params">(y)</span></span></span><br><span class="line">y      = <span class="function"><span class="title">g</span><span class="params">(x)</span></span></span><br></pre></td></tr></table></figure>
-<p>也就是 <code>g(x)</code> 的 output 剛好為 <code>f(y)</code> 的 input，因此才能將 <code>f(g(x))</code> 合併，變成 <code>fog(x)</code>，其中的 <code>y</code> 剛好被消滅。</p>
-<p>若 <code>f()</code> 與 <code>g()</code> 每個 function 的 <code>格式都一樣</code>，都是最後一個 argument 為 <code>data</code>，則可將所有 function 加以組合成一個新 function，這就是 Function Composition。</p>
-<h2 id="JavaScript">JavaScript</h2><hr>
-<p>前面談的都是 F#，你可能看得似懂非懂，我們就來將相同程式碼以大家熟悉的 JavaScript 改寫：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _map = fn =&gt; data =&gt; data.map(fn);</span><br><span class="line"><span class="keyword">const</span> _filter = fn =&gt; data =&gt; data.filter(fn);</span><br><span class="line"><span class="keyword">const</span> _reduce = fn =&gt; data =&gt; data.reduce(fn);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapSquare = _map(elm =&gt; elm * elm);</span><br><span class="line"><span class="keyword">const</span> filterOdd = _filter(elm =&gt; elm % <span class="number">2</span>);</span><br><span class="line"><span class="keyword">const</span> sum = _reduce((acc, elm) =&gt; acc + elm);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> compose = (...fns) =&gt;</span><br><span class="line">    fns.reduce((f, g) =&gt; (...args) =&gt; f(g(...args)));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> calculate = compose(sum, filterOdd, mapSquare);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = calculate([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 10</span></span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> _map = fn =&gt; data =&gt; data.map(fn);</span><br><span class="line"><span class="keyword">const</span> _filter = fn =&gt; data =&gt; data.filter(fn);</span><br><span class="line"><span class="keyword">const</span> _reduce = fn =&gt; data =&gt; data.reduce(fn);</span><br></pre></td></tr></table></figure>
-<p>JavaScript 雖然都有提供 <code>map()</code>、<code>filter()</code> 與 <code>reduce()</code>，但這些都是尚未 Curry 化的 function，無法使用 Function Composition，所以我們第一步就是將這些 function 改寫成 Curry Function。</p>
-<p>第 5 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapSquare = _map(elm =&gt; elm * elm);</span><br><span class="line"><span class="keyword">const</span> filterOdd = _filter(elm =&gt; elm % <span class="number">2</span>);</span><br><span class="line"><span class="keyword">const</span> sum = _reduce((acc, elm) =&gt; acc + elm);</span><br></pre></td></tr></table></figure>
-<p>再改寫成 Point-Free Style function。</p>
-<p>第 9 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> compose = (...fns) =&gt;</span><br><span class="line">    fns.reduce((f, g) =&gt; (...args) =&gt; f(g(...args)));</span><br></pre></td></tr></table></figure>
-<p>由於 JavaScript 沒有提供 <code>compose()</code> 組合 function，我們自己土炮用 <code>reduce()</code> 寫一個 <code>compose()</code>，負責將多個 Point-Free Style function 組合成單一 function。</p>
-<p>12 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calculate = compose(sum, filterOdd, mapSquare);</span><br></pre></td></tr></table></figure>
-<p>將 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 組合成 <code>calculate()</code>。</p>
-<p>這裡與 F# 不一樣，而是 <code>由右至左</code>。</p>
-<blockquote>
-<p>JavaScript 雖然寫的出來，但由於沒有直接支援 Curry Function 與 <code>compose()</code>，因此寫起來有點冗長</p>
-</blockquote>
-<h2 id="Ramda">Ramda</h2><hr>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> map <span class="keyword">from</span> <span class="string">'ramda/src/map'</span>;</span><br><span class="line"><span class="keyword">import</span> filter <span class="keyword">from</span> <span class="string">'ramda/src/filter'</span>;</span><br><span class="line"><span class="keyword">import</span> reduce <span class="keyword">from</span> <span class="string">'ramda/src/reduce'</span>;</span><br><span class="line"><span class="keyword">import</span> compose <span class="keyword">from</span> <span class="string">'ramda/src/compose'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapSquare = map(elm =&gt; elm * elm);</span><br><span class="line"><span class="keyword">const</span> filterOdd = filter(elm =&gt; elm % <span class="number">2</span>);</span><br><span class="line"><span class="keyword">const</span> sum = reduce((acc, elm) =&gt; acc + elm, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> calculate = compose(sum, filterOdd, mapSquare);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> result = calculate([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line"><span class="built_in">console</span>.log(result);</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> map <span class="keyword">from</span> <span class="string">'ramda/src/map'</span>;</span><br><span class="line"><span class="keyword">import</span> filter <span class="keyword">from</span> <span class="string">'ramda/src/filter'</span>;</span><br><span class="line"><span class="keyword">import</span> reduce <span class="keyword">from</span> <span class="string">'ramda/src/reduce'</span>;</span><br></pre></td></tr></table></figure>
-<p>從 Ramda 引入 <code>map()</code>、<code>filter()</code>、<code>reduce()</code> ，這些都是已經是 Curry Function。</p>
-<p>第 4 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> compose <span class="keyword">from</span> <span class="string">'ramda/src/compose'</span>;</span><br></pre></td></tr></table></figure>
-<p>從 Ramda 引入 <code>compose()</code>，這樣我們就不必自己實作 <code>compose()</code> 了。</p>
-<p>第 6 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapSquare = map(elm =&gt; elm * elm);</span><br><span class="line"><span class="keyword">const</span> filterOdd = filter(elm =&gt; elm % <span class="number">2</span>);</span><br><span class="line"><span class="keyword">const</span> sum = reduce((acc, elm) =&gt; acc + elm, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-<p>將 Ramda 的 function 改寫成 Point-Free Style function。</p>
-<p>10 行</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calculate = compose(sum, filterOdd, mapSquare);</span><br></pre></td></tr></table></figure>
-<p>使用 Ramda 的 <code>compose()</code> 將 <code>mapSquare()</code>、<code>filterOdd()</code> 與 <code>sum()</code> 組合成 <code>calculate()</code>。</p>
-<p>這裡與 F# 不一樣，而是 <code>由右至左</code>。</p>
-<blockquote>
-<p>Ramda 的版本就非常精簡，我們只需實作 Point-Free Style function 再加以組合即可，整體風格已經與純 FP 的 F# 非常接近</p>
-</blockquote>
-<h2 id="Summary">Summary</h2><hr>
-<blockquote>
-<p>Q : Function Composition 該 <code>由左至右</code>，還是該 <code>由右至左</code> 呢 ?</p>
-</blockquote>
-<ul>
-<li>F# 的 <code>&gt;&gt;</code> 是 <code>由左至右</code>，優點是程式碼可讀性較佳</li>
-<li>Haskell 的 <code>.</code> 與 Ramda 的 <code>compose()</code> 是 <code>由右至左</code>，優點是與數學的  <code>fog(x) = f(g(x))</code> 一樣 <code>由右至左</code></li>
-</ul>
-<p>個人是偏好 F# 的 <code>由左至右</code>，不過由於 Haskell 與 Ramda 的文化就是 <code>由右至左</code>，也只能習慣了。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Point-Free Style 是 FP 設計 argument 的基本精神，這也是為什麼歐陽繼超在 <a href="https://www.tenlong.com.tw/products/9787121297243" target="_blank" rel="external">前端函數式攻城指南</a> 一書中指出 Underscore 設計錯誤，因為 Underscore 是 <code>_.map([1, 2, 3], x =&gt; x + 1)</code>，將 data 放在第 1 個  argument，這並不符合 Point-Free Style</li>
-<li>FP 首重觀念，只要心裡有 Function Composition，無論是在 F# 或在 JavaScript 都可實作</li>
-<li>純 JavaScript 實作稍微冗長，若使用 Ramda，則整體精簡程度已經與 F# 非常接近</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p>歐陽繼超，<a href="https://www.tenlong.com.tw/products/9787121297243" target="_blank" rel="external">前端函數式攻城指南</a><br>Miran Lipovaca, <a href="https://www.tenlong.com.tw/products/9787115335593" target="_blank" rel="external">Haskell 趣學指南</a><br><a href="https://en.wikipedia.org/wiki/Main_Page" target="_blank" rel="external">Wikipedia</a>, <a href="https://en.wikipedia.org/wiki/Tacit_programming" target="_blank" rel="external">Tacit Programming</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[FP 設計 Argument 的基本方式]]>
-    
-    </summary>
-    
-      <category term="F#" scheme="http://oomusou.io/tags/F/"/>
-    
-      <category term="FP" scheme="http://oomusou.io/tags/FP/"/>
-    
-      <category term="JavaScript" scheme="http://oomusou.io/tags/JavaScript/"/>
-    
-      <category term="Ramda" scheme="http://oomusou.io/tags/Ramda/"/>
     
   </entry>
   
