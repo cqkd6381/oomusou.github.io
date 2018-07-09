@@ -1,0 +1,351 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Rider Refactoring 之 Transform Parameters | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="Rider 最具威力的重構功能之一">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="Rider 最具威力的重構功能之一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rider Refactoring 之 Transform Parameters">
+<meta property="og:url" content="http://oomusou.io/rider/transform-parameters/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="Rider 最具威力的重構功能之一">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-07-09T03:01:41.580Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rider Refactoring 之 Transform Parameters">
+<meta name="twitter:description" content="Rider 最具威力的重構功能之一">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Rider Refactoring 之 Transform Parameters</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> Rider 最具威力的重構功能之一			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構前"><span class="toc-article-text">重構前</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Transform_Parameters"><span class="toc-article-text">Transform Parameters</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Move_Class_to_File"><span class="toc-article-text">Move Class to File</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Extract_Method"><span class="toc-article-text">Extract Method</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Make_Method_Non-Static"><span class="toc-article-text">Make Method Non-Static</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Inline_Variable"><span class="toc-article-text">Inline Variable</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行單元測試"><span class="toc-article-text">執行單元測試</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>在實務上常會發現一些 parameter 總是以 primitive type 一起出現，導致 method 內的 parameter 個數過多，也就是 Code Smell 所謂的 <code>Primitive Obsession</code>，解決方式是將這些 parameter 抽成 class，這在 Refactoring 稱為 <code>Introduce Parameter Object</code>，而在 Rider 則稱為 <code>Transform Parameters</code>，且實務上常常搭配 <code>Make Method Non-Static</code> 一起重構。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>Rider 2018.1.3</p>
+<h2 id="重構前">重構前</h2><hr>
+<p><strong>StateroomService.cs</strong></p>
+<p><img src="/images/rider/transform-parameters/tp004.png" alt="tp004"></p>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">decimal</span> <span class="title">TotalAmount</span>(<span class="params">DateTime startTime, DateTime endTime</span>)</span></span><br></pre></td></tr></table></figure>
+<p>我們發現 <code>startTime</code> 與 <code>endTime</code> 總是一起出現，這正是典型的 <code>Primitive Obsession</code>，因此我們想將 <code>startTime</code> 與 <code>endTime</code> 抽成 <code>Period</code> class。</p>
+<blockquote>
+<p><strong>Primitive Obsession</strong></p>
+<p>過度使用程式語言所提供的基本型別，卻忘記使用使用更有意義的 class 型別</p>
+</blockquote>
+<h2 id="Transform_Parameters">Transform Parameters</h2><hr>
+<p>將 primitive type 的 parameter 抽成 class，也就是 Refactoring 中的 <code>Introduce Parameter Object</code>。</p>
+<p><img src="/images/rider/transform-parameters/tp000.png" alt="tp000"></p>
+<ol>
+<li>將 cursor 放到要抽的 parameter 上</li>
+<li>按熱鍵 <code>⌃ + T</code> ，選擇 <code>Transform Parameters</code></li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp001.png" alt="tp001"></p>
+<ol>
+<li>選擇要抽出的 parameter</li>
+<li><strong>Method receives</strong> : 選擇要抽成 Property 或 Tuple</li>
+<li>輸入 class 名稱</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp002.png" alt="tp002"></p>
+<ol>
+<li>抽出了 <code>Period</code> class</li>
+<li><code>TotalAmount</code> 的 parameter 也由兩個 <code>DateTime</code> 重構成只有一個 <code>Period</code></li>
+</ol>
+<blockquote>
+<p>Rider 預設會將 class 抽在同一個檔案，但實務上建議 1 個檔案只有 1 個 class，因此會繼續重構，將 <code>Period</code> class 獨立成一個檔案</p>
+</blockquote>
+<h2 id="Move_Class_to_File">Move Class to File</h2><hr>
+<p>將 class 抽成獨立的檔案。</p>
+<p><img src="/images/rider/transform-parameters/tp005.png" alt="tp005"></p>
+<ol>
+<li>將 cursor 放到 <code>Period</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Move to &#39;Period.cs&#39;</code></li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp006.png" alt="tp006"></p>
+<ol>
+<li>重構出獨立的 <code>Period.cs</code> 檔案</li>
+</ol>
+<h2 id="Extract_Method">Extract Method</h2><hr>
+<p>將一段 code 抽成 method。</p>
+<p><img src="/images/rider/transform-parameters/tp007.png" alt="tp007"></p>
+<ol>
+<li><code>days</code> 由 <code>period.EndTime</code> 與 <code>period.StartTime</code> 計算所得，明明在 <code>StateroomService</code> 內，卻一直讀取 <code>Period</code> 的資料，這正是典型的 <code>Feature Envy</code>，需進一步抽成 method，然後 <code>Move Method</code> 到 <code>Period</code> </li>
+</ol>
+<blockquote>
+<p><strong>Feature Envy</strong></p>
+<p>不斷的向其他 class 取值，然後在自己的 class 運算</p>
+</blockquote>
+<p><img src="/images/rider/transform-parameters/tp008.png" alt="tp008"></p>
+<ol>
+<li>選擇要抽取的 code</li>
+<li>按熱鍵 <code>⌃ + T</code> ，選擇 <code>Extract Method</code></li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp009.png" alt="tp009"></p>
+<ol>
+<li>選擇 <code>Method</code></li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp010.png" alt="tp010"></p>
+<ol>
+<li>抽出 <code>Days</code> method</li>
+<li>預設將 <code>Make static</code> 打勾</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<blockquote>
+<p><strong>Make static 的重要性</strong></p>
+<ul>
+<li>若能抽成 <code>static</code>，Rider 會自動將 <code>Make static</code> 打勾，這表示該 method 已經與此 class 沒有任何瓜葛 (沒使用 field)，可隨時 <code>Move Method</code> 到其他 class</li>
+<li>若不能抽成 <code>static</code>，則表示此 method 仍使用該 class 的 field，須先進一步重構，直到能抽成 <code>static</code> method 後，才能 <code>Move Method</code> 到其他 class</li>
+<li>若要繼續使用 <code>Make Method Non-Static</code> 重構，則 <code>static</code> method 為其必要條件，否則無法繼續使用 <code>Make Method Non-Static</code></li>
+</ul>
+</blockquote>
+<h2 id="Make_Method_Non-Static">Make Method Non-Static</h2><hr>
+<p>將 <code>Static</code> method  重構到 parameter object 的 instance method，也就是 Refactoring 中的 <code>Move Method</code>。</p>
+<p><img src="/images/rider/transform-parameters/tp011.png" alt="tp011"></p>
+<ol>
+<li>將 cursor 放在 <code>Days()</code> 上</li>
+<li>按熱鍵 <code>⌃ + T</code> ，選擇 <code>Make Method Non-Static</code></li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp012.png" alt="tp012"></p>
+<ol>
+<li>選擇要 <code>Move Method</code> 到 <code>Period</code> </li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp013.png" alt="tp013"></p>
+<ol>
+<li><code>Days()</code> 被搬到 <code>Period</code> </li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp014.png" alt="tp014"></p>
+<ol>
+<li>直接呼叫 <code>period.Days()</code></li>
+</ol>
+<blockquote>
+<p><code>Make Method Non-Static</code> 本質上就是 <code>Move Method</code>，只是因為 <code>Make Method Non-Static</code> 的名稱，會讓人誤以為只是單純的將一個 method 由 <code>static</code> 重構成 <code>non-static</code> 而已，但事實上不只單純的重構成 <code>non-static</code>，還會將整個 method 搬到 parameter object 上，所以若 <code>Extract Method</code> 所抽出的 parameter，不是要我們要 <code>Move Method</code> 的 class，我們還會透過 <code>Change Parameter</code> 加以重構 parameter，讓 <code>Make Method Non-Static</code> 可以繼續進行</p>
+</blockquote>
+<h2 id="Inline_Variable">Inline Variable</h2><hr>
+<p>將不必要的 <code>中介變數</code> 去除。</p>
+<p><img src="/images/rider/transform-parameters/tp015.png" alt="tp015"></p>
+<ol>
+<li><code>days</code> 可以再加以 inline</li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp016.png" alt="tp016"></p>
+<ol>
+<li>將 cursor 放在 <code>days</code> 上</li>
+<li>按熱鍵 <code>⌃ + T</code> ，選擇 <code>Inline Variable</code></li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp017.png" alt="tp017"></p>
+<ol>
+<li><code>days</code> 變數被 inline 掉了</li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp018.png" alt="tp018"></p>
+<ol>
+<li>同理，<code>days</code> 也可再被 inline 掉</li>
+</ol>
+<p><img src="/images/rider/transform-parameters/tp019.png" alt="tp019"></p>
+<ol>
+<li><code>days</code> 變數被 inline 掉了</li>
+</ol>
+<blockquote>
+<p>由於 <code>職責</code> 變清楚，因此少掉了很多不必要的 parameter 與 variable，不只 code 變的清爽，可讀性也高，也更容易維護</p>
+</blockquote>
+<h2 id="執行單元測試">執行單元測試</h2><hr>
+<p><img src="/images/rider/transform-parameters/tp020.png" alt="tp020"></p>
+<ul>
+<li>重新跑單元測試，確認 production code 沒被重構壞掉</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>Primitive Obsession</code> 是很常見的 Code Smell，由於太堅持使用 primitive type，而喪失發現 object 的機會，導致 OOP 名存實亡，透過 Rider 的 <code>Transform Parameters</code>，我們可以直接將 parameter 將抽成 class，這對 legacy code 重構非常方便</li>
+<li><code>Feature Envy</code> 也是很常見的 Code Smell，由於 class A 一直使用 class B，因此需要很多中介的 parameter 與 variable，透過 Rider 的 <code>Extract Method</code>，我們可以直接將 class A 的一段 code 抽成 method，然後透過 <code>Make Method Non-Static</code> 般到 class B，這會使得 class 與 class 間的 <code>職責</code> 更為清楚，也可將不必要的 parameter 與 variable 重構掉</li>
+<li><code>Transform Parameters</code> 與 <code>Make Method Non-Static</code> 常常一起執行，因為既然已經使用 <code>Transform Parameters</code> 將 parameter 抽成新的 object，根據 OOP 的 <code>職責</code> 思維，必然將一些 code 透過 <code>Make Method Non-Static</code> 搬到新的 class，如此才能避免 <code>Primitive Obsession</code> 與 <code>Feature Envy</code></li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/RiderTransformParameters" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/rider/ideavim-extension/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-07-08 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Refactoring/">Refactoring<span>15</span></a></li> <li><a href="/tags/Rider/">Rider<span>7</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
