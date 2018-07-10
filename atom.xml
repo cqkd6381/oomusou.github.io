@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-07-09T08:27:27.478Z</updated>
+  <updated>2018-07-10T03:12:04.938Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -15,43 +15,84 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[如何在 .NET Core 使用 NUnit ?]]></title>
-    <link href="http://oomusou.io/netcore/nunit/"/>
-    <id>http://oomusou.io/netcore/nunit/</id>
-    <published>2018-07-09T13:23:43.000Z</published>
-    <updated>2018-07-09T08:27:27.478Z</updated>
-    <content type="html"><![CDATA[<p>在 <code>單元測試的藝術</code> 一書中，使用的是 <code>NUnit</code>，但 .NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code>，該如何在 .NET Core 使用我們熟悉的 <code>NUnit</code> 呢 ?</p>
+    <title><![CDATA[如何在 .NET Core 使用 NUnit 與 NSubstitute ?]]></title>
+    <link href="http://oomusou.io/nunit/setup/"/>
+    <id>http://oomusou.io/nunit/setup/</id>
+    <published>2018-07-10T13:23:43.000Z</published>
+    <updated>2018-07-10T03:12:04.938Z</updated>
+    <content type="html"><![CDATA[<p>在 <code>單元測試的藝術</code> 一書中，使用的是 <code>NUnit</code> 與 <code>NSubstitute</code>，但 .NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code>，該如何在 .NET Core 使用我們熟悉的 <code>NUnit</code> 與 <code>NSubstitute</code> 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>NUnit 3.10.1<br>Rider 2018.1.3</p>
+<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>NUnit 3.10.1<br>NSubstitute 3.1.0<br>Rider 2018.1.3</p>
 <h2 id="Symptons">Symptons</h2><hr>
 <figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
 <ul>
 <li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
 </ul>
-<p><img src="/images/netcore/nunit/nunit000.png" alt="nunit000"></p>
+<p><img src="/images/nunit/setup/setup000.png" alt="nunit000"></p>
 <p>.NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code> 的 project template。</p>
-<p><img src="/images/netcore/nunit/nunit001.png" alt="nunit001"></p>
+<p><img src="/images/nunit/setup/setup001.png" alt="nunit001"></p>
 <ul>
 <li>因為 .NET Core SDK 只有 <code>MSTest</code> 與 <code>XUnit</code>，因此 Rider 也只支援 <code>MSTest</code> 與 <code>xUnit</code></li>
 </ul>
 <h2 id="NUnit">NUnit</h2><hr>
-<p><img src="/images/netcore/nunit/nunit002.png" alt="nunit002"></p>
+<p><img src="/images/nunit/setup/setup002.png" alt="nunit002"></p>
 <p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載，其中也包含了 <code>NUnit</code>。</p>
 <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"NUnit3.DotNetNew.Template::*"</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/netcore/nunit/nunit003.png" alt="nunit003"></p>
-<p><img src="/images/netcore/nunit/nunit004.png" alt="nunit004"></p>
+<p><img src="/images/nunit/setup/setup003.png" alt="nunit003"></p>
+<p><img src="/images/nunit/setup/setup004.png" alt="nunit004"></p>
 <ol>
 <li>安裝完就會出現 <code>NUnit 3</code> project template</li>
 </ol>
-<p><img src="/images/netcore/nunit/nunit005.png" alt="nunit005"></p>
+<p><img src="/images/nunit/setup/setup005.png" alt="nunit005"></p>
 <ol>
 <li>安裝完後，Rider 也會出現 <code>NUnit 3 Test Project</code></li>
 </ol>
+<h2 id="Project_Reference">Project Reference</h2><hr>
+<p>將 Class Library 的 project reference 加到 Unit Test 專案。</p>
+<p><img src="/images/nunit/setup/setup007.png" alt="nunit007"></p>
+<ol>
+<li>選擇 Unit Test 專案</li>
+<li>按滑鼠右鍵選擇 <code>Add</code></li>
+<li>選擇 <code>Add Reference</code></li>
+</ol>
+<p><img src="/images/nunit/setup/setup008.png" alt="nunit008"></p>
+<ol>
+<li>選擇 <code>ClassLib</code></li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<h2 id="NSubstitute">NSubstitute</h2><hr>
+<p>除了 <code>NUnit</code> 外，單元測試另外一個要角就是 <code>NSubstitute</code>，這要另外安裝。</p>
+<p><img src="/images/nunit/setup/setup009.png" alt="nunit009"></p>
+<ol>
+<li>選擇 Unit Test 專案</li>
+<li>按滑鼠右鍵選擇 <code>Manage NuGet Packages</code></li>
+</ol>
+<p><img src="/images/nunit/setup/setup006.png" alt="nunit006"></p>
+<ol>
+<li>在 NuGet 下輸入 <code>NSubstitute</code></li>
+<li>選擇 <code>NSubstitute</code></li>
+<li>在 Unit Test 專案下安裝 <code>NSubstitute</code></li>
+</ol>
+<h2 id="Parallel_Test">Parallel Test</h2><hr>
+<p><code>NUnit</code> 預設並不是以 parallel 進行單元測試，而是以 sequential 方式，也就是 <code>一個單元測試執行完，才會進行下一個單元測試</code>，而不是每個單元測試平行執行。</p>
+<p>這種方式雖然安全，但有幾個缺點：</p>
+<ol>
+<li>執行速度較慢，沒有完全發揮多核心 CPU 的優勢</li>
+<li>Jenkins 會以 parallel 方式執行單元測試，因此每個單元測試之間不能相依，讓本機與 Jenkins 環境相同</li>
+</ol>
+<p><strong>AssemblyInfo.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NUnit.Framework;</span><br><span class="line"></span><br><span class="line">[assembly:Parallelizable(ParallelScope.All)]</span><br></pre></td></tr></table></figure>
+<p>在 Unit Test 專案下新增 <code>AssemblyInfo.cs</code>，對整個 Unit Test assembly 增加 <code>NUnit</code> 的 <code>Parallelizable</code> attribute，如此每個 test method 都會以 parallel 方式執行單元測試。</p>
+<p><img src="/images/nunit/setup/setup010.png" alt="nunit010"></p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>.NET Core SDK 預設沒有支援 <code>NUnit</code>，但只要自行透過 <code>dotnet new -i</code>，即可安裝 <code>NUnit</code> project template</li>
+<li><code>NSubstitute</code> 以 NuGet package 形式存在，必須另外安裝</li>
+<li><code>NUnit</code> 預設以 sequential 方式執行 Unit Test，不僅沒發揮多核心 CPU 威力，也與 Jenkins 執行環境不同，建議在 Unit Test 專案增加 <code>AssemblyInfo.cs</code>，對整個 Unit Test assembly 增加 <code>Parallelizable(ParallelScope.All)</code> attribute，如此才會以 parallel 方式執行單元測試，也能提早發現 test method 彼此相依可能造成的問題</li>
 </ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NUnitCore" target="_blank" rel="external">GitHub</a> 上找到</p>
 ]]></content>
     <summary type="html">
     <![CDATA[需要另外安裝 NUnit Project Template]]>
@@ -59,6 +100,8 @@
     </summary>
     
       <category term=".NET Core" scheme="http://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="NSubstitute" scheme="http://oomusou.io/tags/NSubstitute/"/>
     
       <category term="NUnit" scheme="http://oomusou.io/tags/NUnit/"/>
     
