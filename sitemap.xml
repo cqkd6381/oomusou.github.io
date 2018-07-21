@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/rider/vim/</loc>
+    <lastmod>2018-07-21T15:34:18.592Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/rider/extract-local-function/</loc>
     <lastmod>2018-07-21T15:04:49.607Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>http://oomusou.io/rider/transform-parameters/</loc>
     <lastmod>2018-07-09T04:13:01.840Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/rider/ideavim-extension/</loc>
-    <lastmod>2018-06-28T15:07:47.534Z</lastmod>
   </url>
   
   <url>

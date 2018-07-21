@@ -3,24 +3,24 @@
 <head>
   <meta charset="utf-8">
   
-  <title>如何在 Vim 的 Normal Mode 自動切換為英文輸入法 ? | 點燈坊</title>
+  <title>如何在 Rider 使用 Vim ? | 點燈坊</title>
   <meta name="author" content="真 OO無双">
   
-  <meta name="description" content="加速 Vim 的操作">
+  <meta name="description" content="完全使用鍵盤高速寫 code">
   
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
- <meta name="description" content="加速 Vim 的操作">
+ <meta name="description" content="完全使用鍵盤高速寫 code">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何在 Vim 的 Normal Mode 自動切換為英文輸入法 ?">
-<meta property="og:url" content="http://oomusou.io/rider/ideavim-extension/index.html">
+<meta property="og:title" content="如何在 Rider 使用 Vim ?">
+<meta property="og:url" content="http://oomusou.io/rider/vim/index.html">
 <meta property="og:site_name" content="點燈坊">
-<meta property="og:description" content="加速 Vim 的操作">
+<meta property="og:description" content="完全使用鍵盤高速寫 code">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-06-28T15:07:47.534Z">
+<meta property="og:updated_time" content="2018-07-21T15:34:18.592Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="如何在 Vim 的 Normal Mode 自動切換為英文輸入法 ?">
-<meta name="twitter:description" content="加速 Vim 的操作">
+<meta name="twitter:title" content="如何在 Rider 使用 Vim ?">
+<meta name="twitter:description" content="完全使用鍵盤高速寫 code">
  
 
   
@@ -81,7 +81,7 @@
     	 
 	
 		<div class="page-header">		
-			<h1> 如何在 Vim 的 Normal Mode 自動切換為英文輸入法 ?</h1>
+			<h1> 如何在 Rider 使用 Vim ?</h1>
 		</div>		
 	
 
@@ -95,42 +95,45 @@
 
 	
 		 <div class="alert alert-success description">
-			<i class="fa fa-info-circle"></i> 加速 Vim 的操作			
+			<i class="fa fa-info-circle"></i> 完全使用鍵盤高速寫 code			
 		</div> <!-- alert -->
 		
 
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_IdeaVimExtension"><span class="toc-article-text">安裝 IdeaVimExtension</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編輯_-ideavimrc"><span class="toc-article-text">編輯 .ideavimrc</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Verison"><span class="toc-article-text">Verison</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#IdeaVim"><span class="toc-article-text">IdeaVim</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Relative_Line_Numbers"><span class="toc-article-text">Relative Line Numbers</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#IdeaVimExtension"><span class="toc-article-text">IdeaVimExtension</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#編輯_-ideavimrc"><span class="toc-article-text">編輯 .ideavimrc</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
 	<div class="mypage">		
-	    <p>Rider 只要安裝了 IdeaVim Plugin，就可以使用 Vim 模式，實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>畢竟我們不會在 Vim 的 Normal Mode 輸入中文，若能在切換到 Normal Mode 時，就自動切換到 <code>英文輸入法</code>，那就太好了。</p>
+	    <p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
 <a id="more"></a>
-<h2 id="安裝_IdeaVimExtension">安裝 IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/ideavim-extension/extension000.png" alt="extension000"></p>
-<ol>
-<li><strong><em>Jetbrains Rider -&gt; Preferences -&gt; Plugins</em></strong></li>
-<li>按 <code>Browse repositories...</code></li>
-</ol>
-<p><img src="/images/rider/ideavim-extension/extension001.png" alt="extension001"></p>
-<ol>
-<li>輸入 <code>IdeaVimExtension</code></li>
-<li>安裝 <code>IdeaVimExtension</code></li>
-</ol>
-<p>需重新啟動 Rider。</p>
-<h2 id="編輯_-ideavimrc">編輯 .ideavimrc</h2><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
 <p><strong>.ideavimrc</strong></p>
 <figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
 <p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/ideavim-extension/extension002.png" alt="extension002"></p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
 <p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
 <li>此技巧在 JetBrains 其他工具也適用</li>
-<li>JetBrains 的 IdeaVim，讓我們也能在 Rider 享受 Vim 的編輯功能，搭配 Rider 本身的重構，等於是倚天劍 + 屠龍刀</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
 </ul>
 	  
 	</div>
@@ -140,14 +143,14 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-				
-    	<li class="prev"><a href="/rider/transform-parameters/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-  		
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
 		
-		   <li class="next"><a href="/rider/terminal-esc/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+		   <li class="next"><a href="/rider/extract-local-function/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
         
 	
 </ul>
@@ -168,7 +171,7 @@
 	
 	<div class="meta-widget">
 	<i class="fa fa-clock-o"></i>
-	2018-06-28 
+	2018-07-21 
 	</div>
 	
 
