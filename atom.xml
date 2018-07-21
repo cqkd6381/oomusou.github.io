@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-07-10T03:12:04.938Z</updated>
+  <updated>2018-07-21T07:41:57.198Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,86 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
+    <link href="http://oomusou.io/rider/extract-local-function/"/>
+    <id>http://oomusou.io/rider/extract-local-function/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T07:41:57.198Z</updated>
+    <content type="html"><![CDATA[<p>Local Function 是 C# 7 支援 FP 的重要功能，除了比 C# 3 的 Func 與 Action 可讀性高，速度也更快，因此建議全面使用 Local Function 取代 Func 與 Action。</p>
+<p>透過 Rider，我們也可將 legacy code 快速重構成有 FP 風格的 Local Function。<br><a id="more"></a></p>
+<h2 id="Version">Version</h2><p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>Rider 2018.1.3</p>
+<h2 id="重構前">重構前</h2><hr>
+<p><strong>Program.cs</strong></p>
+<p><img src="/images/rider/extract-local-function/local000.png" alt="local000"></p>
+<ol>
+<li>傳統我們在寫 LINQ 時，會將 Lambda 寫在 <code>Where()</code> 內，若能將 Lambda 抽成 Local Function，則可讀性更高</li>
+</ol>
+<h2 id="Introduce_Variable">Introduce Variable</h2><hr>
+<p><strong>Program.cs</strong></p>
+<p><img src="/images/rider/extract-local-function/local001.png" alt="local001"></p>
+<ol>
+<li>選擇要抽的 Lambda</li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local002.png" alt="local002"></p>
+<ol>
+<li>按熱鍵 <code>⌃ + T</code>，選擇 <code>Introduce Variable</code></li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local004.png" alt="local002"></p>
+<ol>
+<li>Rider 會自動抽出 Func，不過卻也建議你改用 Local Function</li>
+</ol>
+<blockquote>
+<p>Q : 為什麼 Rider 不直接抽成 Local Function ?</p>
+</blockquote>
+<p><img src="/images/rider/extract-local-function/local003.png" alt="local003"></p>
+<p>因為 Local Function 屬於 C# 7 支援的新功能，只有當你選擇 C# 7 以上時，才會建議使用 Local Function。</p>
+<h2 id="To_Local_Function">To Local Function</h2><hr>
+<p><img src="/images/rider/extract-local-function/local005.png" alt="local005"></p>
+<ol>
+<li>將 cursor 放在 <code>predicate</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>To local function</code> </li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local006.png" alt="local006"></p>
+<p>Rider 會將 Local Function 轉型成 Func，這是不需要的，Rider 也已經反灰提示這是多餘的。</p>
+<ol>
+<li>將 cursor 放在反灰之處</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Remove redundant code in file</code> </li>
+</ol>
+<h2 id="Rename_Variable">Rename Variable</h2><hr>
+<p><img src="/images/rider/extract-local-function/local007.png" alt="local007"></p>
+<p>Rider 預設抽出的 Local Function 名稱都是 <code>Predicate</code>，可讀性不高，需要進一步重構</p>
+<ol>
+<li>將 cursor 放在 <code>Predicate</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Rename</code> </li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local008.png" alt="local008"></p>
+<ol>
+<li>重新命名為 <code>IsOdd</code></li>
+</ol>
+<h2 id="重構後">重構後</h2><hr>
+<p><img src="/images/rider/extract-local-function/local009.png" alt="local009"></p>
+<p>如此的程式碼，可讀性就很高。</p>
+<ol>
+<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline 風格</li>
+<li><code>Where(IsOdd)</code> 可以明顯看出要 where 的是 <code>奇數</code>，<code>ForEach(WriteLine)</code> 可以看出 writeline 要 foreach，而 <code>WriteLine()</code> 與 <code>IsOdd()</code> 又各自是小小的 Local Function 構成，這正是 FP 所謂的 Function Composition</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要抽成 Local Function，直覺會想使用 Rider 的 <code>Extract Method</code>，但因為在 FP 觀念中，Function 就是 First-Class Value，所以在 Rider 要使用 <code>Introduce Variable</code>，而不是 <code>Extract Method</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[重構成 C# 7 的 Local Function]]>
+    
+    </summary>
+    
+      <category term="Refactoring" scheme="http://oomusou.io/tags/Refactoring/"/>
+    
+      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何在 .NET Core 使用 NUnit 與 NSubstitute ?]]></title>
@@ -2051,50 +2131,6 @@
       <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
     
       <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
-    <link href="http://oomusou.io/docker/postgres/"/>
-    <id>http://oomusou.io/docker/postgres/</id>
-    <published>2018-05-21T22:23:43.000Z</published>
-    <updated>2018-06-04T05:54:31.597Z</updated>
-    <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 安裝。本文除了安裝 PostgreSQL 外，還分別使用 DataGrip 與 Rider 連接 PostgreSQL。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3</p>
-<h2 id="建立_Container">建立 Container</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name MyPostgres <span class="operator">-d</span> -p <span class="number">5432</span>:<span class="number">5432</span> <span class="operator">-e</span> POSTGRES_USER=admin <span class="operator">-e</span> POSTGRES_PASSWORD=<span class="string">'12345'</span> postgres</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
-<blockquote>
-<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process<br><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker ) </p>
-<p><code>-p</code> : <code>p</code>ort mapping，host port : container port</p>
-<p><code>-e</code> : 設定環境變數 (<code>e</code>nvironment)，使用 <code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 設定 PostgreSQL 帳號與密碼</p>
-<p><code>postgress</code> : image 名稱</p>
-</blockquote>
-<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
-<h2 id="使用_Terminal_連進_PostgreSQL">使用 Terminal 連進 PostgreSQL</h2><hr>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker exec -<span class="keyword">it</span> MyPostgres bash</span><br></pre></td></tr></table></figure>
-<ol>
-<li><code>exec</code> : 執行 container 的 command</li>
-<li><code>-it</code> : <code>i</code> : interactive，<code>t</code> : terminal</li>
-<li><code>bash</code> : <code>exec</code> 執行 bash</li>
-</ol>
-<p><img src="/images/docker/postgres/post001.png" alt="post012"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[在 Mac 最簡單使用 PostgreSQL 方式]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
     
   </entry>
   

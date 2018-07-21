@@ -1,0 +1,270 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Rider Refactoring 之 Extract Local Function | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="重構成 C# 7 的 Local Function">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="重構成 C# 7 的 Local Function">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rider Refactoring 之 Extract Local Function">
+<meta property="og:url" content="http://oomusou.io/rider/extract-local-function/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="重構成 C# 7 的 Local Function">
+<meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-07-21T07:41:57.198Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rider Refactoring 之 Extract Local Function">
+<meta name="twitter:description" content="重構成 C# 7 的 Local Function">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Rider Refactoring 之 Extract Local Function</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 重構成 C# 7 的 Local Function			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構前"><span class="toc-article-text">重構前</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Introduce_Variable"><span class="toc-article-text">Introduce Variable</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#To_Local_Function"><span class="toc-article-text">To Local Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Rename_Variable"><span class="toc-article-text">Rename Variable</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重構後"><span class="toc-article-text">重構後</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Local Function 是 C# 7 支援 FP 的重要功能，除了比 C# 3 的 Func 與 Action 可讀性高，速度也更快，因此建議全面使用 Local Function 取代 Func 與 Action。</p>
+<p>透過 Rider，我們也可將 legacy code 快速重構成有 FP 風格的 Local Function。<br><a id="more"></a></p>
+<h2 id="Version">Version</h2><p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>Rider 2018.1.3</p>
+<h2 id="重構前">重構前</h2><hr>
+<p><strong>Program.cs</strong></p>
+<p><img src="/images/rider/extract-local-function/local000.png" alt="local000"></p>
+<ol>
+<li>傳統我們在寫 LINQ 時，會將 Lambda 寫在 <code>Where()</code> 內，若能將 Lambda 抽成 Local Function，則可讀性更高</li>
+</ol>
+<h2 id="Introduce_Variable">Introduce Variable</h2><hr>
+<p><strong>Program.cs</strong></p>
+<p><img src="/images/rider/extract-local-function/local001.png" alt="local001"></p>
+<ol>
+<li>選擇要抽的 Lambda</li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local002.png" alt="local002"></p>
+<ol>
+<li>按熱鍵 <code>⌃ + T</code>，選擇 <code>Introduce Variable</code></li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local004.png" alt="local002"></p>
+<ol>
+<li>Rider 會自動抽出 Func，不過卻也建議你改用 Local Function</li>
+</ol>
+<blockquote>
+<p>Q : 為什麼 Rider 不直接抽成 Local Function ?</p>
+</blockquote>
+<p><img src="/images/rider/extract-local-function/local003.png" alt="local003"></p>
+<p>因為 Local Function 屬於 C# 7 支援的新功能，只有當你選擇 C# 7 以上時，才會建議使用 Local Function。</p>
+<h2 id="To_Local_Function">To Local Function</h2><hr>
+<p><img src="/images/rider/extract-local-function/local005.png" alt="local005"></p>
+<ol>
+<li>將 cursor 放在 <code>predicate</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>To local function</code> </li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local006.png" alt="local006"></p>
+<p>Rider 會將 Local Function 轉型成 Func，這是不需要的，Rider 也已經反灰提示這是多餘的。</p>
+<ol>
+<li>將 cursor 放在反灰之處</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Remove redundant code in file</code> </li>
+</ol>
+<h2 id="Rename_Variable">Rename Variable</h2><hr>
+<p><img src="/images/rider/extract-local-function/local007.png" alt="local007"></p>
+<p>Rider 預設抽出的 Local Function 名稱都是 <code>Predicate</code>，可讀性不高，需要進一步重構</p>
+<ol>
+<li>將 cursor 放在 <code>Predicate</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Rename</code> </li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local008.png" alt="local008"></p>
+<ol>
+<li>重新命名為 <code>IsOdd</code></li>
+</ol>
+<h2 id="重構後">重構後</h2><hr>
+<p><img src="/images/rider/extract-local-function/local009.png" alt="local009"></p>
+<p>如此的程式碼，可讀性就很高。</p>
+<ol>
+<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline 風格</li>
+<li><code>Where(IsOdd)</code> 可以明顯看出要 where 的是 <code>奇數</code>，<code>ForEach(WriteLine)</code> 可以看出 writeline 要 foreach，而 <code>WriteLine()</code> 與 <code>IsOdd()</code> 又各自是小小的 Local Function 構成，這正是 FP 所謂的 Function Composition</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要抽成 Local Function，直覺會想使用 Rider 的 <code>Extract Method</code>，但因為在 FP 觀念中，Function 就是 First-Class Value，所以在 Rider 要使用 <code>Introduce Variable</code>，而不是 <code>Extract Method</code></li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/nunit/setup/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-07-21 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Refactoring/">Refactoring<span>16</span></a></li> <li><a href="/tags/Rider/">Rider<span>8</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/rider/extract-local-function/</loc>
+    <lastmod>2018-07-21T07:41:57.198Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/nunit/setup/</loc>
     <lastmod>2018-07-10T03:12:04.938Z</lastmod>
   </url>
