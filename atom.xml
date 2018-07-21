@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-07-21T07:41:57.198Z</updated>
+  <updated>2018-07-21T15:04:49.607Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://oomusou.io/rider/extract-local-function/"/>
     <id>http://oomusou.io/rider/extract-local-function/</id>
     <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T07:41:57.198Z</updated>
+    <updated>2018-07-21T15:04:49.607Z</updated>
     <content type="html"><![CDATA[<p>Local Function 是 C# 7 支援 FP 的重要功能，除了比 C# 3 的 Func 與 Action 可讀性高，速度也更快，因此建議全面使用 Local Function 取代 Func 與 Action。</p>
 <p>透過 Rider，我們也可將 legacy code 快速重構成有 FP 風格的 Local Function。<br><a id="more"></a></p>
 <h2 id="Version">Version</h2><p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>Rider 2018.1.3</p>
@@ -75,7 +75,7 @@
 <p><img src="/images/rider/extract-local-function/local009.png" alt="local009"></p>
 <p>如此的程式碼，可讀性就很高。</p>
 <ol>
-<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline 風格</li>
+<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline</li>
 <li><code>Where(IsOdd)</code> 可以明顯看出要 where 的是 <code>奇數</code>，<code>ForEach(WriteLine)</code> 可以看出 writeline 要 foreach，而 <code>WriteLine()</code> 與 <code>IsOdd()</code> 又各自是小小的 Local Function 構成，這正是 FP 所謂的 Function Composition</li>
 </ol>
 <h2 id="Conclusion">Conclusion</h2><hr>

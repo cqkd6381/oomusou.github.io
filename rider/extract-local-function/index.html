@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="重構成 C# 7 的 Local Function">
 <meta property="og:image" content="http://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-07-21T07:41:57.198Z">
+<meta property="og:updated_time" content="2018-07-21T15:04:49.607Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Rider Refactoring 之 Extract Local Function">
 <meta name="twitter:description" content="重構成 C# 7 的 Local Function">
@@ -162,7 +162,7 @@
 <p><img src="/images/rider/extract-local-function/local009.png" alt="local009"></p>
 <p>如此的程式碼，可讀性就很高。</p>
 <ol>
-<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline 風格</li>
+<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline</li>
 <li><code>Where(IsOdd)</code> 可以明顯看出要 where 的是 <code>奇數</code>，<code>ForEach(WriteLine)</code> 可以看出 writeline 要 foreach，而 <code>WriteLine()</code> 與 <code>IsOdd()</code> 又各自是小小的 Local Function 構成，這正是 FP 所謂的 Function Composition</li>
 </ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
