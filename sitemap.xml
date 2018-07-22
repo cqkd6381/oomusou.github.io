@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/csharp/extension-method/</loc>
+    <lastmod>2018-07-22T08:37:11.372Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/rider/vim/</loc>
     <lastmod>2018-07-21T15:34:18.592Z</lastmod>
   </url>
