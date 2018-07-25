@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://oomusou.io/"/>
-  <updated>2018-07-22T10:52:27.838Z</updated>
+  <updated>2018-07-25T14:07:30.292Z</updated>
   <id>http://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,110 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
+    <link href="http://oomusou.io/docker/postgres/"/>
+    <id>http://oomusou.io/docker/postgres/</id>
+    <published>2018-07-24T22:23:43.000Z</published>
+    <updated>2018-07-25T14:07:30.292Z</updated>
+    <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 。本文分別使用 <code>docker run</code> 與 <code>docker-compose</code> 兩種方式。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.03.1-ce-mac65 (24312)<br>PostgreSQL 10.3</p>
+<h2 id="使用_docker_run">使用 docker run</h2><hr>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="keyword">run</span> --name MyPostgres -<span class="keyword">d</span> -p 5432:5432 -v ~/Postgres:/<span class="keyword">var</span>/lib/postgresql/data -<span class="keyword">e</span> POSTGRES_DB=eflab -<span class="keyword">e</span> POSTGRES_USER=admin -<span class="keyword">e</span> POSTGRES_PASSWORD='12345' postgres:latest</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
+<p><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker 會自動以亂數建立 )<br><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<p><code>-v</code> : <code>v</code>olume，PostgresSQL 新增的資料會寫在 container 內的 <code>/var/lib/postgresql/data</code> 目錄，會改 mapping 到 host 的 <code>~/Postgres</code>，如此 container 刪除後，資料仍然會留在 host </p>
+<p><code>-p</code> : <code>p</code>ort mapping，host 與 container post 的對應，格式為 host port : container port<br><code>-e</code> : <code>e</code>nvironment，設定 PostgreSQL 所需要的環境變數</p>
+<ul>
+<li><code>POSTGRES_DB</code> : database 名稱</li>
+<li><code>POSTGRES_USER</code> : 帳號</li>
+<li><code>POSTGRES_PASSWORD</code> : 密碼</li>
+</ul>
+<p><code>postgress:latest</code> : image 名稱，其中 <code>latest</code> 為最新版的 image</p>
+<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
+<h2 id="使用_Docker-Compose">使用 Docker-Compose</h2><hr>
+<p><code>docker run</code> 方式雖然直接，但需要搭配一堆參數才能執行，若能將這些參數先寫在文字檔內，只要下 <code>docker-compose up -d</code> 就可執行 container。</p>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<h3 id="Docker-compose-yml">Docker-compose.yml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  postgres:&#10;    image: postgres:latest&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;HOST_DIR&#125;:/var/lib/postgresql/data&#10;    expose:&#10;      - &#34;5432&#34;&#10;    ports:&#10;      - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>version</code> 設定 <code>docker-compose.yml</code> 格式的版本。</p>
+<p>因為 <code>docker-compose.yml</code> 的格式版本與 Docker 版本息息相關，若你要使用新版的 Docker 所提供的功能，在 <code>docker-compose.yml</code> 的版本就必須下的更細，如 <code>3.3</code>，在此只使用了 <code>docker-compose.yml</code> 基本功能而已，使用 <code>3</code> 即可。</p>
+<p>第 3 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services:&#10;  postgres:</span><br></pre></td></tr></table></figure>
+<p>使用 <code>services</code> 設定有哪些 service 要一起跑。</p>
+<p><code>Docker-compose.yml</code> 理論上可以同時描述多個 service，也就是多個 container，如 .NET Core + PostgreSQL + Nginx + Redis 同時啟動，但本文只想使用 PostgreSQL 而已，因此僅建立  <code>postgres</code> service。</p>
+<p>第 4 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postgres:&#10;  image: postgres:latest</span><br></pre></td></tr></table></figure>
+<p>設定 <code>postgres</code> service，此名稱可自行建立。</p>
+<ul>
+<li><strong>image</strong> :  設定使用的 image。</li>
+</ul>
+<blockquote>
+<p><code>latest</code> 表示最新版的 <code>postgres</code></p>
+</blockquote>
+<p>第 6 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyPostgres</span><br></pre></td></tr></table></figure>
+<p>使用 <code>container_name</code> 設定 container 名稱。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>--name</code></p>
+</blockquote>
+<p>第 7 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - $&#123;POSTGRES_HOST_DIR&#125;:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
+<p>使用 <code>volumes</code> 設定 host 與 container 所對應的目錄，將來 PostgreSQL 所寫入資料，將寫入 host 目錄。</p>
+<p><code>:</code> 左側為 host 目錄，右側為 container 內目錄。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-v</code></p>
+</blockquote>
+<p><code>POSTGRES_HOST_DIR</code> 將在 <code>.env</code> 中設定。</p>
+<p>第 9 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - &#34;5432&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>expose</code> 設定 container 的 port。</p>
+<p>第 11 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port。</p>
+<p><code>:</code> 左側為 host 的 port，右側為 container 的 port。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-p</code></p>
+</blockquote>
+<p><code>POSTGRES_PORT</code> 將在 <code>.env</code> 中設定。</p>
+<p>13 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">environment:&#10;    - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;    - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;    - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<p>設定 PostgreSQL 的 database、user 與 password，此為 PostgreSQL 所需要的環境變數。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-e</code></p>
+</blockquote>
+<p><code>POSTGRES_DB</code>、<code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 將在 <code>.env</code> 中設定。</p>
+<h3 id="-env">.env</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">HOST_DIR=<span class="value">~/Postgres</span></span></span><br><span class="line"><span class="setting">POSTGRES_PORT=<span class="value"><span class="number">1234</span></span></span></span><br><span class="line"><span class="setting">POSTGRES_DB=<span class="value">eflab</span></span></span><br><span class="line"><span class="setting">POSTGRES_USER=<span class="value">admin</span></span></span><br><span class="line"><span class="setting">POSTGRES_PASSWORD=<span class="value"><span class="number">12345</span></span></span></span><br></pre></td></tr></table></figure>
+<p>此為 <code>Docker-compose.yml</code> 所設定的環境變數，被獨立在 <code>.env</code> 中，可單獨設定，不用修改 <code>Docker-compose.yml</code>。</p>
+<h3 id="Docker-compose_up">Docker-compose up</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose up</code> 啟動 PostgreSQL。</p>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<p><img src="/images/docker/postgres/post001.png" alt="post001"></p>
+<h3 id="Docker-compose_down">Docker-compose down</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose down</code> 結束 PostgreSQL，並且刪除 container。</p>
+<p><img src="/images/docker/postgres/post002.png" alt="post002"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
+<li><code>docker-run</code> 與 <code>Docker-Compose</code> 都可以啟動 PostgreSQL，實務上建議使用 <code>Docker-Compose</code>，將變數寫在 <code>.env</code> 中，這樣可使用 <code>docker-compose up -d</code> 就可啟動 PostgreSQL，<code>docker-compose down</code> 就可結束 PostgreSQL，不用再擔心參數問題</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/PostgresDocker" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
+    
+      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 C# 之 Extension Method]]></title>
@@ -110,52 +214,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="http://oomusou.io/rider/vim/"/>
-    <id>http://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="http://oomusou.io/tags/Vim/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="http://oomusou.io/rider/extract-local-function/"/>
     <id>http://oomusou.io/rider/extract-local-function/</id>
@@ -232,6 +290,52 @@
       <category term="Refactoring" scheme="http://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="http://oomusou.io/rider/vim/"/>
+    <id>http://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="http://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="http://oomusou.io/tags/Vim/"/>
     
   </entry>
   
@@ -2107,68 +2211,6 @@
     </summary>
     
       <category term="Docker" scheme="http://oomusou.io/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 DataGrip 連接 PostgreSQL ?]]></title>
-    <link href="http://oomusou.io/datagrip/postgresql/"/>
-    <id>http://oomusou.io/datagrip/postgresql/</id>
-    <published>2018-05-22T00:23:43.000Z</published>
-    <updated>2018-05-22T11:03:19.584Z</updated>
-    <content type="html"><![CDATA[<p>DataGrip 是 JetBrains 專業的資料庫連線工具，可以直接連上任何資料庫，當然也包含 PostgreSQL。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>Docker for Mac 18.03.0-ce-mac60 (23751)<br>PostgreSQL 10.3<br>DataGrip 2018.1</p>
-<h2 id="DataGrip">DataGrip</h2><hr>
-<p><img src="/images/datagrip/postgresql/grip000.png" alt="post009"></p>
-<p><strong><em>View -&gt; Tool Windows -&gt; Database</em></strong></p>
-<p>或熱鍵：<code>⌘ + 1</code></p>
-<p><img src="/images/datagrip/postgresql/grip001.png" alt="post001"></p>
-<p>左側顯示 Database View。</p>
-<p><img src="/images/datagrip/postgresql/grip002.png" alt="post002"></p>
-<p>DataGrip 連進 PostgreSQL。</p>
-<ol>
-<li>按 <code>+</code>，選擇 <code>Data Source</code></li>
-<li>選擇 <code>PostgreSQL</code></li>
-</ol>
-<p><img src="/images/datagrip/postgresql/grip003.png" alt="post003"></p>
-<p>DataGrip 支援 PostgreSQL，不過預設並沒有安裝 PostgreSQL 驅動程式。</p>
-<ol>
-<li>按 <code>Download</code> 下載 <code>PostgreSQL</code> 驅動程式。</li>
-</ol>
-<p><img src="/images/datagrip/postgresql/grip004.png" alt="post004"></p>
-<ol>
-<li><code>User</code> : <code>admin</code></li>
-<li><code>Password</code> : <code>12345</code></li>
-<li>按 <code>Test Connection</code> 測試連接，顯示 Successful</li>
-</ol>
-<p><img src="/images/datagrip/postgresql/grip005.png" alt="post005"></p>
-<p>DataGrip 預設不會顯示所有 table。</p>
-<ol>
-<li>選 <code>Shemas...</code></li>
-<li>勾選 <code>All schemas</code></li>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<p><img src="/images/datagrip/postgresql/grip006.png" alt="post006"></p>
-<ol>
-<li>展開 <code>tables</code>，選擇 <code>sql_features</code> table</li>
-<li>按 <code>Data Editor</code> 顯示資料</li>
-</ol>
-<p>如此 DataGrip 已經正確連上 PostgreSQL。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>DataGrip 為專業的資料庫管理工具，也包含各資料庫的 driver，可輕鬆連上各種資料庫</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[直接在 DataGrip 連接到 PostgreSQL]]>
-    
-    </summary>
-    
-      <category term="DataGrip" scheme="http://oomusou.io/tags/DataGrip/"/>
-    
-      <category term="PostgreSQL" scheme="http://oomusou.io/tags/PostgreSQL/"/>
     
   </entry>
   

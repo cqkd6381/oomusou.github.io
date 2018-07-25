@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://oomusou.io/docker/postgres/</loc>
+    <lastmod>2018-07-25T14:07:30.292Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://oomusou.io/csharp/extension-method/</loc>
     <lastmod>2018-07-22T10:52:27.838Z</lastmod>
   </url>
@@ -94,11 +99,6 @@
   <url>
     <loc>http://oomusou.io/docker/postgres-core/</loc>
     <lastmod>2018-06-04T08:32:28.687Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://oomusou.io/docker/postgres/</loc>
-    <lastmod>2018-06-04T05:54:31.597Z</lastmod>
   </url>
   
   <url>
