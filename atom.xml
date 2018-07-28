@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-07-28T07:47:05.579Z</updated>
+  <updated>2018-07-28T07:49:45.278Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/hexo/https/"/>
     <id>https://oomusou.io/hexo/https/</id>
     <published>2018-07-28T12:23:43.000Z</published>
-    <updated>2018-07-28T07:47:05.579Z</updated>
+    <updated>2018-07-28T07:49:45.278Z</updated>
     <content type="html"><![CDATA[<p>當 Chrome 在 68 版後會將沒有 https 網站標上 <code>不安全</code> 字樣，讓 blog 升級成 https 已經不能避免的課題，若你是使用 Hexo 且放在 GitHub，則可參考本文的方式。</p>
 <a id="more"></a>
 <h2 id="GoDaddy">GoDaddy</h2><hr>
@@ -60,6 +60,8 @@
     <![CDATA[GitHub 現在已經內建支援 https]]>
     
     </summary>
+    
+      <category term="GitHub" scheme="https://oomusou.io/tags/GitHub/"/>
     
       <category term="Hexo" scheme="https://oomusou.io/tags/Hexo/"/>
     
