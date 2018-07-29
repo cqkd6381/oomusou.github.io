@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-07-28T08:14:52.791Z</updated>
+  <updated>2018-07-29T08:00:56.762Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,56 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何在 Parallel Desktop 使用 Docker for Mac ?]]></title>
+    <link href="https://oomusou.io/docker/parallel-docker/"/>
+    <id>https://oomusou.io/docker/parallel-docker/</id>
+    <published>2018-07-29T12:23:43.000Z</published>
+    <updated>2018-07-29T08:00:56.762Z</updated>
+    <content type="html"><![CDATA[<p>雖然平時以 macOS 作為開發主力，偶爾還是會需要在 Parallel Desktop 使用 Windows，此時若要使用 Docker，雖然也能在 Parallel Destop 內跑 Docker for Windows，不過由於是 VM 中的 VM，Docker 並不穩定，比較建議的方式是 Windows 搭配 Docker for Mac 使用。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>PostgreSQL 10.4<br>Parallel Desktop 13 Pro 13.3.2 (43368)<br>Windows 10 Pro 1803 17134.191<br>Rider 2018.1.3 </p>
+<h2 id="Docker_for_Mac">Docker for Mac</h2><hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
+<p>在 macOS 以 <code>docker-compose</code> 啟動 PostgreSQL container，且 port 為 <code>1234</code>。</p>
+<p><img src="/images/docker/parallel-docker/parallel000.png" alt="parallel000"></p>
+<p>由於將來 Parallel Desktop 內的 Windows 將連到 macOS 的 PostgreSQL container，目前已知其 port 為 <code>1234</code> ，但 IP 是多少呢 ?</p>
+<h2 id="Parallel_Desktop_Network">Parallel Desktop Network</h2><hr>
+<p><img src="/images/docker/parallel-docker/parallel001.png" alt="parallel001"></p>
+<p>Parallel Desktop 預設的 network 是以 <code>Shared Network</code> 方式。</p>
+<p><img src="/images/docker/parallel-docker/parallel002.png" alt="parallel002"></p>
+<p>什麼是 <code>Shared Network</code> 呢 ?</p>
+<p>上圖中的 Mac 有 <code>192.168.0.20</code> 與  <code>10.211.55.10</code> 兩個 <code>IP</code> 。</p>
+<p>而 Windows 的 IP 則為 <code>10.211.55.20</code>。</p>
+<p>簡單的說相當於 Mac 有兩張網卡，一張網卡為 <code>192.168.0.20</code>，而另一張網卡為 <code>10.211.55.10</code>，而 Windows 的 <code>10.211.55.20</code> 與  Mac 的 <code>10.211.55.10</code> 為同一個網段，可彼此互通，然後再透過 <code>192.168.0.20</code> 這張網卡連上 internet。</p>
+<p><img src="/images/docker/parallel-docker/parallel003.png" alt="parallel003"></p>
+<p>我們可發現 Parallel Desktop 自帶 DHCP，且 IP 從 <code>10.211.55.1</code> 開始到 <code>10.211.55.254</code>。</p>
+<p><img src="/images/docker/parallel-docker/parallel004.png" alt="parallel004"></p>
+<p>當 Parallel Desktop 啟動後，實際在 macOS 下 <code>ifconfig</code> 觀察，會發現多了 <code>vinc0</code> 這張網卡，其 IP 為 <code>10.211.55.2</code>。</p>
+<p>也就是說若要從 Parallel Desktop 的 Windows 連到 PostgreSQL container，IP 就是 <code>10.211.55.2</code>，port 為 <code>1234</code>。</p>
+<h2 id="Windows">Windows</h2><hr>
+<p><img src="/images/docker/parallel-docker/parallel005.png" alt="parallel005"></p>
+<ol>
+<li>在 Windows 內的 Rider 能夠以 <code>10.211.55.2 : 1234</code> 連到 Docker for Mac 的 PostgreSQL container</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><ul>
+<li>Parallel Desktop 都會穩定以 <code>10.211.55.2</code> 當成 macOS 的 IP，所以任何 Docker container 都可以跑在 macOS，然後 Windows 再以 <code>10.211.55.2</code> 連上即可，這樣就不需要執行 Docker for Windows 了</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://www.parallels.com" target="_blank" rel="external">Parallels</a>, <a href="https://kb.parallels.com/en/4948" target="_blank" rel="external">Which networking mode (Bridged, Shared or Host-Only) should I use for the virtual machine?</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[不必再與 Docker for Windows 搏鬥]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
+    
+      <category term="Parallel Desktop" scheme="https://oomusou.io/tags/Parallel-Desktop/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使 GitHub Blog 升級成 https ?]]></title>
@@ -267,52 +317,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="https://oomusou.io/rider/vim/"/>
-    <id>https://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="https://oomusou.io/rider/extract-local-function/"/>
     <id>https://oomusou.io/rider/extract-local-function/</id>
@@ -389,6 +393,52 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
     
   </entry>
   
@@ -2044,122 +2094,6 @@
       <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
     
       <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何以 .NET Core CLI 建立並上傳 NuGet 套件 ?]]></title>
-    <link href="https://oomusou.io/netcore/nuget/create/"/>
-    <id>https://oomusou.io/netcore/nuget/create/</id>
-    <published>2018-05-24T12:23:43.000Z</published>
-    <updated>2018-06-07T09:54:20.750Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core 一樣使用 NuGet 管理 package，本文將使用 VS Code 與 .NET Core CLI 建立 package，並上傳到 NuGet server。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.3<br>.NET Core 2.0.7<br>VS Code 1.23.1</p>
-<h2 id="建立_Class_Library">建立 Class Library</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> classlib -o MyClassLib</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet new</code> 建立 project。</p>
-<ul>
-<li><strong>classlib</strong>：建立 class library 類型專案</li>
-<li><strong>-o</strong>：<code>o</code> utput，建立在 <code>MyCalculator</code> 目錄下</li>
-</ul>
-<p><img src="/images/netcore/nuget/create/nuget000.png" alt="nuget000"></p>
-<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyClassLib</span><br></pre></td></tr></table></figure>
-<p>使用 <code>code</code> 執行 VS Code，後面接欲開啟的 <code>目錄名稱</code>。</p>
-<p><img src="/images/netcore/nuget/create/nuget001.png" alt="nuget001"></p>
-<h2 id="編輯_MyCalculator">編輯 MyCalculator</h2><hr>
-<p><strong>MyCalculator.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyClassLib</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MyCalculator</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>建立 <code>MyCalculator</code> class，有只有一個 <code>Sum()</code> method。</p>
-<p><img src="/images/netcore/nuget/create/nuget002.png" alt="nuget002"></p>
-<h2 id="新增_Package_Metadata">新增 Package Metadata</h2><hr>
-<p><strong>MyClassLib.csproj</strong></p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="pi">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Project</span> <span class="attribute">Sdk</span>=<span class="value">"Microsoft.NET.Sdk"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TargetFramework</span>&gt;</span>netstandard2.0<span class="tag">&lt;/<span class="title">TargetFramework</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageId</span>&gt;</span>OomusouCalculator<span class="tag">&lt;/<span class="title">PackageId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="title">Version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Authors</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Authors</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Company</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Company</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">GeneratePackageOnBuild</span>&gt;</span>true<span class="tag">&lt;/<span class="title">GeneratePackageOnBuild</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">Content</span> <span class="attribute">Include</span>=<span class="value">"MyCalculator.cs"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>第 5 行</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">PackageId</span>&gt;</span>OomusouCalculator<span class="tag">&lt;/<span class="title">PackageId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Version</span>&gt;</span>1.0.0<span class="tag">&lt;/<span class="title">Version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Authors</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Authors</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">Company</span>&gt;</span>Oomusou<span class="tag">&lt;/<span class="title">Company</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">GeneratePackageOnBuild</span>&gt;</span>true<span class="tag">&lt;/<span class="title">GeneratePackageOnBuild</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>每個 NuGet package 除了 <code>.nupkg</code> 外，另外還有 <code>.nuspec</code>，用來描述 package 資訊與其所需的 dependency，而這些資訊都來自於 <code>.csproj</code>。</p>
-<ul>
-<li><strong>PackageId</strong>：Package 唯一識別的 id，若是要發佈到 <code>nuget.org</code>，則必須是 <code>nuget.org</code> 唯一；若是發佈到公司內部自己的 NuGet server，則必須是該 server 的唯一</li>
-<li><strong>Version</strong>：套件版本編號</li>
-<li><strong>Authors</strong>：套件作者</li>
-<li><strong>Company</strong>：套件公司</li>
-<li><strong>GeneratePackageOnBuild</strong>：當 <code>dotnet build</code> 時，自動執行 <code>dotnet pack</code> 建立 <code>.nupkg</code></li>
-</ul>
-<p><img src="/images/netcore/nuget/create/nuget003.png" alt="nuget003"></p>
-<h2 id="編譯同時建置_Package">編譯同時建置 Package</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet build</code> 編譯專案。</p>
-<ul>
-<li><strong>-c</strong>：<code>c</code> onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要搭配 <code>-c</code> 參數</li>
-</ul>
-<blockquote>
-<p>由於剛剛已經在 <code>.csproj</code> 增加 <code>GeneratePackageOnBuild</code>，所以只要 <code>dotnet build</code> 就會一起產生 <code>.nupkg</code></p>
-</blockquote>
-<p><img src="/images/netcore/nuget/create/nuget004.png" alt="nuget004"></p>
-<h2 id="獲得_API_Key">獲得 API Key</h2><hr>
-<p>NuGet Package 分兩種，一種是對外公開的 package，一種是公司內部用的 package，本文先討論公開的 NuGet package。</p>
-<p>要發佈到 NuGet server，必須知道兩件事：</p>
-<ol>
-<li><strong>API Key</strong>：相當於你個人資訊憑證</li>
-<li><strong>NuGet server URL</strong>：NuGet server 位址</li>
-</ol>
-<p><img src="/images/netcore/nuget/create/nuget005.png" alt="nuget005"></p>
-<ol>
-<li>到 <code>https://www.nuget.org</code>，這是公開 NuGet package 的集散地</li>
-<li>以個人帳號 Sign in，將 Microsoft 帳號登入</li>
-</ol>
-<p><img src="/images/netcore/nuget/create/nuget006.png" alt="nuget006"></p>
-<ol>
-<li>右上角會顯示登入帳號</li>
-<li>選擇 <code>API Keys</code></li>
-</ol>
-<p><img src="/images/netcore/nuget/create/nuget007.png" alt="nuget007"></p>
-<ol>
-<li>按 <code>Create</code> 建立 API Key</li>
-<li><strong>Key Name</strong>：這是給自己識別的名字，代表某個 API Key</li>
-<li><strong>Glob Patten</strong>：適用的 pattern，<code>*</code> 代表適用所有 package</li>
-</ol>
-<p>最後按 <code>Create</code> 建立 API Key。</p>
-<p><img src="/images/netcore/nuget/create/nuget008.png" alt="nuget008"></p>
-<ol>
-<li>建立新的 API Key 成功</li>
-<li>按 <code>Copy</code> 將 API Key 複製到 clipboard</li>
-</ol>
-<h2 id="發佈_Package">發佈 Package</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject/bin/Release $ dotnet nuget push OomusouCalculator<span class="number">.1</span><span class="number">.0</span><span class="number">.0</span>.nupkg -k oy2mskdm2daf7i7wersaxtwvssc6oebutgtywbhljl5tcw -s https:<span class="comment">//api.nuget.org/v3/index.json</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet nuget push</code> 發佈 NuGet package 到公開的 NuGet server。</p>
-<ul>
-<li><strong>-k</strong>：將剛剛複製的 API Key 貼上</li>
-<li><strong>-s</strong>：公開 NuGet server 的網址為 <code>https://api.nuget.org/v3/index.json</code></li>
-</ul>
-<blockquote>
-<p>API Key 請用自己的，上面的 API Key 只是 <code>示意</code> 用</p>
-</blockquote>
-<p><img src="/images/netcore/nuget/create/nuget009.png" alt="nuget009"></p>
-<ol>
-<li>將目錄切到 <code>.nupkg</code> 所在的 <code>bin/Release</code> 目錄下</li>
-<li>使用 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到公開的 NuGet server</li>
-</ol>
-<blockquote>
-<p>常見的 <code>dotnet nuget push</code> 失敗，都在於 <code>PackageId</code> 重複，請記得取一個 <code>不重複的</code> PackageId</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>上傳 NuGet package 到 NuGet server 已經變得非常簡單，在 <code>dotnet build</code> 已經順便 <code>dotnet pack</code>，配合 <code>dotnet nuget push</code> 即可上傳到公開的 NuGet server</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/nuget/quickstart/create-and-publish-a-package-using-the-dotnet-cli" target="_blank" rel="external">Quickstart: Create and publish a package (dotnet CLI)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[建立 NuGet 套件越來越簡單]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="NuGet" scheme="https://oomusou.io/tags/NuGet/"/>
     
   </entry>
   
