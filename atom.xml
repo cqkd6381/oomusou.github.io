@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-07-31T15:11:05.060Z</updated>
+  <updated>2018-07-31T15:37:22.515Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,61 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何讀取 JSON 格式設定檔 ?]]></title>
+    <link href="https://oomusou.io/netcore/json-config/"/>
+    <id>https://oomusou.io/netcore/json-config/</id>
+    <published>2018-07-31T13:23:43.000Z</published>
+    <updated>2018-07-31T15:37:22.515Z</updated>
+    <content type="html"><![CDATA[<p>在實務上不少資訊我們不想寫死在 code 中，會以 config 形式由 client 設定，目前最主流的 config 就屬 JSON 格式，.NET 也提供了 <code>ConfigurationBuilder</code> ，讓我們輕易的讀取 JSON 格式的 config 檔。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.1.3</p>
+<h2 id="安裝_Package">安裝 Package</h2><hr>
+<p><img src="/images/netcore/json-config/config000.png" alt="config000"></p>
+<p>要另外安裝 3 個 package :</p>
+<ul>
+<li><code>Microsoft.Extensions.Configuration</code></li>
+<li><code>Microsoft.Extensions.Configuration.FileExtensions</code></li>
+<li><code>Microsoft.Extensions.Configuration.Json</code> </li>
+</ul>
+<h2 id="ConfigurationBuilder">ConfigurationBuilder</h2><hr>
+<p><strong>Config.json</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"Name"</span>: <span class="string">"Sam"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假設 <code>config.json</code> 放在 project 的根目錄下，想要讀取 key 為 <code>Name</code> 的 value。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> Microsoft.Extensions.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> currentDirectory = Directory.GetCurrentDirectory();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> config =</span><br><span class="line">                <span class="keyword">new</span> ConfigurationBuilder()</span><br><span class="line">                    .SetBasePath(currentDirectory)</span><br><span class="line">                    .AddJsonFile(<span class="string">"config.json"</span>)</span><br><span class="line">                    .Build();</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(config[<span class="string">"Name"</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> currentDirectory = Directory.GetCurrentDirectory();</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Directory.GetCurrentDirectory()</code> 讀取目前 project 的根目錄。</p>
+<p>14 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ConfigurationBuilder()</span><br><span class="line">    .SetBasePath(currentDirectory)</span><br></pre></td></tr></table></figure>
+<p>建立 <code>ConfigurationBuilder</code>，並由 <code>SetBasePath()</code> 設定其 working directory。</p>
+<p>16 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.AddJsonFile(<span class="string">"config.json"</span>)</span><br></pre></td></tr></table></figure>
+<p>由 <code>AddJsonFile()</code> 設定 config 檔案。</p>
+<p>17 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.Build();</span><br></pre></td></tr></table></figure>
+<p>最後由 <code>Build()</code> 建立 <code>config</code> 物件。</p>
+<p>19 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Console.WriteLine(config[<span class="string">"Name"</span>]);</span><br></pre></td></tr></table></figure>
+<p>由於 <code>IConfiguration</code> 有定義  indexer，因此我們可以 <code>Name</code> 當 key 直接存取。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>使用 <code>ConfigurationBuilder</code> 讓我們可以很簡單地讀取 JSON 格式的 config 檔</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/AppSettingsJson" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 Configuration Package]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 SonarQube 檢查 .NET Core 專案 ? (Docker)]]></title>
@@ -458,6 +513,52 @@
   </entry>
   
   <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="https://oomusou.io/rider/extract-local-function/"/>
     <id>https://oomusou.io/rider/extract-local-function/</id>
@@ -534,52 +635,6 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="https://oomusou.io/rider/vim/"/>
-    <id>https://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
     
   </entry>
   
@@ -1970,121 +2025,6 @@
       <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
     
       <category term="Ubuntu" scheme="https://oomusou.io/tags/Ubuntu/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何將 .NET Core App 打包成 Docker Image ?]]></title>
-    <link href="https://oomusou.io/netcore/build-docker/"/>
-    <id>https://oomusou.io/netcore/build-docker/</id>
-    <published>2018-05-30T13:23:43.000Z</published>
-    <updated>2018-06-05T03:52:26.110Z</updated>
-    <content type="html"><![CDATA[<p>Docker 除了用在測試外，尚可將整個 app 打包成 Docker image，配合 Docker Compose 與其他 Microservice，可以直接用在 production。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>.NET Core 2.0.7<br>VS Code 1.23.1</p>
-<h2 id="建立_Console_App">建立 Console App</h2><hr>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
-<p>使用  <code>dotnet new</code> 建立 .NET Core App。</p>
-<ul>
-<li>new : 建立 project</li>
-<li>console : 建立 console 類型 project</li>
-<li>-o : 以 MyConsole 為專案名稱並建立目錄</li>
-</ul>
-<p><img src="/images/netcore/build-docker/docker000.png" alt="docker000"></p>
-<ol>
-<li>輸入 <code>dotnet new console -o MyConsole</code> 建立 <code>MyConsole</code> 專案，其專案類型為 <code>console app</code></li>
-</ol>
-<h2 id="建立_Dockerfile">建立 Dockerfile</h2><hr>
-<p>由於我們想要將 app 打包成 Docker image，因此要建立自己的 <code>Dockerfile</code>，Docker 才能依照此 <code>Dockerfile</code> 建立 Docker image。</p>
-<p><strong>Dockerfile</strong></p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet:runtime-deps</span><br><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">./bin/Release/netcoreapp2.<span class="number">0</span>/linux-x64/publish ./</span><br><span class="line"></span><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"./MyConsole"</span>]</span></span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet:runtime-deps</span><br></pre></td></tr></table></figure>
-<p><code>FROM</code> 為 Dockerfile 指令，表示以哪一個 image 為基礎建立自己的 image。</p>
-<p>其中 <code>microsoft/dotnet:runtime-deps</code> 是 Microsoft 專為 .NET Core 準備的 Docker image，此 image 不含 .NET Core runtime，僅包含所需要的 Linux library，是最小包的 image。</p>
-<p>第 2 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span></span><br></pre></td></tr></table></figure>
-<p><code>WORKDIR</code> 為 Dockerfile 指令，表示其他 Dockerfile 指令 (如 <code>RUN</code>、<code>CMD</code>、<code>ENTRYPOINT</code>、<code>COPY</code> 與 <code>ADD</code> …等) 的工作目錄。</p>
-<p>以上表示 <code>WORKDIR</code> 為 <code>/app</code>，若 <code>/app</code>  目錄不存在會自動建立。</p>
-<p>第 4 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">COPY</span> <span class="bash">./bin/Release/netcoreapp2.<span class="number">0</span>/linux-x64/publish ./</span></span><br></pre></td></tr></table></figure>
-<p><code>COPY</code> 為 Dockerfile 指令，表示將 Host OS 的檔案或目錄，複製到 container 內。</p>
-<p>第 1 個參數為 Host OS 檔案或目錄，第 2 個參數為 container 檔案或目錄。</p>
-<p>以上表示僅將以 SCD 方式發布的 Linux App 複製到 container 內。</p>
-<p>第 5 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"./MyConsole"</span>]</span></span><br></pre></td></tr></table></figure>
-<p><code>ENTRYPOINT</code> 為 Dockerfile 指令，表示 container 一啟動時，該執行什麼指令。</p>
-<p>以上表示當 container 一啟動時，將執行 <code>./MyConsole</code>。</p>
-<p><img src="/images/netcore/build-docker/docker002.png" alt="docker002"></p>
-<h2 id="建立_Image">建立 Image</h2><hr>
-<p><strong>BuildDocker.sh</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#!/bin/bash</span></span><br><span class="line">dotnet publish -c Release -r linux-x64</span><br><span class="line">docker build -t myconsole .</span><br></pre></td></tr></table></figure>
-<p>由於使用的 Docker image 是 <code>microsoft/dotnet:runtime-deps</code>，這表示我們必須使用 SCD 方式發布，<code>dotnet publish</code> 特別加上 <code>-r linux-x64</code> 使用 SCD，其 runtime 為 <code>linux-x64</code>。</p>
-<p>使用 <code>docker build</code> 由 <code>Dockerfile</code> 建立 Docker image。</p>
-<ul>
-<li><strong>-t</strong> : <code>t</code>ag，image 的名稱</li>
-</ul>
-<p><img src="/images/netcore/build-docker/docker004.png" alt="docker004"></p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyConsole $ chmod +x ./</span><span class="constant">BuildDocker.</span>sh</span><br></pre></td></tr></table></figure>
-<p>使用 <code>chmod</code> 讓 <code>BuildDocker.sh</code> 能夠有 <code>被執行</code> 權限。</p>
-<p><img src="/images/netcore/build-docker/docker005.png" alt="docker005"></p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyConsole $ ./</span><span class="constant">BuildDocker.</span>sh</span><br></pre></td></tr></table></figure>
-<p>執行 <code>BuildDocker.sh</code> 建立 Docker image。</p>
-<p><img src="/images/netcore/build-docker/docker001.png" alt="docker001"></p>
-<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="class">MyConsole</span> <span class="char">$ </span>docker images</span><br></pre></td></tr></table></figure>
-<p>確認 <code>myconsole</code> image 已經被產生。</p>
-<p><img src="/images/netcore/build-docker/docker006.png" alt="docker006"></p>
-<h2 id="建立_Docker_Compose">建立 Docker Compose</h2><hr>
-<p><strong>docker-compose.yml</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  net-core:&#10;    image: myconsole&#10;    container_name: MyConsole</span><br></pre></td></tr></table></figure>
-<p>第 5 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image: myconsole</span><br></pre></td></tr></table></figure>
-<p>使用自己剛剛建立的 <code>mycosole</code> image。</p>
-<p>第 6 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyConsole</span><br></pre></td></tr></table></figure>
-<p>建立名為 <code>MyConsole</code> 的 container。</p>
-<p><img src="/images/netcore/build-docker/docker007.png" alt="docker007"></p>
-<h2 id="執行_Docker_Compose">執行 Docker Compose</h2><hr>
-<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="class">MyConsole</span> <span class="char">$ </span>docker-compose up</span><br></pre></td></tr></table></figure>
-<p>執行 <code>docker-compose up</code> 執行 <code>docker-compose.yml</code> 所定義的 container。</p>
-<p><img src="/images/netcore/build-docker/docker008.png" alt="docker008"></p>
-<p>正確顯示 <code>Hello World</code>，表示 .NET Core App 已在 Docker 內執行成功。</p>
-<h2 id="結束_Docker_Compose">結束 Docker Compose</h2><hr>
-<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="class">MyProject</span> <span class="char">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
-<p>執行 <code>docker-compose down</code> 結束並刪除 container。</p>
-<p><img src="/images/netcore/build-docker/docker009.png" alt="docker009"></p>
-<h2 id="Summary">Summary</h2><hr>
-<p>在 Microsoft 官方的 <a href="https://docs.microsoft.com/en-us/dotnet/core/docker/docker-basics-dotnet-core" target="_blank" rel="external">Learn Docker Basics with .NET Core</a> 文件中，其 Dockerfile 如下：</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet:<span class="number">2.0</span>-sdk</span><br><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># copy csproj and restore as distinct layers</span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">*.csproj ./</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">dotnet restore</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># copy and build everything else</span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">. ./</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">dotnet publish -c Release -o out</span><br><span class="line"></span><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"dotnet"</span>, <span class="string">"out/Hello.dll"</span>]</span></span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet:<span class="number">2.0</span>-sdk</span><br></pre></td></tr></table></figure>
-<p><code>FROM</code> 為 <code>microsoft/dotnet:2.0-sdk</code>，也就是包含了 .NET Core CLI，所以 image 一定比較大。</p>
-<p>第 4 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># copy csproj and restore as distinct layers</span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">*.csproj ./</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">dotnet restore</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># copy and build everything else</span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">. ./</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">dotnet publish -c Release -o out</span></span><br></pre></td></tr></table></figure>
-<p>將所有 source code 都複製進 image，在 <code>docker build</code> 時，在 image 內執行 <code>dotnet restore</code> 與 <code>dotnet publish</code>，由於所有 source code 都進了 image，image 也一定比較大。</p>
-<p>本文是 Host OS 以 SCD 方式 publish，僅將所需要的檔案複製進 image，如此 image 會小很多。</p>
-<p><img src="/images/netcore/build-docker/docker010.png" alt="docker010"></p>
-<p>實際比較發現，若使用 Microsoft 官方作法，Docker image 為 1.84 GB，但使用本文方式，只有 218 MB，非常適合 production 使用。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>將 .NET Core console app 打包成 Docker image 後，就可以跨平台執行此 image</li>
-<li>此範例雖然是 console app，事實上將 ASP.NET Core 打包成 Docker image 也是類似以上流程</li>
-<li>使用本文的方式，Docker image 的 size 將會有效的縮小</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/netcore-docker-production" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://docs.microsoft.com/en-us/dotnet/core/" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/docker/docker-basics-dotnet-core" target="_blank" rel="external">Learn Docker Basics with .NET Core</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[比官方文件更有效的作法]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
     
   </entry>
   

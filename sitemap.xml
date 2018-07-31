@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/netcore/json-config/</loc>
+    <lastmod>2018-07-31T15:37:22.515Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/sonarqube/netcore-docker/</loc>
     <lastmod>2018-07-31T15:11:05.060Z</lastmod>
   </url>
