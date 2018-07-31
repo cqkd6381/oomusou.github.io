@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/docker/postgres/</loc>
+    <lastmod>2018-07-31T01:50:15.231Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/docker/parallel-docker/</loc>
     <lastmod>2018-07-29T08:00:56.762Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>https://oomusou.io/angular/ngrx/</loc>
     <lastmod>2018-07-26T14:26:15.973Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/docker/postgres/</loc>
-    <lastmod>2018-07-25T14:07:30.292Z</lastmod>
   </url>
   
   <url>

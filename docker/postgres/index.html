@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-07-25T14:07:30.292Z">
+<meta property="og:updated_time" content="2018-07-31T01:50:15.231Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 安裝 PostgreSQL ?">
 <meta name="twitter:description" content="在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker">
@@ -127,7 +127,7 @@
 <h2 id="使用_Docker-Compose">使用 Docker-Compose</h2><hr>
 <p><code>docker run</code> 方式雖然直接，但需要搭配一堆參數才能執行，若能將這些參數先寫在文字檔內，只要下 <code>docker-compose up -d</code> 就可執行 container。</p>
 <p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
-<h3 id="Docker-compose-yml">Docker-compose.yml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  postgres:&#10;    image: postgres:latest&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;HOST_DIR&#125;:/var/lib/postgresql/data&#10;    expose:&#10;      - &#34;5432&#34;&#10;    ports:&#10;      - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Docker-compose-yml">Docker-compose.yml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  postgres:&#10;    image: postgres:latest&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;HOST_DIR&#125;:/var/lib/postgresql/data&#10;    expose:&#10;      - 5432&#10;    ports:&#10;      - $&#123;POSTGRES_PORT&#125;:5432&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
 <p>第 1 行</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;</span><br></pre></td></tr></table></figure>
 <p>使用 <code>version</code> 設定 <code>docker-compose.yml</code> 格式的版本。</p>
@@ -160,10 +160,10 @@
 </blockquote>
 <p><code>POSTGRES_HOST_DIR</code> 將在 <code>.env</code> 中設定。</p>
 <p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - &#34;5432&#34;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - 5432</span><br></pre></td></tr></table></figure>
 <p>使用 <code>expose</code> 設定 container 的 port。</p>
 <p>第 11 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - $&#123;POSTGRES_PORT&#125;:5432</span><br></pre></td></tr></table></figure>
 <p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port。</p>
 <p><code>:</code> 左側為 host 的 port，右側為 container 的 port。</p>
 <blockquote>
