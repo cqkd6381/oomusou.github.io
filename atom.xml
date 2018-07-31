@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-07-31T15:02:15.679Z</updated>
+  <updated>2018-07-31T15:11:05.060Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,10 +19,12 @@
     <link href="https://oomusou.io/sonarqube/netcore-docker/"/>
     <id>https://oomusou.io/sonarqube/netcore-docker/</id>
     <published>2018-07-31T12:23:43.000Z</published>
-    <updated>2018-07-31T15:02:15.679Z</updated>
+    <updated>2018-07-31T15:11:05.060Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 C# 的 bugs、 vulenrability、code smell 與 duplication。</p>
-<p>本文使用 Docker-compose.yml，同時啟動 .NET Core 與 SonarQube 兩個 container，對 .NET 專案進行檢查。</p>
+<p>本文使用 Docker-compose.yml，同時啟動 .NET Core 與 SonarQube 兩個 container 對 .NET 專案進行檢查。</p>
 <a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>.NET Core 2.1<br>SonarQube 7.1<br>SonarScanner 4.3.1.1372</p>
 <h2 id="Dockerfile">Dockerfile</h2><hr>
 <figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br><span class="line"></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_VERSION=<span class="number">4.3</span>.<span class="number">1.1372</span></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_HOME=/opt/scanner</span><br><span class="line"></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y unzip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y openjdk-<span class="number">8</span>-jre</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/<span class="variable">$SCANNER_VERSION</span>/sonar-scanner-msbuild-<span class="variable">$SCANNER_VERSION</span>-netcoreapp2.<span class="number">0</span>.zip -O /opt/sonar-scanner-msbuild.zip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mkdir -p <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">unzip /opt/sonar-scanner-msbuild.zip <span class="operator">-d</span> <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">rm /opt/sonar-scanner-msbuild.zip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chmod <span class="number">775</span> <span class="variable">$SCANNER_HOME</span>/ -R</span></span><br></pre></td></tr></table></figure>
 <p>因為要在 .NET Core container 安裝 SonarScanner，所以要對 .NET Core 客製化 image。</p>
