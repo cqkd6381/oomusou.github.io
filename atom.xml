@@ -74,9 +74,9 @@
     <link href="https://oomusou.io/sonarqube/netcore-docker/"/>
     <id>https://oomusou.io/sonarqube/netcore-docker/</id>
     <published>2018-07-31T12:23:43.000Z</published>
-    <updated>2018-08-01T05:16:23.885Z</updated>
+    <updated>2018-08-01T05:24:27.797Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 C# 的 bugs、 vulenrability、code smell 與 duplication。</p>
-<p>本文使用 Docker-compose.yml，並搭配 Rider 同時啟動 .NET Core 與 SonarQube 兩個 container  ，自動化對 .NET 專案進行檢查。</p>
+<p>本文使用 Docker-compose.yml，並同時啟動 .NET Core 與 SonarQube 兩個 container，自動對 .NET 專案進行檢查。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>.NET Core 2.1<br>SonarQube 7.1<br>SonarScanner 4.3.1.1372<br>Rider 2018.1.3</p>
