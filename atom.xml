@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-02T02:47:57.390Z</updated>
+  <updated>2018-08-02T03:03:59.962Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,9 +19,9 @@
     <link href="https://oomusou.io/sonarqube/code-coverage/"/>
     <id>https://oomusou.io/sonarqube/code-coverage/</id>
     <published>2018-08-02T12:23:43.000Z</published>
-    <updated>2018-08-02T02:47:57.390Z</updated>
+    <updated>2018-08-02T03:03:59.962Z</updated>
     <content type="html"><![CDATA[<p>SonarQube 除了能檢查 C# 品質外，還可以當成 dashboard 使用，讓整個團隊有統一入口關注專案的 Code Coverage。</p>
-<p>SonarQube 支援 OpenCover 與 dotCover 兩種格式，本文將以 NUnit + Coverlet 介紹。</p>
+<p>SonarQube 支援 OpenCover 與 dotCover 兩種格式，本文將以 NUnit + Coverlet + OpenCover 介紹。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>.NET Core 2.1<br>SonarQube 7.1<br>SonarScanner 4.3.1.1372<br>NUnit 3.10.1<br>Coverlet 2.1.1<br>Rider 2018.1.3</p>
