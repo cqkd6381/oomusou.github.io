@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="完全使用 Docker 版本 SonarQube">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-08-01T05:28:21.203Z">
+<meta property="og:updated_time" content="2018-08-02T02:48:16.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 SonarQube 檢查 .NET Core 專案 ? (Docker)">
 <meta name="twitter:description" content="完全使用 Docker 版本 SonarQube">
@@ -167,7 +167,7 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  - netcore</span><br></pre></td></tr></table></figure>
 <p>使用 <code>networks</code> 設定 .NET Core 與 SonarQube 共用 <code>netcore</code> 內部網路。</p>
 <p>11 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depends_on:&#10;      - sonarqube</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depends_on:&#10;  - sonarqube</span><br></pre></td></tr></table></figure>
 <p>.NET Core container 相依於 SonarQube container。</p>
 <p>14 行</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sonarqube:&#10;  image: sonarqube:latest</span><br></pre></td></tr></table></figure>
@@ -290,7 +290,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/NET-Core/">.NET Core<span>36</span></a></li> <li><a href="/tags/Docker/">Docker<span>19</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>10</span></a></li>
+  <li><a href="/tags/NET-Core/">.NET Core<span>37</span></a></li> <li><a href="/tags/Docker/">Docker<span>19</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>11</span></a></li>
     </ul>
 	</div>
 		
