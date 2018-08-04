@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-02T03:03:59.962Z</updated>
+  <updated>2018-08-04T08:26:12.495Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,131 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Refactoring to LINQ => ForEach]]></title>
+    <link href="https://oomusou.io/linq/foreach/"/>
+    <id>https://oomusou.io/linq/foreach/</id>
+    <published>2018-08-04T12:23:43.000Z</published>
+    <updated>2018-08-04T08:26:12.495Z</updated>
+    <content type="html"><![CDATA[<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 dataflow 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
+<p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.1.4</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>在 List 中有一堆名字，想要在 console 顯示每個名字。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> names = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Ben"</span>,</span><br><span class="line">                <span class="string">"Jafar"</span>,</span><br><span class="line">                <span class="string">"Matt"</span>,</span><br><span class="line">                <span class="string">"Priya"</span>,</span><br><span class="line">                <span class="string">"Brian"</span></span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Imperative_:_for">Imperative : for</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> names = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Ben"</span>,</span><br><span class="line">                <span class="string">"Jafar"</span>,</span><br><span class="line">                <span class="string">"Matt"</span>,</span><br><span class="line">                <span class="string">"Priya"</span>,</span><br><span class="line">                <span class="string">"Brian"</span></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> counter = <span class="number">0</span>; counter &lt; names.Count; counter++)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(names[counter]);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>19 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> counter = <span class="number">0</span>; counter &lt; names.Count; counter++)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(names[counter]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最直覺的方式 (其實應該說被制約的方式)， 就是透過 List 的 Indexer 將 List 的 item 取出來，並透過 <code>for</code> loop 去執行 <code>Console.WriteLine()</code>。</p>
+<h2 id="Imperative_:_foreach">Imperative : foreach</h2><hr>
+<p><img src="/images/linq/foreach/foreach000.png" alt="foreach000"></p>
+<p>此時 Rider 已經提出警告，建議改用 <code>foreach</code></p>
+<p><img src="/images/linq/foreach/foreach001.png" alt="foreach001"></p>
+<ol>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Convert to foreach</code></li>
+</ol>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> names = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Ben"</span>,</span><br><span class="line">                <span class="string">"Jafar"</span>,</span><br><span class="line">                <span class="string">"Matt"</span>,</span><br><span class="line">                <span class="string">"Priya"</span>,</span><br><span class="line">                <span class="string">"Brian"</span></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> name <span class="keyword">in</span> names)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(name);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>19 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">var</span> name <span class="keyword">in</span> names)</span><br><span class="line">&#123;</span><br><span class="line">    Console.WriteLine(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重構成 <code>foreach</code> 後，就不必使用 <code>counter</code> 變數，也不用考慮 <code>counter++</code> 寫錯，<code>for</code> loop 的 counter 控制，是常見的 bug 來源，所以重構成 <code>foreach</code> 絕對比 <code>for</code> 來得好。</p>
+<p>且 <code>foreach</code> 的語意也比 <code>for</code> 清楚 ，因為不用看到 counter 實作細節。</p>
+<h2 id="FP_:_Higher_Order_Function">FP : Higher Order Function</h2><hr>
+<p>實務上這種 <code>foreach</code> 天天都要用到，但用 <code>foreach</code> 這種 statement 寫法，重複使用能力為 0，就每天都要不斷的寫 <code>foreach</code>。</p>
+<p>若我們能將 <code>foreach</code> 抽成 <code>ForEach()</code> Higher Order Function，我們就能不斷 reuse <code>ForEach()</code>，只要將不同的商業邏輯以 function 傳進 <code>ForEach()</code> 即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> names = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Ben"</span>,</span><br><span class="line">                <span class="string">"Jafar"</span>,</span><br><span class="line">                <span class="string">"Matt"</span>,</span><br><span class="line">                <span class="string">"Priya"</span>,</span><br><span class="line">                <span class="string">"Brian"</span></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            names.MyForEach(name =&gt; Console.WriteLine(name));</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(<span class="keyword">this</span> List&lt;T&gt; list, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                action(iter);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>22 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(<span class="keyword">this</span> List&lt;T&gt; list, Action&lt;T&gt; action)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">    &#123;</span><br><span class="line">        action(iter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自己以 <code>MyForEach()</code> 實作出 <code>foreach</code> 的 Higher Order Function 版本。</p>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">names.MyForEach(name =&gt; Console.WriteLine(name));</span><br></pre></td></tr></table></figure>
+<p>原來的 <code>foreach</code> statement 重構成 <code>MyForEach()</code> Higher Order Function 版本，只要將 <code>Console.WriteLine()</code> 改用 Lambda 傳入 <code>MyForEach()</code> 即可，如此 <code>foreach</code> 就能被 reuse 了。</p>
+<p>不過 C# 在此可能感受不到 FP 所謂的 Dataflow 與 Pipeline，就語意而言，只能說我們為 List 寫了一個新 method : <code>MyForEach()</code> ，也就是 C# 所謂的 Extension Method，這符合傳統 C# 的 OOP 思維。</p>
+<p>他山之石可以攻錯，我們來看看 F# 語法。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> names = [<span class="string">"Ben"</span>; <span class="string">"Jafar"</span>; <span class="string">"Matt"</span>; <span class="string">"Priya"</span>; <span class="string">"Brian"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> MyForEach action list = </span><br><span class="line">    <span class="keyword">for</span> iter <span class="keyword">in</span> list <span class="keyword">do</span></span><br><span class="line">        action iter</span><br><span class="line">names </span><br><span class="line">|&gt; MyForEach (printfn <span class="string">"%A "</span>)</span><br></pre></td></tr></table></figure>
+<p><code>names</code> 為 List，<code>myForEach()</code> 為自己實作的 <code>ForEach()</code> Higher Order function，若不懂 F# 語法先略過細節沒關係。</p>
+<p><code>|&gt;</code> 為 pipline，所以可以明顯看出其語意為 <code>names</code> data 以 Dataflow 與 Pipeline 方式傳給 <code>myForEach()</code> 執行 <code>printf()</code>。</p>
+<p>但 C# 並沒有特別提供 <code>|&gt;</code> 這種 pipeline 符號，而是繼續使用 OOP 的 <code>.</code> 。</p>
+<p><code>.</code> 雖然方便，但心裡要知道，這裡的 <code>.</code> 並不是 OOP 的 method，而是 FP 的 Dataflow 與 Pipeline，只是也使用了 <code>.</code> 為符號，其本質是 F# 的 <code>|&gt;</code>，<code>.</code> 算是 <code>|&gt;</code> 的 syntax sugar。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(<span class="keyword">this</span> List&lt;T&gt; list, Action&lt;T&gt; action)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">    &#123;</span><br><span class="line">        action(iter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>再舉例另外一個例子證明 <code>.</code> 並非 OOP 的 method，而是 FP 的 Pipeline。</p>
+<p>我們實現 <code>MyForEach()</code> 時，並不是寫在 <code>List</code> class 內，而是透過 static method + this 參數成為 Extenstion Method，也就是<code>List</code> data 與  <code>MyForEach()</code> logic 是徹底分離，而非如 OOP 將 data 與 logic 寫在 <code>List</code> class 內，也再次證明 Extension Method 是 C# 實踐 Pipeline 的手法，而 <code>.</code> 只是 syntax sugar，其本質是 FP 的 Pipeline。</p>
+<h2 id="IEnumrable">IEnumrable</h2><hr>
+<p><img src="/images/linq/foreach/foreach002.png" alt="foreach002"></p>
+<p>當初我們只是想為了 List 重構，所以 Extension Method 的型別只用了 List，Rider 提出建議：<code>List&lt;T&gt; 其實可以重構成 IEnumerable&lt;T&gt;</code>，如此 <code>MyForEach()</code> 重複使用能力更高。</p>
+<p><img src="/images/linq/foreach/foreach003.png" alt="foreach003"></p>
+<ol>
+<li>將 cursor 放在 <code>List</code> 上，按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Make parameter type IEnumerable&lt;T&gt;</code></li>
+</ol>
+<p><img src="/images/linq/foreach/foreach005.png" alt="foreach005"></p>
+<ol>
+<li>將 <code>List&lt;T&gt;</code> 重構成 <code>IEnumerable&lt;T&gt;</code>。</li>
+</ol>
+<h2 id="Method_Group">Method Group</h2><hr>
+<p><img src="/images/linq/foreach/foreach008.png" alt="foreach008"></p>
+<p>Rider 建議將 Lambda 重構成 Method Group。</p>
+<p><code>MyForEach()</code> 後接 Lambda 天經地義，但若 function 的型別定義的很清楚，讓 compiler 可以找到正確 signature 的 Overloading method，則不用寫 Lambda，傳入 method 名稱即可，這就是 Method Group，會讓 FP 寫法更加精簡。</p>
+<p><code>MyForEach()</code> 很明確定義了 <code>Action&lt;T&gt;</code>，就只有一個 input 參數的 function，因此 compiler 有足夠的資訊找到 <code>Console.WriteLine()</code> 正確的 Overloading 版本，因此適合重構成 Method Group。</p>
+<p><img src="/images/linq/foreach/foreach004.png" alt="foreach003"></p>
+<ol>
+<li>將 cursor 放在 <code>WriteLine</code> 上，按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Replace with method group</code></li>
+</ol>
+<p><img src="/images/linq/foreach/foreach006.png" alt="foreach006"></p>
+<ol>
+<li>只要傳入 Method 名稱即可，不用寫 Lambda</li>
+</ol>
+<h2 id="Using_static">Using static</h2><hr>
+<p>其實目前的 <code>Console.WriteLine</code> 已經非常精簡，可讀性也高，但 C# 6 提供了 <code>using static</code>，可以讓你寫出更 FP 風格的 code。</p>
+<p><img src="/images/linq/foreach/foreach007.png" alt="foreach007"></p>
+<ol>
+<li>將 cursor 放在 <code>Console</code> 上，按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Import static members</code></li>
+</ol>
+<p><img src="/images/linq/foreach/foreach009.png" alt="foreach009"></p>
+<ol>
+<li>將 <code>System.Console</code> 使用 <code>using static</code></li>
+<li><code>MyForEach()</code> 只要傳入 <code>WriteLine</code> 即可，更像是 function</li>
+</ol>
+<h2 id="LINQ_:_ForEach">LINQ : ForEach</h2><hr>
+<p>其實 <code>ForEach()</code> 這種很普遍的東西，在 LINQ 早已內建，我們改用 LINQ 版本。</p>
+<p><img src="/images/linq/foreach/foreach010.png" alt="foreach010"></p>
+<ol>
+<li>直接使用 LINQ 的 <code>ForEach()</code>，將自己寫的 <code>MyForEach()</code> 刪除</li>
+</ol>
+<h2 id="LINQ_如何實踐_?">LINQ 如何實踐 ?</h2><hr>
+<p><img src="/images/linq/foreach/foreach011.png" alt="foreach011"></p>
+<p>我們來看看 LINQ 的 source code 如何實踐 <code>ForEach()</code> ?</p>
+<p>一開始對 <code>action</code> 進行判斷，若沒有則拋出 exception。</p>
+<p><code>action</code> 也搭配 <code>for</code> 進行，跟我們使用 <code>foreach</code> 類似。</p>
+<blockquote>
+<p>基本上 LINQ 的 <code>ForEach()</code> 跟我們自己寫的 <code>MyForEach()</code> 差不多，但更加嚴謹</p>
+</blockquote>
+<h2 id="使用時機">使用時機</h2><hr>
+<p><code>ForEach()</code> 表面上看起來是 <code>foreach</code> statement 的 syntax sugar，但事實上 <code>ForEach()</code> 在 FP 的意義並非如此。</p>
+<p>FP 將 data 以 Dataflow 與 Pipeline 方式處理，因此提供了眾多 operator，而 operator 則必須搭配 pure function，不能有 Side Effect。但 Side effect 總要有人處理，<code>ForEach()</code> 就是讓你統一處理 Side Effect 之處。</p>
+<p>與 Imperative 寫法的差異是 : Imperative 總是不斷的在處理 Side Effect，因此造成結果難以預測、難以測試，bug 就是由此展開；但  FP 對於 data 處理堅持採用 Dataflow 與 Pipeline，不使用 Side Effect，因此對 data 處理是可預測且容易測試，直到最後 data 處理完，才不得已使用 <code>ForEach()</code> 處理 Side Effect。</p>
+<p>如 <code>Console.WriteLine()</code> 就是 I/O，就是 Side Effect，這是無法避免的，最後使用 <code>ForEach()</code> 統一解決。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>.</code> 與 Extension Method 是 C# 的 syntax sugar，其本質就是 FP 的 data 與 logic 分離與 Pipeline</li>
+<li>Method Group 讓 FP 寫法會更為精簡，也是 C# 很重要的發明</li>
+<li>FP 的 operator 主要在處理 Dataflow 與 Pipeline，應該使用 pure function，但 <code>ForEach()</code> 是少數讓你處理 Side Effect 的 operator，應該將 side effect 集中在 <code>ForEach()</code> 處理</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="http://reactivex.io" target="_blank" rel="external">ReactiveX</a>, <a href="http://reactivex.io/learnrx/" target="_blank" rel="external">Functional Programming in JavaScript</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[以重構角度探討 LINQ]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
+    
+      <category term="LINQ" scheme="https://oomusou.io/tags/LINQ/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 SonarQube 顯示 .NET Core 專案 Code Coverage ? (Docker)]]></title>
@@ -1987,157 +2112,6 @@
     </summary>
     
       <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Docker 建立 .NET Core + PostgreSQL 開發環境 ?]]></title>
-    <link href="https://oomusou.io/docker/postgres-core/"/>
-    <id>https://oomusou.io/docker/postgres-core/</id>
-    <published>2018-06-04T12:23:43.000Z</published>
-    <updated>2018-06-04T08:32:28.687Z</updated>
-    <content type="html"><![CDATA[<p>當使用 .NET Core 之後，server 就不見的要使用 Microsoft 技術，可自由選擇 Linux 受歡迎的 service，如 Nginx、Redis、PostgreSQL … 等。</p>
-<p>以 PostgreSQL 而言，透過 Docker，我們可以很輕鬆的在 Windows 或 macOS 建立 .NET Core + PostgreSQL 開發環境，且重點是 Linux 版的 PostgreSQL 的。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>.NET Core 2.1<br>PostgreSQL 10.3<br>DataGrip 2018.1.4</p>
-<h2 id="建立_Docker_Compose">建立 Docker Compose</h2><hr>
-<p><strong>docker-compose.yml</strong></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  netcore:&#10;    image: microsoft/dotnet&#10;    container_name: MyNETCore&#10;    volumes:&#10;      - $&#123;NETCORE_HOST_DIR&#125;:/code/&#10;    tty: true&#10;    networks: &#10;      - netcore-dev&#10;    depends_on:&#10;      - postgres&#10;&#10;  postgres:&#10;    image: postgres&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;POSTGRES_HOST_DIR&#125;/data:/var/lib/postgresql/data&#10;    expose:&#10;      - &#34;5432&#34;&#10;    ports:&#10;      - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;&#10;    networks:&#10;      - netcore-dev&#10;&#10;networks:&#10;  netcore-dev:</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;</span><br></pre></td></tr></table></figure>
-<p><code>version</code> 為 <code>docker-compose.yml</code> 的第一層 tag，用來設定 <code>docker-compose.yml</code> 格式的版本。</p>
-<p>因為 <code>docker-compose.yml</code> 的格式版本與 Docker 版本息息相關，若你要使用新版的 Docker 所提供的功能，在 <code>docker-compose.yml</code> 的版本就必須下的更細，如 <code>3.3</code>，在此只使用了 <code>docker-compose.yml</code> 基本功能而已，使用 <code>3</code> 即可。</p>
-<p>第 3 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services:&#10;  netcore:&#10;  postgres:</span><br></pre></td></tr></table></figure>
-<p><code>services</code> 為 <code>docker-compose.yml</code> 的第一層 tag，用來設定有哪些 service 要一起跑。</p>
-<p>以本文為例，要同時跑 <code>.NET Core</code> 與 <code>PostgreSQL</code> 兩個 service，因此在 <code>docker-compose.yml</code> 內建立 <code>netcore</code> 與 <code>postgres</code> 兩個 service。</p>
-<p>31 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  netcore-dev:</span><br></pre></td></tr></table></figure>
-<p><code>networks</code> 為 <code>docker-compose.yml</code> 的第一層 tag，用來設定 container 間所共用的網路名稱。</p>
-<p>以本文為例，我們希望 <code>netcore</code> 與 <code>postgres</code> 兩個 container 都跑在相同的網路下，彼此都能看到對方，因此特別宣告了 <code>netcore-dev</code> 網路，將來兩個 container 都將共用此網路。</p>
-<p>第 4 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netcore:&#10;  image: microsoft/dotnet</span><br></pre></td></tr></table></figure>
-<p>設定 <code>netcore</code> service，此名稱可自行建立。</p>
-<p>使用 <code>image</code>設定使用 <code>microsoft/dotnet</code> image。</p>
-<p>第 6 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyNETCore</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 <code>netcore</code> service 的 container 名稱為 <code>MyNETCore</code>。</p>
-<p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - $&#123;NETCORE_HOST_DIR&#125;:/code/</span><br></pre></td></tr></table></figure>
-<p>使用 <code>volumns</code> 設定 Host OS 與 container 所共享目錄，將來 Host OS 所分享的目錄，相當於 container 內部的 <code>/code</code> 目錄。</p>
-<p>由於每個人 Host OS 要分享的目錄都不一樣，因此設定成 <code>NETCORE_HOST_DIR</code> 變數，稍後自行在 <code>.env</code> 設定。</p>
-<p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tty: true</span><br></pre></td></tr></table></figure>
-<p>Docker 為了節省硬體資源，app 執行完就會釋放 container，但處於開發階段，我們需要的是類似 service 跑在背景，隨時可以進入 container 測試 Linux app。</p>
-<p><code>tty: true</code> 將令 Docker 分配一個 TTY (<code>T</code> ele <code>TY</code> pewriter)，綁定到 container 的 <code>stdin</code> 與 <code>stdout</code> 上，將來我們才能透過 Bash 對 container 下指令，由於 <code>tty</code> 在背景持續執行，因此 container 就不會被釋放。</p>
-<p>10 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks: &#10;  - netcore-dev</span><br></pre></td></tr></table></figure>
-<p>使用 <code>networks</code> 設定 container 所要使用的網路名稱。</p>
-<p>由於之前已經建立了 <code>netcore-dev</code> 網路，現在 <code>netcore</code> container 將使用 <code>netcore-dev</code> 網路。</p>
-<p>12 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depends_on:&#10;  - postgres</span><br></pre></td></tr></table></figure>
-<p>使用 <code>depends_on</code> 設定 container 的啟動順序。</p>
-<p>我們希望 <code>postgres</code> container 先啟動後，<code>netcore</code> container 再啟動，如此 .NET Core 才能使用 PostgresSQL。</p>
-<p>15 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postgres:&#10;  image: postgres</span><br></pre></td></tr></table></figure>
-<p>設定 <code>postgres</code> service，此名稱可自行建立。</p>
-<p>使用 <code>image</code> 設定使用 <code>postgres</code> image。</p>
-<p>17 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyPostgres</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 <code>postgres</code> service 的 container 名稱為 <code>MyPostgres</code>。</p>
-<p>18 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - $&#123;POSTGRES_HOST_DIR&#125;/data:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
-<p>使用 <code>volumns</code> 設定 PostgreSQL 所儲存的資料到 Host OS。</p>
-<blockquote>
-<p>我們不希望 PostreSQL 將資料存在 container 內部，如此 PostgreSQL 將來要更新版本時會很麻煩，無法簡單換掉 container 就更新版本，因此特別使用 <code>volumns</code> 指定 Host OS 目錄，如此 PostgreSQL 會將資料存在 Host OS，而不是 container 內</p>
-</blockquote>
-<p>20 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - &#34;5432&#34;</span><br></pre></td></tr></table></figure>
-<p>PostgreSQL 將以 port 5432 對外溝通。</p>
-<blockquote>
-<p>注意這只是對 <code>netcore-dev</code> 網路以 port 5432，若要讓 Host OS 存取，必須進一步靠 <code>ports</code> 設定</p>
-</blockquote>
-<p>22 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>ports</code> 設定 Host OS 與 container 的 port 對應。</p>
-<p>由於每個人 Host OS 所希望的 port 不同，因此設定成 <code>POSTGRES_PORT</code> 變數，稍後自行在 <code>.env</code> 設定。</p>
-<p>24 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">environment:&#10;  - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;  - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;  - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>environment</code> 設定 PostgreSQL 所需的環境變數。</p>
-<ul>
-<li><strong>POSTGRES_DB</strong>： 要使用的 database，container 在建立時，會幫我們自動建立</li>
-<li><strong>POSTGRES_USER</strong>：連進 PostgreSQL 的 <code>user</code></li>
-<li><strong>POSTGRES_PASSWORD</strong>：連進 PostgreSQL 的 <code>password</code></li>
-</ul>
-<p>由於這 3 個變數每個人的需求不同，因此統一使用變數在 <code>.env</code> 設定。</p>
-<p>28 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  - netcore-dev</span><br></pre></td></tr></table></figure>
-<p>使用 <code>networks</code> 設定 container 所要使用的網路名稱。</p>
-<p>由於之前已經建立了 <code>netcore-dev</code> 網路，現在 <code>postgres</code> container 將使用 <code>netcore-dev</code> 網路，如此 <code>netcore</code> 與 <code>postgres</code> 都在相同的 <code>netcore-dev</code> 網路下，可以彼此看到對方。</p>
-<p><img src="/images/docker/postgres-core/post000.png" alt="post000"></p>
-<p><strong>.env</strong></p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NETCORE_HOST_DIR=<span class="value">~/Code/CSharp</span></span></span><br><span class="line"><span class="setting">POSTGRES_HOST_DIR=<span class="value">~/Postgres</span></span></span><br><span class="line"><span class="setting">POSTGRES_DB=<span class="value">eflab</span></span></span><br><span class="line"><span class="setting">POSTGRES_USER=<span class="value">admin</span></span></span><br><span class="line"><span class="setting">POSTGRES_PASSWORD=<span class="value"><span class="number">12345</span></span></span></span><br><span class="line"><span class="setting">POSTGRES_PORT=<span class="value"><span class="number">5432</span></span></span></span><br></pre></td></tr></table></figure>
-<p>所有 Host OS 自行設定的部分，全部放在 <code>.env</code>。</p>
-<ul>
-<li><strong>NETCORE_HOST_DIR</strong> : 設定 Host OS 的 .NET Core 專案所在目錄</li>
-<li><strong>POSTGRES_HOST_DIR</strong> : 設定 PostgreSQL 將資料存到 Host OS 的目錄</li>
-<li><strong>POSTGRES_DB</strong> : 設定 PostgreSQL 所使用的資料庫名稱</li>
-<li><strong>POSTGRES_USER</strong> : 設定 PostgreSQL 連線的 user</li>
-<li><strong>POSTGRES_PASSWORD</strong> : 設定 PostgreSQL 連線的 password</li>
-<li><strong>POSTGRES_PORT</strong> : 設定 PostgreSQL 對應到 Host OS 的 port</li>
-</ul>
-<p><img src="/images/docker/postgres-core/post001.png" alt="post001"></p>
-<h2 id="執行_Docker_Compose">執行 Docker Compose</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/PostgresCore $ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
-<p>進入 <code>docker-compose.yml</code> 所在的目錄，執行 <code>docker-compose up</code> 啟動所有 container。</p>
-<ul>
-<li><strong>-d</strong>：<code>d</code> etatch，表示 <code>docker-compose</code> 啟動後將離開 container 的 process，讓 container 在背景執行</li>
-</ul>
-<p><img src="/images/docker/postgres-core/post002.png" alt="post002"></p>
-<h2 id="連接_PostgreSQL">連接 PostgreSQL</h2><hr>
-<p><img src="/images/docker/postgres-core/post003.png" alt="post003"></p>
-<p>開啟 DataGrip：</p>
-<ol>
-<li>右側選擇 <code>Database</code> tab</li>
-<li>上放按 <code>+</code> 新增連線</li>
-<li>選擇 <code>Data Source -&gt; ProgreSQL</code></li>
-</ol>
-<p><img src="/images/docker/postgres-core/post004.png" alt="post004"></p>
-<ol>
-<li><strong>Name</strong>：設定 connection 連線名稱</li>
-<li><strong>Database</strong>：設定剛剛所建立的 database</li>
-<li><strong>User</strong>：設定剛剛所建立的 user</li>
-<li><strong>Password</strong> : 設定剛剛所建立的 password</li>
-<li>按 <code>Test Connection</code> 測試連線是否成功</li>
-<li>顯示 <code>Successful</code> 確認連線成功</li>
-<li>按 <code>OK</code> 建立連線</li>
-</ol>
-<p><img src="/images/docker/postgres-core/post005.png" alt="post005"></p>
-<ol>
-<li>顯示剛剛所建立的 database</li>
-</ol>
-<h2 id="結束_Docker_Compose">結束 Docker Compose</h2><hr>
-<figure class="highlight smalltalk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="class">PostgresCore</span> <span class="char">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
-<p>進入 <code>docker-compose.yml</code> 所在的目錄，執行 <code>docker-compose down</code> 結束所有 container。</p>
-<p><img src="/images/docker/postgres-core/post006.png" alt="post006"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>透過 Docker，我們可以很輕易在本機建立 .NET Core + PostgreSQL 環境，重點是跑的是 Linux 版本的 PostgreSQL，與 production 的 Linux 版本一致。</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/PostgresCore" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以 Docker 快速建立 PostgreSQL 開發環境]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
-    
-      <category term="PostgreSQL" scheme="https://oomusou.io/tags/PostgreSQL/"/>
     
   </entry>
   
