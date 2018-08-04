@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-04T08:26:12.495Z</updated>
+  <updated>2018-08-04T08:48:07.118Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="https://oomusou.io/linq/foreach/"/>
     <id>https://oomusou.io/linq/foreach/</id>
     <published>2018-08-04T12:23:43.000Z</published>
-    <updated>2018-08-04T08:26:12.495Z</updated>
-    <content type="html"><![CDATA[<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 dataflow 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
+    <updated>2018-08-04T08:48:07.118Z</updated>
+    <content type="html"><![CDATA[<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
 <p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
