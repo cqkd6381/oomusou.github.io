@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-04T10:49:06.538Z</updated>
+  <updated>2018-08-04T11:00:52.704Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/linq/foreach/"/>
     <id>https://oomusou.io/linq/foreach/</id>
     <published>2018-08-04T12:23:43.000Z</published>
-    <updated>2018-08-04T10:49:06.538Z</updated>
+    <updated>2018-08-04T11:00:52.704Z</updated>
     <content type="html"><![CDATA[<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
 <p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
 <a id="more"></a>
@@ -112,8 +112,11 @@
 <p>一開始對 <code>action</code> 進行判斷，若沒有則拋出 exception。</p>
 <p><code>action</code> 也搭配 <code>for</code> 進行，跟我們使用 <code>foreach</code> 類似。</p>
 <blockquote>
-<p>基本上 LINQ 的 <code>ForEach()</code> 跟我們自己寫的 <code>MyForEach()</code> 差不多，但更加嚴謹</p>
+<p>Q : 為什麼 <code>ForEach()</code> 是在 <code>List</code> class ? 而不是以 Extension Method 實現 ?</p>
 </blockquote>
+<p>這的確是 LINQ 設計上的好問題，LINQ 並沒有選擇將 <code>ForEach()</code> 以 Extension Method 對 <code>IEnumerable</code> 實作，而是直接寫在 <code>List</code> class 內。</p>
+<p>這個設計也使得我們要使用 <code>ForEach()</code> 時，一定得 <code>ToList()</code> 成 List 才能使用。</p>
+<p>為了使用上方便，我還是會在自己的 library 為 <code>IEnumerable</code> 加上 <code>ForEach()</code> Extension Method，這樣就不需 <code>ToList()</code> 了。</p>
 <h2 id="使用時機">使用時機</h2><hr>
 <p><code>ForEach()</code> 表面上看起來是 <code>foreach</code> statement 的 syntax sugar，但事實上 <code>ForEach()</code> 在 FP 的意義並非如此。</p>
 <p>FP 將 data 以 Dataflow 與 Pipeline 方式處理，因此提供了眾多 operator，而 operator 則必須搭配 pure function，不能有 Side Effect。但 Side effect 總要有人處理，<code>ForEach()</code> 就是讓你統一處理 Side Effect 之處。</p>
