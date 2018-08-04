@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-04T11:00:52.704Z</updated>
+  <updated>2018-08-04T11:34:25.640Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/linq/foreach/"/>
     <id>https://oomusou.io/linq/foreach/</id>
     <published>2018-08-04T12:23:43.000Z</published>
-    <updated>2018-08-04T11:00:52.704Z</updated>
+    <updated>2018-08-04T11:34:25.640Z</updated>
     <content type="html"><![CDATA[<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
 <p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
 <a id="more"></a>
@@ -128,6 +128,8 @@
 <li>Method Group 讓 FP 寫法會更為精簡，也是 C# 很重要的發明</li>
 <li>FP 的 operator 主要在處理 Dataflow 與 Pipeline，應該使用 pure function，但 <code>ForEach()</code> 是少數讓你處理 Side Effect 的 operator，應該將 side effect 集中在 <code>ForEach()</code> 處理</li>
 </ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/AppSettingsJson" target="_blank" rel="external">GitHub</a> 上找到</p>
 <h2 id="Reference">Reference</h2><hr>
 <p><a href="http://reactivex.io" target="_blank" rel="external">ReactiveX</a>, <a href="http://reactivex.io/learnrx/" target="_blank" rel="external">Functional Programming in JavaScript</a></p>
 ]]></content>
