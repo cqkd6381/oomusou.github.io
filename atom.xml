@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-04T08:48:07.118Z</updated>
+  <updated>2018-08-04T10:49:06.538Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/linq/foreach/"/>
     <id>https://oomusou.io/linq/foreach/</id>
     <published>2018-08-04T12:23:43.000Z</published>
-    <updated>2018-08-04T08:48:07.118Z</updated>
+    <updated>2018-08-04T10:49:06.538Z</updated>
     <content type="html"><![CDATA[<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
 <p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
 <a id="more"></a>
@@ -59,7 +59,7 @@
 <p>他山之石可以攻錯，我們來看看 F# 語法。</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> names = [<span class="string">"Ben"</span>; <span class="string">"Jafar"</span>; <span class="string">"Matt"</span>; <span class="string">"Priya"</span>; <span class="string">"Brian"</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> MyForEach action list = </span><br><span class="line">    <span class="keyword">for</span> iter <span class="keyword">in</span> list <span class="keyword">do</span></span><br><span class="line">        action iter</span><br><span class="line">names </span><br><span class="line">|&gt; MyForEach (printfn <span class="string">"%A "</span>)</span><br></pre></td></tr></table></figure>
 <p><code>names</code> 為 List，<code>myForEach()</code> 為自己實作的 <code>ForEach()</code> Higher Order function，若不懂 F# 語法先略過細節沒關係。</p>
-<p><code>|&gt;</code> 為 pipline，所以可以明顯看出其語意為 <code>names</code> data 以 Dataflow 與 Pipeline 方式傳給 <code>myForEach()</code> 執行 <code>printf()</code>。</p>
+<p><code>|&gt;</code> 為 pipeline，所以可以明顯看出其語意為 <code>names</code> data 以 Dataflow 與 Pipeline 方式傳給 <code>myForEach()</code> 執行 <code>printfn()</code>。</p>
 <p>但 C# 並沒有特別提供 <code>|&gt;</code> 這種 pipeline 符號，而是繼續使用 OOP 的 <code>.</code> 。</p>
 <p><code>.</code> 雖然方便，但心裡要知道，這裡的 <code>.</code> 並不是 OOP 的 method，而是 FP 的 Dataflow 與 Pipeline，只是也使用了 <code>.</code> 為符號，其本質是 F# 的 <code>|&gt;</code>，<code>.</code> 算是 <code>|&gt;</code> 的 syntax sugar。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(<span class="keyword">this</span> List&lt;T&gt; list, Action&lt;T&gt; action)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">    &#123;</span><br><span class="line">        action(iter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
