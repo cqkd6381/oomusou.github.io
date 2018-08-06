@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T08:05:13.587Z</updated>
+  <updated>2018-08-06T08:17:55.231Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T08:05:13.587Z</updated>
+    <updated>2018-08-06T08:17:55.231Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -225,7 +225,7 @@
 <li>C# 從 1.0 就有 Delegate，可以將 function 當成 input 與 output 使用</li>
 <li>C# 3.0 支援 Lambda，讓 Anonymous Function 更容易實現</li>
 <li>C# 3.0 支援 Func、Predicate、Action，讓 Anonyoua Delegate 更為方便</li>
-<li>C# 的 Type Inference 比較弱，必須明確指定 Delegate 或 Func 型別 (不滿意但可接受，希望 C# 持續進步對 Type Inference 持續加油) </li>
+<li>C# 的 Type Inference 比較弱，必須明確指定 Delegate 或 Func 型別 (不滿意但可接受，希望 C# 對 Type Inference 持續加油) </li>
 </ul>
 <p><strong>No State Mutation</strong></p>
 <ul>
