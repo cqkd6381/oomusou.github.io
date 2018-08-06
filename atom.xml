@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T08:58:06.456Z</updated>
+  <updated>2018-08-06T12:24:45.191Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T08:58:06.456Z</updated>
+    <updated>2018-08-06T12:24:45.191Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -90,7 +90,7 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">triple</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; (x * <span class="number">3</span>).ToString();</span><br><span class="line"></span><br><span class="line">            Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(triple)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
 <p>10 行</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">triple</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; (x * <span class="number">3</span>).ToString();</span><br></pre></td></tr></table></figure>
-<p>使用 C# 7 的 Local Function 宣告 <code>Triple()</code> 。</p>
+<p>使用 C# 7 的 Local Function 宣告 <code>triple()</code> 。</p>
 <p>12 行</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Range(<span class="number">1</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
 <p>使用 <code>Range()</code> 建立 <code>IEnumerable&lt;int&gt;</code>，因為有 <code>using static System.Linq.Enumerable;</code></p>
