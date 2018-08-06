@@ -1,0 +1,541 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Functional Programming 簡介 (使用 C#) | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以大家的老朋友 C# 談 FP">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以大家的老朋友 C# 談 FP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Functional Programming 簡介 (使用 C#)">
+<meta property="og:url" content="https://oomusou.io/fp/intro/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以大家的老朋友 C# 談 FP">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-08-06T07:25:37.372Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Functional Programming 簡介 (使用 C#)">
+<meta name="twitter:description" content="以大家的老朋友 C# 談 FP">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Functional Programming 簡介 (使用 C#)</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以大家的老朋友 C# 談 FP			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Introduction"><span class="toc-article-text">Introduction</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Function"><span class="toc-article-text">Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Functial_Programming"><span class="toc-article-text">Functial Programming</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Function_as_Data"><span class="toc-article-text">Function as Data</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#No_State_Mutation"><span class="toc-article-text">No State Mutation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Parallel_Computation"><span class="toc-article-text">Parallel Computation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FP_vs-_OOP"><span class="toc-article-text">FP vs. OOP</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SOLID"><span class="toc-article-text">SOLID</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FP_鹹魚翻身"><span class="toc-article-text">FP 鹹魚翻身</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#C#_適合_FP_嗎_?"><span class="toc-article-text">C# 適合 FP 嗎 ?</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Functional_CSharp"><span class="toc-article-text">Functional CSharp</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#C#_如何實現_Function_?"><span class="toc-article-text">C# 如何實現 Function ?</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 的世界。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>C# 7.2</p>
+<h2 id="Introduction">Introduction</h2><hr>
+<ul>
+<li>FP 是一種 Programming Paradigm，不是 Design Pattern 也不是 Framework，更不是 Language</li>
+<li>是一種以 function 為中心的 <code>思考方式</code> 與 <code>程式風格</code></li>
+<li>有別於目前主流 Imperative、OOP，所以被稱為<code>邪教</code> ? </li>
+</ul>
+<h2 id="Function">Function</h2><hr>
+<p>在討論什麼是 Functional Programming 之前，我們先來定義什麼是 <strong>Function</strong> :</p>
+<p><strong>Mathematical Function</strong></p>
+<p><img src="/images/fp/intro/fp000.svg" alt="fp000"></p>
+<p>在數學裡，function 就是 x 與 <code>y = f(x)</code> 的對應關係。</p>
+<blockquote>
+<p>f(x) 結果只與 x 的輸入有關，不會其他任何東西相關。</p>
+</blockquote>
+<p><img src="/images/fp/intro/fp001.svg" alt="fp001"></p>
+<ul>
+<li><strong>Domain</strong> : 所有的 <code>x</code> 稱為 <code>定義域</code></li>
+<li><strong>Codomain</strong> : 所有 <code>可能</code> 的 <code>f(x)</code> 稱為 <code>對應域</code></li>
+<li><strong>Range</strong> : 所有 <code>實際</code> 的 <code>f(x)</code> 稱為 <code>值域</code></li>
+</ul>
+<blockquote>
+<p>這些都不是什麼高深的數學，在國一的代數我們就會了</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span>(<span class="params"><span class="keyword">int</span> x</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>int</code> : 為 Codomain</li>
+<li><code>int x</code> :  為 Domain</li>
+</ul>
+<p>Pure Function : Codomain 只與 Domain 相關。</p>
+<blockquote>
+<p>Pure Function 為 Mathematical Function 在程式語言的實踐</p>
+</blockquote>
+<p><strong>Programming Function</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> z = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> w = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span>(<span class="params"><span class="keyword">int</span> x</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    t = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + z + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>func()</code> 可以讀取 <code>func()</code> 外面的 <code>z</code>，甚至可以改寫 <code>func()</code> 外部的 <code>w</code>，這就是所謂的 Side Effect。</p>
+<p>因為讀取與寫入 function 的外部變數造成 Side Effect，使得變數改變的 <code>時機</code> 變得很重要，也就是所謂的 Race Condition。</p>
+<blockquote>
+<p>OS 恐龍書花了很多的篇幅都在解決 Race Condition (Lock、Mutex ….)。</p>
+</blockquote>
+<h2 id="Functial_Programming">Functial Programming</h2><hr>
+<blockquote>
+<p>把  function 當成 data 使用，並避免 State Mutation</p>
+</blockquote>
+<ul>
+<li>Function as data (把 function 當成 data 使用)</li>
+<li>No state mutation (不要修改 data，只要修改資料，就需擔心可能 Race Condition)</li>
+</ul>
+<h2 id="Function_as_Data">Function as Data</h2><hr>
+<blockquote>
+<p>比  function 當成 data 使用</p>
+</blockquote>
+<ul>
+<li>能把 function 當 input、把 function 當 return</li>
+<li>能將 function 指定給變數</li>
+<li>能將 function 存進 Collection</li>
+</ul>
+<blockquote>
+<p>以前 data 能怎麼用，function 就怎麼用</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">triple</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; (x * <span class="number">3</span>).ToString();</span><br><span class="line"></span><br><span class="line">            Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(triple)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<p>10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">triple</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; (x * <span class="number">3</span>).ToString();</span><br></pre></td></tr></table></figure>
+<p>使用 C# 7 的 Local Function 宣告 <code>Triple()</code> 。</p>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Range(<span class="number">1</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Range()</code> 建立 <code>IEnumerable&lt;int&gt;</code>，因為有 <code>using static System.Linq.Enumerable;</code></p>
+<blockquote>
+<p><code>using static</code> 在 FP 建議使用，會讓 code 更 functional</p>
+</blockquote>
+<p>13 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.Select(triple)</span><br></pre></td></tr></table></figure>
+<p><code>Select()</code> 就是 FP 的 <code>Map()</code>，為 <code>IEnumerable</code> 的 Extension Method。</p>
+<p>與 <code>Map()</code> 一樣，<code>Select()</code> 並沒有修改原本的 <code>Range(1, 3)</code>，而是 return 新的 IEnumerable。</p>
+<p><code>triple</code> 為 function，但如 data 般傳進 <code>Select()</code>，<code>Select()</code> 也就是所謂的 Higher Order Function。</p>
+<blockquote>
+<p>在 LINQ 的 <code>.</code> ，若使用 Extension Method，則不是 OOP 的 Method，而是 FP 的 Pipeline</p>
+</blockquote>
+<p>14 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.ToList()</span><br><span class="line">.ForEach(WriteLine);</span><br></pre></td></tr></table></figure>
+<p>因為 List 才有 <code>ForEach()</code>，所以要先轉成 List。</p>
+<p>直接使用 <code>WriteLine</code>，因為有 <code>using static System.Console;</code>。</p>
+<h2 id="No_State_Mutation">No State Mutation</h2><hr>
+<blockquote>
+<p>不要修改 data</p>
+</blockquote>
+<p><code>7, 6, 1</code> 只取 <code>奇數</code>，並且 <code>由小到大</code> 排序。</p>
+<p><strong>Imperative</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> original = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>&#125;;</span><br><span class="line">            <span class="keyword">var</span> result = GetOddsByAsc(original);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(iter);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">GetOddsByAsc</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; original</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> original)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (iter % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    result.Add(iter);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            result.Sort();</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
+<p>21 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br></pre></td></tr></table></figure>
+<p>Imperative 典型寫法會先建立一個 <code>result</code> 變數。</p>
+<p>23 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> original)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (iter % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        result.Add(iter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>根據 <code>條件</code> 不斷修改變數。</p>
+<p>31 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result.Sort();</span><br></pre></td></tr></table></figure>
+<p>直接修改 <code>result</code> 資料排序。</p>
+<p><strong>Functional</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> original = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>&#125;;</span><br><span class="line">            <span class="keyword">var</span> result = GetOddsByAsc(original);</span><br><span class="line"></span><br><span class="line">            result.ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">GetOddsByAsc</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; original</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">isOdd</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x % <span class="number">2</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">asc</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> original</span><br><span class="line">                .Where(isOdd)</span><br><span class="line">                .OrderBy(asc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
+<p>22 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> original</span><br><span class="line">    .Where(isOdd)</span><br><span class="line">    .OrderBy(asc);</span><br></pre></td></tr></table></figure>
+<p><code>original</code> 經由 pipeline 方式，先經過 <code>Where()</code> 找出 <code>奇數</code>，最後再以 <code>asc</code> 排序。</p>
+<p>Code 就類似 <code>講話</code>，看不到實作細節，可讀性高。</p>
+<p>不需要建立 <code>result</code> 暫存變數，也沒有修改 <code>original</code> 與 <code>result</code>，從頭到尾都沒有修改 data，這就是所謂的 <code>No State Mutation</code>，而是每次 pipeline 都建立新的 data。</p>
+<blockquote>
+<ul>
+<li>LINQ 的 <code>Where()</code> 就是 FP 的 <code>filter()</code>，</li>
+<li>LINQ 的 <code>OrderBy()</code> 就是 FP 的 <code>sort()</code></li>
+</ul>
+</blockquote>
+<h2 id="Parallel_Computation">Parallel Computation</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> nums = Range(-<span class="number">10000</span>, <span class="number">20001</span>).Reverse().ToList();</span><br><span class="line"><span class="comment">// =&gt; [10000, 9999, ... , -9999, -10000]</span></span><br><span class="line">Action task1 = () =&gt; WriteLine(nums.Sum());</span><br><span class="line">Action task2 = () =&gt; &#123; nums.Sort(); WriteLine(nums.Sum()); &#125;;</span><br><span class="line"></span><br><span class="line">Parallel.Invoke(task1, task2);</span><br><span class="line"><span class="comment">// prints: 92332970</span></span><br><span class="line"><span class="comment">//         0</span></span><br></pre></td></tr></table></figure>
+<p>由於 <code>Sort</code> 會直接去改 <code>nums</code>，造成了 Race Condition。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> nums = Range(-<span class="number">10000</span>, <span class="number">20001</span>).Reverse().ToList();</span><br><span class="line"><span class="comment">// =&gt; [10000, 9999, ... , -9999, -10000]</span></span><br><span class="line">Action task1 = () =&gt; WriteLine(nums.Sum());</span><br><span class="line">Action task2 = () =&gt; WriteLine(nums.OrderBy(x =&gt; x).Sum());</span><br><span class="line"></span><br><span class="line">Parallel.Invoke(task1, task2);</span><br><span class="line"><span class="comment">// prints: 0</span></span><br><span class="line"><span class="comment">//         0</span></span><br></pre></td></tr></table></figure>
+<p><code>task2</code> 並不會去修改 <code>nums</code>，因此不會 Race Condition。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> original = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>&#125;;</span><br><span class="line">            <span class="keyword">var</span> result = GetOddsByAsc(original);</span><br><span class="line"></span><br><span class="line">            result.ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">GetOddsByAsc</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; original</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">asc</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x;</span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">isOdd</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x % <span class="number">2</span> == <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> original</span><br><span class="line">                .AsParallel()</span><br><span class="line">                .Where(isOdd)</span><br><span class="line">                .OrderBy(asc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>22 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> original</span><br><span class="line">    .AsParallel()</span><br><span class="line">    .Where(isOdd)</span><br><span class="line">	.OrderBy(asc);</span><br></pre></td></tr></table></figure>
+<p>只要加上 <code>AsParallel()</code> 之後，完全無痛升級多核心。</p>
+<p>因為 <code>Where(isOdd)</code> 與 <code>OrderBy(asc)</code> 都是 Pure Function，沒有 Side Effect，也就沒有 Race Condition，因此可以放心使用多核心平行運算。</p>
+<blockquote>
+<p>想想原本 Where + OrderBy 的 Imperative + Side Effect 寫法，若要支援多核心，程式碼要改多少 ?</p>
+</blockquote>
+<h2 id="FP_vs-_OOP">FP vs. OOP</h2><hr>
+<p>OOP 是大家習慣的編程方式，FP 究竟有哪些觀念與 OOP 不同呢 ?</p>
+<p><strong>Encapsulation</strong></p>
+<ul>
+<li>OOP : data 與 logic 包在 class 內</li>
+<li>FP : data 與 logic 分家，data 就是 data，logic 就是 function，不使用 class</li>
+</ul>
+<p><strong>State Mutation</strong></p>
+<ul>
+<li>OOP : 繼續使用 Imperative 修改 state</li>
+<li>FP : No State Mutation =&gt; Immutable =&gt; No Side Effect =&gt; No Race Condition =&gt; Pure Function =&gt; Dataflow =&gt; Pipeline (其實都在講同一件事情)</li>
+</ul>
+<blockquote>
+<p>大部分人最難突破的 FP 點在此，這與傳統程式思維差異很大，為什麼不能改 data 呢 ?</p>
+</blockquote>
+<p><strong>Modularity</strong></p>
+<ul>
+<li>OOP : 以 class 為單位</li>
+<li>FP : 以 function 為單元</li>
+</ul>
+<p><strong>Dependency</strong></p>
+<ul>
+<li>OOP : Dependency Injection</li>
+<li>FP : Higher Order Function (Function Injection)</li>
+</ul>
+<p><strong>Loose Coupling</strong></p>
+<ul>
+<li>OOP : Interface</li>
+<li>FP : Function Signature 就是 interface，使用 Function Composition / Function Pipeline</li>
+</ul>
+<h2 id="SOLID">SOLID</h2><hr>
+<p><strong>SRP</strong></p>
+<ul>
+<li>OOP : Class 與 Method 要單一職責</li>
+<li>FP :  Module 與 Function 要單一職責</li>
+</ul>
+<p><strong>OCP</strong></p>
+<ul>
+<li>OOP : Interface，使用 Object Composition</li>
+<li>FP : Function Signature 就是 interface，使用 Function Composition</li>
+</ul>
+<p><strong>LSP</strong></p>
+<ul>
+<li>OOP : 有限度的繼承</li>
+<li>FP : N/A</li>
+</ul>
+<p><strong>ISP</strong></p>
+<ul>
+<li>OOP : Interface 要盡量小</li>
+<li>FP : Interface 小到極致就變成 function</li>
+</ul>
+<p><strong>DIP</strong></p>
+<ul>
+<li>OOP : Dependency Injection</li>
+<li>FP : Higher Order Function</li>
+</ul>
+<blockquote>
+<p>SOLID 原則在 OOP 與 FP 都適用，不過 OOP 與 FP 在實現手法並不一樣，OOP 以 class 實現，FP 以 function 實現</p>
+</blockquote>
+<h2 id="FP_鹹魚翻身">FP 鹹魚翻身</h2><hr>
+<p>FP 其實是比 OOP 更古老的技術，LISP 早在 1958 年就問世，而 Smalltalk 則在 1972 年發表，但因為 FP 基於數學，且強調 No State Mutation，與 CPU 設計理念不合 (CPU 就是要你不斷改暫存器與記憶體)，很多人無法接受而視為 <code>邪教</code>，一直到最近才鹹魚翻身： </p>
+<ol>
+<li>硬體單核心時脈出現瓶頸，CPU 已經無法做出時脈超過 5GHz 以上，因此單執行緒程式速度也面臨瓶頸，但隨著半導體製程進步，單位面積可以塞入更多電晶體，因此 CPU 可以放進更多核心，但 Imperative 寫法依賴 Side Effect，使得多核心很難發揮，但 FP 沒有 Side Effect，很容易多核心平行運算，發揮多核心威力</li>
+<li>Side Effect 寫法很難單元測試，因為不保證每次的結果都ㄧ樣，但 FP 的 Pure Function 很適合單元測試</li>
+<li>OOP 的 Object Compostion 需依賴 Interface，容易造成 interface 滿天飛與 Over Design，但 FP 的 Function Compostion 不需要額外 interface，只要求你使用 Dataflow 思考，並使用 Pure Function 避免 Side Effect 即可</li>
+<li>Reactive Programming 並不適合使用 OOP，但卻異常適合 FP，這使得 FP 找到了 <code>殺手級</code> 應用</li>
+</ol>
+<h2 id="C#_適合_FP_嗎_?">C# 適合 FP 嗎 ?</h2><hr>
+<p>回想 FP 定義 :</p>
+<ol>
+<li>Function as Data</li>
+<li>No State Mutation</li>
+</ol>
+<p><strong>Function as Data</strong></p>
+<ul>
+<li>C# 從 1.0 就有 Delegate，可以將 function 當成 input 與 output 使用</li>
+<li>C# 3.0 支援 Lambda，讓 Anonymous Function 更容易實現</li>
+<li>C# 3.0 支援 Func、Predicate、Action，讓 Anonyoua Delegate 更為方便</li>
+<li>C# 的 Type Inference 比較弱，必須明確指定 Delegate 或 Func 型別 (不滿意但可接受，希望 C# 持續進步對 Type Inference 持續加油) </li>
+</ul>
+<p><strong>No State Mutation</strong></p>
+<ul>
+<li>Primitive Type 只有 <code>string</code> 與 <code>datetime</code> 為 Immutable</li>
+<li>由於 C# 是從 Imperative 與 OOP 起家，任何 data 預設都是 Mutable，而不像 FP 語言預設 data 都是 Immutable，需自己加上 <code>readonly</code></li>
+<li>自訂型別預設是 Mutable</li>
+<li>Collection 預設是 Mutable，但已經提供 Immutable Collection</li>
+</ul>
+<p>所以大體上除了 Type Inference 與 Immutable 支援比較不足外，C# 7 算是個準 FP 語言，C# 亦持續朝更完整的 FP 邁進 :</p>
+<ul>
+<li>Record Type (Immutable 自訂 Type)</li>
+<li>Algebraic Data Type (適合 DDD)</li>
+<li>Pattern Matching</li>
+<li>更強的 Tuple</li>
+</ul>
+<p>C# 8 將會是更成熟的 FP 語言。</p>
+<h2 id="Functional_CSharp">Functional CSharp</h2><p><strong>C# 3 與 LINQ</strong></p>
+<ul>
+<li>LINQ 本質上就是 FP，並不是使用 OOP 技術</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Enumerable</span><br><span class="line">    .Range(<span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">    .Where(i =&gt; i % <span class="number">20</span> == <span class="number">0</span>)</span><br><span class="line">    .OrderBy(i =&gt; -i)</span><br><span class="line">    .Select(i =&gt; $<span class="string">"&#123;i&#125;%"</span>)</span><br></pre></td></tr></table></figure>
+<p><code>Where()</code>、<code>OrderBy()</code>、<code>Select()</code> 都以 function 為參數，且並沒有去修改原本的 <code>Enumerable.Range(1, 100)</code>，完全符合 FP 的基本定義 :</p>
+<ul>
+<li>Function as Data</li>
+<li>No State Mutation</li>
+</ul>
+<p>且 C# 提供了 Lambda，讓我們以更精簡的方式撰寫 Delegate，對於 FP 這種只使用一次的 Anonymous Function 特別有效，這也使得 C# 更適合寫 FP。</p>
+<blockquote>
+<p>不過 C# 社群大都沒發現 LINQ 的 FP 的本質，只有在處理 <code>IEnumerable</code> 與 <code>IQueryable</code> 才會使用 FP，其他 code 又繼續使用 Imperative 與 OOP，並沒有完全發揮 Functional C# 的淺力，也就是 FP 思維其實沒有深入 C# 社群</p>
+</blockquote>
+<p><strong>C# 6、7</strong></p>
+<p>C# 6、7 乍看之下沒有提供實質功能，都是 synta sugar，若以 OOP 角度來看的確如此，但若以 FP 角度，所有的 syntax sugar 都是為了讓 C# 成為更好的 FP 而準備。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Math;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Circle</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Radius &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Circumference =&gt; PI * <span class="number">2</span> * Radius;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Circle</span>(<span class="params"><span class="keyword">double</span> radius</span>) </span>=&gt; Radius = radius;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Area</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">            <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> (<span class="keyword">double</span> Circumference, <span class="keyword">double</span> Area) Stats =&gt; (Circumference, Area);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>Using Static</strong></p>
+<p>第 1 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Math;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Area</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">get</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">		<span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>C# 6 的 <code>using static</code> 讓我們可以直接 <code>PI</code> 或 <code>Pow</code> 使用 <code>Math.PI</code> 與 <code>Math.Pow</code>。</p>
+<blockquote>
+<p>Q : 為什麼 <code>using static</code> 重要 ?</p>
+</blockquote>
+<p>在 OOP，我們必須建立 object instance，然後才能用 method，主要是因為 OOP 的 instance method 會以 Imperative 與 Side Effect 方式使用 data，也就是 field，因此不同的 object instance 就有不同的 field，正就是 OOP 的 Encapsulation : data 與 logic 合一。</p>
+<p>但因為 FP 是 data 與 logic 分家，logic 會以 static method 實現，也沒有 field，因此就不須建立 object instance，因此類似 <code>Math</code> 這種 instance variable 在 FP 就顯得沒有意義且多餘，因為 static method 都是 Pure Function，根本不需要 instance variable。</p>
+<p><strong>Immutable Type</strong></p>
+<p>第 5 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Radius &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Circle</span>(<span class="params"><span class="keyword">double</span> radius</span>) </span>=&gt; Radius = radius;</span><br></pre></td></tr></table></figure>
+<p>C# 目前的缺點就是沒有 <code>直接</code> 支援  Immutable 自訂型別，C# 6 透過宣告 getter-only 的 auto-property，compiler 會自動建立 <code>readonly</code> 的 field，且只能透過 constructor 設定其值，達到 <code>No State Mutation</code> 的要求。</p>
+<p><strong>Expression Body</strong></p>
+<p>第 6 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Circumference =&gt; PI * <span class="number">2</span> * Radius;</span><br></pre></td></tr></table></figure>
+<p>Property 可直接使用 Expression Body 語法。</p>
+<blockquote>
+<p>Q : 為什麼 Expression Body 語法重要 ?</p>
+</blockquote>
+<p>因為 FP 很習慣寫 <code>小 property</code> 與 <code>小 function</code>，最後再靠 Function Composition 與 Function Pipeleine 組合起來，為了這種只有一行的 <code>小 function</code> ，還要加上 <code>{}</code>，除了浪費行數，也不符合 FP 的 Lambda 極簡風。</p>
+<p>C# 6 一開始只有在 Property 與 Method 支援 Expression Body，但 C# 7 可以在 Constructor、Destructor、Getter 與 Setter 全面使用 Expression Body。</p>
+<p><strong>Local Function</strong></p>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">get</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由於 FP 常常需要建立 <code>小 function</code>，最後再 compose 或 pipeline，C# 7 之前只能宣告 <code>Func</code> 型別變數並配合 Lambda，但 <code>Func</code> 寫法可讀性實在不高，這也使的 C# 族群不太願意抽 <code>小 function</code>。</p>
+<p>但 Local Function 的可讀性就很高，也符合一般 function 的 syntax，讓我們更願意抽 <code>小 function</code> 來 compose。</p>
+<p><strong>Better Tuple</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> (<span class="keyword">double</span> Circumference, <span class="keyword">double</span> Area) Stats =&gt; (Circumference, Area);</span><br></pre></td></tr></table></figure>
+<p>為了回傳 Tuple 外，還可以對 element 指定有意義的名字，讓 client 使用 Tuple 時有 Intellisense 支援。</p>
+<blockquote>
+<p>Q : 為什麼 Tuple 在 FP 重要 ?</p>
+</blockquote>
+<p>因為 FP 會在 Function Composition 與 Function Pipeline 時，拆很多小 function 實現 Dataflow，而這些 <code>小 function</code> 在傳遞資料時，就會使用 Tuple，但為這種只使用一次的 data 定義自訂型別，又會造成自訂型別滿天飛的問題，但若使用 Tuple 就可避免此問題。</p>
+<h2 id="C#_如何實現_Function_?">C# 如何實現 Function ?</h2><hr>
+<p>這裡的 Function 是所謂的 Mathematical Function，也就是 Pure Function。</p>
+<p><strong>Static Method</strong></p>
+<p>由於 Pure Function 要求 output 只與 input 有關，也就是 Pure Function 沒有 Side Effect，因此會直接使用 Static Method，如 <code>System.Math</code> 一樣，且還可搭配 C# 6 的 <code>using static</code>，讓程式碼更精簡。</p>
+<p><strong>Delegate</strong></p>
+<p>FP 要求 <code>Function as Data</code>，也就是 Pure Function 會以參數方式傳進其他 function，C# 1.0 function 包成 Delegate 後，以 Delegate 形式傳進其它 function。</p>
+<p>Delegate 要求兩個步驟 :</p>
+<ul>
+<li>宣告 Delegate 型別</li>
+<li>實作符合 Delegate 型別的 function</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">System</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">int</span> Comparison&lt;T&gt; (T x, Y x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Delegate</code> 宣告 <code>Comparison</code> 型別。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = </span><br><span class="line">    Enumerable</span><br><span class="line">		.Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">    	.Select(i =&gt; i * <span class="number">3</span>)</span><br><span class="line">    	.ToList();</span><br><span class="line"></span><br><span class="line">Comparison&lt;<span class="keyword">int</span>&gt; alphabetically = </span><br><span class="line">    (<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString());</span><br><span class="line"></span><br><span class="line">list.Sort(alphabetically);</span><br></pre></td></tr></table></figure>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Comparison&lt;<span class="keyword">int</span>&gt; alphabetically = </span><br><span class="line">    (<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString());</span><br></pre></td></tr></table></figure>
+<p>根據 <code>Comparison</code> delegate 型別定義 <code>alphabetically</code> 變數，以 Lambda 描述 function。</p>
+<blockquote>
+<p>若實作不符合 Delegate 定義，compiler 就會報錯，所以 Delegate 也被稱為 Type-Safe Function Pointer。</p>
+</blockquote>
+<p>第 10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.Sort(alphabetically);</span><br></pre></td></tr></table></figure>
+<p>將 <code>alphabetically</code> delegate 傳入 <code>List.Sort()</code>。</p>
+<p><strong>Func &amp; Action</strong></p>
+<p>Delegate 讓我們實現 <code>Function as Data</code>，但對於只使用一次的 Anonymous Delegate 型別，到處宣告 Delegate 就類似 interface 一樣，造成檔案爆炸。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">delegate</span> Greeting <span class="title">Greeter</span>(<span class="params">Person p</span>)</span>;</span><br></pre></td></tr></table></figure>
+<p>其實相當於</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;Person, Greeting&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>.NET Framework 3 之後，以 Func 與 Action 取代 Custom Delegate</p>
+</blockquote>
+<p><strong>Lambda</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = </span><br><span class="line">    Enumerable</span><br><span class="line">		.Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">    	.Select(i =&gt; i * <span class="number">3</span>)</span><br><span class="line">    	.ToList();</span><br><span class="line"></span><br><span class="line">list.Sort((<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString();</span><br></pre></td></tr></table></figure>
+<p>不用再宣告 <code>Comparison&lt;T&gt;</code> Delegate，也不用建立 <code>Comparison&lt;T&gt;</code> 的實作，直接以 Lambda 傳入 <code>List.Sort()</code>。</p>
+<blockquote>
+<p>寫 Lambda 時，不用寫型別，compiler 會自動使用 Type Inference 導出參數型別，且會將 Lambda 轉型成 Delegate 型別，判斷是不是符合 <code>List.Sort()</code> 要求</p>
+<p>因此 Lamba 雖然寫起來像 <code>弱型別</code>，但絲毫不會影響原本 Delegate 強型別的特性，這就是 Type Inference 強大之處</p>
+</blockquote>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> days = Enum.GetValues(<span class="keyword">typeof</span>(DayOfWeek)).Cast&lt;DayOfWeek&gt;();</span><br><span class="line"><span class="comment">// =&gt; [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]</span></span><br><span class="line"></span><br><span class="line"><span class="function">IEnumerable&lt;DayOfWeek&gt; <span class="title">daysStartingWith</span>(<span class="params"><span class="keyword">string</span> pattern</span>)</span><br><span class="line">	</span>=&gt; days.Where(d =&gt; d.ToString().StartsWith(pattern));</span><br><span class="line"></span><br><span class="line">daysStartingWith(<span class="string">"S"</span>)</span><br><span class="line"><span class="comment">// =&gt; [Sunday, Saturday]</span></span><br></pre></td></tr></table></figure>
+<p>不只 JavaScript 有 Closure，事實上 C# 也是有 Closure。</p>
+<p> <code>daysStartingWith()</code> 會回傳 function，但傳入的參數 <code>S</code> 會以 Closure 方式存在於回傳的 function。</p>
+<p><strong>Dictionary</strong></p>
+<p>既然 Pure Function 只與 input 有關，我們甚至可以使用 <code>查表法</code> 的方式實作 function :</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> frenchFor = <span class="keyword">new</span> Dictionary&lt;<span class="keyword">bool</span>, <span class="keyword">string</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">true</span>]  = <span class="string">"Vari"</span>,</span><br><span class="line">    [<span class="keyword">false</span>] = <span class="string">"Faux"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">frenchFor[<span class="keyword">true</span>];</span><br></pre></td></tr></table></figure>
+<p>C# 6 提供了新的 Dictionary 初始化語法，甚至可以使用 <code>true</code> 與 <code>false</code> 當 key。</p>
+<blockquote>
+<p>實務上有兩種需求很適合使用 Dictionary</p>
+<ol>
+<li>沒有邏輯可言的 data 轉換</li>
+<li>花時間的運算</li>
+</ol>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>FP 的 function 指的是 Mathematical Function，也就是 Pure Function</li>
+<li>FP 屬於 Paradigm 層次，不是 framework 也不是程式語言，只要語言能支援 First-Class Function，就能以 FP 風格實現，若能支援 Immutable 與 Type Inference 更佳</li>
+<li>C# 目前已經支援大部分的 FP 功能，隨著 C# 8 的發佈，FP 支援將更為完整</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/linq/foreach/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-08-06 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/C/">C#<span>10</span></a></li> <li><a href="/tags/FP/">FP<span>3</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
