@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T08:41:36.936Z</updated>
+  <updated>2018-08-06T08:50:43.384Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T08:41:36.936Z</updated>
+    <updated>2018-08-06T08:50:43.384Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -329,7 +329,7 @@
 <p>.NET Framework 3 之後，以 Func 與 Action 取代 Custom Delegate</p>
 </blockquote>
 <p><strong>Lambda</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = </span><br><span class="line">    Enumerable</span><br><span class="line">		.Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">    	.Select(i =&gt; i * <span class="number">3</span>)</span><br><span class="line">    	.ToList();</span><br><span class="line"></span><br><span class="line">list.Sort((<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString();</span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = </span><br><span class="line">    Enumerable</span><br><span class="line">        .Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">        .Select(i =&gt; i * <span class="number">3</span>)</span><br><span class="line">        .ToList();</span><br><span class="line"></span><br><span class="line">list.Sort((<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString();</span><br></pre></td></tr></table></figure>
 <p>不用再宣告 <code>Comparison&lt;T&gt;</code> Delegate，也不用建立 <code>Comparison&lt;T&gt;</code> 的實作，直接以 Lambda 傳入 <code>List.Sort()</code>。</p>
 <blockquote>
 <p>寫 Lambda 時，不用寫型別，compiler 會自動使用 Type Inference 導出參數型別，且會將 Lambda 轉型成 Delegate 型別，判斷是不是符合 <code>List.Sort()</code> 要求</p>
