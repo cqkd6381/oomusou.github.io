@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T08:17:55.231Z</updated>
+  <updated>2018-08-06T08:24:32.104Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T08:17:55.231Z</updated>
+    <updated>2018-08-06T08:24:32.104Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -57,7 +57,7 @@
 <p>Pure Function 就是 Mathematical Function 在程式語言的實踐</p>
 </blockquote>
 <p><strong>Programming Function</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> z = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> w = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span>(<span class="params"><span class="keyword">int</span> x</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    t = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + z + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> z = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> w = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span>(<span class="params"><span class="keyword">int</span> x</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    w = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + z + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>func()</code> 可以讀取 <code>func()</code> 外面的 <code>z</code>，甚至可以改寫 <code>func()</code> 外部的 <code>w</code>，這就是所謂的 Side Effect。</p>
 <p>因為讀取與寫入 function 的外部變數造成 Side Effect，使得變數改變的 <code>時機</code> 變得很重要，也就是所謂的 Race Condition。</p>
 <blockquote>
