@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T07:25:37.372Z</updated>
+  <updated>2018-08-06T07:44:21.522Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T07:25:37.372Z</updated>
+    <updated>2018-08-06T07:44:21.522Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 的世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -264,7 +264,7 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Math;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Area</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">get</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">		<span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>C# 6 的 <code>using static</code> 讓我們可以直接 <code>PI</code> 或 <code>Pow</code> 使用 <code>Math.PI</code> 與 <code>Math.Pow</code>。</p>
 <blockquote>
-<p>Q : 為什麼 <code>using static</code> 重要 ?</p>
+<p>Q : 為什麼 <code>using static</code> 對 FP 重要 ?</p>
 </blockquote>
 <p>在 OOP，我們必須建立 object instance，然後才能用 method，主要是因為 OOP 的 instance method 會以 Imperative 與 Side Effect 方式使用 data，也就是 field，因此不同的 object instance 就有不同的 field，正就是 OOP 的 Encapsulation : data 與 logic 合一。</p>
 <p>但因為 FP 是 data 與 logic 分家，logic 會以 static method 實現，也沒有 field，因此就不須建立 object instance，因此類似 <code>Math</code> 這種 instance variable 在 FP 就顯得沒有意義且多餘，因為 static method 都是 Pure Function，根本不需要 instance variable。</p>
@@ -277,20 +277,24 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Circumference =&gt; PI * <span class="number">2</span> * Radius;</span><br></pre></td></tr></table></figure>
 <p>Property 可直接使用 Expression Body 語法。</p>
 <blockquote>
-<p>Q : 為什麼 Expression Body 語法重要 ?</p>
+<p>Q : 為什麼 Expression Body 對 FP 重要 ?</p>
 </blockquote>
 <p>因為 FP 很習慣寫 <code>小 property</code> 與 <code>小 function</code>，最後再靠 Function Composition 與 Function Pipeleine 組合起來，為了這種只有一行的 <code>小 function</code> ，還要加上 <code>{}</code>，除了浪費行數，也不符合 FP 的 Lambda 極簡風。</p>
 <p>C# 6 一開始只有在 Property 與 Method 支援 Expression Body，但 C# 7 可以在 Constructor、Destructor、Getter 與 Setter 全面使用 Expression Body。</p>
 <p><strong>Local Function</strong></p>
 <p>12 行</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">get</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Local Function 使我們在 Method 內可直接建立 function。</p>
+<blockquote>
+<p>Q : 為什麼 Local Function 對 FP 重要 ?</p>
+</blockquote>
 <p>由於 FP 常常需要建立 <code>小 function</code>，最後再 compose 或 pipeline，C# 7 之前只能宣告 <code>Func</code> 型別變數並配合 Lambda，但 <code>Func</code> 寫法可讀性實在不高，這也使的 C# 族群不太願意抽 <code>小 function</code>。</p>
 <p>但 Local Function 的可讀性就很高，也符合一般 function 的 syntax，讓我們更願意抽 <code>小 function</code> 來 compose。</p>
 <p><strong>Better Tuple</strong></p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> (<span class="keyword">double</span> Circumference, <span class="keyword">double</span> Area) Stats =&gt; (Circumference, Area);</span><br></pre></td></tr></table></figure>
 <p>為了回傳 Tuple 外，還可以對 element 指定有意義的名字，讓 client 使用 Tuple 時有 Intellisense 支援。</p>
 <blockquote>
-<p>Q : 為什麼 Tuple 在 FP 重要 ?</p>
+<p>Q : 為什麼 Tuple 對 FP 重要 ?</p>
 </blockquote>
 <p>因為 FP 會在 Function Composition 與 Function Pipeline 時，拆很多小 function 實現 Dataflow，而這些 <code>小 function</code> 在傳遞資料時，就會使用 Tuple，但為這種只使用一次的 data 定義自訂型別，又會造成自訂型別滿天飛的問題，但若使用 Tuple 就可避免此問題。</p>
 <h2 id="C#_如何實現_Function_?">C# 如何實現 Function ?</h2><hr>
@@ -352,7 +356,7 @@
 <li>C# 目前已經支援大部分的 FP 功能，隨著 C# 8 的發佈，FP 支援將更為完整</li>
 </ul>
 <h2 id="Reference">Reference</h2><hr>
-<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
+<p><a href="https://www.mathsisfun.com" target="_blank" rel="external">Math is Fun</a>, <a href="https://www.mathsisfun.com/sets/domain-range-codomain.html" target="_blank" rel="external">Domain, Range and Codomain</a><br>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[以大家的老朋友 C# 談 FP]]>
