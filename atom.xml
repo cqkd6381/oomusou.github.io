@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T08:50:43.384Z</updated>
+  <updated>2018-08-06T08:57:07.091Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T08:50:43.384Z</updated>
+    <updated>2018-08-06T08:57:07.091Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -30,6 +30,10 @@
 <li>是一種以 function 為中心的 <code>思考方式</code> 與 <code>程式風格</code></li>
 <li>有別於目前主流 Imperative、OOP，所以被稱為<code>邪教</code> ? </li>
 </ul>
+<blockquote>
+<p>Imperative</p>
+<p>以 command 或 statement 方式，一行一行的執行程式</p>
+</blockquote>
 <h2 id="Function">Function</h2><hr>
 <p>在討論什麼是 Functional Programming 之前，我們先來定義什麼是 <strong>Function</strong> :</p>
 <p><strong>Mathematical Function</strong></p>
