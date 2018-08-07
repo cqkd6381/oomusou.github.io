@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-06T12:24:45.191Z</updated>
+  <updated>2018-08-07T09:32:27.607Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-06T12:24:45.191Z</updated>
+    <updated>2018-08-07T09:32:27.607Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -148,9 +148,6 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> original</span><br><span class="line">    .AsParallel()</span><br><span class="line">    .Where(isOdd)</span><br><span class="line">    .OrderBy(asc);</span><br></pre></td></tr></table></figure>
 <p>只要加上 <code>AsParallel()</code> 之後，完全無痛升級多核心。</p>
 <p>因為 <code>Where(isOdd)</code> 與 <code>OrderBy(asc)</code> 都是 Pure Function，沒有 Side Effect，也就沒有 Race Condition，因此可以放心使用多核心平行運算。</p>
-<blockquote>
-<p>想想原本 Where + OrderBy 的 Imperative + Side Effect 寫法，若要支援多核心，程式碼要改多少 ?</p>
-</blockquote>
 <h2 id="FP_vs-_OOP">FP vs. OOP</h2><hr>
 <p>OOP 是大家習慣的編程方式，FP 究竟有哪些觀念與 OOP 不同呢 ?</p>
 <p><strong>Encapsulation</strong></p>
