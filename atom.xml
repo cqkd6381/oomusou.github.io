@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-07T09:32:27.607Z</updated>
+  <updated>2018-08-08T04:17:02.566Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-07T09:32:27.607Z</updated>
+    <updated>2018-08-08T04:17:02.566Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -243,7 +243,7 @@
 <li>更強的 Tuple</li>
 </ul>
 <p>C# 8 將會是更成熟的 FP 語言。</p>
-<h2 id="Functional_CSharp">Functional CSharp</h2><p><strong>C# 3 與 LINQ</strong></p>
+<h2 id="C#_對_FP_支援">C# 對 FP 支援</h2><p><strong>C# 3 與 LINQ</strong></p>
 <ul>
 <li>LINQ 本質上就是 FP，並不是使用 OOP 技術</li>
 </ul>
@@ -258,7 +258,7 @@
 <p>不過 C# 社群大都沒發現 LINQ 的 FP 的本質，只有在處理 <code>IEnumerable</code> 與 <code>IQueryable</code> 才會使用 FP，其他 code 又繼續使用 Imperative 與 OOP，並沒有完全發揮 Functional C# 的潛力，也就是 FP 思維其實沒有深入 C# 社群</p>
 </blockquote>
 <p><strong>C# 6、7</strong></p>
-<p>C# 6、7 乍看之下沒有提供實質功能，都是 synta sugar，若以 OOP 角度來看的確如此，但若以 FP 角度，所有的 syntax sugar 都是為了讓 C# 成為更好的 FP 而準備。</p>
+<p>C# 6、7 乍看之下沒有提供實質功能，都是 syntax sugar，若以 OOP 角度來看的確如此，但若以 FP 角度，所有的 syntax sugar 都是為了讓 C# 成為更好的 FP 而準備。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Math;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Circle</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Radius &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Circumference =&gt; PI * <span class="number">2</span> * Radius;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Circle</span>(<span class="params"><span class="keyword">double</span> radius</span>) </span>=&gt; Radius = radius;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Area</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">            <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> (<span class="keyword">double</span> Circumference, <span class="keyword">double</span> Area) Stats =&gt; (Circumference, Area);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>Using Static</strong></p>
 <p>第 1 行</p>
