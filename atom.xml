@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-08T04:17:02.566Z</updated>
+  <updated>2018-08-11T07:28:51.763Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,81 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Vue CLI 3 Hello World]]></title>
+    <link href="https://oomusou.io/vue/vuecli/hello-world/"/>
+    <id>https://oomusou.io/vue/vuecli/hello-world/</id>
+    <published>2018-08-11T12:23:43.000Z</published>
+    <updated>2018-08-11T07:28:51.763Z</updated>
+    <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
+<p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue.js 2.5.17<br>Vue CLI 3.0.0</p>
+<h2 id="Node-js">Node.js</h2><hr>
+<p>現代前端都基於 Node.js 生態系，Vue 也不例外，首先必須安裝 Node.js。</p>
+<p>Vue CLI 3 官網推薦的版本是 Node.js 8.11.0 以上。</p>
+<blockquote>
+<p>Node.js 版本進步很快，又不像 .NET Core 可以同時並存多個版本，比較不建議將單一 Node.js 版本安裝在系統，而是另外使用 Node.js 版本管理工具作為抽象層，將來方便管理 Node.js。</p>
+<ul>
+<li>Mac / Linux : <a href="https://github.com/creationix/nvm" target="_blank" rel="external">nvm</a></li>
+<li>Windows : <a href="https://github.com/coreybutler/nvm-windows" target="_blank" rel="external">nvm-windows</a></li>
+</ul>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nvm install <span class="number">8.11</span><span class="number">.3</span></span><br></pre></td></tr></table></figure>
+<p>使用 nvm 安裝 Node.js 指定版本。</p>
+<p><img src="/images/vue/vuecli/hello-world/vuecli000.png" alt="vuecli000"></p>
+<h2 id="Yarn">Yarn</h2><hr>
+<p>Node.js 內建 NPM 套件管理工具，但 NPM 的演算法實在不優，速度很慢，Facebook 另外提出了 Yarn 管理前端套件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g yarn</span><br></pre></td></tr></table></figure>
+<p>使用 NPM 以 <code>g</code> lobal 方式安裝 Yarn。</p>
+<p><img src="/images/vue/vuecli/hello-world/vuecli001.png" alt="vuecli001"></p>
+<p>將來安裝前端套件，將以 Yarn 取代 NPM。</p>
+<h2 id="Vue_CLI">Vue CLI</h2><hr>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="built_in">global</span> <span class="keyword">add</span> @vue/<span class="keyword">cli</span></span><br></pre></td></tr></table></figure>
+<p>使用 Yarn 以 <code>g</code> lobal 方式安裝 Vue CLI。</p>
+<p><img src="/images/vue/vuecli/hello-world/vuecli002.png" alt="vuecli002"></p>
+<h2 id="建立_Project">建立 Project</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/vuecli/hello-world/vuecli003.png" alt="vuecli003"></p>
+<p><img src="/images/vue/vuecli/hello-world/vuecli004.png" alt="vuecli004"></p>
+<ol>
+<li>選擇 project 類型，先按 ↩ 選擇預設值即可</li>
+</ol>
+<p><img src="/images/vue/vuecli/hello-world/vuecli005.png" alt="vuecli005"></p>
+<p>開始建立專案。</p>
+<h2 id="執行_Vue">執行 Vue</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd hello-world</span><br><span class="line">hello-world <span class="variable">$ </span>yarn serve</span><br></pre></td></tr></table></figure>
+<p>使用 <code>yarn serve</code> 執行 Vue。</p>
+<p><img src="/images/vue/vuecli/hello-world/vuecli006.png" alt="vuecli006"></p>
+<ol>
+<li>進入 <code>hello-world</code> 目錄</li>
+<li>輸入 <code>yarn serve</code> 執行 Vue</li>
+</ol>
+<p><img src="/images/vue/vuecli/hello-world/vuecli007.png" alt="vuecli007"></p>
+<ol>
+<li>Vue 啟動在 <code>http://localhost:8080</code></li>
+</ol>
+<p><img src="/images/vue/vuecli/hello-world/vuecli008.png" alt="vuecli008"></p>
+<p>Vue 順利執行在 <code>localhost:8080</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Vue CLI 3 讓我們類似 Angular CLI 快速的建立專案，也將相關的設定 tooling 都準備好，大幅降低現代前端的進入門檻</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 Vue CLI 3 快速建立 Project]]>
+    
+    </summary>
+    
+      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
+    
+      <category term="Vue CLI" scheme="https://oomusou.io/tags/Vue-CLI/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Functional Programming 簡介 (使用 C#)]]></title>
@@ -1198,52 +1273,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="https://oomusou.io/rider/vim/"/>
-    <id>https://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="https://oomusou.io/rider/extract-local-function/"/>
     <id>https://oomusou.io/rider/extract-local-function/</id>
@@ -1320,6 +1349,52 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
     
   </entry>
   
@@ -2288,97 +2363,6 @@
       <category term="CLI" scheme="https://oomusou.io/tags/CLI/"/>
     
       <category term="Typora" scheme="https://oomusou.io/tags/Typora/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何架設企業內部的 NuGet Server ?]]></title>
-    <link href="https://oomusou.io/netcore/nuget/nuget-server/"/>
-    <id>https://oomusou.io/netcore/nuget/nuget-server/</id>
-    <published>2018-06-07T12:23:43.000Z</published>
-    <updated>2018-06-07T10:09:01.388Z</updated>
-    <content type="html"><![CDATA[<p>.NET Core 目前仍延續 .NET Framework 使用 NuGet 為 package，除了使用公用的 NuGet server 外，企業也需要自己內部使用 NuGet server。</p>
-<p>NuGet Foundation 提供了 <code>NuGet.Server</code> 免費使用，但目前只有 .NET Framework 版本，因此還是只能安裝在 Windows Server 上。<br><a id="more"></a></p>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>Parallel Desktop 13 for Mac Pro Edition 13.3.1 (43365)<br>Windows 10 Pro 1803 17134.81<br>Visual Studio Enterprise 2017 15.7.3<br>NuGet.Server 3.1.2<br>.NET Framework 4.6.1<br>.NET Core 2.1</p>
-<h2 id="建立_NuGet_Server">建立 NuGet Server</h2><hr>
-<p>NuGet.Server 已經被封裝的 NuGet package，只要建立 ASP.NET MVC Application，並且加入 <code>NuGet.Server</code> package，不用寫任何一行 code，編譯後就是可用的 NuGet server。</p>
-<h2 id="建立_ASP-NET_Web_Application">建立 ASP.NET Web Application</h2><hr>
-<p><img src="/images/netcore/nuget/nuget-server/nuget000.png" alt="nuget000"></p>
-<ol>
-<li>選擇 <code>Web</code></li>
-<li>選擇 <code>ASP.NET Web Application</code> (不是 ASP.NET Core)</li>
-<li><strong>Name</strong>：輸入 project 名稱</li>
-<li><strong>Framework</strong>：注意是 <code>.NET Framework 4.6</code>，不是 .NET Core</li>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/nuget/nuget-server/nuget001.png" alt="nuget001"></p>
-<ol>
-<li>選擇 <code>Empty</code> ，其餘什麼都不用勾選</li>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<h2 id="安裝_NuGet-Server_Package">安裝 NuGet.Server Package</h2><hr>
-<p><img src="/images/netcore/nuget/nuget-server/nuget002.png" alt="nuget002"></p>
-<p><strong><em>Tools -&gt; NuGet Package Manager -&gt; Manage NuGet Package for Solution</em></strong></p>
-<p><img src="/images/netcore/nuget/nuget-server/nuget003.png" alt="nuget003"></p>
-<ol>
-<li>輸入 <code>NuGet.Server</code></li>
-<li>選擇 <code>NuGet.Server</code></li>
-<li>勾選 <code>NuGetServer</code> project</li>
-<li>按 <code>Install</code> 開始安裝 package</li>
-</ol>
-<p><img src="/images/netcore/nuget/nuget-server/nuget004.png" alt="nuget004"></p>
-<ol>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/nuget/nuget-server/nuget005.png" alt="nuget005"></p>
-<ol>
-<li>按 <code>I Accept</code> 繼續</li>
-</ol>
-<p><img src="/images/netcore/nuget/nuget-server/nuget006.png" alt="nuget006"></p>
-<ol>
-<li><code>NuGet.Server</code> package 安裝完成</li>
-</ol>
-<h2 id="編輯_Web-config">編輯 Web.config</h2><hr>
-<p><img src="/images/netcore/nuget/nuget-server/nuget007.png" alt="nuget007"></p>
-<ol>
-<li>將 18 行的 <code>&lt;compilation debug=&quot;true&quot; targetFramework=&quot;4.6&quot; /&gt;</code> 刪除，這算是 bug，重複兩個相同的 <code>targetFramework</code> 會無法執行</li>
-</ol>
-<h2 id="設定_API_Key">設定 API Key</h2><hr>
-<p><img src="/images/netcore/nuget/nuget-server/nuget009.png" alt="nuget009"></p>
-<ol>
-<li>當使用 <code>dotnet nuget push</code> 上傳時，會需要指定 API Key，可在 <code>Web.config</code> 內設定。</li>
-</ol>
-<h2 id="測試_NuGet_Server">測試 NuGet Server</h2><hr>
-<p><img src="/images/netcore/nuget/nuget-server/nuget008.png" alt="nuget008"></p>
-<ol>
-<li>按熱鍵 <code>Alt + Shift + R</code> Start Without Debug，此時會啟動 IIS Express 執行</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet nuget push MyClassLib<span class="number">.1</span><span class="number">.0</span><span class="number">.0</span>.nupkg -k <span class="number">12345</span> -s http:<span class="comment">//localhost:49771/nuget</span></span><br></pre></td></tr></table></figure>
-<p>使用 .NET Core CLI 的 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到 NuGet server。</p>
-<ul>
-<li><strong>-k</strong> : 指定 API Key</li>
-<li><strong>-s</strong> : 指定 NuGet server 網址</li>
-</ul>
-<p><img src="/images/netcore/nuget/nuget-server/nuget010.png" alt="nuget010"></p>
-<p>目前為止，<code>NuGet.Server</code> 已經正常啟動，也可接受 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到 NuGet server，但 IIS Express 會動態選擇 port，只適合開發測試用，最後還是得將 NuGet.Server 安裝到 IIS 上。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>目前 NuGet.Server 還沒有 .NET Core 版本，這也意味著若使用 NuGet.Server，只能搭配 .NET Framework，也就是只能用於 Windows Server，還無法跨平台裝在 Linux 上</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://poychang.github.io" target="_blank" rel="external">Poy Chang</a>, <a href="https://poychang.github.io" target="_blank" rel="external">架設私有的 NuGet 伺服器</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[可惜目前只有 .NET Framework 版本]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term=".NET Framework" scheme="https://oomusou.io/tags/NET-Framework/"/>
-    
-      <category term="NuGet" scheme="https://oomusou.io/tags/NuGet/"/>
     
   </entry>
   
