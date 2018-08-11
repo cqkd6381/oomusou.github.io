@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-11T07:28:51.763Z</updated>
+  <updated>2018-08-11T07:34:34.284Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/vue/vuecli/hello-world/"/>
     <id>https://oomusou.io/vue/vuecli/hello-world/</id>
     <published>2018-08-11T12:23:43.000Z</published>
-    <updated>2018-08-11T07:28:51.763Z</updated>
+    <updated>2018-08-11T07:34:34.284Z</updated>
     <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
 <p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
 <a id="more"></a>
@@ -73,7 +73,7 @@
 <p>Vue 順利執行在 <code>localhost:8080</code>。</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>Vue CLI 3 讓我們類似 Angular CLI 快速的建立專案，也將相關的設定 tooling 都準備好，大幅降低現代前端的進入門檻</li>
+<li>Vue CLI 3 讓我們類似 Angular CLI 快速建立專案，也將相關的設定 tooling 都準備好，大幅降低現代前端的進入門檻</li>
 </ul>
 <h2 id="Reference">Reference</h2><hr>
 <p><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
