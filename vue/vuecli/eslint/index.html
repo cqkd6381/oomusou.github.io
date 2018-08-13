@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 Vue 搭配 ESLint + Airbnb Style Guide ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 ESLint 與 Airbnb 為 Vue 做更嚴的檢查">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 ESLint 與 Airbnb 為 Vue 做更嚴的檢查">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 Vue 搭配 ESLint + Airbnb Style Guide ?">
+<meta property="og:url" content="https://oomusou.io/vue/vuecli/eslint/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 ESLint 與 Airbnb 為 Vue 做更嚴的檢查">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-08-13T07:47:12.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 Vue 搭配 ESLint + Airbnb Style Guide ?">
+<meta name="twitter:description" content="使用 ESLint 與 Airbnb 為 Vue 做更嚴的檢查">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 Vue 搭配 ESLint + Airbnb Style Guide ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 ESLint 與 Airbnb 為 Vue 做更嚴的檢查			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Project"><span class="toc-article-text">建立 Project</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#選擇_Feature"><span class="toc-article-text">選擇 Feature</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#選擇_Babel_與_Linter"><span class="toc-article-text">選擇 Babel 與 Linter</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#存檔時執行_ESLint"><span class="toc-article-text">存檔時執行 ESLint</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Config_存檔方式"><span class="toc-article-text">Config 存檔方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將設定存成預設值"><span class="toc-article-text">將設定存成預設值</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#選擇套件管理工具"><span class="toc-article-text">選擇套件管理工具</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#WebStorm"><span class="toc-article-text">WebStorm</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Vue CLI 3 已經整合 ESLint 與著名的 Airbnb JavaScript Style Guide，只要跟著 Vue CLI 3 的 Wizard，我們也能輕易地將 ESLint 與 Airbnb 整進 Vue 專案。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue.js 2.5.17<br>Vue CLI 3.0.0<br>WebStorm 2018.2.1</p>
+<h2 id="建立_Project">建立 Project</h2><hr>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/vuecli/eslint/eslint000.png" alt="eslint000"></p>
+<h2 id="選擇_Feature">選擇 Feature</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint001.png" alt="eslint001"></p>
+<ol>
+<li>不選擇 <code>babel, eslint</code>，選擇 <code>Manually select features</code></li>
+</ol>
+<h2 id="選擇_Babel_與_Linter">選擇 Babel 與 Linter</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint002.png" alt="eslint002"></p>
+<ol>
+<li>選擇 <code>Babel</code></li>
+<li>選擇 <code>Linter / Formatter</code></li>
+</ol>
+<p><img src="/images/vue/vuecli/eslint/eslint003.png" alt="eslint003"></p>
+<ol>
+<li>選擇 <code>ESLint + Airbnb config</code></li>
+</ol>
+<h2 id="存檔時執行_ESLint">存檔時執行 ESLint</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint004.png" alt="eslint004"></p>
+<ol>
+<li>選擇 <code>Lint on save</code></li>
+</ol>
+<h2 id="Config_存檔方式">Config 存檔方式</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint005.png" alt="eslint005"></p>
+<ol>
+<li>選擇 <code>In dedicated config files</code>，也就是設定會單獨在 <code>.eslintrc.js</code>，而不是存到 <code>package.json</code> 內</li>
+</ol>
+<h2 id="將設定存成預設值">將設定存成預設值</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint006.png" alt="eslint006"></p>
+<ol>
+<li>選擇 <code>Y</code> 將 ESLint + Airbnb 存成預設值</li>
+<li>將預設值存成 <code>.vuerc</code></li>
+</ol>
+<blockquote>
+<p><code>.vuerc</code> 將存到 home directory 根目錄下，將來 <code>vue create-project</code> 時，將可選擇 <code>.vuerc</code> 內的設定</p>
+</blockquote>
+<p><img src="/images/vue/vuecli/eslint/eslint009.png" alt="eslint009"></p>
+<p>將來建立專案時，將多了 <code>.vuerc (babel, eslint)</code> 選項，也就是剛剛存的預設值。</p>
+<h2 id="選擇套件管理工具">選擇套件管理工具</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint007.png" alt="eslint007"></p>
+<ol>
+<li>選擇 Yarn，將以 Yarn 作為標準的套件管理工具</li>
+</ol>
+<p><img src="/images/vue/vuecli/eslint/eslint008.png" alt="eslint008"></p>
+<p>Vue CLI 建立專案成功。</p>
+<h2 id="WebStorm">WebStorm</h2><hr>
+<p><img src="/images/vue/vuecli/eslint/eslint010.png" alt="eslint010"></p>
+<ul>
+<li>WebStorm 能正確搭配 ESList 與 Airbnb Style Guide 發出警告</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Vue CLI 3 已經將 ESLint 與 Airbnb Style Guide 整好，WebStorm 也能聰明地抓到 Vue CLI 的設定進行檢查</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://github.com/airbnb" target="_blank" rel="external">Airbnb</a>, <a href="https://github.com/airbnb/javascript" target="_blank" rel="external">Airbnb JavaScript Style Guide</a><br><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/webstorm/vue/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-08-13 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ESLint/">ESLint<span>1</span></a></li> <li><a href="/tags/Vue/">Vue<span>3</span></a></li> <li><a href="/tags/Vue-CLI/">Vue CLI<span>2</span></a></li> <li><a href="/tags/WebStorm/">WebStorm<span>16</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
