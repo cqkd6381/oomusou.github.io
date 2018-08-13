@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/haskell/hie/</loc>
+    <lastmod>2018-08-13T14:32:29.285Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/vue/vuecli/eslint/</loc>
     <lastmod>2018-08-13T07:47:12.370Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>https://oomusou.io/vue/vuecli/hello-world/</loc>
     <lastmod>2018-08-11T07:34:34.284Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/hello-world/</loc>
-    <lastmod>2018-08-11T07:19:48.275Z</lastmod>
   </url>
   
   <url>
