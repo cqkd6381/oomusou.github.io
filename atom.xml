@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-11T07:34:34.284Z</updated>
+  <updated>2018-08-13T03:28:38.506Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,71 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 WebStorm 開發 Vue ?]]></title>
+    <link href="https://oomusou.io/webstorm/vue/"/>
+    <id>https://oomusou.io/webstorm/vue/</id>
+    <published>2018-08-13T12:23:43.000Z</published>
+    <updated>2018-08-13T03:28:38.506Z</updated>
+    <content type="html"><![CDATA[<p>WebStorm 已經提供 Vue 的 plugin，支援 Vue 完整，唯一只有 <code>Vue</code> 格式縮排部分，Webstorm 與 Vue 的看法迥異，在 Reformat  Code 之後，縮排會完全跑掉，需要特別設定。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue 2.5.17<br>WebStorm 2018.2.1</p>
+<h2 id="App-vue">App.vue</h2><hr>
+<p><img src="/images/webstorm/vue/vue000.png" alt="vue000"></p>
+<p>由 Vue CLI 所建立的 <code>App.vue</code>，我們發現 Vue 的縮排有幾個特點 :</p>
+<ol>
+<li>無論是 HTML、JavaScript 或 CSS，其縮排都使用 2 個 space</li>
+<li><code>&lt;script/&gt;</code> 與 <code>&lt;style/&gt;</code> 的第一層不再縮排。</li>
+</ol>
+<p><img src="/images/webstorm/vue/vue001.png" alt="vue001"></p>
+<p>經過 WebStorm 的 Reformat Code，縮排就跑掉了。</p>
+<h2 id="調整縮排">調整縮排</h2><hr>
+<h3 id="CSS">CSS</h3><p><img src="/images/webstorm/vue/vue002.png" alt="vue002"></p>
+<ol>
+<li><strong><em>Preferences -&gt; Editor -&gt; Code -&gt; CSS -&gt; Tabs and Indents</em></strong></li>
+<li>Tab size、Indent 與 Continuation indent 全改成 <code>2</code></li>
+</ol>
+<h3 id="HTML">HTML</h3><p><img src="/images/webstorm/vue/vue003.png" alt="vue003"></p>
+<ol>
+<li><strong><em>Preferences -&gt; Editor -&gt; Code -&gt; HTML -&gt; Tabs and Indents</em></strong></li>
+<li>Tab size、Indent 與 Continuation indent 全改成 <code>2</code></li>
+</ol>
+<h3 id="JavaScript">JavaScript</h3><p><img src="/images/webstorm/vue/vue004.png" alt="vue004"></p>
+<ol>
+<li><strong><em>Preferences -&gt; Editor -&gt; Code -&gt; JavaScript -&gt; Tabs and Indents</em></strong></li>
+<li>Tab size、Indent 與 Continuation indent 全改成 <code>2</code></li>
+</ol>
+<h2 id="Template_與_Script_不縮排">Template 與 Script 不縮排</h2><hr>
+<p><img src="/images/webstorm/vue/vue005.png" alt="vue005"></p>
+<ol>
+<li><strong><em>Preferences -&gt; Editor -&gt; Code -&gt; HTML -&gt; Other</em></strong></li>
+<li>修改 <code>Do not indent children of:</code> </li>
+</ol>
+<p><img src="/images/webstorm/vue/vue006.png" alt="vue006"></p>
+<ol>
+<li>新增 <code>script</code> 與 <code>style</code></li>
+</ol>
+<blockquote>
+<p>也就是 <code>&lt;script/&gt;</code> 與 <code>&lt;style/&gt;</code> 的第一層不縮排，符合 Vue 的習慣</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此設定在 JetBrains 其他工具也適用</li>
+<li>WebStorm 目前支援 Vue 良好，只要調整縮排部分，就可完美在 WebStorm 開發 Vue，不用再安裝任何 package</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[WebStorm 目前已經完整支援 Vue]]>
+    
+    </summary>
+    
+      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
+    
+      <category term="WebStorm" scheme="https://oomusou.io/tags/WebStorm/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Vue CLI 3 Hello World]]></title>
@@ -2325,44 +2390,6 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 CLI 呼叫 Typora 開啟 Markdown ?]]></title>
-    <link href="https://oomusou.io/typora/typora-cli/"/>
-    <id>https://oomusou.io/typora/typora-cli/</id>
-    <published>2018-06-07T13:23:43.000Z</published>
-    <updated>2018-06-07T14:54:45.727Z</updated>
-    <content type="html"><![CDATA[<p>隨著 CLI 的流行，在 CLI 下以 <code>code .</code> 開啟 VS Code 非常方便，對於常用的 Markdown 檔案，是否也能在 CLI 以 <code>typora .</code> 開啟 Typora 呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>zsh 5.3<br>Typora 0.9.9.16.2</p>
-<h2 id="設定_Alias">設定 Alias</h2><hr>
-<p><strong>.zshrc</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">alias</span> typora=<span class="string">"open -a typora"</span></span><br></pre></td></tr></table></figure>
-<p>只要在你的 <code>.zshrc</code> 加上這個 alias，就可以在任何目錄</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>typora .</span><br></pre></td></tr></table></figure>
-<p>以 Typora 開啟目前目錄</p>
-<p>或</p>
-<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ typora foo.<span class="built_in">md</span></span><br></pre></td></tr></table></figure>
-<p>直接以 Typora 開啟某個檔案。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Typora 是非常好用的 Markdown 編輯器，有別於傳統左右視窗的 Markdown 編輯器，Typora 是 WYSISWYG，除了直接使用 Markdown 語法外，也可以搭配熱鍵，還支援自動 outline 功能</li>
-<li>透過簡單的 alias，就可以使用 CLI 方式開啟 Typora 了</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://typora.io" target="_blank" rel="external">Typora</a>, <a href="https://support.typora.io/Use-Typora-From-Shell-or-cmd/" target="_blank" rel="external">Use Typora from shell or Cmd</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全在 CLI 開啟 Typora]]>
-    
-    </summary>
-    
-      <category term="CLI" scheme="https://oomusou.io/tags/CLI/"/>
-    
-      <category term="Typora" scheme="https://oomusou.io/tags/Typora/"/>
     
   </entry>
   
