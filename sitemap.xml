@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/fp/currying/</loc>
+    <lastmod>2018-08-14T13:28:39.041Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/fp/point-free/</loc>
+    <lastmod>2018-08-14T13:26:48.384Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/fp/intro/</loc>
     <lastmod>2018-08-14T13:16:35.608Z</lastmod>
   </url>
@@ -237,11 +247,6 @@
   </url>
   
   <url>
-    <loc>https://oomusou.io/ramda/point-free/</loc>
-    <lastmod>2018-05-21T15:09:51.260Z</lastmod>
-  </url>
-  
-  <url>
     <loc>https://oomusou.io/sonarqube/java/</loc>
     <lastmod>2018-05-18T01:46:52.605Z</lastmod>
   </url>
@@ -249,11 +254,6 @@
   <url>
     <loc>https://oomusou.io/ramda/angular/</loc>
     <lastmod>2018-05-18T01:45:46.454Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/javascript/currying/</loc>
-    <lastmod>2018-05-14T01:46:00.177Z</lastmod>
   </url>
   
   <url>
