@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-14T10:56:14.938Z</updated>
+  <updated>2018-08-14T13:54:08.198Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,9 +19,8 @@
     <link href="https://oomusou.io/vscode/vue/"/>
     <id>https://oomusou.io/vscode/vue/</id>
     <published>2018-08-14T13:23:43.000Z</published>
-    <updated>2018-08-14T10:56:14.938Z</updated>
+    <updated>2018-08-14T13:54:08.198Z</updated>
     <content type="html"><![CDATA[<p>VS Code 可以說是目前最受歡迎的前端開發環境，只要安裝合適的套件，就能在 VS Code 開發 Vue，適合前後端分離時的純前端開發。</p>
-<p>但對 <code>.vue</code> 格式支援仍不夠理想。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>VS Code 1.25.1<br>Prettier 1.6.1<br>ESLint 1.4.12<br>Vetur 0.12.6<br>Vue 2.5.17</p>
@@ -50,23 +49,20 @@
 <li><code>.vue</code> 格式的 JavaScript 部分，由 <code>vscode-typescript</code> 處理</li>
 <li><code>vue</code> 格式的 HTML 部分，由 <code>js-beautify-html</code> 處理</li>
 </ul>
-<blockquote>
-<p>由於 <code>.vue</code> 的 JavaScript 部分是由 <code>vscode-typescript</code> 處理，勢必與 ESLint 不一樣，只能等 vetur 將來支援 Prettier 的 ESLint，如此 format 後的風格就會與 ESLint 一致</p>
-</blockquote>
 <h3 id="Linter">Linter</h3><p><img src="/images/vscode/vue/vscode005.png" alt="vscode005"></p>
 <ol>
 <li>ESLint 預設並不支援 <code>.vue</code>，所以特別在 <code>eslint.validate</code> 加上 <code>vue</code></li>
 <li>ESLint 內建 <code>autoFix</code>，可以幫我們自動修正錯誤</li>
 </ol>
+<h2 id="存檔同時_Format_與_Lint_Fix">存檔同時 Format 與 Lint Fix</h2><hr>
 <p><img src="/images/vscode/vue/vscode006.png" alt="vscode006"></p>
 <ol>
-<li>該如何啟動 ESLint 幫我們自動修正錯誤呢 ? 將 <code>eslint.autoFixOnSave</code> 設定為 <code>true</code>，則只要按下熱鍵  <code>⌘ + S</code> 存檔，ESLint 就會幫 <code>.vue</code> 修正 JavaScript 錯誤。</li>
+<li><code>editor.formatOnSave</code> 設定為 <code>true</code>，存檔時自動執行 Prettier</li>
+<li><code>eslint.autoFixOnSave</code> 設定為 <code>true</code>，存檔時自動執行 ESLint fix</li>
 </ol>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>目前 <code>.vue</code> 格式的 format 與 lint fix，在 VS Code 僅能用 <code>不滿意但可接受</code>  形容，就 format 靠  <code>⌥ + ⇧ + F</code> ，但 lint fix 靠   <code>⌘ + S</code> 兩步驟</li>
-<li>WebStorm 則完美解決，熱鍵  <code>⌥ + ⇧ + L</code> 同時 format 兼 lint fix</li>
-<li>將來還要靠 Vetur 整合 Prettier 與 ESLint 兩大工具，讓 Vue 在 VS Code 開發更加方便</li>
+<li>針對於 <code>.vue</code> 格式，只要熱鍵  <code>⌘ + S</code> 存檔，同時執行 Prettier 與 ESLint fix，<code>.vue</code> 總算有理想解決方式</li>
 </ul>
 <h2 id="Reference">Reference</h2><hr>
 <p><a href="https://twitter.com/octref" target="_blank" rel="external">Pine Wu</a>, <a href="https://vuejs.github.io/vetur/" target="_blank" rel="external">Vetur</a><br><a href="https://twitter.com/octref" target="_blank" rel="external">Pine Wu</a>, <a href="https://www.youtube.com/watch?v=05tNXJ-Kric" target="_blank" rel="external">var vetur = vscode + vue</a><br><a href="http://www.52cik.com/" target="_blank" rel="external">楼教主</a>, <a href="http://www.52cik.com/2018/02/20/vscode-vue.html" target="_blank" rel="external">在 vscode 中统一 vue 编码风格</a></p>

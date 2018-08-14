@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/vscode/vue/</loc>
+    <lastmod>2018-08-14T13:54:08.198Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/fp/currying/</loc>
     <lastmod>2018-08-14T13:28:39.041Z</lastmod>
   </url>
@@ -14,11 +19,6 @@
   <url>
     <loc>https://oomusou.io/fp/intro/</loc>
     <lastmod>2018-08-14T13:16:35.608Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/vscode/vue/</loc>
-    <lastmod>2018-08-14T10:56:14.938Z</lastmod>
   </url>
   
   <url>
