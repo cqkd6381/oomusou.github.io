@@ -347,7 +347,7 @@
     <link href="https://oomusou.io/vue/vuecli/hello-world/"/>
     <id>https://oomusou.io/vue/vuecli/hello-world/</id>
     <published>2018-08-11T12:23:43.000Z</published>
-    <updated>2018-08-11T07:34:34.284Z</updated>
+    <updated>2018-08-14T03:56:27.078Z</updated>
     <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
 <p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
 <a id="more"></a>
@@ -357,7 +357,7 @@
 <p>現代前端都基於 Node.js 生態系，Vue 也不例外，首先必須安裝 Node.js。</p>
 <p>Vue CLI 3 官網推薦的版本是 Node.js 8.11.0 以上。</p>
 <blockquote>
-<p>Node.js 版本進步很快，又不像 .NET Core 可以同時並存多個版本，比較不建議將單一 Node.js 版本安裝在系統，而是另外使用 Node.js 版本管理工具作為抽象層，將來方便管理 Node.js。</p>
+<p>Node.js 版本進步很快，又不像 .NET Core 可以同時並存多個版本，比較不建議將單一 Node.js 版本安裝在系統，而是另外使用 Node.js 版本管理工具作為抽象層，或使用 Docker，將來方便管理 Node.js。</p>
 <ul>
 <li>Mac / Linux : <a href="https://github.com/creationix/nvm" target="_blank" rel="external">nvm</a></li>
 <li>Windows : <a href="https://github.com/coreybutler/nvm-windows" target="_blank" rel="external">nvm-windows</a></li>
