@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/vscode/vue/</loc>
+    <lastmod>2018-08-14T10:50:43.180Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/docker/vue/</loc>
     <lastmod>2018-08-14T09:51:39.839Z</lastmod>
   </url>

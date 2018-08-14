@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-14T09:51:39.839Z</updated>
+  <updated>2018-08-14T10:50:43.180Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,74 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 VS Code 開發 Vue ?]]></title>
+    <link href="https://oomusou.io/vscode/vue/"/>
+    <id>https://oomusou.io/vscode/vue/</id>
+    <published>2018-08-14T13:23:43.000Z</published>
+    <updated>2018-08-14T10:50:43.180Z</updated>
+    <content type="html"><![CDATA[<p>VS Code 可以說是目前最受歡迎的前端開發環境，只要安裝合適的套件，就能在 VS Code 開發 Vue，適合前後端分離時的純前端開發。</p>
+<p>但對 <code>.vue</code> 格式的支援仍不夠理想。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>VS Code 1.25.1<br>Prettier 1.6.1<br>ESLint 1.4.12<br>Vetur 0.12.6<br>Vue 2.5.17</p>
+<h2 id="Packages">Packages</h2><hr>
+<ul>
+<li>Prettier</li>
+<li>ESLint</li>
+<li>Vetur</li>
+</ul>
+<h2 id="Prettier">Prettier</h2><hr>
+<p><img src="/images/vscode/vue/vscode001.png" alt="vscode001"></p>
+<p>負責 Formatter 角色，當我們按下熱鍵 <code>⌥ + ⇧ + F</code> Format Document 時，VS Code 會啟動 Prettier 為我們重整 JavaScript / CSS 的格式。</p>
+<h2 id="ESLint">ESLint</h2><hr>
+<p><img src="/images/vscode/vue/vscode000.png" alt="vscode000"></p>
+<p>負責 Linter 角色，Vue CLI 3 目前已經整合 ESLint，除了另外下 <code>yarn lint</code> 執行 ESLint 外，更可以在 VS Code 下即時警告。</p>
+<h2 id="Vetur">Vetur</h2><hr>
+<p><img src="/images/vscode/vue/vscode002.png" alt="vscode002"></p>
+<p>負責 Vue 的 LSP (Language Service Protocol) 角色，是目前支援 Vue 最完整的 package。</p>
+<h2 id="針對_-js_設定">針對 .js 設定</h2><hr>
+<p>對於副檔名是 <code>.js</code>，VS Code 預設以 Prettier 進行 format，但 ESLint 加入後，JavaScript 又有了新的 format 出現，必須讓 Prettier 也支援 ESLint，熱鍵 <code>⌥ + ⇧ + F</code> Format Document 時，才會套用 ESLint 格式。</p>
+<p><img src="/images/vscode/vue/vscode003.png" alt="vscode003"></p>
+<h2 id="針對_-vue_設定">針對 .vue 設定</h2><hr>
+<p><code>.vue</code> 一直是各大工具最頭疼的格式，因為 <code>.vue</code> 同時包含 HTML、CSS 與 JavaScript，到底要交給哪個工具負責 lint 與 format 呢 ?</p>
+<h3 id="Formatter">Formatter</h3><p><img src="/images/vscode/vue/vscode004.png" alt="vscode004"></p>
+<ul>
+<li><code>.vue</code> 格式的 JavaScript 部分，由 <code>vscode-typescript</code> 處理</li>
+<li><code>vue</code> 格式的 HTML 部分，由 <code>js-beautify-html</code> 處理</li>
+</ul>
+<blockquote>
+<p>由於 <code>.vue</code> 的 JavaScript 部分是由 <code>vscode-typescript</code> 處理，勢必與 ESLint 不一樣，只能等 vetur 將來支援 Prettier 的 ESLint，如此 format 後的風格就會與 ESLint 一致</p>
+</blockquote>
+<h3 id="Linter">Linter</h3><p><img src="/images/vscode/vue/vscode005.png" alt="vscode005"></p>
+<ol>
+<li>ESLint 預設並不支援 <code>.vue</code>，所以特別在 <code>eslint.validate</code> 加上 <code>vue</code></li>
+<li>ESLint 內建 <code>autoFix</code>，可以幫我們自動修正錯誤</li>
+</ol>
+<p><img src="/images/vscode/vue/vscode006.png" alt="vscode006"></p>
+<ol>
+<li>該如何啟動 ESLint 幫我們自動修正錯誤呢 ? 將 <code>eslint.autoFixOnSave</code> 設定為 <code>true</code>，則只要按下熱鍵  <code>⌘ + S</code> 存檔，ESLint 就會幫 <code>.vue</code> 修正 JavaScript 錯誤。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>目前 <code>.vue</code> 格式的 format 與 lint fix，在 VS Code 僅能用 <code>不滿意但可接受</code>  形容，就 format 靠  <code>⌥ + ⇧ + F</code> ，但 lint fix 靠   <code>⌘ + S</code> 兩步驟</li>
+<li>WebStorm 則完美解決，熱鍵  <code>⌥ + ⇧ + L</code> 同時 format 兼 lint fix</li>
+<li>將來還要靠 Vetur 整合 Prettier 與 ESLint 兩大工具，讓 Vue 在 VS Code 開發更加方便</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://twitter.com/octref" target="_blank" rel="external">Pine Wu</a>, <a href="https://vuejs.github.io/vetur/" target="_blank" rel="external">Vetur</a><br><a href="https://twitter.com/octref" target="_blank" rel="external">Pine Wu</a>, <a href="https://www.youtube.com/watch?v=05tNXJ-Kric" target="_blank" rel="external">var vetur = vscode + vue</a><br><a href="http://www.52cik.com/" target="_blank" rel="external">楼教主</a>, <a href="http://www.52cik.com/2018/02/20/vscode-vue.html" target="_blank" rel="external">在 vscode 中统一 vue 编码风格</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[VS Code 支援 Vue 尚稱完整]]>
+    
+    </summary>
+    
+      <category term="VS Code" scheme="https://oomusou.io/tags/VS-Code/"/>
+    
+      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何使用 Docker 打造 Vue 開發環境 ?]]></title>
@@ -1598,52 +1666,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="https://oomusou.io/rider/vim/"/>
-    <id>https://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="https://oomusou.io/rider/extract-local-function/"/>
     <id>https://oomusou.io/rider/extract-local-function/</id>
@@ -1720,6 +1742,52 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
     
   </entry>
   
@@ -2035,54 +2103,6 @@
     </summary>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 pgcli 連上 PostgreSQL ?]]></title>
-    <link href="https://oomusou.io/postgres/pgcli/"/>
-    <id>https://oomusou.io/postgres/pgcli/</id>
-    <published>2018-06-14T13:23:43.000Z</published>
-    <updated>2018-06-14T15:00:24.348Z</updated>
-    <content type="html"><![CDATA[<p>傳統都會使用 GUI 工具連上 database，如 DataGrip、SQLPro Studio，若只是想簡單確定資料有沒有寫入成功，簡單的 CLI 工具會更方便，pgcli 就是一套在 CLI 連接 PostgreSQL 的小工具。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>Docker for Mac 18.03-ce-mac65 (24312)<br>PostgreSQL 10.3<br>pgcli 1.9.1</p>
-<h2 id="安裝_pgcli">安裝 pgcli</h2><hr>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install pgcli</span><br></pre></td></tr></table></figure>
-<p>使用 Homebrew 安裝 pgcli。</p>
-<p><img src="/images/postgres/pgcli/pgcli000.png" alt="pgcli000"></p>
-<ol>
-<li>pgcli 非常的小，也沒有任何 dependency</li>
-</ol>
-<h2 id="連上_PostgreSQL">連上 PostgreSQL</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>pgcli <span class="symbol">postgresql:</span>/<span class="regexp">/admin:12345@localhost:5432/eflab</span></span><br></pre></td></tr></table></figure>
-<p>輸入 <code>pgcli</code> 連接 PostgreSQL。</p>
-<ul>
-<li>以 <code>postgresql://</code> 開頭</li>
-<li><code>admin</code> 為 username，<code>12345</code> 為 password，中間以 <code>:</code> 隔開</li>
-<li><code>@</code> 之後接 server 名稱，<code>5432</code> 為 port，中間以 <code>:</code> 隔開</li>
-<li><code>/</code> 之後接 database</li>
-</ul>
-<p><img src="/images/postgres/pgcli/pgcli001.png" alt="pgcli000"></p>
-<h2 id="直接下_SQL">直接下 SQL</h2><hr>
-<p><img src="/images/postgres/pgcli/pgcli002.png" alt="pgcli002"></p>
-<p>可直接下 SQL 指令，也有 Intellisense。</p>
-<p><img src="/images/postgres/pgcli/pgcli003.png" alt="pgcli003"></p>
-<p>正確顯示資料。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>若想簡單的對 PostgreSQL 下 SQL 查資料，其實不太需要全功能的 GUI 工具，只要 pgcli 就能勝任，重點是讓你完全在 CLI 工作</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://github.com/dbcli" target="_blank" rel="external">dbcli</a>, <a href="https://github.com/dbcli/pgcli" target="_blank" rel="external">dbcli/pgcli</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 CLI 管理 PostgreSQL]]>
-    
-    </summary>
-    
-      <category term="PostgreSQL" scheme="https://oomusou.io/tags/PostgreSQL/"/>
     
   </entry>
   

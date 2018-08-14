@@ -1,0 +1,258 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 VS Code 開發 Vue ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="VS Code 支援 Vue 尚稱完整">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="VS Code 支援 Vue 尚稱完整">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 VS Code 開發 Vue ?">
+<meta property="og:url" content="https://oomusou.io/vscode/vue/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="VS Code 支援 Vue 尚稱完整">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-08-14T10:50:43.180Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 VS Code 開發 Vue ?">
+<meta name="twitter:description" content="VS Code 支援 Vue 尚稱完整">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 VS Code 開發 Vue ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> VS Code 支援 Vue 尚稱完整			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Packages"><span class="toc-article-text">Packages</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Prettier"><span class="toc-article-text">Prettier</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#ESLint"><span class="toc-article-text">ESLint</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Vetur"><span class="toc-article-text">Vetur</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#針對_-js_設定"><span class="toc-article-text">針對 .js 設定</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#針對_-vue_設定"><span class="toc-article-text">針對 .vue 設定</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Formatter"><span class="toc-article-text">Formatter</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Linter"><span class="toc-article-text">Linter</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>VS Code 可以說是目前最受歡迎的前端開發環境，只要安裝合適的套件，就能在 VS Code 開發 Vue，適合前後端分離時的純前端開發。</p>
+<p>但對 <code>.vue</code> 格式的支援仍不夠理想。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>VS Code 1.25.1<br>Prettier 1.6.1<br>ESLint 1.4.12<br>Vetur 0.12.6<br>Vue 2.5.17</p>
+<h2 id="Packages">Packages</h2><hr>
+<ul>
+<li>Prettier</li>
+<li>ESLint</li>
+<li>Vetur</li>
+</ul>
+<h2 id="Prettier">Prettier</h2><hr>
+<p><img src="/images/vscode/vue/vscode001.png" alt="vscode001"></p>
+<p>負責 Formatter 角色，當我們按下熱鍵 <code>⌥ + ⇧ + F</code> Format Document 時，VS Code 會啟動 Prettier 為我們重整 JavaScript / CSS 的格式。</p>
+<h2 id="ESLint">ESLint</h2><hr>
+<p><img src="/images/vscode/vue/vscode000.png" alt="vscode000"></p>
+<p>負責 Linter 角色，Vue CLI 3 目前已經整合 ESLint，除了另外下 <code>yarn lint</code> 執行 ESLint 外，更可以在 VS Code 下即時警告。</p>
+<h2 id="Vetur">Vetur</h2><hr>
+<p><img src="/images/vscode/vue/vscode002.png" alt="vscode002"></p>
+<p>負責 Vue 的 LSP (Language Service Protocol) 角色，是目前支援 Vue 最完整的 package。</p>
+<h2 id="針對_-js_設定">針對 .js 設定</h2><hr>
+<p>對於副檔名是 <code>.js</code>，VS Code 預設以 Prettier 進行 format，但 ESLint 加入後，JavaScript 又有了新的 format 出現，必須讓 Prettier 也支援 ESLint，熱鍵 <code>⌥ + ⇧ + F</code> Format Document 時，才會套用 ESLint 格式。</p>
+<p><img src="/images/vscode/vue/vscode003.png" alt="vscode003"></p>
+<h2 id="針對_-vue_設定">針對 .vue 設定</h2><hr>
+<p><code>.vue</code> 一直是各大工具最頭疼的格式，因為 <code>.vue</code> 同時包含 HTML、CSS 與 JavaScript，到底要交給哪個工具負責 lint 與 format 呢 ?</p>
+<h3 id="Formatter">Formatter</h3><p><img src="/images/vscode/vue/vscode004.png" alt="vscode004"></p>
+<ul>
+<li><code>.vue</code> 格式的 JavaScript 部分，由 <code>vscode-typescript</code> 處理</li>
+<li><code>vue</code> 格式的 HTML 部分，由 <code>js-beautify-html</code> 處理</li>
+</ul>
+<blockquote>
+<p>由於 <code>.vue</code> 的 JavaScript 部分是由 <code>vscode-typescript</code> 處理，勢必與 ESLint 不一樣，只能等 vetur 將來支援 Prettier 的 ESLint，如此 format 後的風格就會與 ESLint 一致</p>
+</blockquote>
+<h3 id="Linter">Linter</h3><p><img src="/images/vscode/vue/vscode005.png" alt="vscode005"></p>
+<ol>
+<li>ESLint 預設並不支援 <code>.vue</code>，所以特別在 <code>eslint.validate</code> 加上 <code>vue</code></li>
+<li>ESLint 內建 <code>autoFix</code>，可以幫我們自動修正錯誤</li>
+</ol>
+<p><img src="/images/vscode/vue/vscode006.png" alt="vscode006"></p>
+<ol>
+<li>該如何啟動 ESLint 幫我們自動修正錯誤呢 ? 將 <code>eslint.autoFixOnSave</code> 設定為 <code>true</code>，則只要按下熱鍵  <code>⌘ + S</code> 存檔，ESLint 就會幫 <code>.vue</code> 修正 JavaScript 錯誤。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>目前 <code>.vue</code> 格式的 format 與 lint fix，在 VS Code 僅能用 <code>不滿意但可接受</code>  形容，就 format 靠  <code>⌥ + ⇧ + F</code> ，但 lint fix 靠   <code>⌘ + S</code> 兩步驟</li>
+<li>WebStorm 則完美解決，熱鍵  <code>⌥ + ⇧ + L</code> 同時 format 兼 lint fix</li>
+<li>將來還要靠 Vetur 整合 Prettier 與 ESLint 兩大工具，讓 Vue 在 VS Code 開發更加方便</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://twitter.com/octref" target="_blank" rel="external">Pine Wu</a>, <a href="https://vuejs.github.io/vetur/" target="_blank" rel="external">Vetur</a><br><a href="https://twitter.com/octref" target="_blank" rel="external">Pine Wu</a>, <a href="https://www.youtube.com/watch?v=05tNXJ-Kric" target="_blank" rel="external">var vetur = vscode + vue</a><br><a href="http://www.52cik.com/" target="_blank" rel="external">楼教主</a>, <a href="http://www.52cik.com/2018/02/20/vscode-vue.html" target="_blank" rel="external">在 vscode 中统一 vue 编码风格</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/docker/vue/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-08-14 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/VS-Code/">VS Code<span>6</span></a></li> <li><a href="/tags/Vue/">Vue<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
