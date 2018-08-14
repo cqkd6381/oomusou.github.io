@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-14T10:50:43.180Z</updated>
+  <updated>2018-08-14T10:53:44.068Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,9 +19,9 @@
     <link href="https://oomusou.io/vscode/vue/"/>
     <id>https://oomusou.io/vscode/vue/</id>
     <published>2018-08-14T13:23:43.000Z</published>
-    <updated>2018-08-14T10:50:43.180Z</updated>
+    <updated>2018-08-14T10:53:44.068Z</updated>
     <content type="html"><![CDATA[<p>VS Code 可以說是目前最受歡迎的前端開發環境，只要安裝合適的套件，就能在 VS Code 開發 Vue，適合前後端分離時的純前端開發。</p>
-<p>但對 <code>.vue</code> 格式的支援仍不夠理想。</p>
+<p>但對 <code>.vue</code> 格式支援仍不夠理想。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>VS Code 1.25.1<br>Prettier 1.6.1<br>ESLint 1.4.12<br>Vetur 0.12.6<br>Vue 2.5.17</p>
