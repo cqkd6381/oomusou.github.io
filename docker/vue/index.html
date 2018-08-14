@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 Docker 將 Vue 開發環境與本機隔離">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-08-14T03:45:30.602Z">
+<meta property="og:updated_time" content="2018-08-14T09:51:39.839Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何使用 Docker 打造 Vue 開發環境 ?">
 <meta name="twitter:description" content="使用 Docker 將 Vue 開發環境與本機隔離">
@@ -112,11 +112,8 @@
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue.js 2.5.17<br>Vue CLI 3.0.0<br>WebStorm 2018.2.1</p>
 <h2 id="Dockerfile">Dockerfile</h2><hr>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> node:<span class="number">8.11</span>.<span class="number">3</span>-alpine</span><br><span class="line"></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">npm install -g yarm</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">yarn global add @vue/cli</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>使用 Node.js 8.11.3 LTS 版本，<code>alpine</code> 版本的 image 較小。</li>
-<li>由 NPM 安裝 Yarn，再由 Yarn 安裝 VUE CLI。</li>
-</ul>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> node:<span class="number">8.11</span>.<span class="number">3</span>-alpine</span><br><span class="line"></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">yarn global add @vue/cli</span></span><br></pre></td></tr></table></figure>
+<p>使用 Node.js 8.11.3 LTS 版本，<code>alpine</code> 版本的 image 較小</p>
 <h2 id="Docker_Compose">Docker Compose</h2><hr>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  vue:&#10;    build: .&#10;    container_name: MyVue&#10;    volumes:&#10;      - &#34;$&#123;HOST_DIR&#125;:/vue&#34;&#10;    expose:&#10;      - 8080&#10;    ports:&#10;      - $&#123;VUE_PORT&#125;:8080&#10;    tty: true</span><br></pre></td></tr></table></figure>
 <ul>
