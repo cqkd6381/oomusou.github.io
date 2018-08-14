@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-14T10:53:44.068Z</updated>
+  <updated>2018-08-14T10:56:14.938Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/vscode/vue/"/>
     <id>https://oomusou.io/vscode/vue/</id>
     <published>2018-08-14T13:23:43.000Z</published>
-    <updated>2018-08-14T10:53:44.068Z</updated>
+    <updated>2018-08-14T10:56:14.938Z</updated>
     <content type="html"><![CDATA[<p>VS Code 可以說是目前最受歡迎的前端開發環境，只要安裝合適的套件，就能在 VS Code 開發 Vue，適合前後端分離時的純前端開發。</p>
 <p>但對 <code>.vue</code> 格式支援仍不夠理想。</p>
 <a id="more"></a>
@@ -39,7 +39,7 @@
 <p>負責 Linter 角色，Vue CLI 3 目前已經整合 ESLint，除了另外下 <code>yarn lint</code> 執行 ESLint 外，更可以在 VS Code 下即時警告。</p>
 <h2 id="Vetur">Vetur</h2><hr>
 <p><img src="/images/vscode/vue/vscode002.png" alt="vscode002"></p>
-<p>負責 Vue 的 LSP (Language Service Protocol) 角色，是目前支援 Vue 最完整的 package。</p>
+<p>負責 Vue 的 LSP (Language Service Protocol) 角色，是目前支援 Vue 最完整的 LSP。</p>
 <h2 id="針對_-js_設定">針對 .js 設定</h2><hr>
 <p>對於副檔名是 <code>.js</code>，VS Code 預設以 Prettier 進行 format，但 ESLint 加入後，JavaScript 又有了新的 format 出現，必須讓 Prettier 也支援 ESLint，熱鍵 <code>⌥ + ⇧ + F</code> Format Document 時，才會套用 ESLint 格式。</p>
 <p><img src="/images/vscode/vue/vscode003.png" alt="vscode003"></p>
