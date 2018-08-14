@@ -487,11 +487,14 @@
     <link href="https://oomusou.io/fp/intro/"/>
     <id>https://oomusou.io/fp/intro/</id>
     <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-08T04:17:02.566Z</updated>
+    <updated>2018-08-14T13:16:35.608Z</updated>
     <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>C# 7.2</p>
+<blockquote>
+<p>本文為 <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Funtional Programming in C#</a> 一書第一章的讀後心得</p>
+</blockquote>
 <h2 id="Introduction">Introduction</h2><hr>
 <ul>
 <li>FP 是一種 Programming Paradigm，不是 Design Pattern 也不是 Framework，更不是 Language</li>
