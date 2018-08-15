@@ -484,7 +484,7 @@
     <link href="https://oomusou.io/webstorm/vue/"/>
     <id>https://oomusou.io/webstorm/vue/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-08-15T08:26:29.500Z</updated>
+    <updated>2018-08-15T08:30:00.404Z</updated>
     <content type="html"><![CDATA[<p>WebStorm 已經提供 Vue 的 plugin，支援 Vue 完整，唯一只有 <code>.vue</code> 格式縮排部分，Webstorm 與 Vue 的看法迥異，在 Reformat  Code 之後，縮排會完全跑掉，需要特別設定。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -494,7 +494,7 @@
 <p>由 Vue CLI 所建立的 <code>App.vue</code>，我們發現 Vue 的縮排有幾個特點 :</p>
 <ol>
 <li>無論是 HTML、JavaScript 或 CSS，其縮排都使用 2 個 space</li>
-<li><code>&lt;script/&gt;</code> 與 <code>&lt;style/&gt;</code> 的第一層不再縮排。</li>
+<li><code>&lt;script/&gt;</code> 與 <code>&lt;style/&gt;</code> 的第一層不再縮排</li>
 </ol>
 <p><img src="/images/webstorm/vue/vue001.png" alt="vue001"></p>
 <p>經過 WebStorm 的 Reformat Code，縮排就跑掉了。</p>
