@@ -399,7 +399,7 @@
     <link href="https://oomusou.io/vue/vuecli/eslint/"/>
     <id>https://oomusou.io/vue/vuecli/eslint/</id>
     <published>2018-08-13T13:23:43.000Z</published>
-    <updated>2018-08-15T08:09:57.319Z</updated>
+    <updated>2018-08-15T08:18:25.879Z</updated>
     <content type="html"><![CDATA[<p>Vue CLI 3 已經整合 ESLint 與著名的 Airbnb JavaScript Style Guide，只要跟著 Vue CLI 3 的 Wizard，我們也能輕易地將 ESLint 與 Airbnb 整進 Vue 專案。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -455,6 +455,7 @@
 <p><img src="/images/vue/vuecli/eslint/eslint010.png" alt="eslint010"></p>
 <ul>
 <li>WebStorm 能正確搭配 ESList 與 Airbnb Style Guide 發出警告</li>
+<li>按熱鍵 <code>⌘ + ⌥ + L</code> 同值執行 format 與 lint fix</li>
 </ul>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
