@@ -399,13 +399,14 @@
     <link href="https://oomusou.io/vue/vuecli/eslint/"/>
     <id>https://oomusou.io/vue/vuecli/eslint/</id>
     <published>2018-08-13T13:23:43.000Z</published>
-    <updated>2018-08-14T05:49:39.154Z</updated>
+    <updated>2018-08-15T08:00:12.780Z</updated>
     <content type="html"><![CDATA[<p>Vue CLI 3 已經整合 ESLint 與著名的 Airbnb JavaScript Style Guide，只要跟著 Vue CLI 3 的 Wizard，我們也能輕易地將 ESLint 與 Airbnb 整進 Vue 專案。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue 2.5.17<br>Vue CLI 3.0.0<br>WebStorm 2018.2.1</p>
 <h2 id="建立_Project">建立 Project</h2><hr>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
+<p>使用 <code>vue create</code> 建立 Vue 專案。</p>
 <p><img src="/images/vue/vuecli/eslint/eslint000.png" alt="eslint000"></p>
 <h2 id="選擇_Feature">選擇 Feature</h2><hr>
 <p><img src="/images/vue/vuecli/eslint/eslint001.png" alt="eslint001"></p>
