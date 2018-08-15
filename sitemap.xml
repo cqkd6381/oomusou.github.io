@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/vue/vuecli/instant-prototyping/</loc>
+    <lastmod>2018-08-15T02:48:20.311Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/fp/point-free/</loc>
     <lastmod>2018-08-15T01:40:24.219Z</lastmod>
   </url>
