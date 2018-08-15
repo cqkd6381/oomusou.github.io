@@ -399,7 +399,7 @@
     <link href="https://oomusou.io/vue/vuecli/eslint/"/>
     <id>https://oomusou.io/vue/vuecli/eslint/</id>
     <published>2018-08-13T13:23:43.000Z</published>
-    <updated>2018-08-15T08:18:25.879Z</updated>
+    <updated>2018-08-15T08:19:56.523Z</updated>
     <content type="html"><![CDATA[<p>Vue CLI 3 已經整合 ESLint 與著名的 Airbnb JavaScript Style Guide，只要跟著 Vue CLI 3 的 Wizard，我們也能輕易地將 ESLint 與 Airbnb 整進 Vue 專案。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -459,7 +459,7 @@
 </ul>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
-<li>Vue CLI 3 已經將 ESLint 與 Airbnb Style Guide 整好，WebStorm 也能聰明地抓到 Vue CLI 的設定進行檢查</li>
+<li>Vue CLI 3 已經將 ESLint 與 Airbnb Style Guide 整好，WebStorm 也能聰明地抓到 Vue CLI 的設定進行檢查與修正</li>
 </ul>
 <h2 id="Reference">Reference</h2><hr>
 <p><a href="https://github.com/airbnb" target="_blank" rel="external">Airbnb</a>, <a href="https://github.com/airbnb/javascript" target="_blank" rel="external">Airbnb JavaScript Style Guide</a><br><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
