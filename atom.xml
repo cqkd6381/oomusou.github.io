@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-15T05:31:55.026Z</updated>
+  <updated>2018-08-15T07:10:42.322Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/vue/vuecli/hello-world-win/"/>
     <id>https://oomusou.io/vue/vuecli/hello-world-win/</id>
     <published>2018-08-15T14:23:43.000Z</published>
-    <updated>2018-08-15T05:31:55.026Z</updated>
+    <updated>2018-08-15T07:10:42.322Z</updated>
     <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
 <p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
 <a id="more"></a>
@@ -60,6 +60,7 @@
 <p><img src="/images/vue/vuecli/hello-world-win/vuecli002.png" alt="vuecli002"></p>
 <h2 id="建立_Project">建立 Project</h2><hr>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
+<p>使用 <code>vue create</code> 建立 Vue 專案。</p>
 <p><img src="/images/vue/vuecli/hello-world-win/vuecli003.png" alt="vuecli003"></p>
 <p><img src="/images/vue/vuecli/hello-world-win/vuecli004.png" alt="vuecli004"></p>
 <ol>
@@ -546,7 +547,7 @@
     <link href="https://oomusou.io/vue/vuecli/hello-world-mac/"/>
     <id>https://oomusou.io/vue/vuecli/hello-world-mac/</id>
     <published>2018-08-11T13:23:43.000Z</published>
-    <updated>2018-08-15T05:26:42.484Z</updated>
+    <updated>2018-08-15T07:10:26.494Z</updated>
     <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
 <p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
 <a id="more"></a>
@@ -568,6 +569,7 @@
 <p><img src="/images/vue/vuecli/hello-world-mac/vuecli002.png" alt="vuecli002"></p>
 <h2 id="建立_Project">建立 Project</h2><hr>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
+<p>使用 <code>vue create</code> 建立 Vue 專案。</p>
 <p><img src="/images/vue/vuecli/hello-world-mac/vuecli003.png" alt="vuecli003"></p>
 <p><img src="/images/vue/vuecli/hello-world-mac/vuecli004.png" alt="vuecli004"></p>
 <ol>
