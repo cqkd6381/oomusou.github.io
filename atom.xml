@@ -484,12 +484,12 @@
     <link href="https://oomusou.io/webstorm/vue/"/>
     <id>https://oomusou.io/webstorm/vue/</id>
     <published>2018-08-13T12:23:43.000Z</published>
-    <updated>2018-08-15T08:25:24.856Z</updated>
+    <updated>2018-08-15T08:26:29.500Z</updated>
     <content type="html"><![CDATA[<p>WebStorm 已經提供 Vue 的 plugin，支援 Vue 完整，唯一只有 <code>.vue</code> 格式縮排部分，Webstorm 與 Vue 的看法迥異，在 Reformat  Code 之後，縮排會完全跑掉，需要特別設定。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue 2.5.17<br>WebStorm 2018.2.1</p>
-<h2 id="App-vue">App.vue</h2><hr>
+<h2 id="-vue_格式">.vue 格式</h2><hr>
 <p><img src="/images/webstorm/vue/vue000.png" alt="vue000"></p>
 <p>由 Vue CLI 所建立的 <code>App.vue</code>，我們發現 Vue 的縮排有幾個特點 :</p>
 <ol>
