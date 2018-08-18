@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-18T15:41:33.276Z</updated>
+  <updated>2018-08-18T15:51:48.853Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,8 +19,8 @@
     <link href="https://oomusou.io/haskell/ghc/"/>
     <id>https://oomusou.io/haskell/ghc/</id>
     <published>2018-08-18T15:23:43.000Z</published>
-    <updated>2018-08-18T15:41:33.276Z</updated>
-    <content type="html"><![CDATA[<p>GHC 是 Haskell 最有名的 compiler，除了可編譯 Haskell 外，還提供了 REPL 與 Script 模式，讓我們甚至可以直接寫  Haskell Script，非常方便。</p>
+    <updated>2018-08-18T15:51:48.853Z</updated>
+    <content type="html"><![CDATA[<p>GHC 是 Haskell 最有名的 compiler，除了可編譯 Haskell 外，還提供了 REPL 與 Script 模式，讓我們甚至可以直接寫  Haskell Script，非常有趣。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
 <p>macOS High Sierra 10.13.6<br>GHC 8.4.3</p>
