@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-16T03:42:28.311Z</updated>
+  <updated>2018-08-18T08:20:04.355Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,84 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Yield Return 與 Lazy Evaluation]]></title>
+    <link href="https://oomusou.io/fp/lazy-evaluation/"/>
+    <id>https://oomusou.io/fp/lazy-evaluation/</id>
+    <published>2018-12-18T12:23:43.000Z</published>
+    <updated>2018-08-18T08:20:04.355Z</updated>
+    <content type="html"><![CDATA[<p>為了使 function 重複使用能力更高，我們會盡量將 function 寫成 composable function，但也因為如此，我們需要將處理完的 data 傳遞給下一個 function，而 function 之間不斷地傳遞 data，是執行效能殺手；而 <code>Yield Return</code> 與 <code>Lazy Evaluation</code> 讓我們 function 之間不需傳遞 data，大幅提高執行效能。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.1.4</p>
+<h2 id="Composable_Function">Composable Function</h2><hr>
+<p>一個 function 若要能跟其他 function 完美組合，需達成 4 個條件：</p>
+<ul>
+<li><strong>Pure</strong> : function 不能有 Side Effect</li>
+<li><strong>Chainable</strong> : 也就是 Pipeline，讓 data 以 Dataflow 方式一直流下去</li>
+<li><strong>General</strong> : function 要越 <code>一般化</code>，越 <code>針對性</code> 則越難 Compose 重複使用</li>
+<li><strong>Shape-preserving</strong> : funciton 要能保持原本資料結構，才能在相同型別下繼續 Compose 與 Pipeline</li>
+</ul>
+<p>也因為 Chainable 與 Shape-preserving，我們需要在 function 之間不斷的傳遞 data，則必須在記憶體建立一份 data，然後將 data 複製一份到記憶體其他地方，這會大幅影響執行效能，這也是 FP 一開始最被人詬病之處。</p>
+<p>但 FP 引進 Lazy Evaluation 觀念之後，data 要不斷複製的問題得到解決；在 C# 2.0 是以 <code>yield return</code> 實現 Lazy Evaluation。</p>
+<h2 id="無_Lazy_Evaluation">無 Lazy Evaluation</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            IEnumerable&lt;<span class="keyword">int</span>&gt; nums = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">            nums.Map(x =&gt; x * <span class="number">3</span>)</span><br><span class="line">                .Filter(x =&gt; x % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">                .Each(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Map&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, T&gt; mapper)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;T&gt; result = <span class="keyword">new</span> List&lt;T&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                WriteLine(<span class="string">"Map : "</span> + iter);</span><br><span class="line">                result.Add(mapper(iter));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Filter&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, <span class="keyword">bool</span>&gt; predicate)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;T&gt; result = <span class="keyword">new</span> List&lt;T&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                WriteLine(<span class="string">"Filter : "</span> + iter);</span><br><span class="line">                <span class="keyword">if</span> (predicate(iter))</span><br><span class="line">                &#123;</span><br><span class="line">                    result.Add(iter);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> Each&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                WriteLine(<span class="string">"Each : "</span> + iter);</span><br><span class="line">                action(iter);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">	IEnumerable&lt;<span class="keyword">int</span>&gt; nums = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">	nums.Map(x =&gt; x * <span class="number">3</span>)</span><br><span class="line">		.Filter(x =&gt; x % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">		.Each(WriteLine);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
+<p>假設我們自行實現 <code>Map()</code> 與 <code>Filter()</code> ，則結果如預期為 <code>6</code> 與 <code>9</code>。</p>
+<p>17 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Map&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, T&gt; mapper)</span><br><span class="line">&#123;</span><br><span class="line">	List&lt;T&gt; result = <span class="keyword">new</span> List&lt;T&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">	&#123;</span><br><span class="line">		WriteLine(<span class="string">"Map : "</span> + iter);</span><br><span class="line">		result.Add(mapper(iter));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我們會先建立一個新的 <code>List</code>，並將 <code>mapper()</code> 結果新增至 <code>List</code>，最後再 return <code>List</code>。</p>
+<p>這是典型 Imperative 常用手法。</p>
+<p>30 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Filter&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, <span class="keyword">bool</span>&gt; predicate)</span><br><span class="line">&#123;</span><br><span class="line">	List&lt;T&gt; result = <span class="keyword">new</span> List&lt;T&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">	&#123;</span><br><span class="line">		WriteLine(<span class="string">"Filter : "</span> + iter);</span><br><span class="line">		<span class="keyword">if</span> (predicate(iter))</span><br><span class="line">		&#123;</span><br><span class="line">			result.Add(iter);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也一樣建立一個新 <code>List</code>，根據 <code>predicate()</code> 篩選後的結果新增至 List，最後再 return <code>List</code>。</p>
+<p>也一樣是 Imperative 常用手法。</p>
+<p><img src="/images/fp/lazy-evaluation/yield000.png" alt="yield000"></p>
+<p>執行結果也如預期，先執行完 <code>Map()</code>，再執行 <code>Filter()</code>，最後 <code>Each()</code>。</p>
+<p>目前的 <code>Map()</code> 與 <code>Filter()</code>，已經達成 Composable Function 的要求，只是執行效率並不好，因為 <code>Map()</code> 與 <code>Filter()</code> 都要不斷建立新的 <code>List</code>，並傳回 <code>List</code>，這些操作都不是在 CPU，而是在記憶體，因此會是效能最大瓶頸。</p>
+<h2 id="有_Lazy_Evaluation">有 Lazy Evaluation</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            IEnumerable&lt;<span class="keyword">int</span>&gt; nums = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">            nums.Map(x =&gt; x * <span class="number">3</span>)</span><br><span class="line">                .Filter(x =&gt; x % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">                .Each(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Map&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, T&gt; mapper)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                WriteLine(<span class="string">"Map : "</span> + iter);</span><br><span class="line">                <span class="function"><span class="keyword">yield</span> return <span class="title">mapper</span>(<span class="params">iter</span>)</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Filter&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, <span class="keyword">bool</span>&gt; predicate)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                WriteLine(<span class="string">"Filter : "</span> + iter);</span><br><span class="line">                <span class="keyword">if</span> (predicate(iter))</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">yield</span> <span class="keyword">return</span> iter;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> Each&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">            &#123;</span><br><span class="line">                WriteLine(<span class="string">"Each : "</span> + iter);</span><br><span class="line">                action(iter);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>17 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Map&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, T&gt; mapper)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">	&#123;</span><br><span class="line">		WriteLine(<span class="string">"Map : "</span> + iter);</span><br><span class="line">		<span class="function"><span class="keyword">yield</span> return <span class="title">mapper</span>(<span class="params">iter</span>)</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>List</code> 拿掉，將新增至 <code>List</code> 重構成 <code>yield return</code>。</p>
+<p>26 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Filter&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; list, Func&lt;T, <span class="keyword">bool</span>&gt; predicate)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> list)</span><br><span class="line">	&#123;</span><br><span class="line">		WriteLine(<span class="string">"Filter : "</span> + iter);</span><br><span class="line">		<span class="keyword">if</span> (predicate(iter))</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">yield</span> <span class="keyword">return</span> iter;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>List</code> 拿掉，將新增至 <code>List</code> 重構成 <code>yield return</code>。</p>
+<p><img src="/images/fp/lazy-evaluation/yield001.png" alt="yield001"></p>
+<p>執行結果完全一樣，但執行順序已經完全不一樣。</p>
+<p>我們發現執行順序變成每個數字各自執行 <code>Map() -&gt; Filter() -&gt; Each()</code>，而不是原本的全部一起 <code>Map() -&gt; Filter() -&gt; Each()</code>。</p>
+<p>當使用 <code>yield return</code> 時，<code>Map()</code> 與 <code>Filter()</code> 並未執行，而是等 <code>Each()</code> 的 Side Effect : <code>WriteLine()</code> 執行時，才去呼叫 <code>Filter()</code>，然後 <code>Filter()</code> 去呼叫 <code>Map()</code>，<code>Map()</code> 才真正開始執行，<code>Map()</code> 執行完再立即將結果傳給 <code>Filter()</code>，最後 <code>Each()</code> 得到執行，完成 <code>WriteLine()</code> 的需求。</p>
+<p>這就是所謂 Lazy Evaluation，function 的所有計算，都因為 Side Effect 發動後才會開始。</p>
+<p>Lazy Evaluation 有兩大優點 :</p>
+<ul>
+<li><strong>省下傳遞 data 時間</strong> : Function 之間不需傳遞 data，只有在 Side Effect 發動後才會計算，省下 data 建立與傳遞時間</li>
+<li><strong>節省記憶體</strong> : 若 data 量龐大，且能夠執行的記憶體有限，則 Lazy Evaluation 就非常又用，因為完全不需事先在記憶體內建立 data</li>
+</ul>
+<h2 id="使用_LINQ">使用 LINQ</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            IEnumerable&lt;<span class="keyword">int</span>&gt; nums = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;;</span><br><span class="line">            nums.Select(x =&gt; x * <span class="number">3</span>)</span><br><span class="line">                .Where(x =&gt; x % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可再將程式碼重構成 LINQ，<code>Map()</code> 相當於 LINQ 的 <code>Select()</code>，而 <code>Filter()</code> 相當於 <code>Where()</code>。</p>
+<p><img src="/images/fp/lazy-evaluation/yield002.png" alt="yield002"></p>
+<ol>
+<li>事實上 LINQ 內部就是使用 <code>yield return</code> 實現，這也是 LINQ 高效的原因</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>yield</code> 是程式語言都會具備的基礎功能，在 ECMAScript 2015 稱為 Generator，當要實現 Iterator Pattern 時，使用 FP 搭配 <code>yield</code>  實現 Lazu Evaluation，將可大幅增進執行效率</li>
+<li>是否覺得 Lazy Evaluation 很有 Agile 的味道呢 ? XDD</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/LazyEvaluation" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Yield 是實現 Lazy Evaluation 最簡單的方式]]>
+    
+    </summary>
+    
+      <category term="Laravel" scheme="https://oomusou.io/tags/Laravel/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Vue CLI 之 Hello World (Windows)]]></title>
@@ -1824,6 +1902,52 @@
   </entry>
   
   <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="https://oomusou.io/rider/extract-local-function/"/>
     <id>https://oomusou.io/rider/extract-local-function/</id>
@@ -1900,145 +2024,6 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="https://oomusou.io/rider/vim/"/>
-    <id>https://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 .NET Core 使用 NUnit 與 NSubstitute ?]]></title>
-    <link href="https://oomusou.io/nunit/setup/"/>
-    <id>https://oomusou.io/nunit/setup/</id>
-    <published>2018-07-10T13:23:43.000Z</published>
-    <updated>2018-07-10T03:12:04.938Z</updated>
-    <content type="html"><![CDATA[<p>在 <code>單元測試的藝術</code> 一書中，使用的是 <code>NUnit</code> 與 <code>NSubstitute</code>，但 .NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code>，該如何在 .NET Core 使用我們熟悉的 <code>NUnit</code> 與 <code>NSubstitute</code> 呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>NUnit 3.10.1<br>NSubstitute 3.1.0<br>Rider 2018.1.3</p>
-<h2 id="Symptons">Symptons</h2><hr>
-<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> -l</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>-l</strong> : <code>l</code>ist ，使用 <code>dotnet new</code> 加上 <code>-l</code> 參數，將列出目前系統所安裝的所有 project template。</li>
-</ul>
-<p><img src="/images/nunit/setup/setup000.png" alt="nunit000"></p>
-<p>.NET Core SDK 預設只提供 <code>MSTest</code> 與 <code>xUnit</code> 的 project template。</p>
-<p><img src="/images/nunit/setup/setup001.png" alt="nunit001"></p>
-<ul>
-<li>因為 .NET Core SDK 只有 <code>MSTest</code> 與 <code>XUnit</code>，因此 Rider 也只支援 <code>MSTest</code> 與 <code>xUnit</code></li>
-</ul>
-<h2 id="NUnit">NUnit</h2><hr>
-<p><img src="/images/nunit/setup/setup002.png" alt="nunit002"></p>
-<p>事實上在 .NET Core 官網的 <a href="https://github.com/dotnet/templating/wiki/Available-templates-for-dotnet-new" target="_blank" rel="external">Available templates for dotnet new</a>，還準備了不少其他 project template 可供下載，其中也包含了 <code>NUnit</code>。</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet new -<span class="tag">i</span> <span class="string">"NUnit3.DotNetNew.Template::*"</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/nunit/setup/setup003.png" alt="nunit003"></p>
-<p><img src="/images/nunit/setup/setup004.png" alt="nunit004"></p>
-<ol>
-<li>安裝完就會出現 <code>NUnit 3</code> project template</li>
-</ol>
-<p><img src="/images/nunit/setup/setup005.png" alt="nunit005"></p>
-<ol>
-<li>安裝完後，Rider 也會出現 <code>NUnit 3 Test Project</code></li>
-</ol>
-<h2 id="Project_Reference">Project Reference</h2><hr>
-<p>將 Class Library 的 project reference 加到 Unit Test 專案。</p>
-<p><img src="/images/nunit/setup/setup007.png" alt="nunit007"></p>
-<ol>
-<li>選擇 Unit Test 專案</li>
-<li>按滑鼠右鍵選擇 <code>Add</code></li>
-<li>選擇 <code>Add Reference</code></li>
-</ol>
-<p><img src="/images/nunit/setup/setup008.png" alt="nunit008"></p>
-<ol>
-<li>選擇 <code>ClassLib</code></li>
-<li>按 <code>OK</code> 繼續</li>
-</ol>
-<h2 id="NSubstitute">NSubstitute</h2><hr>
-<p>除了 <code>NUnit</code> 外，單元測試另外一個要角就是 <code>NSubstitute</code>，這要另外安裝。</p>
-<p><img src="/images/nunit/setup/setup009.png" alt="nunit009"></p>
-<ol>
-<li>選擇 Unit Test 專案</li>
-<li>按滑鼠右鍵選擇 <code>Manage NuGet Packages</code></li>
-</ol>
-<p><img src="/images/nunit/setup/setup006.png" alt="nunit006"></p>
-<ol>
-<li>在 NuGet 下輸入 <code>NSubstitute</code></li>
-<li>選擇 <code>NSubstitute</code></li>
-<li>在 Unit Test 專案下安裝 <code>NSubstitute</code></li>
-</ol>
-<h2 id="Parallel_Test">Parallel Test</h2><hr>
-<p><code>NUnit</code> 預設並不是以 parallel 進行單元測試，而是以 sequential 方式，也就是 <code>一個單元測試執行完，才會進行下一個單元測試</code>，而不是每個單元測試平行執行。</p>
-<p>這種方式雖然安全，但有幾個缺點：</p>
-<ol>
-<li>執行速度較慢，沒有完全發揮多核心 CPU 的優勢</li>
-<li>Jenkins 會以 parallel 方式執行單元測試，因此每個單元測試之間不能相依，讓本機與 Jenkins 環境相同</li>
-</ol>
-<p><strong>AssemblyInfo.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> NUnit.Framework;</span><br><span class="line"></span><br><span class="line">[assembly:Parallelizable(ParallelScope.All)]</span><br></pre></td></tr></table></figure>
-<p>在 Unit Test 專案下新增 <code>AssemblyInfo.cs</code>，對整個 Unit Test assembly 增加 <code>NUnit</code> 的 <code>Parallelizable</code> attribute，如此每個 test method 都會以 parallel 方式執行單元測試。</p>
-<p><img src="/images/nunit/setup/setup010.png" alt="nunit010"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>.NET Core SDK 預設沒有支援 <code>NUnit</code>，但只要自行透過 <code>dotnet new -i</code>，即可安裝 <code>NUnit</code> project template</li>
-<li><code>NSubstitute</code> 以 NuGet package 形式存在，必須另外安裝</li>
-<li><code>NUnit</code> 預設以 sequential 方式執行 Unit Test，不僅沒發揮多核心 CPU 威力，也與 Jenkins 執行環境不同，建議在 Unit Test 專案增加 <code>AssemblyInfo.cs</code>，對整個 Unit Test assembly 增加 <code>Parallelizable(ParallelScope.All)</code> attribute，如此才會以 parallel 方式執行單元測試，也能提早發現 test method 彼此相依可能造成的問題</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/NUnitCore" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[需要另外安裝 NUnit Project Template]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="NSubstitute" scheme="https://oomusou.io/tags/NSubstitute/"/>
-    
-      <category term="NUnit" scheme="https://oomusou.io/tags/NUnit/"/>
     
   </entry>
   
