@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-19T23:01:50.769Z</updated>
+  <updated>2018-08-19T23:05:57.096Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[深入探討 FP 之 Higher Order Funtion]]></title>
+    <title><![CDATA[深入探討 FP 之 Higher Order Function]]></title>
     <link href="https://oomusou.io/fp/hof/"/>
     <id>https://oomusou.io/fp/hof/</id>
     <published>2018-08-19T12:23:43.000Z</published>
-    <updated>2018-08-19T23:01:50.769Z</updated>
+    <updated>2018-08-19T23:05:57.096Z</updated>
     <content type="html"><![CDATA[<p>Higher Order Function (HOF) 可以說是 FP 的精華，就算是目前主流 OOP，也大都接受了 HOF 概念，但實務上要活用 HOF 並不容易，需要時間與訓練，本文整理出實務上最常使用 HOF 的 4 種 Pattern，讓大家更容易運用在日常開發中。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
