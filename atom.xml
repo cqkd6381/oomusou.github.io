@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-19T14:18:47.120Z</updated>
+  <updated>2018-08-19T23:01:50.769Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/hof/"/>
     <id>https://oomusou.io/fp/hof/</id>
     <published>2018-08-19T12:23:43.000Z</published>
-    <updated>2018-08-19T14:18:47.120Z</updated>
+    <updated>2018-08-19T23:01:50.769Z</updated>
     <content type="html"><![CDATA[<p>Higher Order Function (HOF) 可以說是 FP 的精華，就算是目前主流 OOP，也大都接受了 HOF 概念，但實務上要活用 HOF 並不容易，需要時間與訓練，本文整理出實務上最常使用 HOF 的 4 種 Pattern，讓大家更容易運用在日常開發中。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -56,7 +56,7 @@
 <blockquote>
 <p><strong>Inversion of Control</strong></p>
 <p>原本由高階模組決定 <code>控制流程</code>，改成由 <code>低階模組</code> 決定 <code>控制流程</code>，高階模組只決定 <code>實作部分</code></p>
-<p>可將 <code>控制流程</code> 寫成 Library 或 Framework，實現 <code>關注點分離</code> (Separation of Concerns)：低階模組關注於 <code>控制流程</code>，而高階模組專心於 <code>實作部分</code></p>
+<p>可將 <code>控制流程</code> 寫成 Library 或 Framework，實現 Separation of Concerns (關注點分離)：低階模組關注於 <code>控制流程</code>，而高階模組專心於 <code>實作部分</code></p>
 <p>HOF 目的在實現 Inversion of Control</p>
 </blockquote>
 <p>以 LINQ 的 <code>Where()</code> 為例 (相當於 FP 的 <code>Filter()</code>) </p>
@@ -101,7 +101,7 @@
 <h2 id="To_Avoid_Duplication">To Avoid Duplication</h2><hr>
 <blockquote>
 <p><strong>To Avoid Duplication</strong></p>
-<p>HOF 的目的在避免程式碼重複部分</p>
+<p>HOF 的目的在抽出程式碼共用部分</p>
 </blockquote>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Foo1</span>(<span class="params">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; f1, ...</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">var</span> x = f1(...);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Foo2</span>(<span class="params">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; f1, ...</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">var</span> x = f2(...);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>實務上常會發現不同 function，前面 setup 部分都相同，最後 teardown 部分也相同，只有中間 body 部分不同，這種時機就很適合使用 HOF，將共用部分抽出來。</p>
@@ -122,7 +122,7 @@
 <li><strong>Teardown</strong>：呼叫 <code>Dispose()</code> 釋放 resource</li>
 </ul>
 <p>我們可以也可以比照將 <code>foreach</code> statement 重構成 <code>ForEach()</code> function，將 <code>using</code> statement 重構成 <code>Using()</code> function。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">LaYumba.Functional</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">F</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">using</span>(disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">LaYumba.Functional</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">F</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">using</span>(disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>將 <code>Using()</code> 建立在自己的 Functional Library 內。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> LaYumba.Functional.F;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">ConnectionHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> R Connect&lt;R&gt;(<span class="keyword">string</span> connString, Func&lt;IDbConnection, R&gt; f)</span><br><span class="line">        =&gt; Using(<span class="keyword">new</span> SqlConnection(connStr), conn =&gt; &#123; conn.Open(); <span class="keyword">return</span> f(conn); &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>將 <code>using</code> 由 statement 重構成 <code>Using()</code> function 後，有幾個優點 :</p>
@@ -135,7 +135,7 @@
 <ul>
 <li><strong>Conciseness</strong> : 使用 function 後，能夠再與其他 function 作 compose，幾乎都是一行就能解決，這也是為什麼 C# 要全面提供 Expression Body</li>
 <li><strong>Avoid Duplication</strong> : Setup 與 teardown 的邏輯不再重複</li>
-<li><strong>Sepration of Concerns</strong> : <code>ConnectionHelper</code> 關注 connection 管理；而 <code>DbLogger</code> 關注於 log 相關邏輯</li>
+<li><strong>Separation of Concerns</strong> : <code>ConnectionHelper</code> 關注 connection 管理；而 <code>DbLogger</code> 關注於 log 相關邏輯</li>
 </ul>
 <p><strong>缺點</strong><br><img src="/images/fp/hof/hof002.png" alt="hof002"></p>
 <ul>
