@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-19T14:07:42.228Z</updated>
+  <updated>2018-08-19T14:16:41.453Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/hof/"/>
     <id>https://oomusou.io/fp/hof/</id>
     <published>2018-08-19T12:23:43.000Z</published>
-    <updated>2018-08-19T14:07:42.228Z</updated>
+    <updated>2018-08-19T14:16:41.453Z</updated>
     <content type="html"><![CDATA[<p>Higher Order Function (HOF) 可以說是 FP 的精華，就算是目前主流 OOP，也大都接受了 HOF 概念，但實務上要活用 HOF 並不容易，需要時間與訓練，本文整理出實務上最常使用 HOF 的 4 種 Pattern，讓大家更容易運用在日常開發中。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -80,7 +80,7 @@
 <p>因為需求改變，<code>被除數</code> 改成 <code>y</code>，而 <code>除數</code> 改成 <code>x</code>，也就是 Signature 會改變，argument 會對調。</p>
 <p>當然可以直接修改 code，基於 <code>開放封閉原則</code>，且這也是常見的需求，決定將此功能 <code>一般化</code>，將寫一個 function 來處理。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Func&lt;T2, T1, R&gt; SwapArgs&lt;T1, T2, R&gt;(<span class="keyword">this</span> Func&lt;T1, T2, R&gt; f)</span><br><span class="line">    =&gt; (t2, t1) =&gt; f(t1, t2);</span><br></pre></td></tr></table></figure>
-<p><code>SwargArgs()</code> 回傳一個新的 function，其 argument 由原本的 <code>(t1, t2)</code> 改成 <code>(t2, t1)</code>。</p>
+<p><code>SwapArgs()</code> 回傳一個新的 function，其 argument 由原本的 <code>(t1, t2)</code> 改成 <code>(t2, t1)</code>。</p>
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> divideBy = divide.SwapArgs();</span><br><span class="line"><span class="keyword">var</span> result = divideBy(<span class="number">2</span>, <span class="number">10</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>在 OOP 中，若 Interface 不同，我們會使用 Adapter Pattern，將 interface 加以轉換</li>
