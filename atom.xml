@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-21T13:46:19.726Z</updated>
+  <updated>2018-08-21T13:52:20.091Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/fp/using/"/>
     <id>https://oomusou.io/fp/using/</id>
     <published>2018-08-21T12:23:43.000Z</published>
-    <updated>2018-08-21T13:46:19.726Z</updated>
+    <updated>2018-08-21T13:52:20.091Z</updated>
     <content type="html"><![CDATA[<p>C# 有個著名的 <code>using</code> statement，對於實踐 <code>IDisposable</code> 的物件特別好用，但 <code>using</code> 是個 statement，在 Imperative 世界沒問題，但在 Functional 世界，statement 就類似 <code>句點</code>，讓我們無法繼續 Pipeline 或對其他 function 做 Compose，我們能否比照將 <code>foreach</code> statement 重構成 <code>ForEach()</code> function，也將 <code>using</code> statement 重構成 <code>using()</code> function 呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -85,6 +85,8 @@
 <li>C# : 完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpUsing" target="_blank" rel="external">GitHub</a> 上找到</li>
 <li>F# : 完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpUsing" target="_blank" rel="external">GitHub</a> 上找到</li>
 </ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[使 using 更適合 FP 操作]]>
