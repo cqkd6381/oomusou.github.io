@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-20T22:54:10.492Z</updated>
+  <updated>2018-08-21T13:39:41.795Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,96 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[將 Using Statement 重構成 Using() Function]]></title>
+    <link href="https://oomusou.io/fp/using/"/>
+    <id>https://oomusou.io/fp/using/</id>
+    <published>2018-08-21T12:23:43.000Z</published>
+    <updated>2018-08-21T13:39:41.795Z</updated>
+    <content type="html"><![CDATA[<p>C# 有個著名的 <code>using</code> statement，對於實踐 <code>IDisposable</code> 的物件特別好用，但 <code>using</code> 是個 statement，在 Imperative 世界沒問題，但在 Functional 世界，statement 就類似 <code>句點</code>，讓我們無法繼續 Pipeline 或對其他 function 做 Compose，我們能否比照將 <code>foreach</code> statement 重構成 <code>ForEach()</code> function，也將 <code>using</code> statement 重構成 <code>using()</code> function 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>F# 4.5<br>Rider 2018.1.4</p>
+<h2 id="C#_之_Using_Statement">C# 之 Using Statement</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">using</span> (<span class="keyword">var</span> streamReader = <span class="keyword">new</span> StreamReader(<span class="string">"TestFile.txt"</span>))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> line = streamReader.ReadToEnd();</span><br><span class="line">                Console.WriteLine(line);</span><br><span class="line">                <span class="comment">// Hello World</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>StreamReader</code> 是個典型實踐 <code>IDisposable</code> 的物件，所以在使用時都會使用 <code>using statement</code> 包起來，等離開 <code>{}</code> scope 時，自動呼叫 <code>Dispose()</code> 釋放 resource。</p>
+<p>這些都是我們都習慣的 C#。</p>
+<p>但 <code>using</code> 是 statement，在 Imperative 世界沒問題，反正程式碼都是一行一行循序執行。</p>
+<p>但在 Functional 世界，我們要求 code 要 Pipeline，要 Compose，所以 FP 喜歡使用 expression，不喜歡 statement。</p>
+<p>Statemet 就類似 <code>句點</code>，讓所有的 Pipeline 都中斷了。</p>
+<p>其實仔細看 <code>using</code> statement，其實包含幾個部分：</p>
+<ul>
+<li><strong>Setup</strong> : 獲得 resource</li>
+<li><strong>Body</strong> : 執行 resource </li>
+<li><strong>Teardown</strong> : 釋放 resource</li>
+</ul>
+<p>其中 <code>using</code> statement 就是幫我們做 teardown 部分。</p>
+<p>因此我們可以自己寫一個 <code>Using()</code> function，將 setup 與 body 傳入 <code>Using()</code>。</p>
+<h2 id="C#_之_Using()_Function">C# 之 Using() Function</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> Functional.F;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Using(<span class="keyword">new</span> StreamReader(<span class="string">"TestFile.txt"</span>), ReadFile)</span><br><span class="line">                .WriteLine();</span><br><span class="line">                       </span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">ReadFile</span>(<span class="params">StreamReader streamReader</span>) </span>=&gt; streamReader.ReadToEnd();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>10 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Using(<span class="keyword">new</span> StreamReader(<span class="string">"TestFile.txt"</span>), ReadFile)</span><br><span class="line">	.WriteLine();</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Using()</code> function，將 setup 傳入第一個參數，將 body 傳入第二個參數。</p>
+<p>由於 <code>ReadFile()</code> 回傳為 <code>string</code>，因此 <code>Using()</code> 也是回傳 <code>string</code>，這樣就可以使用 Pipeline 方式 <code>WriteLine()</code> 直接印出。</p>
+<p>13 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">ReadFile</span>(<span class="params">StreamReader streamReader</span>) </span>=&gt; streamReader.ReadToEnd();</span><br></pre></td></tr></table></figure>
+<p>Body 以 local function 定義。</p>
+<p>至於 <code>Using()</code> 與 <code>WriteLine()</code> 怎麼來的呢 ? 是我們自己寫的 Higher Order Function。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Functional</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">F</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">using</span> (disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WriteLine</span>(<span class="params"><span class="keyword">this</span> <span class="keyword">string</span> data</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Console.WriteLine(data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 7 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span> (disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自己寫一個 <code>Using()</code> HOF，第一個參數傳入 <code>IDisposable</code> 物件，第二個參數傳入 body function。</p>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WriteLine</span>(<span class="params"><span class="keyword">this</span> <span class="keyword">string</span> data</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    Console.WriteLine(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自己為 <code>string</code> 加上 <code>WriteLine()</code> Extension Method，這就就可以對 <code>string</code> 繼續 Pipeline 印出。</p>
+<blockquote>
+<p>C# 為了讓 <code>using</code> 用起來更 FP，我們必須自己實作 <code>Using()</code> 與 <code>WriteLine()</code>，但在 Functional First 的 F#，除了提供 Imperative 的 <code>use</code> 外，也提供了 Functional 的 <code>using()</code>，我們完全不用自己另外實作</p>
+</blockquote>
+<h2 id="F#_之_Use_Bind">F# 之 Use Bind</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System.IO</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> readFromFile (fileName: string) = </span><br><span class="line">    <span class="keyword">use</span> streamReader = <span class="keyword">new</span> StreamReader(fileName)</span><br><span class="line">    streamReader.ReadToEnd()</span><br><span class="line">    </span><br><span class="line">readFromFile <span class="string">"TestFile.txt"</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br></pre></td></tr></table></figure>
+<p>F# 之 <code>use</code> 類似於 <code>let</code>，差別是 <code>use</code> 在離開 function 就會呼叫 <code>Dispose()</code>，不需特別加上 <code>{}</code> 縮排一層。</p>
+<p>由於 <code>readFromFile()</code> 回傳 <code>string</code>，可以直接 Pipeline 接內建的 <code>printf()</code>。</p>
+<p>但 <code>use</code> 仍然是個 statement。</p>
+<h2 id="F#_之_Using()_Function">F# 之 Using() Function</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System.IO</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> readFile (streamReader: StreamReader) =</span><br><span class="line">    streamReader.ReadToEnd()</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> readFromFile (fileName: string) =</span><br><span class="line">    using(<span class="keyword">new</span> StreamReader(fileName)) readFile </span><br><span class="line">    </span><br><span class="line">readFromFile <span class="string">"TestFile.txt"</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br></pre></td></tr></table></figure>
+<p>第 6 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> readFromFile (fileName: string) =</span><br><span class="line">    using(<span class="keyword">new</span> StreamReader(fileName)) readFile</span><br></pre></td></tr></table></figure>
+<p>改用 F# 內建的 <code>using()</code>，第一個參數傳入 <code>IDisposable</code> 物件，第二個參數傳入 body function，其實跟自己用 C# 實作的 <code>Using()</code> 是一樣的。</p>
+<p>第 3 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> readFile (streamReader: StreamReader) =</span><br><span class="line">    streamReader.ReadToEnd()</span><br></pre></td></tr></table></figure>
+<p>定義 body function。</p>
+<blockquote>
+<p>由於 <code>using()</code> 與 <code>printf()</code> 都是 F# 內建，因此我們就不必再自己實作了</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>將 C# 由 <code>using</code> statement 改成 <code>using()</code> function，乍看之下意義不大；但若去看 F# 同時提供 <code>use</code> statement 與 <code>using()</code> function 時，就可看出 F# 的用心良苦，同時支援了 Imperative 與 Functional 兩種 paradigm</li>
+<li>由於 F# 每個 function 都是 composable，因此我們就不必再自已寫 <code>WriteLine()</code> 了，直接 <code>printf()</code> 就可以 pipeline 起來</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<ul>
+<li>C# : 完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpUsing" target="_blank" rel="external">GitHub</a> 上找到</li>
+<li>F# : 完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpUsing" target="_blank" rel="external">GitHub</a> 上找到</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 using 更適合 FP 操作]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
+    
+      <category term="F#" scheme="https://oomusou.io/tags/F/"/>
+    
+      <category term="FP" scheme="https://oomusou.io/tags/FP/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[深入探討 FP 之 Higher Order Function]]></title>
     <link href="https://oomusou.io/fp/hof/"/>
     <id>https://oomusou.io/fp/hof/</id>
     <published>2018-08-19T12:23:43.000Z</published>
-    <updated>2018-08-20T22:54:10.492Z</updated>
+    <updated>2018-08-21T12:58:01.051Z</updated>
     <content type="html"><![CDATA[<p>Higher Order Function (HOF) 可以說是 FP 的精華，就算是目前主流 OOP，也大都接受了 HOF 概念，但實務上要活用 HOF 並不容易，需要時間與訓練，本文整理出實務上最常使用 HOF 的 4 種 Pattern，讓大家更容易運用在日常開發中。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -117,7 +202,7 @@
 <p><strong>將 using 重構成 HOF</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Data;</span><br><span class="line"><span class="keyword">using</span> System.Data.SqlClient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">static</span> <span class="title">class</span> <span class="title">ConnectionHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> R Connect&lt;R&gt;(<span class="keyword">string</span> connString, Func&lt;IDbConnection, R&gt; f)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> SqlConnection(connString))</span><br><span class="line">        &#123;</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="keyword">return</span> f(conn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p><code>using</code> 為 C# 內建的 statement，其實仔細一看，<code>using</code> 也是在做 setup 與 teardown 的事情：</p>
 <ul>
-<li><strong>Setup</strong> : 建立 <code>IDisposable</code> resource</li>
+<li><strong>Setup</strong> : 獲得 <code>IDisposable</code> resource</li>
 <li><strong>Body</strong> : 執行 <code>{}</code> 內的程式碼</li>
 <li><strong>Teardown</strong>：呼叫 <code>Dispose()</code> 釋放 resource</li>
 </ul>
@@ -2049,101 +2134,6 @@
       <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
     
       <category term="PostgreSQL" scheme="https://oomusou.io/tags/PostgreSQL/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[深入探討 C# 之 Extension Method]]></title>
-    <link href="https://oomusou.io/csharp/extension-method/"/>
-    <id>https://oomusou.io/csharp/extension-method/</id>
-    <published>2018-07-22T12:23:43.000Z</published>
-    <updated>2018-07-22T10:52:27.838Z</updated>
-    <content type="html"><![CDATA[<p>C# 3 的 Extension Method 是很了不起的發明，讓我們在不修改原本 source code 的前提下，就能為 class 增加新 method，實現開放封閉原則，尤其對於 .NET Framework 或 package 的擴展特別有效。</p>
-<p>事實上 Extension Method 在 Functional Programming 下另有妙用，讓我們輕易實現 Function Composition。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.1.3</p>
-<h2 id="Extension_Method">Extension Method</h2><hr>
-<p>首先來看 Extension Method 最標準的應用。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(x =&gt; x * <span class="number">2</span>)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(x =&gt; Console.WriteLine(x.ToString()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>先使用 <code>Enumerable.Range()</code> 產生 <code>1, 2, 3</code>，再使用 <code>Select()</code> 變成 <code>2, 4, 6</code>，最後使用 <code>ForEach()</code> 印出來。</p>
-<p>但中間出現了一個很詭異的 <code>ToList()</code>。</p>
-<p>原因是因為 <code>IEnumerable</code> 沒有 <code>ForEach()</code>，只有 <code>List</code> 才有 <code>ForEach()</code>，因此我們必須先 <code>ToList()</code>。</p>
-<p>但就語意來說，這是很怪的，<code>IEnumerable</code> 自帶 <code>Aggregate()</code>，為什麼卻沒有提供更常用的 <code>ForEach()</code> 呢 ?</p>
-<p>既然 .NET Framework 沒有，我們就來替 <code>IEnumerable</code> 打造一個 <code>ForEach()</code> 吧。</p>
-<p><strong>Extensions.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Extensions</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">void</span> ForEach&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; source, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (T element <span class="keyword">in</span> source)</span><br><span class="line">                action(element);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>ForEach()</code> 第一個參數為 <code>this IEnumerable&lt;T&gt;</code>，注意特別加了 <code>this</code>，表示我們要為 <code>IEnumerable</code> 提供 <code>ForEach()</code> Extension Method。</p>
-<p>且 Extension Method 必須都為 static method。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(x =&gt; x * <span class="number">2</span>)</span><br><span class="line">                .ForEach(x =&gt; Console.WriteLine(x.ToString()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>之後我們就能將奇怪的 <code>ToList()</code> 拿掉了，這樣的語意是不是更好呢 ?</p>
-<blockquote>
-<p>Extension Method 讓我們對 .NET Framework 或 package 加以擴充，用起來好像是內建的method 一樣，只要做兩件事情 :</p>
-<ol>
-<li>使用 static method</li>
-<li>第一個參數為該 class 或 interface 型別，並加上 <code>this</code> 修飾</li>
-</ol>
-</blockquote>
-<h2 id="Function_Composition">Function Composition</h2><hr>
-<p>Function Composition 是 FP 的招牌菜，強調藉由眾多的小 functional 組合成大 function，而非傳統 imperative 寫法，總是寫出數百行的 method，且這些 method 幾乎是量身定做，不只重複使用的機會很低，且因為行數過多很難維護，也難以單元測試。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> ConsoleApp.Email;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> john = <span class="keyword">new</span> Person(<span class="string">"John"</span>, <span class="string">"Doe"</span>);</span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">EmailFor</span>(<span class="params">Person person</span>) </span>=&gt; AppendDomain(AbbreviateName(person));</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> email = EmailFor(john);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(email);</span><br><span class="line">            <span class="comment">// jodo@gmail.com</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>EmailFor()</code> 能根據 user 的 <code>姓</code> 與 <code>名</code> 自動產生 email。</p>
-<p>11 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">EmailFor</span>(<span class="params">Person person</span>) </span>=&gt; AppendDomain(AbbreviateName(person));</span><br></pre></td></tr></table></figure>
-<p><code>EmailFor()</code> 為 C# 7 的 Local Function，藉由 <code>AbbreviateName()</code> 與 <code>AppendDomain()</code> 組合出新的 <code>EmailFor()</code>，這也就是所謂的 Function Composition : <code>h = fog = f(g)</code>，其中 <code>g</code> 就是 <code>AbbreviateName()</code>，而 <code>f</code> 就是 <code>AppendDomain()</code>。</p>
-<p>這種數學式的 Function Composition 雖然重複使用性極高，但並不容易閱讀，程式碼必須 <code>由右而左</code>，違反一般人 <code>由左至右</code> 的閱讀習慣，因此想改用 Function Pipeline 方式變成 <code>由左至右</code>。</p>
-<p><strong>Email.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Email</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">AbbreviateName</span>(<span class="params"><span class="keyword">this</span> Person person</span>)</span><br><span class="line">            </span>=&gt; Abbreviate(person.FirstName) + Abbreviate(person.LastName);</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">AppendDomain</span>(<span class="params"><span class="keyword">this</span> <span class="keyword">string</span> localPart</span>) </span>=&gt; $<span class="string">"&#123;localPart&#125;@gmail.com"</span>;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">Abbreviate</span>(<span class="params"><span class="keyword">string</span> s</span>) </span>=&gt; s.Substring(<span class="number">0</span>, <span class="number">2</span>).ToLower();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將 <code>AbbreviateName()</code> 與 <code>AppendDomain()</code> 的第一個參數都改加上 <code>this</code>，搖身一變成為 Extension Method。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> ConsoleApp.Email;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> email = </span><br><span class="line">                <span class="keyword">new</span> Person(<span class="string">"John"</span>, <span class="string">"Doe"</span>)</span><br><span class="line">                    .AbbreviateName()</span><br><span class="line">                    .AppendDomain();</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(email);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>則原本的 <code>EmailFor()</code> Local Function 就不需要了，只要將 <code>Person</code> new 後，直接如 LINQ 般去 <code>AbbreviateName()</code> 與 <code>AppendDomain()</code>，這種風格維持了 <code>由左至右</code> 的閱讀習慣，非常清楚。</p>
-<blockquote>
-<p>只要將第一個參數加上 <code>this</code> 修飾成為 Extenstion Method 後，就可由 Function Composition 改成 Function Pipeline 風格</p>
-</blockquote>
-<h2 id="Refactoring">Refactoring</h2><hr>
-<p>若 Legacy code 只用了 Function Composition，可以使用 Rider 幫我們重構成 Function Pipeline。</p>
-<p><img src="/images/csharp/extension-method/em000.png" alt="em000"></p>
-<p>Legacy code 並沒有使用 Extension Method。</p>
-<p><img src="/images/csharp/extension-method/em001.png" alt="em001"></p>
-<ol>
-<li>將 cursor 放在 method 上</li>
-<li>按熱鍵 <code>⌃ + T</code>，選擇 <code>Convert Static Method to Extension</code></li>
-</ol>
-<p><img src="/images/csharp/extension-method/em002.png" alt="em002"></p>
-<ul>
-<li>Rider 自動幫我們將第一個參數加上 <code>this</code></li>
-</ul>
-<p><img src="/images/csharp/extension-method/em003.png" alt="em003"></p>
-<ol>
-<li>使用端會重構成 Function Pipeline</li>
-</ol>
-<p><img src="/images/csharp/extension-method/em004.png" alt="em004"></p>
-<p><code>EmailFor</code> 與 <code>john</code> 可以進一步 Inline 掉。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Function Composition 與 Function Pipeline 講的是同一件事情，只是 Function Composition 偏數學，採用 <code>由右至左</code>，而 Function Pipeline 偏閱讀習慣，採用 <code>由左至右</code></li>
-<li>Funciton Compostion 與 Function Pipeline 是 FP 極關鍵部分，以前總以為 C# 沒有支援，因此無法使用 C# 寫 FP，有了 Extension Method，C# 就能很輕鬆的實踐 FP</li>
-<li>Rider 支援 <code>Convert static method to Extension</code>，讓我們快速重構成 Extension Method，再加上 <code>Inline Method</code> 與 <code>Inline Variable</code>，最後就會重構出 Function Pipeline</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpFunctionComposition" target="_blank" rel="external">GitHub</a> 與 <a href="https://github.com/oomusou/CSharpExtensionMethod" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[Extension Method 是 C# 的獨門招式]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
-    
-      <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
     
   </entry>
   

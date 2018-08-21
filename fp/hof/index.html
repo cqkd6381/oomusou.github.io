@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="歸納出 HOF 常用的 4 種 Pattern">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-08-20T22:54:10.492Z">
+<meta property="og:updated_time" content="2018-08-21T12:58:01.051Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入探討 FP 之 Higher Order Function">
 <meta name="twitter:description" content="歸納出 HOF 常用的 4 種 Pattern">
@@ -204,7 +204,7 @@
 <p><strong>將 using 重構成 HOF</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Data;</span><br><span class="line"><span class="keyword">using</span> System.Data.SqlClient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">static</span> <span class="title">class</span> <span class="title">ConnectionHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> R Connect&lt;R&gt;(<span class="keyword">string</span> connString, Func&lt;IDbConnection, R&gt; f)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> SqlConnection(connString))</span><br><span class="line">        &#123;</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="keyword">return</span> f(conn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p><code>using</code> 為 C# 內建的 statement，其實仔細一看，<code>using</code> 也是在做 setup 與 teardown 的事情：</p>
 <ul>
-<li><strong>Setup</strong> : 建立 <code>IDisposable</code> resource</li>
+<li><strong>Setup</strong> : 獲得 <code>IDisposable</code> resource</li>
 <li><strong>Body</strong> : 執行 <code>{}</code> 內的程式碼</li>
 <li><strong>Teardown</strong>：呼叫 <code>Dispose()</code> 釋放 resource</li>
 </ul>
@@ -246,9 +246,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/fp/using/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -284,7 +284,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/C/">C#<span>12</span></a></li> <li><a href="/tags/FP/">FP<span>5</span></a></li>
+  <li><a href="/tags/C/">C#<span>13</span></a></li> <li><a href="/tags/FP/">FP<span>6</span></a></li>
     </ul>
 	</div>
 		
