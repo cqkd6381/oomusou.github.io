@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何不啟用 SonarQube 內建的 Rule ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="SonarQube 無法修改預設的 Sonar way">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="SonarQube 無法修改預設的 Sonar way">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何不啟用 SonarQube 內建的 Rule ?">
+<meta property="og:url" content="https://oomusou.io/sonarqube/deactivate-rule/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="SonarQube 無法修改預設的 Sonar way">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-03T07:18:41.899Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何不啟用 SonarQube 內建的 Rule ?">
+<meta name="twitter:description" content="SonarQube 無法修改預設的 Sonar way">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何不啟用 SonarQube 內建的 Rule ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> SonarQube 無法修改預設的 Sonar way			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Rules"><span class="toc-article-text">Rules</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Quality_Profiles"><span class="toc-article-text">Quality Profiles</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Deactivate_Rule"><span class="toc-article-text">Deactivate Rule</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>SonarQube 內建很多檢查 rule，但有些 rule 可能不適合團隊，暫時不想啟用，該如何在 SonarQube 設定呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.1-ce-mac59 (26764)<br>SonarQube 7.1 (build 11001)</p>
+<h2 id="Rules">Rules</h2><hr>
+<p><img src="/images/sonarqube/deactivate-rule/rule000.png" alt="rule000"></p>
+<p><strong><em>Rule -&gt; C#</em></strong></p>
+<p>若第一個 rule :  <code>=+ should not be used instead of +=</code>  不適合團隊，想暫時不啟用檢查。</p>
+<blockquote>
+<p>並不是這個 rule 不好，只是因為是第一個 C# rule，所以以此為範例</p>
+</blockquote>
+<p>SonarQube 舊版允許你直接不啟用某個 rule，但新版取消了這個功能，無法直接不啟用。</p>
+<h2 id="Quality_Profiles">Quality Profiles</h2><hr>
+<p><img src="/images/sonarqube/deactivate-rule/rule001.png" alt="rule001"></p>
+<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
+<p>SonarQube 預設使用的 Quality Profile 是 <code>Sonar way</code>，目前 <code>Sonar way</code> 無法取消 rule。</p>
+<p>若要取消 rule，必須建立自己的 Quality Profile，然後才能取消。</p>
+<p><img src="/images/sonarqube/deactivate-rule/rule002.png" alt="rule002"></p>
+<ul>
+<li>選擇右側  <code>option</code> 的 <code>Copy</code></li>
+</ul>
+<p><img src="/images/sonarqube/deactivate-rule/rule003.png" alt="rule003"></p>
+<ol>
+<li>輸入新的 Quality Profile 名稱</li>
+<li>按 <code>Copy</code> 確定</li>
+</ol>
+<p><img src="/images/sonarqube/deactivate-rule/rule004.png" alt="rule004"></p>
+<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
+<ul>
+<li>選擇 <code>My way</code>，選擇右側  <code>option</code> 的 <code>Set as Default</code></li>
+</ul>
+<p><img src="/images/sonarqube/deactivate-rule/rule005.png" alt="rule005"></p>
+<ul>
+<li><code>My way</code> 成為 C# project 預設的 Quality Profile</li>
+</ul>
+<h2 id="Deactivate_Rule">Deactivate Rule</h2><hr>
+<p><img src="/images/sonarqube/deactivate-rule/rule006.png" alt="rule006"></p>
+<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
+<ul>
+<li>點擊 <code>My way</code> Quality Profile</li>
+</ul>
+<p><img src="/images/sonarqube/deactivate-rule/rule007.png" alt="rule007"></p>
+<ol>
+<li>點擊 <code>Active</code> 下所有的 rule</li>
+</ol>
+<p><img src="/images/sonarqube/deactivate-rule/rule008.png" alt="rule008"></p>
+<ol>
+<li>找到我們想取消的 <code>=+ should not be used instead of +=</code> rule</li>
+<li>按 <code>Deactivate</code> 取消</li>
+</ol>
+<p><img src="/images/sonarqube/deactivate-rule/rule009.png" alt="rule009"></p>
+<ol>
+<li><code>=+ should not be used instead of +=</code> rule 已被 <code>Deactivate</code></li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>原本認為很簡單的功能，但因為 SonarQube 的設計有改變，竟然花了一些時間才搞定，特別記錄下來</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fp/using/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-03 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/SonarQube/">SonarQube<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

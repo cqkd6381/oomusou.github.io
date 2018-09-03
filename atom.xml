@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-08-21T13:52:20.091Z</updated>
+  <updated>2018-09-03T07:18:41.899Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,80 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何不啟用 SonarQube 內建的 Rule ?]]></title>
+    <link href="https://oomusou.io/sonarqube/deactivate-rule/"/>
+    <id>https://oomusou.io/sonarqube/deactivate-rule/</id>
+    <published>2018-09-03T12:23:43.000Z</published>
+    <updated>2018-09-03T07:18:41.899Z</updated>
+    <content type="html"><![CDATA[<p>SonarQube 內建很多檢查 rule，但有些 rule 可能不適合團隊，暫時不想啟用，該如何在 SonarQube 設定呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.1-ce-mac59 (26764)<br>SonarQube 7.1 (build 11001)</p>
+<h2 id="Rules">Rules</h2><hr>
+<p><img src="/images/sonarqube/deactivate-rule/rule000.png" alt="rule000"></p>
+<p><strong><em>Rule -&gt; C#</em></strong></p>
+<p>若第一個 rule :  <code>=+ should not be used instead of +=</code>  不適合團隊，想暫時不啟用檢查。</p>
+<blockquote>
+<p>並不是這個 rule 不好，只是因為是第一個 C# rule，所以以此為範例</p>
+</blockquote>
+<p>SonarQube 舊版允許你直接不啟用某個 rule，但新版取消了這個功能，無法直接不啟用。</p>
+<h2 id="Quality_Profiles">Quality Profiles</h2><hr>
+<p><img src="/images/sonarqube/deactivate-rule/rule001.png" alt="rule001"></p>
+<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
+<p>SonarQube 預設使用的 Quality Profile 是 <code>Sonar way</code>，目前 <code>Sonar way</code> 無法取消 rule。</p>
+<p>若要取消 rule，必須建立自己的 Quality Profile，然後才能取消。</p>
+<p><img src="/images/sonarqube/deactivate-rule/rule002.png" alt="rule002"></p>
+<ul>
+<li>選擇右側  <code>option</code> 的 <code>Copy</code></li>
+</ul>
+<p><img src="/images/sonarqube/deactivate-rule/rule003.png" alt="rule003"></p>
+<ol>
+<li>輸入新的 Quality Profile 名稱</li>
+<li>按 <code>Copy</code> 確定</li>
+</ol>
+<p><img src="/images/sonarqube/deactivate-rule/rule004.png" alt="rule004"></p>
+<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
+<ul>
+<li>選擇 <code>My way</code>，選擇右側  <code>option</code> 的 <code>Set as Default</code></li>
+</ul>
+<p><img src="/images/sonarqube/deactivate-rule/rule005.png" alt="rule005"></p>
+<ul>
+<li><code>My way</code> 成為 C# project 預設的 Quality Profile</li>
+</ul>
+<h2 id="Deactivate_Rule">Deactivate Rule</h2><hr>
+<p><img src="/images/sonarqube/deactivate-rule/rule006.png" alt="rule006"></p>
+<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
+<ul>
+<li>點擊 <code>My way</code> Quality Profile</li>
+</ul>
+<p><img src="/images/sonarqube/deactivate-rule/rule007.png" alt="rule007"></p>
+<ol>
+<li>點擊 <code>Active</code> 下所有的 rule</li>
+</ol>
+<p><img src="/images/sonarqube/deactivate-rule/rule008.png" alt="rule008"></p>
+<ol>
+<li>找到我們想取消的 <code>=+ should not be used instead of +=</code> rule</li>
+<li>按 <code>Deactivate</code> 取消</li>
+</ol>
+<p><img src="/images/sonarqube/deactivate-rule/rule009.png" alt="rule009"></p>
+<ol>
+<li><code>=+ should not be used instead of +=</code> rule 已被 <code>Deactivate</code></li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>原本認為很簡單的功能，但因為 SonarQube 的設計有改變，竟然花了一些時間才搞定，特別記錄下來</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[SonarQube 無法修改預設的 Sonar way]]>
+    
+    </summary>
+    
+      <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[將 Using Statement 重構成 Using() Function]]></title>
@@ -2032,110 +2106,6 @@
       <category term="GitHub" scheme="https://oomusou.io/tags/GitHub/"/>
     
       <category term="Hexo" scheme="https://oomusou.io/tags/Hexo/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
-    <link href="https://oomusou.io/docker/postgres/"/>
-    <id>https://oomusou.io/docker/postgres/</id>
-    <published>2018-07-24T22:23:43.000Z</published>
-    <updated>2018-07-31T01:50:15.231Z</updated>
-    <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 。本文分別使用 <code>docker run</code> 與 <code>docker-compose</code> 兩種方式。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.03.1-ce-mac65 (24312)<br>PostgreSQL 10.3</p>
-<h2 id="使用_docker_run">使用 docker run</h2><hr>
-<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="keyword">run</span> --name MyPostgres -<span class="keyword">d</span> -p 5432:5432 -v ~/Postgres:/<span class="keyword">var</span>/lib/postgresql/data -<span class="keyword">e</span> POSTGRES_DB=eflab -<span class="keyword">e</span> POSTGRES_USER=admin -<span class="keyword">e</span> POSTGRES_PASSWORD='12345' postgres:latest</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
-<p><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker 會自動以亂數建立 )<br><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
-<p><code>-v</code> : <code>v</code>olume，PostgresSQL 新增的資料會寫在 container 內的 <code>/var/lib/postgresql/data</code> 目錄，會改 mapping 到 host 的 <code>~/Postgres</code>，如此 container 刪除後，資料仍然會留在 host </p>
-<p><code>-p</code> : <code>p</code>ort mapping，host 與 container post 的對應，格式為 host port : container port<br><code>-e</code> : <code>e</code>nvironment，設定 PostgreSQL 所需要的環境變數</p>
-<ul>
-<li><code>POSTGRES_DB</code> : database 名稱</li>
-<li><code>POSTGRES_USER</code> : 帳號</li>
-<li><code>POSTGRES_PASSWORD</code> : 密碼</li>
-</ul>
-<p><code>postgress:latest</code> : image 名稱，其中 <code>latest</code> 為最新版的 image</p>
-<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
-<h2 id="使用_Docker-Compose">使用 Docker-Compose</h2><hr>
-<p><code>docker run</code> 方式雖然直接，但需要搭配一堆參數才能執行，若能將這些參數先寫在文字檔內，只要下 <code>docker-compose up -d</code> 就可執行 container。</p>
-<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
-<h3 id="Docker-compose-yml">Docker-compose.yml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  postgres:&#10;    image: postgres:latest&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;HOST_DIR&#125;:/var/lib/postgresql/data&#10;    expose:&#10;      - 5432&#10;    ports:&#10;      - $&#123;POSTGRES_PORT&#125;:5432&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
-<p>第 1 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>version</code> 設定 <code>docker-compose.yml</code> 格式的版本。</p>
-<p>因為 <code>docker-compose.yml</code> 的格式版本與 Docker 版本息息相關，若你要使用新版的 Docker 所提供的功能，在 <code>docker-compose.yml</code> 的版本就必須下的更細，如 <code>3.3</code>，在此只使用了 <code>docker-compose.yml</code> 基本功能而已，使用 <code>3</code> 即可。</p>
-<p>第 3 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services:&#10;  postgres:</span><br></pre></td></tr></table></figure>
-<p>使用 <code>services</code> 設定有哪些 service 要一起跑。</p>
-<p><code>Docker-compose.yml</code> 理論上可以同時描述多個 service，也就是多個 container，如 .NET Core + PostgreSQL + Nginx + Redis 同時啟動，但本文只想使用 PostgreSQL 而已，因此僅建立  <code>postgres</code> service。</p>
-<p>第 4 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postgres:&#10;  image: postgres:latest</span><br></pre></td></tr></table></figure>
-<p>設定 <code>postgres</code> service，此名稱可自行建立。</p>
-<ul>
-<li><strong>image</strong> :  設定使用的 image。</li>
-</ul>
-<blockquote>
-<p><code>latest</code> 表示最新版的 <code>postgres</code></p>
-</blockquote>
-<p>第 6 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyPostgres</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 container 名稱。</p>
-<blockquote>
-<p>相當於 <code>docker run</code> 的 <code>--name</code></p>
-</blockquote>
-<p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - $&#123;POSTGRES_HOST_DIR&#125;:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
-<p>使用 <code>volumes</code> 設定 host 與 container 所對應的目錄，將來 PostgreSQL 所寫入資料，將寫入 host 目錄。</p>
-<p><code>:</code> 左側為 host 目錄，右側為 container 內目錄。</p>
-<blockquote>
-<p>相當於 <code>docker run</code> 的 <code>-v</code></p>
-</blockquote>
-<p><code>POSTGRES_HOST_DIR</code> 將在 <code>.env</code> 中設定。</p>
-<p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - 5432</span><br></pre></td></tr></table></figure>
-<p>使用 <code>expose</code> 設定 container 的 port。</p>
-<p>第 11 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - $&#123;POSTGRES_PORT&#125;:5432</span><br></pre></td></tr></table></figure>
-<p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port。</p>
-<p><code>:</code> 左側為 host 的 port，右側為 container 的 port。</p>
-<blockquote>
-<p>相當於 <code>docker run</code> 的 <code>-p</code></p>
-</blockquote>
-<p><code>POSTGRES_PORT</code> 將在 <code>.env</code> 中設定。</p>
-<p>13 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">environment:&#10;    - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;    - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;    - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
-<p>設定 PostgreSQL 的 database、user 與 password，此為 PostgreSQL 所需要的環境變數。</p>
-<blockquote>
-<p>相當於 <code>docker run</code> 的 <code>-e</code></p>
-</blockquote>
-<p><code>POSTGRES_DB</code>、<code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 將在 <code>.env</code> 中設定。</p>
-<h3 id="-env">.env</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">HOST_DIR=<span class="value">~/Postgres</span></span></span><br><span class="line"><span class="setting">POSTGRES_PORT=<span class="value"><span class="number">1234</span></span></span></span><br><span class="line"><span class="setting">POSTGRES_DB=<span class="value">eflab</span></span></span><br><span class="line"><span class="setting">POSTGRES_USER=<span class="value">admin</span></span></span><br><span class="line"><span class="setting">POSTGRES_PASSWORD=<span class="value"><span class="number">12345</span></span></span></span><br></pre></td></tr></table></figure>
-<p>此為 <code>Docker-compose.yml</code> 所設定的環境變數，被獨立在 <code>.env</code> 中，可單獨設定，不用修改 <code>Docker-compose.yml</code>。</p>
-<h3 id="Docker-compose_up">Docker-compose up</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker-compose up</code> 啟動 PostgreSQL。</p>
-<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
-<p><img src="/images/docker/postgres/post001.png" alt="post001"></p>
-<h3 id="Docker-compose_down">Docker-compose down</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
-<p>使用 <code>docker-compose down</code> 結束 PostgreSQL，並且刪除 container。</p>
-<p><img src="/images/docker/postgres/post002.png" alt="post002"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
-<li><code>docker-run</code> 與 <code>Docker-Compose</code> 都可以啟動 PostgreSQL，實務上建議使用 <code>Docker-Compose</code>，將變數寫在 <code>.env</code> 中，這樣可使用 <code>docker-compose up -d</code> 就可啟動 PostgreSQL，<code>docker-compose down</code> 就可結束 PostgreSQL，不用再擔心參數問題</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/PostgresDocker" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
-    
-      <category term="PostgreSQL" scheme="https://oomusou.io/tags/PostgreSQL/"/>
     
   </entry>
   
