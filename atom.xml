@@ -500,145 +500,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[Vue CLI 之 Hello World (Windows)]]></title>
-    <link href="https://oomusou.io/vue/vuecli/hello-world-win/"/>
-    <id>https://oomusou.io/vue/vuecli/hello-world-win/</id>
-    <published>2018-08-15T14:23:43.000Z</published>
-    <updated>2018-08-16T03:42:28.311Z</updated>
-    <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
-<p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>Windows 10 Professional 1803 (17134.191)<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue.js 2.5.17<br>Vue CLI 3.0.0</p>
-<h2 id="Node-js">Node.js</h2><hr>
-<p>現代前端都基於 Node.js 生態系，Vue 也不例外，首先必須安裝 Node.js。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli009.png" alt="vuecli009"></p>
-<p>到 <a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js 官網</a>下載 8.11.3 LTS，只要下一步下一步安裝即可。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli010.png" alt="vuecli010"></p>
-<p>安裝完後會多了 <code>Node.js command prompt</code>，將來所有 Vue 的 CLI，都要使用此 command prompt。</p>
-<h2 id="Yarn">Yarn</h2><hr>
-<p>Node.js 內建 NPM 套件管理工具，但 NPM 的演算法實在不優，速度很慢，Facebook 另外提出了 Yarn 管理前端套件。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm <span class="operator"><span class="keyword">install</span> -<span class="keyword">g</span> yarn</span></span><br></pre></td></tr></table></figure>
-<p>使用 NPM 以 <code>g</code> lobal 方式安裝 Yarn。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli011.png" alt="vuecli011"></p>
-<p>將來安裝前端套件，將以 Yarn 取代 NPM。</p>
-<h2 id="設定_Yarn_套件路徑">設定 Yarn 套件路徑</h2><hr>
-<p>由於 Node.js 內建 NPM，因此 NPM 套件 path 已經整好，但 Yarn 由於是外加套件，所以 path 要另外設定。</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="keyword">global</span> bin</span><br></pre></td></tr></table></figure>
-<p>使用 <code>yarn global bin</code> 回傳 global 套件所在的 path。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli012.png" alt="vuecli012"></p>
-<ol>
-<li>輸入 <code>yarn global bin</code></li>
-<li>顯示 global 套件的 path，每個人的 path 會不一樣</li>
-</ol>
-<blockquote>
-<p>Yarn 的套件路徑設定只有 Windows 需要，在 macOS 不必</p>
-</blockquote>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli013.png" alt="vuecli013"></p>
-<ol>
-<li>將 path 設定到系統環境變數</li>
-<li>重新啟動 <code>Node.js command prompt</code></li>
-</ol>
-<h2 id="Vue_CLI">Vue CLI</h2><hr>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="built_in">global</span> <span class="keyword">add</span> @vue/<span class="keyword">cli</span></span><br></pre></td></tr></table></figure>
-<p>使用 Yarn 以 <code>g</code> lobal 方式安裝 Vue CLI。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli002.png" alt="vuecli002"></p>
-<h2 id="建立_Project">建立 Project</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
-<p>使用 <code>vue create</code> 建立 Vue 專案。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli003.png" alt="vuecli003"></p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli004.png" alt="vuecli004"></p>
-<ol>
-<li>選擇 project 類型，先按 ↩ 選擇預設的 <code>babel + eslint</code> 即可</li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli014.png" alt="vuecli014"></p>
-<ol>
-<li>選擇套件管理工具，選擇預設的 <code>Yarn</code></li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli015.png" alt="vuecli015"></p>
-<ol>
-<li>成功建立專案</li>
-</ol>
-<h2 id="執行_Vue">執行 Vue</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd hello-world</span><br><span class="line">hello-world <span class="variable">$ </span>yarn serve</span><br></pre></td></tr></table></figure>
-<p>使用 <code>yarn serve</code> 執行 Vue。</p>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli006.png" alt="vuecli006"></p>
-<ol>
-<li>進入 <code>hello-world</code> 目錄</li>
-<li>輸入 <code>yarn serve</code> 執行 Vue</li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli007.png" alt="vuecli007"></p>
-<ol>
-<li>Vue 啟動在 <code>http://localhost:8080</code></li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-win/vuecli008.png" alt="vuecli008"></p>
-<p>Vue 順利執行在 <code>localhost:8080</code>。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Vue CLI 3 讓我們類似 Angular CLI 快速建立專案，也將相關的設定 tooling 都準備好，大幅降低進入現代前端的門檻</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 Vue CLI 3 快速建立 Project]]>
-    
-    </summary>
-    
-      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
-    
-      <category term="Vue CLI" scheme="https://oomusou.io/tags/Vue-CLI/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Vue CLI 之 Instant Prototyping]]></title>
-    <link href="https://oomusou.io/vue/vuecli/instant-prototyping/"/>
-    <id>https://oomusou.io/vue/vuecli/instant-prototyping/</id>
-    <published>2018-08-15T12:23:43.000Z</published>
-    <updated>2018-08-16T03:42:19.425Z</updated>
-    <content type="html"><![CDATA[<p>Vue CLI 3 提供了一個很酷的 Instant Prototyping，在學習 Vue 時非常有用，讓我們不用建立 Vue 專案，只要一個 <code>.vue</code> 檔就可開始練習與 demo。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue 2.5.17<br>Vue CLI 3.0.0<br>WebStorm 2018.2.1</p>
-<h2 id="安裝_CLI-Service_Global">安裝 CLI-Service Global</h2><hr>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="built_in">global</span> <span class="keyword">add</span> @vue/<span class="keyword">cli</span>-service-<span class="built_in">global</span></span><br></pre></td></tr></table></figure>
-<p>Vue CLI 並沒有內建 CLI-Service Global，要另外安裝。</p>
-<p><img src="/images/vue/vuecli/instant-prototyping/prototype000.png" alt="prototype000"></p>
-<h2 id="建立_-vue">建立 .vue</h2><hr>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;template&#62;&#10;  &#60;h1&#62;Hello!&#60;/h1&#62;&#10;&#60;/template&#62;</span><br></pre></td></tr></table></figure>
-<p>用任何工具建立 <code>.vue</code> 皆可，如存檔命名為 <code>hello.vue</code>。</p>
-<p><img src="/images/vue/vuecli/instant-prototyping/prototype001.png" alt="prototype001"></p>
-<ol>
-<li>就算使用 Vim 建立 <code>.vue</code> 也行</li>
-</ol>
-<h2 id="執行_Vue">執行 Vue</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue serve hello.vue</span><br></pre></td></tr></table></figure>
-<p><code>vue serve</code> 後面接 <code>檔案名稱</code>，就可執行 Vue。</p>
-<p><img src="/images/vue/vuecli/instant-prototyping/prototype002.png" alt="prototype002"></p>
-<p><img src="/images/vue/vuecli/instant-prototyping/prototype003.png" alt="prototype003"></p>
-<p>Vue 啟動在 <code>http://localhost:8080/</code></p>
-<p><img src="/images/vue/vuecli/instant-prototyping/prototype004.png" alt="prototype004"></p>
-<p>Vue 順利執行在 <code>localhost:8080</code>。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Vue CLI 3 的 Instant Prototyping 讓我們在學習測試 Vue 時更方便，不用再使用 Yarn 建立新專案，只要一個 <code>.vue</code> 檔即可</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI</a>, <a href="https://cli.vuejs.org/guide/prototyping.html" target="_blank" rel="external">Instant Prototyping</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[不用建立 Vue 專案就可 demo]]>
-    
-    </summary>
-    
-      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
-    
-      <category term="Vue CLI" scheme="https://oomusou.io/tags/Vue-CLI/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[如何使用 VS Code 開發 Vue ?]]></title>
     <link href="https://oomusou.io/vscode/vue/"/>
     <id>https://oomusou.io/vscode/vue/</id>
@@ -880,91 +741,6 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何使用 Vue 搭配 ESLint + Airbnb Style Guide ?]]></title>
-    <link href="https://oomusou.io/vue/vuecli/eslint/"/>
-    <id>https://oomusou.io/vue/vuecli/eslint/</id>
-    <published>2018-08-13T13:23:43.000Z</published>
-    <updated>2018-08-15T08:19:56.523Z</updated>
-    <content type="html"><![CDATA[<p>Vue CLI 3 已經整合 ESLint 與著名的 Airbnb JavaScript Style Guide，只要跟著 Vue CLI 3 的 Wizard，我們也能輕易地將 ESLint 與 Airbnb 整進 Vue 專案。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue 2.5.17<br>Vue CLI 3.0.0<br>WebStorm 2018.2.1</p>
-<h2 id="建立_Project">建立 Project</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
-<p>使用 <code>vue create</code> 建立 Vue 專案。</p>
-<p><img src="/images/vue/vuecli/eslint/eslint000.png" alt="eslint000"></p>
-<h2 id="選擇_Feature">選擇 Feature</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint001.png" alt="eslint001"></p>
-<ol>
-<li>不選擇 <code>babel, eslint</code>，選擇 <code>Manually select features</code></li>
-</ol>
-<h2 id="選擇_Babel_與_Linter">選擇 Babel 與 Linter</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint002.png" alt="eslint002"></p>
-<ol>
-<li>選擇 <code>Babel</code></li>
-<li>選擇 <code>Linter / Formatter</code></li>
-</ol>
-<p><img src="/images/vue/vuecli/eslint/eslint003.png" alt="eslint003"></p>
-<ol>
-<li>選擇 <code>ESLint + Airbnb config</code></li>
-</ol>
-<h2 id="存檔時執行_ESLint">存檔時執行 ESLint</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint004.png" alt="eslint004"></p>
-<ol>
-<li>選擇 <code>Lint on save</code></li>
-</ol>
-<h2 id="Config_存檔方式">Config 存檔方式</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint005.png" alt="eslint005"></p>
-<ol>
-<li>選擇 <code>In dedicated config files</code>，也就是設定會單獨在 <code>.eslintrc.js</code>，而不是存到 <code>package.json</code> 內</li>
-</ol>
-<h2 id="將設定存成預設值">將設定存成預設值</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint006.png" alt="eslint006"></p>
-<ol>
-<li>選擇 <code>Y</code> 將 ESLint + Airbnb 存成預設值</li>
-<li>將預設值存成 <code>.vuerc</code></li>
-</ol>
-<blockquote>
-<p><code>.vuerc</code> 將存到 home directory 根目錄下，將來 <code>vue create</code> 時，將可選擇 <code>.vuerc</code> 內的設定</p>
-</blockquote>
-<p><img src="/images/vue/vuecli/eslint/eslint009.png" alt="eslint009"></p>
-<p>將來建立專案時，將多了 <code>.vuerc (babel, eslint)</code> 選項，也就是剛剛存的預設值。</p>
-<h2 id="選擇套件管理工具">選擇套件管理工具</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint007.png" alt="eslint007"></p>
-<ol>
-<li>選擇 Yarn，將以 Yarn 作為標準的套件管理工具</li>
-</ol>
-<p><img src="/images/vue/vuecli/eslint/eslint008.png" alt="eslint008"></p>
-<p>Vue CLI 建立專案成功。</p>
-<h2 id="WebStorm">WebStorm</h2><hr>
-<p><img src="/images/vue/vuecli/eslint/eslint010.png" alt="eslint010"></p>
-<ul>
-<li>WebStorm 能正確搭配 ESList 與 Airbnb Style Guide 發出警告</li>
-<li>按熱鍵 <code>⌘ + ⌥ + L</code> 同值執行 format 與 lint fix</li>
-</ul>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Vue CLI 3 已經將 ESLint 與 Airbnb Style Guide 整好，WebStorm 也能聰明地抓到 Vue CLI 的設定進行檢查與修正</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://github.com/airbnb" target="_blank" rel="external">Airbnb</a>, <a href="https://github.com/airbnb/javascript" target="_blank" rel="external">Airbnb JavaScript Style Guide</a><br><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 ESLint 與 Airbnb 為 Vue 做更嚴的檢查]]>
-    
-    </summary>
-    
-      <category term="ESLint" scheme="https://oomusou.io/tags/ESLint/"/>
-    
-      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
-    
-      <category term="Vue CLI" scheme="https://oomusou.io/tags/Vue-CLI/"/>
-    
-      <category term="WebStorm" scheme="https://oomusou.io/tags/WebStorm/"/>
-    
-  </entry>
-  
-  <entry>
     <title><![CDATA[如何使用 WebStorm 開發 Vue ?]]></title>
     <link href="https://oomusou.io/webstorm/vue/"/>
     <id>https://oomusou.io/webstorm/vue/</id>
@@ -1046,79 +822,6 @@
       <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
     
       <category term="WebStorm" scheme="https://oomusou.io/tags/WebStorm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Vue CLI 之 Hello World (macOS)]]></title>
-    <link href="https://oomusou.io/vue/vuecli/hello-world-mac/"/>
-    <id>https://oomusou.io/vue/vuecli/hello-world-mac/</id>
-    <published>2018-08-11T13:23:43.000Z</published>
-    <updated>2018-08-16T03:42:14.631Z</updated>
-    <content type="html"><![CDATA[<p>現代前端的 Tooling 繁雜， 一直是跨入前端的門檻，讓 CLI 成為 Tooling 的抽象層，由 CLI 幫我們解決繁瑣的 Tooling 整合。</p>
-<p>由於 Vue CLI 3 的發表，Vue 的 CLI 又向前邁進一大步，本文介紹如何使用 Vue CLI 3 快速建立 Vue 專案。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Node.js 8.11.3<br>Yarn 1.9.4<br>Vue.js 2.5.17<br>Vue CLI 3.0.0</p>
-<h2 id="Node-js">Node.js</h2><hr>
-<p>現代前端都基於 Node.js 生態系，Vue 也不例外，首先必須安裝 Node.js。</p>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli009.png" alt="vuecli009"></p>
-<p>到 <a href="https://nodejs.org/en/" target="_blank" rel="external">Node.js</a> 官網下載 8.11.3 LTS，只要下一步下一步安裝即可。</p>
-<h2 id="Yarn">Yarn</h2><hr>
-<p>Node.js 內建 NPM 套件管理工具，但 NPM 的演算法實在不優，速度很慢，Facebook 另外提出了 Yarn 管理前端套件。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g yarn</span><br></pre></td></tr></table></figure>
-<p>使用 NPM 以 <code>g</code> lobal 方式安裝 Yarn。</p>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli001.png" alt="vuecli001"></p>
-<p>將來安裝前端套件，將以 Yarn 取代 NPM。</p>
-<h2 id="Vue_CLI">Vue CLI</h2><hr>
-<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="built_in">global</span> <span class="keyword">add</span> @vue/<span class="keyword">cli</span></span><br></pre></td></tr></table></figure>
-<p>使用 Yarn 以 <code>g</code> lobal 方式安裝 Vue CLI。</p>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli002.png" alt="vuecli002"></p>
-<h2 id="建立_Project">建立 Project</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>vue create hello-world</span><br></pre></td></tr></table></figure>
-<p>使用 <code>vue create</code> 建立 Vue 專案。</p>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli003.png" alt="vuecli003"></p>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli004.png" alt="vuecli004"></p>
-<ol>
-<li>選擇 project 類型，先按 ↩ 選擇預設的 (babel + eslint) 即可</li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli010.png" alt="vuecli010"></p>
-<ol>
-<li>選擇套件管理工具，選擇預設的 <code>Yarn</code></li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli005.png" alt="vuecli005"></p>
-<ol>
-<li>成功建立專案</li>
-</ol>
-<h2 id="執行_Vue">執行 Vue</h2><hr>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd hello-world</span><br><span class="line">hello-world <span class="variable">$ </span>yarn serve</span><br></pre></td></tr></table></figure>
-<p>使用 <code>yarn serve</code> 執行 Vue。</p>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli006.png" alt="vuecli006"></p>
-<ol>
-<li>進入 <code>hello-world</code> 目錄</li>
-<li>輸入 <code>yarn serve</code> 執行 Vue</li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli007.png" alt="vuecli007"></p>
-<ol>
-<li>Vue 啟動在 <code>http://localhost:8080</code></li>
-</ol>
-<p><img src="/images/vue/vuecli/hello-world-mac/vuecli008.png" alt="vuecli008"></p>
-<p>Vue 順利執行在 <code>localhost:8080</code>。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Vue CLI 3 讓我們類似 Angular CLI 快速建立專案，也將相關的設定 tooling 都準備好，大幅降低現代前端的進入門檻</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://vuejs.org/" target="_blank" rel="external">Vue.js</a>, <a href="https://cli.vuejs.org/" target="_blank" rel="external">Vue CLI 3</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 Vue CLI 3 快速建立 Project]]>
-    
-    </summary>
-    
-      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
-    
-      <category term="Vue CLI" scheme="https://oomusou.io/tags/Vue-CLI/"/>
     
   </entry>
   
@@ -2106,6 +1809,331 @@
       <category term="GitHub" scheme="https://oomusou.io/tags/GitHub/"/>
     
       <category term="Hexo" scheme="https://oomusou.io/tags/Hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何使用 Docker 安裝 PostgreSQL ?]]></title>
+    <link href="https://oomusou.io/docker/postgres/"/>
+    <id>https://oomusou.io/docker/postgres/</id>
+    <published>2018-07-24T22:23:43.000Z</published>
+    <updated>2018-07-31T01:50:15.231Z</updated>
+    <content type="html"><![CDATA[<p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 。本文分別使用 <code>docker run</code> 與 <code>docker-compose</code> 兩種方式。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.03.1-ce-mac65 (24312)<br>PostgreSQL 10.3</p>
+<h2 id="使用_docker_run">使用 docker run</h2><hr>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="keyword">run</span> --name MyPostgres -<span class="keyword">d</span> -p 5432:5432 -v ~/Postgres:/<span class="keyword">var</span>/lib/postgresql/data -<span class="keyword">e</span> POSTGRES_DB=eflab -<span class="keyword">e</span> POSTGRES_USER=admin -<span class="keyword">e</span> POSTGRES_PASSWORD='12345' postgres:latest</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
+<p><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker 會自動以亂數建立 )<br><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<p><code>-v</code> : <code>v</code>olume，PostgresSQL 新增的資料會寫在 container 內的 <code>/var/lib/postgresql/data</code> 目錄，會改 mapping 到 host 的 <code>~/Postgres</code>，如此 container 刪除後，資料仍然會留在 host </p>
+<p><code>-p</code> : <code>p</code>ort mapping，host 與 container post 的對應，格式為 host port : container port<br><code>-e</code> : <code>e</code>nvironment，設定 PostgreSQL 所需要的環境變數</p>
+<ul>
+<li><code>POSTGRES_DB</code> : database 名稱</li>
+<li><code>POSTGRES_USER</code> : 帳號</li>
+<li><code>POSTGRES_PASSWORD</code> : 密碼</li>
+</ul>
+<p><code>postgress:latest</code> : image 名稱，其中 <code>latest</code> 為最新版的 image</p>
+<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
+<h2 id="使用_Docker-Compose">使用 Docker-Compose</h2><hr>
+<p><code>docker run</code> 方式雖然直接，但需要搭配一堆參數才能執行，若能將這些參數先寫在文字檔內，只要下 <code>docker-compose up -d</code> 就可執行 container。</p>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<h3 id="Docker-compose-yml">Docker-compose.yml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  postgres:&#10;    image: postgres:latest&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;HOST_DIR&#125;:/var/lib/postgresql/data&#10;    expose:&#10;      - 5432&#10;    ports:&#10;      - $&#123;POSTGRES_PORT&#125;:5432&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>version</code> 設定 <code>docker-compose.yml</code> 格式的版本。</p>
+<p>因為 <code>docker-compose.yml</code> 的格式版本與 Docker 版本息息相關，若你要使用新版的 Docker 所提供的功能，在 <code>docker-compose.yml</code> 的版本就必須下的更細，如 <code>3.3</code>，在此只使用了 <code>docker-compose.yml</code> 基本功能而已，使用 <code>3</code> 即可。</p>
+<p>第 3 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services:&#10;  postgres:</span><br></pre></td></tr></table></figure>
+<p>使用 <code>services</code> 設定有哪些 service 要一起跑。</p>
+<p><code>Docker-compose.yml</code> 理論上可以同時描述多個 service，也就是多個 container，如 .NET Core + PostgreSQL + Nginx + Redis 同時啟動，但本文只想使用 PostgreSQL 而已，因此僅建立  <code>postgres</code> service。</p>
+<p>第 4 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postgres:&#10;  image: postgres:latest</span><br></pre></td></tr></table></figure>
+<p>設定 <code>postgres</code> service，此名稱可自行建立。</p>
+<ul>
+<li><strong>image</strong> :  設定使用的 image。</li>
+</ul>
+<blockquote>
+<p><code>latest</code> 表示最新版的 <code>postgres</code></p>
+</blockquote>
+<p>第 6 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyPostgres</span><br></pre></td></tr></table></figure>
+<p>使用 <code>container_name</code> 設定 container 名稱。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>--name</code></p>
+</blockquote>
+<p>第 7 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - $&#123;POSTGRES_HOST_DIR&#125;:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
+<p>使用 <code>volumes</code> 設定 host 與 container 所對應的目錄，將來 PostgreSQL 所寫入資料，將寫入 host 目錄。</p>
+<p><code>:</code> 左側為 host 目錄，右側為 container 內目錄。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-v</code></p>
+</blockquote>
+<p><code>POSTGRES_HOST_DIR</code> 將在 <code>.env</code> 中設定。</p>
+<p>第 9 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - 5432</span><br></pre></td></tr></table></figure>
+<p>使用 <code>expose</code> 設定 container 的 port。</p>
+<p>第 11 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - $&#123;POSTGRES_PORT&#125;:5432</span><br></pre></td></tr></table></figure>
+<p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port。</p>
+<p><code>:</code> 左側為 host 的 port，右側為 container 的 port。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-p</code></p>
+</blockquote>
+<p><code>POSTGRES_PORT</code> 將在 <code>.env</code> 中設定。</p>
+<p>13 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">environment:&#10;    - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;    - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;    - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<p>設定 PostgreSQL 的 database、user 與 password，此為 PostgreSQL 所需要的環境變數。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-e</code></p>
+</blockquote>
+<p><code>POSTGRES_DB</code>、<code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 將在 <code>.env</code> 中設定。</p>
+<h3 id="-env">.env</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">HOST_DIR=<span class="value">~/Postgres</span></span></span><br><span class="line"><span class="setting">POSTGRES_PORT=<span class="value"><span class="number">1234</span></span></span></span><br><span class="line"><span class="setting">POSTGRES_DB=<span class="value">eflab</span></span></span><br><span class="line"><span class="setting">POSTGRES_USER=<span class="value">admin</span></span></span><br><span class="line"><span class="setting">POSTGRES_PASSWORD=<span class="value"><span class="number">12345</span></span></span></span><br></pre></td></tr></table></figure>
+<p>此為 <code>Docker-compose.yml</code> 所設定的環境變數，被獨立在 <code>.env</code> 中，可單獨設定，不用修改 <code>Docker-compose.yml</code>。</p>
+<h3 id="Docker-compose_up">Docker-compose up</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose up</code> 啟動 PostgreSQL。</p>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<p><img src="/images/docker/postgres/post001.png" alt="post001"></p>
+<h3 id="Docker-compose_down">Docker-compose down</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose down</code> 結束 PostgreSQL，並且刪除 container。</p>
+<p><img src="/images/docker/postgres/post002.png" alt="post002"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
+<li><code>docker-run</code> 與 <code>Docker-Compose</code> 都可以啟動 PostgreSQL，實務上建議使用 <code>Docker-Compose</code>，將變數寫在 <code>.env</code> 中，這樣可使用 <code>docker-compose up -d</code> 就可啟動 PostgreSQL，<code>docker-compose down</code> 就可結束 PostgreSQL，不用再擔心參數問題</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/PostgresDocker" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker]]>
+    
+    </summary>
+    
+      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
+    
+      <category term="PostgreSQL" scheme="https://oomusou.io/tags/PostgreSQL/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[深入探討 C# 之 Extension Method]]></title>
+    <link href="https://oomusou.io/csharp/extension-method/"/>
+    <id>https://oomusou.io/csharp/extension-method/</id>
+    <published>2018-07-22T12:23:43.000Z</published>
+    <updated>2018-07-22T10:52:27.838Z</updated>
+    <content type="html"><![CDATA[<p>C# 3 的 Extension Method 是很了不起的發明，讓我們在不修改原本 source code 的前提下，就能為 class 增加新 method，實現開放封閉原則，尤其對於 .NET Framework 或 package 的擴展特別有效。</p>
+<p>事實上 Extension Method 在 Functional Programming 下另有妙用，讓我們輕易實現 Function Composition。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.1.3</p>
+<h2 id="Extension_Method">Extension Method</h2><hr>
+<p>首先來看 Extension Method 最標準的應用。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(x =&gt; x * <span class="number">2</span>)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(x =&gt; Console.WriteLine(x.ToString()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>先使用 <code>Enumerable.Range()</code> 產生 <code>1, 2, 3</code>，再使用 <code>Select()</code> 變成 <code>2, 4, 6</code>，最後使用 <code>ForEach()</code> 印出來。</p>
+<p>但中間出現了一個很詭異的 <code>ToList()</code>。</p>
+<p>原因是因為 <code>IEnumerable</code> 沒有 <code>ForEach()</code>，只有 <code>List</code> 才有 <code>ForEach()</code>，因此我們必須先 <code>ToList()</code>。</p>
+<p>但就語意來說，這是很怪的，<code>IEnumerable</code> 自帶 <code>Aggregate()</code>，為什麼卻沒有提供更常用的 <code>ForEach()</code> 呢 ?</p>
+<p>既然 .NET Framework 沒有，我們就來替 <code>IEnumerable</code> 打造一個 <code>ForEach()</code> 吧。</p>
+<p><strong>Extensions.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Extensions</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">void</span> ForEach&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; source, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (T element <span class="keyword">in</span> source)</span><br><span class="line">                action(element);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ForEach()</code> 第一個參數為 <code>this IEnumerable&lt;T&gt;</code>，注意特別加了 <code>this</code>，表示我們要為 <code>IEnumerable</code> 提供 <code>ForEach()</code> Extension Method。</p>
+<p>且 Extension Method 必須都為 static method。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(x =&gt; x * <span class="number">2</span>)</span><br><span class="line">                .ForEach(x =&gt; Console.WriteLine(x.ToString()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>之後我們就能將奇怪的 <code>ToList()</code> 拿掉了，這樣的語意是不是更好呢 ?</p>
+<blockquote>
+<p>Extension Method 讓我們對 .NET Framework 或 package 加以擴充，用起來好像是內建的method 一樣，只要做兩件事情 :</p>
+<ol>
+<li>使用 static method</li>
+<li>第一個參數為該 class 或 interface 型別，並加上 <code>this</code> 修飾</li>
+</ol>
+</blockquote>
+<h2 id="Function_Composition">Function Composition</h2><hr>
+<p>Function Composition 是 FP 的招牌菜，強調藉由眾多的小 functional 組合成大 function，而非傳統 imperative 寫法，總是寫出數百行的 method，且這些 method 幾乎是量身定做，不只重複使用的機會很低，且因為行數過多很難維護，也難以單元測試。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> ConsoleApp.Email;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> john = <span class="keyword">new</span> Person(<span class="string">"John"</span>, <span class="string">"Doe"</span>);</span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">EmailFor</span>(<span class="params">Person person</span>) </span>=&gt; AppendDomain(AbbreviateName(person));</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">var</span> email = EmailFor(john);</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(email);</span><br><span class="line">            <span class="comment">// jodo@gmail.com</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>EmailFor()</code> 能根據 user 的 <code>姓</code> 與 <code>名</code> 自動產生 email。</p>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">EmailFor</span>(<span class="params">Person person</span>) </span>=&gt; AppendDomain(AbbreviateName(person));</span><br></pre></td></tr></table></figure>
+<p><code>EmailFor()</code> 為 C# 7 的 Local Function，藉由 <code>AbbreviateName()</code> 與 <code>AppendDomain()</code> 組合出新的 <code>EmailFor()</code>，這也就是所謂的 Function Composition : <code>h = fog = f(g)</code>，其中 <code>g</code> 就是 <code>AbbreviateName()</code>，而 <code>f</code> 就是 <code>AppendDomain()</code>。</p>
+<p>這種數學式的 Function Composition 雖然重複使用性極高，但並不容易閱讀，程式碼必須 <code>由右而左</code>，違反一般人 <code>由左至右</code> 的閱讀習慣，因此想改用 Function Pipeline 方式變成 <code>由左至右</code>。</p>
+<p><strong>Email.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Email</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">AbbreviateName</span>(<span class="params"><span class="keyword">this</span> Person person</span>)</span><br><span class="line">            </span>=&gt; Abbreviate(person.FirstName) + Abbreviate(person.LastName);</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">AppendDomain</span>(<span class="params"><span class="keyword">this</span> <span class="keyword">string</span> localPart</span>) </span>=&gt; $<span class="string">"&#123;localPart&#125;@gmail.com"</span>;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">Abbreviate</span>(<span class="params"><span class="keyword">string</span> s</span>) </span>=&gt; s.Substring(<span class="number">0</span>, <span class="number">2</span>).ToLower();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>AbbreviateName()</code> 與 <code>AppendDomain()</code> 的第一個參數都改加上 <code>this</code>，搖身一變成為 Extension Method。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> ConsoleApp.Email;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">internal</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> email = </span><br><span class="line">                <span class="keyword">new</span> Person(<span class="string">"John"</span>, <span class="string">"Doe"</span>)</span><br><span class="line">                    .AbbreviateName()</span><br><span class="line">                    .AppendDomain();</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine(email);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>則原本的 <code>EmailFor()</code> Local Function 就不需要了，只要將 <code>Person</code> new 後，直接如 LINQ 般去 <code>AbbreviateName()</code> 與 <code>AppendDomain()</code>，這種風格維持了 <code>由左至右</code> 的閱讀習慣，非常清楚。</p>
+<blockquote>
+<p>只要將第一個參數加上 <code>this</code> 修飾成為 Extenstion Method 後，就可由 Function Composition 改成 Function Pipeline 風格</p>
+</blockquote>
+<h2 id="Refactoring">Refactoring</h2><hr>
+<p>若 Legacy code 只用了 Function Composition，可以使用 Rider 幫我們重構成 Function Pipeline。</p>
+<p><img src="/images/csharp/extension-method/em000.png" alt="em000"></p>
+<p>Legacy code 並沒有使用 Extension Method。</p>
+<p><img src="/images/csharp/extension-method/em001.png" alt="em001"></p>
+<ol>
+<li>將 cursor 放在 method 上</li>
+<li>按熱鍵 <code>⌃ + T</code>，選擇 <code>Convert Static Method to Extension</code></li>
+</ol>
+<p><img src="/images/csharp/extension-method/em002.png" alt="em002"></p>
+<ul>
+<li>Rider 自動幫我們將第一個參數加上 <code>this</code></li>
+</ul>
+<p><img src="/images/csharp/extension-method/em003.png" alt="em003"></p>
+<ol>
+<li>使用端會重構成 Function Pipeline</li>
+</ol>
+<p><img src="/images/csharp/extension-method/em004.png" alt="em004"></p>
+<p><code>EmailFor</code> 與 <code>john</code> 可以進一步 Inline 掉。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Function Composition 與 Function Pipeline 講的是同一件事情，只是 Function Composition 偏數學，採用 <code>由右至左</code>，而 Function Pipeline 偏閱讀習慣，採用 <code>由左至右</code></li>
+<li>Funciton Compostion 與 Function Pipeline 是 FP 極關鍵部分，以前總以為 C# 沒有支援，因此無法使用 C# 寫 FP，有了 Extension Method，C# 就能很輕鬆的實踐 FP</li>
+<li>Rider 支援 <code>Convert static method to Extension</code>，讓我們快速重構成 Extension Method，再加上 <code>Inline Method</code> 與 <code>Inline Variable</code>，最後就會重構出 Function Pipeline</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpFunctionComposition" target="_blank" rel="external">GitHub</a> 與 <a href="https://github.com/oomusou/CSharpExtensionMethod" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Extension Method 是 C# 的獨門招式]]>
+    
+    </summary>
+    
+      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
+    
+      <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
+    <link href="https://oomusou.io/rider/extract-local-function/"/>
+    <id>https://oomusou.io/rider/extract-local-function/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:04:49.607Z</updated>
+    <content type="html"><![CDATA[<p>Local Function 是 C# 7 支援 FP 的重要功能，除了比 C# 3 的 Func 與 Action 可讀性高，速度也更快，因此建議全面使用 Local Function 取代 Func 與 Action。</p>
+<p>透過 Rider，我們也可將 legacy code 快速重構成有 FP 風格的 Local Function。<br><a id="more"></a></p>
+<h2 id="Version">Version</h2><p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>Rider 2018.1.3</p>
+<h2 id="重構前">重構前</h2><hr>
+<p><strong>Program.cs</strong></p>
+<p><img src="/images/rider/extract-local-function/local000.png" alt="local000"></p>
+<ol>
+<li>傳統我們在寫 LINQ 時，會將 Lambda 寫在 <code>Where()</code> 內，若能將 Lambda 抽成 Local Function，則可讀性更高</li>
+</ol>
+<h2 id="Introduce_Variable">Introduce Variable</h2><hr>
+<p><strong>Program.cs</strong></p>
+<p><img src="/images/rider/extract-local-function/local001.png" alt="local001"></p>
+<ol>
+<li>選擇要抽的 Lambda</li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local002.png" alt="local002"></p>
+<ol>
+<li>按熱鍵 <code>⌃ + T</code>，選擇 <code>Introduce Variable</code></li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local004.png" alt="local002"></p>
+<ol>
+<li>Rider 會自動抽出 Func，不過卻也建議你改用 Local Function</li>
+</ol>
+<blockquote>
+<p>Q : 為什麼 Rider 不直接抽成 Local Function ?</p>
+</blockquote>
+<p><img src="/images/rider/extract-local-function/local003.png" alt="local003"></p>
+<p>因為 Local Function 屬於 C# 7 支援的新功能，只有當你選擇 C# 7 以上時，才會建議使用 Local Function。</p>
+<h2 id="To_Local_Function">To Local Function</h2><hr>
+<p><img src="/images/rider/extract-local-function/local005.png" alt="local005"></p>
+<ol>
+<li>將 cursor 放在 <code>predicate</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>To local function</code> </li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local006.png" alt="local006"></p>
+<p>Rider 會將 Local Function 轉型成 Func，這是不需要的，Rider 也已經反灰提示這是多餘的。</p>
+<ol>
+<li>將 cursor 放在反灰之處</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Remove redundant code in file</code> </li>
+</ol>
+<h2 id="Rename_Variable">Rename Variable</h2><hr>
+<p><img src="/images/rider/extract-local-function/local007.png" alt="local007"></p>
+<p>Rider 預設抽出的 Local Function 名稱都是 <code>Predicate</code>，可讀性不高，需要進一步重構</p>
+<ol>
+<li>將 cursor 放在 <code>Predicate</code> 上</li>
+<li>按熱鍵 <code>⌥ + ↩</code>，選擇 <code>Rename</code> </li>
+</ol>
+<p><img src="/images/rider/extract-local-function/local008.png" alt="local008"></p>
+<ol>
+<li>重新命名為 <code>IsOdd</code></li>
+</ol>
+<h2 id="重構後">重構後</h2><hr>
+<p><img src="/images/rider/extract-local-function/local009.png" alt="local009"></p>
+<p>如此的程式碼，可讀性就很高。</p>
+<ol>
+<li><code>original</code> 陣列經過 <code>Where()</code> ，再經過 <code>ForEach()</code>，這正是 FP 所謂的 Function Pipeline</li>
+<li><code>Where(IsOdd)</code> 可以明顯看出要 where 的是 <code>奇數</code>，<code>ForEach(WriteLine)</code> 可以看出 writeline 要 foreach，而 <code>WriteLine()</code> 與 <code>IsOdd()</code> 又各自是小小的 Local Function 構成，這正是 FP 所謂的 Function Composition</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要抽成 Local Function，直覺會想使用 Rider 的 <code>Extract Method</code>，但因為在 FP 觀念中，Function 就是 First-Class Value，所以在 Rider 要使用 <code>Introduce Variable</code>，而不是 <code>Extract Method</code></li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[重構成 C# 7 的 Local Function]]>
+    
+    </summary>
+    
+      <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
     
   </entry>
   
