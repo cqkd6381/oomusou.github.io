@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-03T07:18:41.899Z</updated>
+  <updated>2018-09-05T07:15:59.852Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,103 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[如何使用 .NET Core 實現 Web API (POST) ?]]></title>
+    <link href="https://oomusou.io/netcore/webapi/post/"/>
+    <id>https://oomusou.io/netcore/webapi/post/</id>
+    <published>2018-09-05T12:23:43.000Z</published>
+    <updated>2018-09-05T07:15:59.852Z</updated>
+    <content type="html"><![CDATA[<p>當前後端分離後，後端退守 API，使用 .NET Core 實現 Web API 為最常見的功能，本文將以實務上常使用的 <code>會員登入</code> 為範例，示範如何實作出 POST action 的 Web API。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>Paw 3.1.5</p>
+<h2 id="Login_API_(POST)">Login API (POST)</h2><hr>
+<h3 id="Login_Success">Login Success</h3><p><img src="/images/netcore/webapi/post/post000.png" alt="post000"></p>
+<ol>
+<li>使用 <code>POST</code>，<code>http://localhost:5001/api/login</code></li>
+<li>傳入 </li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    username: "Sam",</span><br><span class="line">    password: "1234"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>回傳</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    success: "true",</span><br><span class="line">    username: "Sam"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若 login 成功，會回傳 <code>success</code> 為 <code>true</code>，與 <code>username</code> 為 user 名稱。</p>
+<h3 id="Login_Failed">Login Failed</h3><p><img src="/images/netcore/webapi/post/post001.png" alt="post001"></p>
+<ol>
+<li>使用 <code>POST</code>，<code>http://localhost:5001/api/login</code></li>
+<li>傳入 </li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    username: "Kevin",</span><br><span class="line">    password: "1234"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>回傳</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    success: "false",</span><br><span class="line">    username: ""</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若 login 失敗，會回傳 <code>success</code> 為 <code>false</code>，與 <code>username</code> 為 <code>空白</code>。</p>
+<p><strong>LoginController.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> Login.Models;</span><br><span class="line"><span class="keyword">using</span> Microsoft.AspNetCore.Mvc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Login.Controllers</span></span><br><span class="line">&#123;</span><br><span class="line">    [Route(<span class="string">"api/[controller]"</span>)]</span><br><span class="line">    [ApiController]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LoginController</span> : <span class="title">ControllerBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;Member&gt; _members = <span class="keyword">new</span> List&lt;Member&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">new</span> Member</span><br><span class="line">            &#123;</span><br><span class="line">                Username = <span class="string">"Sam"</span>,</span><br><span class="line">                Password = <span class="string">"1234"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// POST api/login</span></span><br><span class="line">        [HttpPost]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> ActionResult&lt;Response&gt; <span class="title">LoginMember</span>(<span class="params">[FromBody] Member member</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _members</span><br><span class="line">                .Where(IsMember)</span><br><span class="line">                .DefaultIfEmpty(DefaultMember())</span><br><span class="line">                .Select(Result)</span><br><span class="line">                .FirstOrDefault();</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">IsMember</span>(<span class="params">Member x</span>)</span><br><span class="line">                </span>=&gt; x.Username == member.Username</span><br><span class="line">                   &amp;&amp; x.Password == member.Password;</span><br><span class="line"></span><br><span class="line">            <span class="function">Member <span class="title">DefaultMember</span>(<span class="params"></span>)</span><br><span class="line">                </span>=&gt; <span class="keyword">new</span> Member</span><br><span class="line">                &#123;</span><br><span class="line">                    Username = <span class="keyword">string</span>.Empty,</span><br><span class="line">                    Password = <span class="keyword">string</span>.Empty</span><br><span class="line">                &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="function">Response <span class="title">Result</span>(<span class="params">Member x</span>)</span><br><span class="line">                </span>=&gt; <span class="keyword">new</span> Response</span><br><span class="line">                &#123;</span><br><span class="line">                    Success = !<span class="keyword">string</span>.IsNullOrEmpty(x.Username),</span><br><span class="line">                    Username = x.Username</span><br><span class="line">                &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;Member&gt; _members = <span class="keyword">new</span> List&lt;Member&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">new</span> Member</span><br><span class="line">    &#123;</span><br><span class="line">        Username = <span class="string">"Sam"</span>,</span><br><span class="line">        Password = <span class="string">"1234"</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>為簡化起見，就沒從 database 判斷 username 與 password，暫時將資料放在 <code>List</code> 內。</p>
+<p>23 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult&lt;Response&gt; <span class="title">LoginMember</span>(<span class="params">[FromBody] Member member</span>)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用 <code>HttpPost</code> attribute 描述 <code>LoginMember</code> 使用 POST action</li>
+<li>使用 <code>FromBody</code> attribute 描述 data 來自於 Body，並且自動轉型 <code>Member</code> 自訂型別</li>
+<li>回傳值 <code>Response</code> 自訂型別，被包在 .NET Core 規定的 <code>ActionResult</code> 內</li>
+</ul>
+<p>25 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> _members</span><br><span class="line">    .Where(IsMember)</span><br><span class="line">    .DefaultIfEmpty(DefaultMember())</span><br><span class="line">    .Select(Result)</span><br><span class="line">    .FirstOrDefault();</span><br></pre></td></tr></table></figure>
+<p><code>Where()</code>：判斷資料是否在 <code>List</code> 內</p>
+<blockquote>
+<p>LINQ 的 <code>Where()</code> 相當於 FP 的 <code>filter()</code></p>
+</blockquote>
+<p><code>DefaultIfEmpty()</code> ：<code>Where()</code> 一定可能找不到資料，因此會回傳 <code>null</code>，但 <code>null</code> 相當於癌細胞，只要一使用到 <code>null</code>，就必須到處判斷 <code>null</code> ，非常麻煩，而且只要有一個地方沒判斷到 <code>null</code>，程式就可能在 run-time 出錯。</p>
+<p>比較好的方式是在 <code>Where()</code> 之後馬上配上 <code>DefaultIfEmpty()</code> 描述，只要 <code>Where()</code> 找不到資料，就不會回傳 <code>null</code>，而是回傳 default object。</p>
+<blockquote>
+<p><code>DefaultIfEmpty()</code> 就是 LINQ 支援 <strong>Null Object Pattern</strong> / <strong>Default Object Pattern</strong> 的一種實現</p>
+</blockquote>
+<p><code>Select()</code>：我們要回傳的是 <code>Response</code> 自訂型別，而不是 <code>Member</code> 型別，勢必要做轉換，<code>Select()</code> 幫我們將 <code>Member</code> 自訂型別轉成 <code>Result</code> 自訂型別。</p>
+<blockquote>
+<p>LINQ 的 <code>Select()</code> 相當於 FP 的 <code>map()</code></p>
+</blockquote>
+<p><code>FirsrOrDefault()</code>：別忘了 <code>Select()</code> 的轉換有個特色：原本是 <code>Collection</code>，<code>Select()</code> 之後還是 <code>Collection</code>，但我們要的是 <code>Response</code>，因此使用 <code>FirstOrDefault()</code> 只取一筆 <code>Response</code>。</p>
+<p>31 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsMember</span>(<span class="params">Member x</span>)</span><br><span class="line">    </span>=&gt; x.Username == member.Username</span><br><span class="line">       &amp;&amp; x.Password == member.Password;</span><br></pre></td></tr></table></figure>
+<p><code>IsMember()</code> Local Function，提供 <code>Where()</code> 的 Predicate Function。</p>
+<blockquote>
+<p>Q : Parameter 使用 <code>x</code> 符合 Clean Code 原則 ?</p>
+</blockquote>
+<p>Local Function 與 Lambda 強調的就是 function 要短要小，且常常配合 Body Expression，若 parameter 名稱取太長，Lambda 就不美了。</p>
+<p>由於 Lambda 來自於數學，一般會採用數學 <code>y = f(x)</code> 習慣，使用 <code>x</code>、<code>y</code>、<code>z</code> 即可。</p>
+<p><code>x</code> 會難閱讀嗎 ? 由於 Local Function 與 Lambda 很短，很容易看到看到其型別定義，所以沒有閱讀與維護的問題。</p>
+<p>35 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Member <span class="title">DefaultMember</span>(<span class="params"></span>)</span><br><span class="line">    </span>=&gt; <span class="keyword">new</span> Member</span><br><span class="line">   &#123;</span><br><span class="line">       Username = <span class="keyword">string</span>.Empty,</span><br><span class="line">       Password = <span class="keyword">string</span>.Empty</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure>
+<p><code>DefaultMember()</code> Local Function，主要提供 <code>DefaultIfEmpty()</code> 所需要的 default object。</p>
+<p>42 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Response <span class="title">Result</span>(<span class="params">Member x</span>)</span><br><span class="line">  </span>=&gt; <span class="keyword">new</span> Response</span><br><span class="line">  &#123;</span><br><span class="line">    Success = !<span class="keyword">string</span>.IsNullOrEmpty(x.Username),</span><br><span class="line">    Username = x.Username</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p><code>Result()</code> Local Function，主要提供 <code>Select()</code> 所需要的 data 與型別轉換。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>.NET Core 提供了  <code>HttpPost</code> attribute 與  <code>FromBody</code> attribute，讓我們簡單的將 Controller 的 Method 提供 Web API 的 POST 服務</li>
+<li>使用 LINQ 的 <code>Where()</code> 與 <code>DefaultIfEmpty()</code> 讓我們避開 <code>null</code> 魔咒，不用再到處判斷 <code>null</code>，也就是所謂的 Null Object Pattern 或 Default Object Pattern 的實踐</li>
+<li>Local Function 與 Lambda 的 parameter 可以打破 OOP 與 Imperative 的習慣，以 <code>x</code>、<code>y</code>、<code>z</code> 命名即可，因為 Lambda 功能都很單一，且 function 很短，不像 Imperative 會拉很長，因此才需要取有意義的 parameter 名稱</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><p>完整的範例可以在我的 <a href="https://github.com/oomusou/WegAPIPost" target="_blank" rel="external">GitHub</a> 上找到</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[以 POST 實現會員登入 API]]>
+    
+    </summary>
+    
+      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
+    
+      <category term="LINQ" scheme="https://oomusou.io/tags/LINQ/"/>
+    
+      <category term="Web API" scheme="https://oomusou.io/tags/Web-API/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何不啟用 SonarQube 內建的 Rule ?]]></title>
@@ -1779,6 +1876,52 @@
   </entry>
   
   <entry>
+    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
+    <link href="https://oomusou.io/rider/vim/"/>
+    <id>https://oomusou.io/rider/vim/</id>
+    <published>2018-07-21T12:23:43.000Z</published>
+    <updated>2018-07-21T15:34:18.592Z</updated>
+    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
+<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
+<a id="more"></a>
+<h2 id="Verison">Verison</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
+<h2 id="IdeaVim">IdeaVim</h2><hr>
+<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
+<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
+<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
+<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
+<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
+<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
+<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
+<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
+<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
+<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
+<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
+<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
+<p><strong>.ideavimrc</strong></p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>.ideavimrc</code> 加上這一行</p>
+<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
+<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>此技巧在 JetBrains 其他工具也適用</li>
+<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[完全使用鍵盤高速寫 code]]>
+    
+    </summary>
+    
+      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
+    
+      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Rider Refactoring 之 Extract Local Function]]></title>
     <link href="https://oomusou.io/rider/extract-local-function/"/>
     <id>https://oomusou.io/rider/extract-local-function/</id>
@@ -1855,52 +1998,6 @@
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Rider 使用 Vim ?]]></title>
-    <link href="https://oomusou.io/rider/vim/"/>
-    <id>https://oomusou.io/rider/vim/</id>
-    <published>2018-07-21T12:23:43.000Z</published>
-    <updated>2018-07-21T15:34:18.592Z</updated>
-    <content type="html"><![CDATA[<p>Vim 是一個歷史悠久的編輯器，完全使用鍵盤操作，就算你使用 IDE，但其 <code>鍵盤操作</code> 的精神卻可以保留下來，讓你在開發時完全不需要摸到滑鼠與觸控板，而使用鍵盤全速開發。</p>
-<p>在 Rider 只要安裝以下三個套件，就能順利在 Rider 使用 Vim，也適用於其他 JetBrains 產品。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Rider 2018.1.3</p>
-<h2 id="IdeaVim">IdeaVim</h2><hr>
-<p><img src="/images/rider/vim/extension003.png" alt="extension003"></p>
-<p>由 JetBrains 自己所開發的 Vim 套件，讓你可以在 JetBrains 使用 Vim 熱鍵。</p>
-<h2 id="Relative_Line_Numbers">Relative Line Numbers</h2><hr>
-<p><img src="/images/rider/vim/extension004.png" alt="extension004"></p>
-<p>Vim 的重要精神就是不用選取就可操作，所以必須知道目前 cursor 的相對行數。</p>
-<p><img src="/images/rider/vim/extension005.png" alt="extension005"></p>
-<p>裝了之後除了原本的 <code>行數</code>，還多了一排 <code>相對行數</code>。</p>
-<h2 id="IdeaVimExtension">IdeaVimExtension</h2><hr>
-<p><img src="/images/rider/vim/extension000.png" alt="extension000"></p>
-<p>實務上在寫 <code>註解</code> 或單元測試的 <code>method 名稱</code> 時，有可能會使用中文，此時若切換回 Vim 的 Normal Mode，又必須重新切回 <code>英文輸入法</code> 才能下指令，非常不方便。</p>
-<p>IdeaVimExtension 能在切換到 Normal Mode 時，自動切換到回 <code>英文輸入法</code>。</p>
-<h3 id="編輯_-ideavimrc">編輯 .ideavimrc</h3><p>Rider 的 Vim 預設會執行 home directory 的 <code>.ideavimrc</code>，須在此啟動 IdeaVimExtension。</p>
-<p><strong>.ideavimrc</strong></p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="built_in">set</span> keep-<span class="keyword">english</span>-<span class="operator">in</span>-<span class="keyword">normal</span></span><br></pre></td></tr></table></figure>
-<p>在 <code>.ideavimrc</code> 加上這一行</p>
-<p><img src="/images/rider/vim/extension002.png" alt="extension002"></p>
-<p>再次重新啟動 Rider 後，當切換到 Normal Mode 時，就都會是 <code>英文輸入法</code> 。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 重構 + Vim 編輯，讓我們同時享受 IDE 與 Editor 的優點，等於是倚天劍 + 屠龍刀</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤高速寫 code]]>
-    
-    </summary>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-      <category term="Vim" scheme="https://oomusou.io/tags/Vim/"/>
     
   </entry>
   
@@ -2153,67 +2250,6 @@
     </summary>
     
       <category term="Refactoring" scheme="https://oomusou.io/tags/Refactoring/"/>
-    
-      <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Rider 從 Editor 與 Terminal 快速切換 ?]]></title>
-    <link href="https://oomusou.io/rider/terminal-esc/"/>
-    <id>https://oomusou.io/rider/terminal-esc/</id>
-    <published>2018-06-27T12:23:43.000Z</published>
-    <updated>2018-06-27T05:26:10.791Z</updated>
-    <content type="html"><![CDATA[<p>在 .NET Core 使用 CLI 的機會越來越多，因此如何在 Rider 從 Editor 與 Terminal 快速切換，是一個不可逃避的問題，當然可以用滑鼠慢慢的點，但若能完全使用鍵盤操作，整個 workflow 會非常的順。</p>
-<p>將設定使用  <code>⌃ + ~</code> 啟動 Terminal，<code>ESC</code> 離開 Terminal 回 Editor。</p>
-<a id="more"></a>
-<h2 id="Verison">Verison</h2><hr>
-<p>macOS High Sierra 10.13.4<br>.NET Core 2.1.1<br>Rider 2018.1.2</p>
-<h2 id="重新設定_Terminal_熱鍵">重新設定 Terminal 熱鍵</h2><hr>
-<p>Rider 預設的 terminal 熱鍵是 <code>⌥ + F12</code>，這個熱鍵組合勢必用到 <code>雙手</code>，我建議改成 VS Code 的 <code>⌃ + ~</code>，只要 <code>單手</code>就能啟動 terminal，非常順手。</p>
-<p><img src="/images/rider/terminal-esc/esc000.png" alt="esc000"></p>
-<ol>
-<li><strong><em>JetBrains Rider -&gt; Preferences -&gt; Keymap</em></strong></li>
-<li>輸入 <code>terminal</code></li>
-<li>選擇 <code>Tool Windows -&gt; Terminal</code></li>
-</ol>
-<p><img src="/images/rider/terminal-esc/esc001.png" alt="esc001"></p>
-<ol>
-<li>按滑鼠右鍵選擇 <code>Add Keyboard Shoarcut</code></li>
-</ol>
-<p><img src="/images/rider/terminal-esc/esc002.png" alt="esc002"></p>
-<ol>
-<li>重新定義熱鍵  <code>⌃ + ~</code></li>
-</ol>
-<h2 id="Terminal_自動隱藏">Terminal 自動隱藏</h2><hr>
-<p><img src="/images/rider/terminal-esc/esc003.png" alt="esc003"></p>
-<ol>
-<li>Termial 的 <code>Docked Mode</code> 與 <code>Floating Mode</code> 都不要勾選</li>
-</ol>
-<blockquote>
-<p>如此就能隨著 <code>ESC</code> 而自動隱藏，如 Solution、Database 也建議如此設定</p>
-</blockquote>
-<h2 id="使用_ESC_自動隱藏_Terminal">使用 ESC 自動隱藏 Terminal</h2><hr>
-<p>對於 Rider 其它視窗，如 Solution、Database，只要 <code>ESC</code> 按下就會自動隱藏，但是 Terminal 是特例，按 <code>ESC</code> 竟然不會隱藏</p>
-<p><img src="/images/rider/terminal-esc/esc004.png" alt="esc004"></p>
-<ol>
-<li><strong><em>JetBrains Rider -&gt; Preferences -&gt; Tools -&gt; Terminal</em></strong></li>
-<li><code>Override IDE shortcuts</code> 不要勾選</li>
-<li>按 <code>Save</code> 存檔</li>
-</ol>
-<blockquote>
-<p>也就是 Rider 當初有特別考量，希望 Terminal 有自己的 <code>ESC</code>，不要吃 Rider 整體的 <code>ESC</code>，但這會使 Terminal 不會隨著按下 <code>ESC</code> 而隱藏</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>此技巧在 JetBrains 其他工具也適用</li>
-<li>Rider 是一個開發 .NET Core 很舒服的工具，尤其在這麼短的時間，就已經將 Resharper 與 IntelliJ 的精華融合在 Rider 上，目前我還沒遇到什麼 Resharper 重構無法在 Rider 執行，假如你覺得 Visual Studio + Resharper 太慢，又想在 macOS 開發 .NET Core，Rider 真的是非常推薦的工具</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用鍵盤操作才會快]]>
-    
-    </summary>
     
       <category term="Rider" scheme="https://oomusou.io/tags/Rider/"/>
     
