@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-06T06:11:37.440Z</updated>
+  <updated>2018-09-06T10:05:40.154Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[如何使用 .NET Core 實現 Web API (GET) ?]]></title>
+    <title><![CDATA[如何使用 .NET Core 開發 Web API (GET) ?]]></title>
     <link href="https://oomusou.io/netcore/webapi/get/"/>
     <id>https://oomusou.io/netcore/webapi/get/</id>
     <published>2018-09-06T12:23:43.000Z</published>
-    <updated>2018-09-06T06:11:37.440Z</updated>
+    <updated>2018-09-06T10:05:40.154Z</updated>
     <content type="html"><![CDATA[<p>當前後端分離後，後端退守 API，使用 .NET Core 實現 Web API 為最常見的功能，本文將以實務上常使用的 <code>查詢會員</code> 為範例，示範如何實作出 GET action 的 Web API。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -108,11 +108,11 @@
   </entry>
   
   <entry>
-    <title><![CDATA[如何使用 .NET Core 實現 Web API (POST) ?]]></title>
+    <title><![CDATA[如何使用 .NET Core 開發 Web API (POST) ?]]></title>
     <link href="https://oomusou.io/netcore/webapi/post/"/>
     <id>https://oomusou.io/netcore/webapi/post/</id>
     <published>2018-09-05T12:23:43.000Z</published>
-    <updated>2018-09-06T06:11:55.295Z</updated>
+    <updated>2018-09-06T10:05:29.138Z</updated>
     <content type="html"><![CDATA[<p>當前後端分離後，後端退守 API，使用 .NET Core 實現 Web API 為最常見的功能，本文將以實務上常使用的 <code>會員登入</code> 為範例，示範如何實作出 POST action 的 Web API。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
