@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/linq/defaultifempty/</loc>
+    <lastmod>2018-09-06T14:32:22.372Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/netcore/webapi/get/</loc>
     <lastmod>2018-09-06T10:34:32.233Z</lastmod>
   </url>

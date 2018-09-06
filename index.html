@@ -99,6 +99,41 @@
 	<!-- display as entry -->	
 		<h3 class="title">
 			
+			<div class="article-title"><a href="/linq/defaultifempty/" title="更 FP 的方式使用 LINQ">使用 DefaultIfEmpty() 取代 null 判斷</a></div>						
+		</h3>
+	
+
+
+			<div class="entry">
+  <div class="row">
+  
+	<div class="col-md-4">
+	  <div class="thumbnail">
+	    <a href="/linq/defaultifempty/"><img src="/images/feature/csharp.png" alt="使用 DefaultIfEmpty() 取代 null 判斷"  class="nofancybox"></a>
+	  </div>
+	</div>
+  
+  
+	<div class="col-md-8">
+  
+  
+	<p>在使用 LINQ 的 <code>Where()</code>，大部分人都會再搭配 <code>FirstOrDefault()</code>，如此 <code>Where()</code> 找不到時就不會拋出 Exception，而是改判斷 <code>null</code> 。</p>
+<p>但判斷 <code>null</code> 也不是什麼好事，因為 <code>null</code> 就像癌細胞，只要出現 <code>null</code>，就到處都要判斷 <code>null</code>，而且還很容易忘記判斷 <code>null</code> 導致 run-time 錯誤。</p>
+  	
+    </div>
+    <div class="col-md-10"></div>
+    <div class="col-md-2">
+	  <a type="button" href="/linq/defaultifempty/#more" class="btn btn-default more">Read More</a>
+    </div>
+  </div>
+</div>
+
+		
+			
+	
+	<!-- display as entry -->	
+		<h3 class="title">
+			
 			<div class="article-title"><a href="/netcore/webapi/get/" title="以 GET 實現查詢會員 API">如何使用 .NET Core 開發 Web API (GET) ?</a></div>						
 		</h3>
 	
@@ -396,41 +431,6 @@
     <div class="col-md-10"></div>
     <div class="col-md-2">
 	  <a type="button" href="/fp/intro/#more" class="btn btn-default more">Read More</a>
-    </div>
-  </div>
-</div>
-
-		
-			
-	
-	<!-- display as entry -->	
-		<h3 class="title">
-			
-			<div class="article-title"><a href="/linq/foreach/" title="以重構角度探討 LINQ">Refactoring to LINQ =&gt; ForEach</a></div>						
-		</h3>
-	
-
-
-			<div class="entry">
-  <div class="row">
-  
-	<div class="col-md-4">
-	  <div class="thumbnail">
-	    <a href="/linq/foreach/"><img src="/images/feature/csharp.png" alt="Refactoring to LINQ =&gt; ForEach"  class="nofancybox"></a>
-	  </div>
-	</div>
-  
-  
-	<div class="col-md-8">
-  
-  
-	<p>LINQ 是 C# 3 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator，並參考 LINQ source code 的實現方式。</p>
-<p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
-  	
-    </div>
-    <div class="col-md-10"></div>
-    <div class="col-md-2">
-	  <a type="button" href="/linq/foreach/#more" class="btn btn-default more">Read More</a>
     </div>
   </div>
 </div>
