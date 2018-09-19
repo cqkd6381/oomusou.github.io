@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何檢查忘記寫try...catch的PHP程式碼? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="若外部API有throw exception，呼叫API的函式就必須加上try...catch做例外處理，如Java可以在編譯的時候幫你檢查是否忘了加try…catch，但因為PHP不用編譯，所以無法靠compiler幫我們檢查，但透過PHPDoc的@thorws與PHP Inspections這個外掛，可以讓我們寫code的當下，PhpStorm就自動幫我們檢查是否忘了加try…catch。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="若外部API有throw exception，呼叫API的函式就必須加上try...catch做例外處理，如Java可以在編譯的時候幫你檢查是否忘了加try…catch，但因為PHP不用編譯，所以無法靠compiler幫我們檢查，但透過PHPDoc的@thorws與PHP Inspections這個外掛，可以讓我們寫code的當下，PhpStorm就自動幫我們檢查是否忘了加try…catch。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何檢查忘記寫try...catch的PHP程式碼?">
+<meta property="og:url" content="https://oomusou.io/phpstorm/phpstorm-exception-inspection/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="若外部API有throw exception，呼叫API的函式就必須加上try...catch做例外處理，如Java可以在編譯的時候幫你檢查是否忘了加try…catch，但因為PHP不用編譯，所以無法靠compiler幫我們檢查，但透過PHPDoc的@thorws與PHP Inspections這個外掛，可以讓我們寫code的當下，PhpStorm就自動幫我們檢查是否忘了加try…catch。">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何檢查忘記寫try...catch的PHP程式碼?">
+<meta name="twitter:description" content="若外部API有throw exception，呼叫API的函式就必須加上try...catch做例外處理，如Java可以在編譯的時候幫你檢查是否忘了加try…catch，但因為PHP不用編譯，所以無法靠compiler幫我們檢查，但透過PHPDoc的@thorws與PHP Inspections這個外掛，可以讓我們寫code的當下，PhpStorm就自動幫我們檢查是否忘了加try…catch。">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何檢查忘記寫try...catch的PHP程式碼?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載外掛"><span class="toc-article-text">下載外掛</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝外掛"><span class="toc-article-text">安裝外掛</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#檢查Exception"><span class="toc-article-text">檢查Exception</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>若外部API有throw exception，呼叫API的函式就必須加上<code>try...catch</code>做例外處理，如Java可以在編譯的時候幫你檢查是否忘了加try…catch，但因為PHP不用編譯，所以無法靠compiler幫我們檢查，但透過PHPDoc的<code>@thorws</code>與<code>PHP Inspections</code>這個外掛，可以讓我們寫code的當下，PhpStorm就自動幫我們檢查是否忘了加try…catch。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.1.24<br>PhpStorm 10.0.1</p>
+<h2 id="下載外掛">下載外掛</h2><hr>
+<p>到<a href="https://plugins.jetbrains.com/plugin/7622" target="_blank" rel="external">PHP Inspections</a>下載，檔案為Java的<code>PhpInspectionsEA.jar</code>。</p>
+<h2 id="安裝外掛">安裝外掛</h2><hr>
+<p><strong><em> PhpStorm -&gt; Preferences -&gt; Plugin -&gt; Install plugin from disk… </em></strong><br><img src="/images/phpstorm/phpstorm-exception-inspection/try000.png" alt=""></p>
+<p>載入剛剛下載的<code>PhpInspectionsEA.jar</code>。<br><img src="/images/phpstorm/phpstorm-exception-inspection/try001.png" alt=""></p>
+<p>安裝完會要求啟動PhpStorm。<br><img src="/images/phpstorm/phpstorm-exception-inspection/try002.png" alt=""></p>
+<h2 id="檢查Exception">檢查Exception</h2><hr>
+<figure class="highlight php"><figcaption><span>app/Services/MyService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">app</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Doctrine</span>\<span class="title">Instantiator</span>\<span class="title">Exception</span>\<span class="title">UnexpectedValueException</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 模擬產生exception的外部API</span><br><span class="line">     *</span><br><span class="line">     * <span class="doctag">@throws</span> UnexpectedValueException</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">process</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> UnexpectedValueException();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+<p>我們在第15行自行throw了一個exception。</p>
+<p>由於PHP沒有compiler，PHP Inspection是靠PHPDoc的<code>@thorws</code>去判斷該函式是否有throw exception，所以一定要加上<code>@throws</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-exception-inspection/try003.png" alt=""></p>
+<p>若忘了加上<code>try...catch</code>，PhpStorm會在code下方加上波浪警告，滑鼠指過去會顯示警告的原因。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><p>套過PhpStorm與PHP Inspection外掛，我們就可以在寫code時隨時發現自己是否忘記加上try…catch，避免上線後才發現問題。</p>
+</li>
+<li><p>PHP Inspection事實上還有其他很強的功能，可以幫我們檢查PHP : </p>
+<ol>
+<li>architecture related issues (e.g. design pattern violations) </li>
+<li>possible code construct simplifications </li>
+<li>weak types control (important in Enterprise Applications) </li>
+<li>performance issues </li>
+<li>non-optimal, duplicate and suspicious “if” conditions </li>
+<li>validation of magic methods usage </li>
+<li>regular expressions </li>
+<li>validation of exception handling workflow </li>
+<li>compatibility issues </li>
+<li>variety of time-consuming bugs </li>
+</ol>
+</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/tdd/tdd-solid/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/phpstorm-file-header/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-11-27 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

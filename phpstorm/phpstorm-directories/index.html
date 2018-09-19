@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何設定 PhpStorm 的 Directories? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="正確設定 Directories 才能發揮 PhpStorm 的威力">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="正確設定 Directories 才能發揮 PhpStorm 的威力">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何設定 PhpStorm 的 Directories?">
+<meta property="og:url" content="https://oomusou.io/phpstorm/phpstorm-directories/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="正確設定 Directories 才能發揮 PhpStorm 的威力">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-06-17T07:30:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何設定 PhpStorm 的 Directories?">
+<meta name="twitter:description" content="正確設定 Directories 才能發揮 PhpStorm 的威力">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何設定 PhpStorm 的 Directories?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 正確設定 Directories 才能發揮 PhpStorm 的威力			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#提示設定_Directories"><span class="toc-article-text">提示設定 Directories</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#手動設定_Directories"><span class="toc-article-text">手動設定 Directories</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sources"><span class="toc-article-text">Sources</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Tests"><span class="toc-article-text">Tests</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Resource_Root"><span class="toc-article-text">Resource Root</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Excluded"><span class="toc-article-text">Excluded</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>PhpStorm 最強的三個功能為 : Refactoring、Debugging、與 Inspection，但由於 PHP 生態是眾多 framework，而每個 framework 的目錄架構也不太一樣，因此必須先在 PhpStorm 設定 directories，才能發揮 PhpStorm 的強悍功能，而不只是文字編輯器而已。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.2.36</p>
+<h2 id="提示設定_Directories">提示設定 Directories</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-directories/dir000.png" alt=""></p>
+<p>當使用 PhpStorm 開啟 Laravel 專案時，一開始會對專案做 indexing，之後就會出現 <code>Detect PSR-0 namespace roots</code> 的提示，要求你設定 Directories。</p>
+<p>很多初學者因為不知道設定 Directories 的重要性，就直接將對話框關閉，這是非常可惜的，這將喪失很多 PhpStorm 重要的功能。</p>
+<h2 id="手動設定_Directories">手動設定 Directories</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-directories/dir001.png" alt=""></p>
+<p>按 <code>Settings | Directories</code> 手動設定 <code>Directories</code>。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  不建議使用 <strong>automatically</strong> 由 PhpStorm 自動設定 directories，這將導致 <strong>vendor</strong> 目錄被設定在 <strong>Excluded</strong> 下，導致 Laravel 與其他 package 的語法提示不正常。</div>
+<p><img src="/images/phpstorm/phpstorm-directories/dir002.png" alt=""></p>
+<p>進入設定 Directories 視窗，若第一次沒由 <code>Detect PSR-0 namespaces roots</code> 設定也沒關係，日後只要在此設定即可。</p>
+<p><strong><em> PhpStorm -&gt; Preferences -&gt; Directories </em></strong></p>
+<p>接下來要設定 <code>Tests</code>、<code>Sources</code>、<code>Excluded</code> 與 <code>Resource Root</code> 4 個目錄。</p>
+<h2 id="Sources">Sources</h2><hr>
+<p>設定 <code>PSR-0 namespace roots</code> 的主目錄，也就是 Laravel 的 <code>app</code> 目錄。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir003.png" alt=""></p>
+<p>選擇 <code>app</code> 目錄，按上方的 <code>Sources</code>，會在右側出現 <code>Source Folders app</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir004.png" alt=""></p>
+<p>按 <code>P</code> 設定該目錄的 property。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir005.png" alt=""></p>
+<p>在 <code>Package prefix</code> 輸入 <code>App</code>，因為 <code>app</code> 目錄對應的正是 Laravel 的 namespace <code>App</code>。</p>
+<p>這是所有 directories 設定中最重要的一個，在 Laravel 5 之後，全面使用 namespace，管理 namespace 成為很多人的惡夢，但只要設定了 <code>Sources</code> 之後，將來 PhpStorm 會幫我們管理 namespace。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir006.png" alt=""></p>
+<p>設定了 <code>Sources</code> 之後，在 project windows 的 <code>app</code> 會顯示藍色。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir007.png" alt=""></p>
+<p>假如我們想在自己建立的 <code>Services</code> 目錄下，建立其他 class 寫商業邏輯。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於 Service 模式，詳細請參考<a href="/laravel/laravel-service/">如何使用 Service 模式?</a></span></span></span></p>
+<p>選擇 <code>Services</code> 目錄，按熱鍵 &#8984; + N，顯示 <code>New</code> 視窗，選擇 <code>PHP Class</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir008.png" alt=""></p>
+<p>自行輸入 class 名稱，值得注意的是，PhpStorm 已經自動幫我們準備好 namespace，不必我們操心。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir009.png" alt=""></p>
+<p>程式碼也幫我們管理好 namespace 了。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52Directories_demo/commit/81257eedf3819dd685911dd90f04ce7207b3ea34" target="_blank" rel="external">建立 OrderService</a></span></span></span></p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir010.png" alt=""></p>
+<p>若想要注入其他物件，可在 constructor 的參數以 type hint 方式注入。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>關於依賴注入，詳細請參考<a href="/tdd/tdd-di/">深入探討依賴注入</a></span></span></span></p>
+<p>如我們想注入 <code>User</code>，但 PhpStorm 已經反白警告找不到 <code>User</code> class。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir011.png" alt=""></p>
+<p>選擇反白的 <code>User</code>，按熱鍵 &#8997; + &#8617;，選擇 <code>Import class</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir012.png" alt=""></p>
+<p>若整個專案只有一個同名的 class，PhpStorm 會自動 import，否則會出現視窗讓你決定要 import 哪一個 class。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir013.png" alt=""></p>
+<p>PhpStorm 自動幫我們 use 了 <code>App\User</code>。<span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52Directories_demo/commit/8a4d3267723e5b9d3be63767503d1f399a85c6a9" target="_blank" rel="external">注入 User</a></span></span></span></p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  無論是建立 namespace，或者引用 namespace，完全由 PhpStorm 自動幫我們處理，不用擔心 namespace 大小寫寫錯，也不用擔心 namespace 的完整路徑為何。</div>
+<h2 id="Tests">Tests</h2><hr>
+<p>設定測試程式的主目錄，也就是 Laravel 的 <code>tests</code> 目錄。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir014.png" alt=""></p>
+<p>選擇 <code>tests</code> 目錄，按上方的 <code>Tests</code>，會在右側出現 <code>Test Source Folders tests</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir015.png" alt=""></p>
+<p>設定了 <code>Tests</code> 之後，在 project windows 的 <code>tests</code> 會顯示綠色。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir016.png" alt=""></p>
+<p>可在 project windows 選擇 <code>Tests</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir017.png" alt=""></p>
+<p>將只顯示所有測試程式，方便測試時使用。</p>
+<h2 id="Resource_Root">Resource Root</h2><hr>
+<p>設定前端資源的主目錄，也就是 Laravel 的 <code>public</code> 目錄。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir018.png" alt=""></p>
+<p>選擇 <code>public</code> 目錄，按上方的 <code>Resource Root</code>，會在右側出現 <code>Resource roots public</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir019.png" alt=""></p>
+<p>設定了 <code>Resource roots</code> 之後，在 project windows 的 <code>public</code> 會顯示紫色。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir020.png" alt=""></p>
+<p>在 <code>resources/views/welcome.blade.php</code> 加上 Vue.js 後，在 <code>js/app.js</code> 出現反白。<span class="margin-note-marker"><sup>5</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">5</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52Directories_demo/commit/b5e0b68d2677e96e77117eb1d9f17ea316af7d1f" target="_blank" rel="external">修改 welcome.blade.php</a></span></span></span></p>
+<p>PhpStorm 抱怨找不到 <code>js/app.js</code>，的確我們在 <code>public</code> 目錄下還沒有建立 <code>js/app.js</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-directories/dir021.png" alt=""></p>
+<p>在 <code>public</code> 目錄下新增 <code>js/app.js</code> 之後，PhpStorm 就不在警告了。<span class="margin-note-marker"><sup>6</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">6</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52Directories_demo/commit/4418c29aa7d0913388911dee8ad5411414adbb25" target="_blank" rel="external">新增 js/app.js</a></span></span></span></p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  <strong>Resource roots</strong> 不是設定在 Laravel 的 <strong>resources</strong> 目錄，而是設定在 <strong>public</strong> 目錄。藉由此設定，PhpStorm 可以幫你檢查 Blade 或 HTML 的 JavaScript 與 CSS 路徑是否合法。</div>
+<h2 id="Excluded">Excluded</h2><hr>
+<p>不由 PhpStorm 管理，或不想由 PhpStorm 建立 index 的目錄。</p>
+<p>實務上若你在專案目錄下，會自己建立一個目錄放 Spec 或相關文件，如 pdf, docx, xlsx 格式，這個目錄交給 PhpStorm 管理並沒有任何意義，只會增加建立 index 時間而已，就可以將該目錄設定為 <code>Excluded</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>這些都是很重要的設定，可惜 PhpStorm 文件並沒有仔細介紹，以上都是實際使用 PhpStorm 一段時間之後摸索出來的心得，將這些目錄設定之後，才能發揮 PhpStorm 強悍功能。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Laravel52Directories_demo" target="_blank" rel="external">GitHub</a> 上找到。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/phpstorm/phpstorm-xdebug/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/ecmascript/variable-property/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-06-10 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 .NET Core 開發 Web API (POST) ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以 POST 實現會員登入 API">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以 POST 實現會員登入 API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 .NET Core 開發 Web API (POST) ?">
+<meta property="og:url" content="https://oomusou.io/netcore/webapi/post/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以 POST 實現會員登入 API">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-06T10:34:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 .NET Core 開發 Web API (POST) ?">
+<meta name="twitter:description" content="以 POST 實現會員登入 API">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 .NET Core 開發 Web API (POST) ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以 POST 實現會員登入 API			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Login_API_(POST)"><span class="toc-article-text">Login API (POST)</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Login_Success"><span class="toc-article-text">Login Success</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Login_Failed"><span class="toc-article-text">Login Failed</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>當前後端分離後，後端退守 API，使用 .NET Core 實現 Web API 為最常見的功能，本文將以實務上常使用的 <code>會員登入</code> 為範例，示範如何實作出 POST action 的 Web API。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>.NET Core 2.1<br>Rider 2018.2<br>Paw 3.1.5</p>
+<h2 id="Login_API_(POST)">Login API (POST)</h2><hr>
+<h3 id="Login_Success">Login Success</h3><p><img src="/images/netcore/webapi/post/post000.png" alt="post000"></p>
+<ol>
+<li>使用 <code>POST</code>，<code>http://localhost:5001/api/login</code></li>
+<li>傳入 </li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    username: "Sam",</span><br><span class="line">    password: "1234"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>回傳</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    success: "true",</span><br><span class="line">    username: "Sam"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若 login 成功，會回傳 <code>success</code> 為 <code>true</code>，與 <code>username</code> 為 user 名稱。</p>
+<h3 id="Login_Failed">Login Failed</h3><p><img src="/images/netcore/webapi/post/post001.png" alt="post001"></p>
+<ol>
+<li>使用 <code>POST</code>，<code>http://localhost:5001/api/login</code></li>
+<li>傳入 </li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    username: "Kevin",</span><br><span class="line">    password: "1234"</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>回傳</li>
+</ol>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    success: "false",</span><br><span class="line">    username: ""</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若 login 失敗，會回傳 <code>success</code> 為 <code>false</code>，與 <code>username</code> 為 <code>空白</code>。</p>
+<p><strong>LoginController.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> Login.Models;</span><br><span class="line"><span class="keyword">using</span> Microsoft.AspNetCore.Mvc;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Login.Controllers</span></span><br><span class="line">&#123;</span><br><span class="line">    [Route(<span class="string">"api/[controller]"</span>)]</span><br><span class="line">    [ApiController]</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">LoginController</span> : <span class="title">ControllerBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;Member&gt; _members </span><br><span class="line">            = <span class="keyword">new</span> List&lt;Member&gt; &#123;<span class="keyword">new</span> Member &#123;Username = <span class="string">"Sam"</span>, Password = <span class="string">"1234"</span>&#125;&#125;;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// POST api/login</span></span><br><span class="line">        [HttpPost]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> ActionResult&lt;Response&gt; <span class="title">LoginMember</span>(<span class="params">[FromBody] Member member</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> _members</span><br><span class="line">                .Where(IsMember)</span><br><span class="line">                .DefaultIfEmpty(DefaultMember())</span><br><span class="line">                .Select(Result)</span><br><span class="line">                .First();</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">IsMember</span>(<span class="params">Member x</span>)</span><br><span class="line">                </span>=&gt; x.Username == member.Username &amp;&amp; x.Password == member.Password;</span><br><span class="line"></span><br><span class="line">            <span class="function">Member <span class="title">DefaultMember</span>(<span class="params"></span>)</span><br><span class="line">                </span>=&gt; <span class="keyword">new</span> Member &#123;Username = <span class="keyword">string</span>.Empty, Password = <span class="keyword">string</span>.Empty&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="function">Response <span class="title">Result</span>(<span class="params">Member x</span>)</span><br><span class="line">                </span>=&gt; <span class="keyword">new</span> Response</span><br><span class="line">                &#123;</span><br><span class="line">                    Success = !<span class="keyword">string</span>.IsNullOrEmpty(x.Username),</span><br><span class="line">                    Username = x.Username</span><br><span class="line">                &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">readonly</span> List&lt;Member&gt; _members</span><br><span class="line">    = <span class="keyword">new</span> List&lt;Member&gt; &#123;<span class="keyword">new</span> Member &#123;Username = <span class="string">"Sam"</span>, Password = <span class="string">"1234"</span>&#125;&#125;;</span><br></pre></td></tr></table></figure>
+<p>為簡化起見，就沒從 database 判斷 username 與 password，暫時將資料放在 <code>List</code> 內。</p>
+<p>16 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[HttpPost]</span><br><span class="line"><span class="function"><span class="keyword">public</span> ActionResult&lt;Response&gt; <span class="title">LoginMember</span>(<span class="params">[FromBody] Member member</span>)</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用 <code>HttpPost</code> attribute 描述 <code>LoginMember</code> 使用 POST action</li>
+<li>使用 <code>FromBody</code> attribute 描述 data 來自於 Body，並且自動轉型 <code>Member</code> 自訂型別</li>
+<li>回傳值 <code>Response</code> 自訂型別，被包在 .NET Core 規定的 <code>ActionResult</code> 內</li>
+</ul>
+<p>25 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> _members</span><br><span class="line">    .Where(IsMember)</span><br><span class="line">    .DefaultIfEmpty(DefaultMember())</span><br><span class="line">    .Select(Result)</span><br><span class="line">    .FirstOrDefault();</span><br></pre></td></tr></table></figure>
+<p><code>Where()</code>：判斷資料是否在 <code>List</code> 內</p>
+<blockquote>
+<p>LINQ 的 <code>Where()</code> 相當於 FP 的 <code>filter()</code></p>
+</blockquote>
+<p><code>DefaultIfEmpty()</code> ：<code>Where()</code> 一定可能找不到資料，因此會回傳 <code>null</code>，但 <code>null</code> 相當於癌細胞，只要一使用到 <code>null</code>，就必須到處判斷 <code>null</code> ，非常麻煩，而且只要有一個地方沒判斷到 <code>null</code>，程式就可能在 run-time 出錯。</p>
+<p>比較好的方式是在 <code>Where()</code> 之後馬上配上 <code>DefaultIfEmpty()</code> 描述，只要 <code>Where()</code> 找不到資料，就不會回傳 <code>null</code>，而是回傳 default object。</p>
+<blockquote>
+<p><code>DefaultIfEmpty()</code> 就是 LINQ 支援 <strong>Null Object Pattern</strong> / <strong>Default Object Pattern</strong> 的一種實現</p>
+</blockquote>
+<p><code>Select()</code>：我們要回傳的是 <code>Response</code> 自訂型別，而不是 <code>Member</code> 型別，勢必要做轉換，<code>Select()</code> 幫我們將 <code>Member</code> 自訂型別轉成 <code>Result</code> 自訂型別。</p>
+<blockquote>
+<p>LINQ 的 <code>Select()</code> 相當於 FP 的 <code>map()</code></p>
+</blockquote>
+<p><code>First()</code>：別忘了 <code>Select()</code> 的轉換有個特色：原本是 <code>Collection</code>，<code>Select()</code> 之後還是 <code>Collection</code>，但我們要的是 <code>Response</code>，因此使用 <code>First()</code> 只取一筆 <code>Response</code>。</p>
+<p>25 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">IsMember</span>(<span class="params">Member x</span>)</span><br><span class="line">    </span>=&gt; x.Username == member.Username &amp;&amp; x.Password == member.Password;</span><br></pre></td></tr></table></figure>
+<p><code>IsMember()</code> Local Function，提供 <code>Where()</code> 的 Predicate Function。</p>
+<blockquote>
+<p>Q : Parameter 使用 <code>x</code> 符合 Clean Code 原則 ?</p>
+</blockquote>
+<p>Local Function 與 Lambda 強調的就是 function 要短要小，且常常配合 Body Expression，若 parameter 名稱取太長，Lambda 就不美了。</p>
+<p>由於 Lambda 來自於數學，一般會採用數學 <code>y = f(x)</code> 習慣，使用 <code>x</code>、<code>y</code>、<code>z</code> 即可。</p>
+<p><code>x</code> 會難閱讀嗎 ? 由於 Local Function 與 Lambda 很短，很容易看到看到其型別定義，所以沒有閱讀與維護的問題。</p>
+<p>28 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Member <span class="title">DefaultMember</span>(<span class="params"></span>)</span><br><span class="line">    </span>=&gt; <span class="keyword">new</span> Member &#123;Username = <span class="keyword">string</span>.Empty, Password = <span class="keyword">string</span>.Empty&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>DefaultMember()</code> Local Function，主要提供 <code>DefaultIfEmpty()</code> 所需要的 default object。</p>
+<p>31 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Response <span class="title">Result</span>(<span class="params">Member x</span>)</span><br><span class="line">  </span>=&gt; <span class="keyword">new</span> Response</span><br><span class="line">  &#123;</span><br><span class="line">    Success = !<span class="keyword">string</span>.IsNullOrEmpty(x.Username),</span><br><span class="line">    Username = x.Username</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p><code>Result()</code> Local Function，主要提供 <code>Select()</code> 所需要的 data 與型別轉換。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>.NET Core 提供了  <code>HttpPost</code> attribute 與  <code>FromBody</code> attribute，讓我們簡單的將 Controller 的 Method 提供 Web API 的 POST 服務</li>
+<li>使用 LINQ 的 <code>Where()</code> 與 <code>DefaultIfEmpty()</code> 讓我們避開 <code>null</code> 魔咒，不用再到處判斷 <code>null</code>，也就是所謂的 Null Object Pattern 或 Default Object Pattern 的實踐</li>
+<li>Local Function 與 Lambda 的 parameter 可以打破 OOP 與 Imperative 的習慣，以 <code>x</code>、<code>y</code>、<code>z</code> 命名即可，因為 Lambda 功能都很單一，且 function 很短，不像 Imperative 會拉很長，因此才需要取有意義的 parameter 名稱</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/WebAPIPOST" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/webapi/get/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/sonarqube/deactivate-rule/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-05 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li> <li><a href="/tags/LINQ/">LINQ<span>4</span></a></li> <li><a href="/tags/Web-API/">Web API<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入探討 F# 之 Discriminated Union | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="將不同型別 OR 起來">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="將不同型別 OR 起來">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探討 F# 之 Discriminated Union">
+<meta property="og:url" content="https://oomusou.io/fsharp/union/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="將不同型別 OR 起來">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-22T02:20:20.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入探討 F# 之 Discriminated Union">
+<meta name="twitter:description" content="將不同型別 OR 起來">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入探討 F# 之 Discriminated Union</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 將不同型別 OR 起來			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Syntax"><span class="toc-article-text">Syntax</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Case"><span class="toc-article-text">Case</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Field"><span class="toc-article-text">Field</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Empty_Case"><span class="toc-article-text">Empty Case</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Single_Case"><span class="toc-article-text">Single Case</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Destructor"><span class="toc-article-text">Destructor</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Equality"><span class="toc-article-text">Equality</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Representation"><span class="toc-article-text">Representation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object_Hierarchy"><span class="toc-article-text">Object Hierarchy</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>將實質上不同的型別，在邏輯上看成相同的型別。如 function 可能回傳 <code>int</code> 或 <code>bool</code> 兩種型別，可為此 function 特別建立 <code>IntOrBool</code> 型別，同時包含 <code>int</code> 與 <code>bool</code>，這就是 Discriminated Union，簡稱 <code>union</code>。</p>
+<p>若說 <code>tuple</code> 是將不同型別加以 AND，則 <code>union</code> 是將不同型別加以 OR。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>.NET Core SDK 2.1.101<br>F# 4.1</p>
+<h2 id="Definition">Definition</h2><hr>
+<p>將不同的型別，整合成單一型別。</p>
+<blockquote>
+<p>Q : 為什麼要稱為 <code>Discriminated</code> Union？</p>
+</blockquote>
+<p>因為不是簡單的將不同型別加以 union 而已，而可以將不同的型別取 <code>case-identifier</code> 加以區別 (discriminated)，所以稱為 <code>Discriminated</code> Union。</p>
+<h2 id="Syntax">Syntax</h2><hr>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ attributes ]&#10;type type-name =&#10;    | case-identifier1 [of [ fieldname1 : ] type1 [ * [ fieldname2 : ] type2 ...]&#10;    | case-identifier2 [of [fieldname3 : ]type3 [ * [ fieldname4 : ]type4 ...]&#10;...</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>type-name</strong> : 定義 <code>union</code> 的型別名稱</li>
+<li><strong>I</strong> : 因為 <code>union</code> 包含多種型別，所以使用 <code>|</code>，第一個 <code>|</code> 可省略</li>
+<li><strong>case-identifider</strong> : 為每個型別取一個別名，必須為 <code>大駝峰</code></li>
+<li><strong>of</strong> : 每個別名的型別，可以是內建型別，也可以是自己定義的其他 type</li>
+<li><strong>*</strong> : 若 <code>of</code> 之後為 <code>tuple</code>，不同 type 以 <code>*</code> 區別不同型別</li>
+<li><strong>fieldname</strong> : 若 <code>of</code> 型別是 <code>tuple</code>，可為 <code>tuple</code> 內每個型別取別名</li>
+</ul>
+<p>以上只有 <code>type-name</code> 與 <code>case-identifier</code> 為必須，其他都可省略。</p>
+<blockquote>
+<p>簡單來說，<code>|</code> 之後稱為 case，<code>of</code> 之後稱為 field</p>
+<p>Case 不可省略，但 field 可省略</p>
+</blockquote>
+<h2 id="Case">Case</h2><hr>
+<p><strong>Case of Primitive Type</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= </span><br><span class="line">  | Int <span class="keyword">of</span> int</span><br><span class="line">  | Bool <span class="keyword">of</span> bool</span><br></pre></td></tr></table></figure>
+<p>如 function 找得到資料會傳回 <code>int</code> 型態的的 <code>orderId</code>，若找不到則傳回 <code>bool</code> 型態的 <code>false</code>，也就是回傳型態可能是 <code>int</code> 或  <code>bool</code>，可將此型態重新定義為 <code>OrderId</code> union，則無論傳回 <code>int</code> 或 <code>bool</code> 都是 <code>OrderId</code> union，且也只能傳回 <code>int</code> 或  <code>bool</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= Int <span class="keyword">of</span> int | Bool <span class="keyword">of</span> bool</span><br></pre></td></tr></table></figure>
+<p>若 case 很少，也可以寫成一行，則第一個 <code>|</code> 可省略。</p>
+<p><strong>Case of Unnamed Type</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>=</span><br><span class="line">    | Rectangle <span class="keyword">of</span> int * int</span><br><span class="line">    | Circle <span class="keyword">of</span> int</span><br><span class="line">    | Prism <span class="keyword">of</span> int * int * int</span><br></pre></td></tr></table></figure>
+<p><code>of</code> 之後的型別，如是 unnamed type，可以直接 inline 表示，如直接指定為 <code>tuple</code> 。</p>
+<p>如打算將 <code>Rectangle</code>、<code>Circle</code> 與 <code>Prism</code> 三個型別定義出一個新的 <code>Shape</code> union，只要是 <code>Rectangle</code> 或 <code>Circle</code> 或 <code>Prism</code> 之一，都算是 <code>Shape</code>。</p>
+<ul>
+<li><code>Rectangle</code> 為 <code>int</code> * <code>int</code> 組合的 <code>tuple</code></li>
+<li><code>Circle</code> 為 <code>int</code></li>
+<li><code>Prism</code> 為 <code>int</code> <em> <code>int</code> </em> <code>int</code> 組合的 <code>tuple</code></li>
+</ul>
+<blockquote>
+<p>type * type 為 tuple 的型別定義方式</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">MixedType</span> </span>= </span><br><span class="line">    Tuple <span class="keyword">of</span> int * int</span><br><span class="line">    List <span class="keyword">of</span> int list</span><br></pre></td></tr></table></figure>
+<p><code>Collection</code> 也屬於 unnamed type，亦可直接 inline 表示。</p>
+<blockquote>
+<p><code>int list</code> 表示為 <code>list</code> 型別，其 element 型別為 <code>int</code>。</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rectangle = Rectangle (<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> circle = Circle <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> prism = Prism (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>當建立 <code>union</code> 時，以類似 constructor 的方式建立，稱為 case constructor，唯沒有 <code>new</code>， <code>class</code> 換成 <code>case</code>，且必須要照 <code>定義順序</code> 傳入。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">C</span> </span>= </span><br><span class="line">    | Circle <span class="keyword">of</span> int </span><br><span class="line">    | Rectangle <span class="keyword">of</span> int * int</span><br><span class="line"></span><br><span class="line">[<span class="number">1.</span><span class="number">.10</span>]</span><br><span class="line">|&gt; List.map Circle</span><br><span class="line"></span><br><span class="line">[<span class="number">1.</span><span class="number">.10</span>]</span><br><span class="line">|&gt; List.zip [<span class="number">21.</span><span class="number">.30</span>]</span><br><span class="line">|&gt; List.map Rectangle</span><br></pre></td></tr></table></figure>
+<p>Case contructor 本質就是 function，因此任何可傳入 function 之處，就可傳入 case constructor。</p>
+<p><strong>Case of Named Type</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Person</span> </span>= &#123; first: string; last: string &#125;</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">IntOrBool</span> </span>= Int <span class="keyword">of</span> int | Bool <span class="keyword">of</span> bool</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">MixedType</span> </span>= </span><br><span class="line">    | Person <span class="keyword">of</span> Person       </span><br><span class="line">    | IntOrBool <span class="keyword">of</span> IntOrBool</span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">MixedType</span> </span>= </span><br><span class="line">    | Person <span class="keyword">of</span>  &#123; first: string; last: string &#125;  <span class="comment">// error</span></span><br><span class="line">    | IntOrBool <span class="keyword">of</span> (Int <span class="keyword">of</span> int | Bool <span class="keyword">of</span> bool)    <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+<p><code>of</code> 之後的型別若是 named type，則必須先用 <code>type</code> 定義好型別，如 <code>record</code> 或 <code>union</code>，不能以 inline 的方式表示。</p>
+<h2 id="Field">Field</h2><hr>
+<p>若 case 的型別為 <code>tuple</code>，雖能在 <code>of</code> 之後簡單的宣告 <code>int * int</code>，有幾個缺點 :</p>
+<ol>
+<li>要建立 <code>union</code> 時，只能依照 <code>定義順序</code> 傳入，可讀性較差</li>
+<li>無法由 <code>tuple</code> 看出其 domain 上的意義</li>
+</ol>
+<p>若我們加上 field，則清楚許多。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>=</span><br><span class="line">    | Rectangle <span class="keyword">of</span> width : int * length : int</span><br><span class="line">    | Circle <span class="keyword">of</span> radius: int</span><br><span class="line">    | Prism <span class="keyword">of</span> width: int * length : int * height: int</span><br></pre></td></tr></table></figure>
+<p>在 <code>of</code> 之後加上 field，可明確表達出 <code>tuple</code> 的每個 element 的 domain 意義。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> rectangle = Rectangle (length = <span class="number">1</span>, width = <span class="number">2</span>)</span><br><span class="line"><span class="keyword">let</span> circle = Circle (radius = <span class="number">1</span>)</span><br><span class="line"><span class="keyword">let</span> prism = Prism (width = <span class="number">1</span>, length = <span class="number">2</span>, height = <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>建立 <code>union</code> 時，可在 case constructor 明確指定其 field，如此可讀性更高，且不用依照 <code>定義順序</code> 傳入。</p>
+<h2 id="Empty_Case">Empty Case</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Directory</span> </span>= </span><br><span class="line">    | Root                   </span><br><span class="line">    | Subdirectory <span class="keyword">of</span> string</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Result</span> </span>= </span><br><span class="line">    | Success                </span><br><span class="line">    | ErrorMessage <span class="keyword">of</span> string</span><br></pre></td></tr></table></figure>
+<p>Case 並不一定要搭配 type，若該 case 並不需要任何型態的值傳入，可以不指定 type。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> myDir1 = Root</span><br><span class="line"><span class="keyword">let</span> myDir2 = Subdirectory <span class="string">"bin"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> myResult1 = Success</span><br><span class="line"><span class="keyword">let</span> myResult2 = ErrorMessage <span class="string">"not found"</span></span><br></pre></td></tr></table></figure>
+<p>沒有 type 的 case，其 case constructor 就不用傳入任何值。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Size</span> </span>= Small | Medium | Large</span><br><span class="line"><span class="keyword">let</span> mySize = Small</span><br></pre></td></tr></table></figure>
+<p>當全部 case 都沒有 type 時，其功能等效於 <code>enum</code>。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Size</span> </span>= Small     | Medium     | Large     <span class="comment">// DU</span></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Size</span> </span>= Small = <span class="number">0</span> | Medium = <span class="number">1</span> | Large = <span class="number">2</span> <span class="comment">// enum</span></span><br></pre></td></tr></table></figure>
+<p><code>union</code> 與 <code>enum</code> 都使用 type 定義，沒有指定 <code>int</code> 值為 <code>union</code>，有則為 <code>enum</code>。</p>
+<blockquote>
+<p>Q : F# 也有 <code>enum</code>，我該用 <code>union</code> 還是 <code>enum</code> 呢 ?</p>
+</blockquote>
+<p>F# 的 <code>union</code> 功能較強，<code>enum</code> 只是 <code>union</code> 的特例，實務上應優先使用 <code>union</code>，除非有以下需求：</p>
+<ol>
+<li>Case 必須搭配 <code>int</code></li>
+<li><code>union</code> 必須與其他 .NET 語言搭配時</li>
+</ol>
+<p>才必須使用 <code>enum</code>。</p>
+<blockquote>
+<p>F# 的 <code>enum</code> 與 .NET 的 <code>enum</code> 是相同的</p>
+</blockquote>
+<h2 id="Single_Case">Single Case</h2><hr>
+<p>雖然 <code>union</code> 原本的用途是用在將不同的型別整合成單一型別，也就是將不同的 case 整合成一個 <code>union</code>，但實務上有一種應用是一個 <code>union</code> 只有一個 case，所謂的 single case。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">CustomerId</span> </span>= int</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= int</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> printOrderId (orderId: OrderId) = </span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> custId = <span class="number">1</span></span><br><span class="line">printOrderId custId</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> CustomerId = int</span><br><span class="line"><span class="keyword">type</span> OrderId = int</span><br></pre></td></tr></table></figure>
+<p><code>type</code> 能對 primitive type 取 alias，所以我們分別對  <code>int</code> 定義成 <code>CustomerId</code> type 與 <code>OrderId</code> type。</p>
+<p>第 4 行</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> printOrderId (orderId: OrderId) = </span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br></pre></td></tr></table></figure>
+<p>建立 <code>printOrderId</code> function，傳入參數的型別為 <code>OrderId</code>。</p>
+<p>第 7 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> custId = <span class="number">1</span></span><br><span class="line">printOrderId custId</span><br></pre></td></tr></table></figure>
+<p><code>custId</code> 的型別為 <code>int</code>，傳入 <code>printOrderId</code> compiler 也沒報錯，明明要的是 <code>OrderId</code> 型別。</p>
+<p>因為 <code>OrderId</code> 與 <code>CustomerId</code> 都只能算是 <code>int</code> 的 alias，還不算是個型別。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">CustomerId</span> </span>= CustomerId <span class="keyword">of</span> int</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= OrderId <span class="keyword">of</span> int</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> printOrderId (OrderId orderId) =</span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> custId = CustomerId <span class="number">1</span></span><br><span class="line">printOrderId custId                   <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">CustomerId</span> </span>= CustomerId <span class="keyword">of</span> int</span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">OrderId</span> </span>= OrderId <span class="keyword">of</span> int</span><br></pre></td></tr></table></figure>
+<ul>
+<li>定義 <code>CustomerId</code> union，其 case 為 <code>CustomerId</code>，型別為 <code>int</code></li>
+<li>定義 <code>OrderId</code> union，其 case 為 <code>OrderId</code>，型別為 <code>int</code></li>
+</ul>
+<blockquote>
+<p>當使用 single case 的 <code>union</code> 時，type 會與 case 相同</p>
+</blockquote>
+<p>第 4 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> printOrderId (OrderId orderId) =</span><br><span class="line">   printfn <span class="string">"The orderId is %i"</span> orderId</span><br></pre></td></tr></table></figure>
+<p>建立 <code>printOrderId</code> function，傳入參數的型別為 <code>OrderId</code>。</p>
+<p>與之前的 <code>printOrderId</code> function 一樣。</p>
+<p>第 7 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> custId = CustomerId <span class="number">1</span></span><br><span class="line">printOrderId custId                   <span class="comment">// Error</span></span><br></pre></td></tr></table></figure>
+<p><code>custId</code> 型別不再是 <code>int</code>，而是 <code>CustomerId</code>，因為使用了 <code>CustomerId</code>  的 case constructor 建立。</p>
+<p><code>custId</code> 傳入  <code>printOrderId</code> 後，如願出現 compiler error，因為 <code>OrderId</code> 與 <code>CustomerId</code> 都是具體的 type，而不只是 alias。</p>
+<h2 id="Destructor">Destructor</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getShapeHeight shape =</span><br><span class="line">    <span class="keyword">match</span> shape <span class="keyword">with</span></span><br><span class="line">    | Rectangle(height = h) -&gt; h</span><br><span class="line">    | Circle(radius = r) -&gt; <span class="number">2.</span> * r</span><br><span class="line">    | Prism(height = h) -&gt; h</span><br></pre></td></tr></table></figure>
+<p>當 <code>union</code> 傳入 function 後，可使用 Pattern Matching 與 field 將 <code>tuple</code> 的值取出。</p>
+<p><code>with</code> 之後配合的 <code>union</code> 的 case，<code>()</code> 內配合 field，可以直接取出該 field 的值。</p>
+<blockquote>
+<p>使用 field 之後，可輕易的配合 Pattern Matching 取出 <code>tuple</code> 內的值</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getCustomerId (CustomerId customerId) = </span><br><span class="line">    printfn <span class="string">"The CustomerId is %i"</span> customerId</span><br></pre></td></tr></table></figure>
+<p>在 function 的 paramter 使用 <code>()</code>，將 case 寫在 parameter 之前，則自動會將傳入的 <code>union</code> destruct 成 value。</p>
+<blockquote>
+<p>語法雖然很類似 C#，但別忘了 F# 的 type 是在 <code>:</code> 之後，所以 <code>CustomerId</code> 寫在前面並不是型別，而是 <code>union</code> 的 case</p>
+</blockquote>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> (CustomerId customerId) = custId </span><br><span class="line"><span class="keyword">let</span> CustomerId customerIdInt = custId <span class="comment">// error</span></span><br></pre></td></tr></table></figure>
+<p><code>custId</code> 為 <code>CustomerId</code> union，會直接 destruct 成 <code>customerId</code>。</p>
+<blockquote>
+<p>使用 destructor 時，一定要加上 <code>()</code>，否則會誤以為是新的 function</p>
+</blockquote>
+<h2 id="Equality">Equality</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Contact</span> </span>= </span><br><span class="line">    | Email <span class="keyword">of</span> string </span><br><span class="line">    | Phone <span class="keyword">of</span> int</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> email1 = Email <span class="string">"bob@example.com"</span></span><br><span class="line"><span class="keyword">let</span> email2 = Email <span class="string">"bob@example.com"</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> areEqual = (email1=email2) <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>雖然 <code>union</code> 為 reference type，但 <code>union</code> 的比較卻像 value type，只要 type 一樣，value 一樣，<code>union</code> 就算一樣。</p>
+<h2 id="Representation">Representation</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Contact</span> </span>= Email <span class="keyword">of</span> string | Phone <span class="keyword">of</span> int</span><br><span class="line"><span class="keyword">let</span> email = Email <span class="string">"bob@example.com"</span></span><br><span class="line"></span><br><span class="line">printfn <span class="string">"%A"</span> email    <span class="comment">// nice</span></span><br></pre></td></tr></table></figure>
+<p><code>printfn</code> 使用 <code>%A</code> 支援 <code>union</code>。</p>
+<h2 id="Object_Hierarchy">Object Hierarchy</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Shape</span> </span>=</span><br><span class="line">    | Circle <span class="keyword">of</span> float</span><br><span class="line">    | EquilateralTriangle <span class="keyword">of</span> double</span><br><span class="line">    | Square <span class="keyword">of</span> double</span><br><span class="line">    | Rectangle <span class="keyword">of</span> double * double</span><br></pre></td></tr></table></figure>
+<p>若使用 OOP，會設計 <code>Shape</code> interface，再由 <code>Circle</code>、<code>EquilateralTriangle</code>、<code>Square</code> 與 <code>Rectangle</code> 實踐 <code>Shape</code>，如此需要開 5 個檔案。</p>
+<p>若使用 <code>union</code>，只要 5 行就可解決。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> pi = <span class="number">3.141592654</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> area myShape =</span><br><span class="line">    <span class="keyword">match</span> myShape <span class="keyword">with</span></span><br><span class="line">    | Circle radius -&gt; pi * radius * radius</span><br><span class="line">    | EquilateralTriangle s -&gt; (sqrt <span class="number">3.0</span>) / <span class="number">4.0</span> * s * s</span><br><span class="line">    | Square s -&gt; s * s</span><br><span class="line">    | Rectangle (h, w) -&gt; h * w</span><br></pre></td></tr></table></figure>
+<p>若使用 OOP，由於各種形狀計算面積的公式不同，勢必在 <code>Shape</code> interface 開 <code>area()</code>，再由  <code>Circle</code>、<code>EquilateralTriangle</code>、<code>Square</code> 與 <code>Rectangle</code> 各自實作 <code>area()</code>。</p>
+<p>但在 FP 的 F#，只需使用 pattern matching 根據 <code>union</code> 的不同 case 實作即可，6 行即可解決。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>F# 的 <code>union</code> 非常強大，可以算是 <code>enum</code> 的威力加強版，搭配 Pattern Matching 更是如虎添翼</li>
+<li><code>union</code> 配合 <code>tuple</code> 可以定義出複雜的 domain model</li>
+<li>Single case 的 <code>union</code> 可以替 domain 定義一個更有意義的型別名稱，且兼具 type safety 與 compiler 保護</li>
+</ul>
+<h2 id="Reference">Reference</h2><p><a href="https://docs.microsoft.com/en-us/dotnet/fsharp/" target="_blank" rel="external">F#</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/discriminated-unions" target="_blank" rel="external">Discriminated Unions</a><br><a href="https://fsharpforfunandprofit.com" target="_blank" rel="external">F# for fum and profit</a>, <a href="https://fsharpforfunandprofit.com/posts/discriminated-unions/" target="_blank" rel="external">Discriminated Unions</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/typescript/generics/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/package-reference/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-17 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>22</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

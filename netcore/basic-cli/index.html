@@ -1,0 +1,341 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>.NET Core CLI 基本指令練習 | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="天天都會用到的 .NET Core 指令">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="天天都會用到的 .NET Core 指令">
+<meta property="og:type" content="article">
+<meta property="og:title" content=".NET Core CLI 基本指令練習">
+<meta property="og:url" content="https://oomusou.io/netcore/basic-cli/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="天天都會用到的 .NET Core 指令">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-05-23T06:41:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content=".NET Core CLI 基本指令練習">
+<meta name="twitter:description" content="天天都會用到的 .NET Core 指令">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> .NET Core CLI 基本指令練習</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 天天都會用到的 .NET Core 指令			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Console_App_專案"><span class="toc-article-text">建立 Console App 專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_VS_Code_開啟專案"><span class="toc-article-text">使用 VS Code 開啟專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編輯_Program-cs"><span class="toc-article-text">編輯 Program.cs</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#觀察_MyConsole-csproj"><span class="toc-article-text">觀察 MyConsole.csproj</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#還原_Dependency"><span class="toc-article-text">還原 Dependency</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編譯_Console_App"><span class="toc-article-text">編譯 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Console_App"><span class="toc-article-text">執行 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#清除_Assembly"><span class="toc-article-text">清除 Assembly</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#發佈_Console_App"><span class="toc-article-text">發佈 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Console_App-1"><span class="toc-article-text">執行 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Console app 是最基本的 .NET Core 專案類型，常用在測試 class library、提供 class library 範例程式，或者開發跨平台的 CLI 工具，我們可以使用 <code>ng new console</code> 建立 console app 型態專案。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立專案。</p>
+<ul>
+<li><strong>console</strong> : 建立 console 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/basic-sdk/sdk009.png" alt="sdk009"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
+<p><img src="/images/netcore/basic-sdk/sdk010.png" alt="sdk010"></p>
+<ol>
+<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/basic-sdk/sdk011.png" alt="sdk011"></p>
+<ol>
+<li><code>.vscode</code> 被 VS Code 自動建立</li>
+</ol>
+<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
+<p><img src="/images/netcore/basic-sdk/sdk012.png" alt="sdk012"></p>
+<ol>
+<li>開啟 <code>Program.cs</code></li>
+<li>將 <code>World</code> 改成 <code>Sam</code> 存檔</li>
+</ol>
+<h2 id="觀察_MyConsole-csproj">觀察 MyConsole.csproj</h2><hr>
+<p><img src="/images/netcore/basic-sdk/sdk013.png" alt="sdk013"></p>
+<ol>
+<li>開啟 <code>MyConsole.csproj</code></li>
+</ol>
+<blockquote>
+<p><code>csproj</code> 負責紀錄 project 的 project 與 package 的 reference ，以及其他與 project 相關資訊，使用 Visual Studio 配合 .NET Framework 時，我們不會去維護 <code>csproj</code> 檔案，而是靠 Visual Studio 幫我們維護，但若使用 VS Code + .NET Core CLI 的組合時，將來會有很多機會要自己維護 <code>csproj</code></p>
+</blockquote>
+<h2 id="還原_Dependency">還原 Dependency</h2><hr>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="built_in">restore</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet restore</code> 根據 <code>csproj</code> 建立 package 與實際位置的 mapping 檔案。</p>
+<p><img src="/images/netcore/basic-sdk/sdk014.png" alt="sdk014"></p>
+<ol>
+<li>按熱鍵 Ctrl + ` 開啟內建的 terminal</li>
+<li>輸入 <code>dotnet restore</code> 還原 dependency</li>
+</ol>
+<h2 id="編譯_Console_App">編譯 Console App</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 編譯專案。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/basic-sdk/sdk000.png" alt="dk00"></p>
+<ol>
+<li>輸入 <code>dotnet build -c Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>自動執行 <code>dotnet restore</code></li>
+<li>最後 build 出 <code>MyConsole.dll</code></li>
+</ol>
+<blockquote>
+<p>注意是 build 到 <code>Release</code> 目錄</p>
+</blockquote>
+<h2 id="執行_Console_App">執行 Console App</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyConsole $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet run</code> 執行專案。</p>
+<blockquote>
+<p><code>dotnet run</code> 明顯感覺比較慢，因為 C# 不是 script，<code>dotnet run</code> 事實上做了幾件事情 :</p>
+<ol>
+<li><code>dotnet restore</code></li>
+<li><code>dotnet build</code></li>
+<li>最後才是執行程式</li>
+</ol>
+<p>所以才會感覺比較慢</p>
+</blockquote>
+<p><img src="/images/netcore/basic-sdk/sdk001.png" alt="dk00"></p>
+<ol>
+<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
+</ol>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">~/MyConsole $ dotnet /</span>Users<span class="regexp">/oomusou/</span>Code<span class="regexp">/CSharp/</span>MyConsole<span class="regexp">/bin/</span>Release/netcoreapp2.</span><br><span class="line"><span class="number">0</span>/MyConsole.dll</span><br></pre></td></tr></table></figure>
+<p>直接使用 <code>dontet</code> 執行 dll，由於使用 <code>Release</code> 模式編譯，速度非常快。</p>
+<p><img src="/images/netcore/basic-sdk/sdk002.png" alt="dk00"></p>
+<ol>
+<li>輸入 <code>dotnet</code> 直接執行編譯過 <code>Release</code> 模式的 <code>MyConsole.dll</code></li>
+<li>馬上出現 <code>Hello Sam!</code> ，不用等待</li>
+</ol>
+<blockquote>
+<p>實務上不建議直接使用 <code>dotnet run</code>，因為速度很慢，要用 <code>dotnet</code> 執行編譯過且最佳化的 dll</p>
+</blockquote>
+<h2 id="清除_Assembly">清除 Assembly</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyConsole</span> $ <span class="keyword">dotnet</span> clean -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet clean</code> 清除所編譯的 dll。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet clean</code> 是清除 <code>Debug</code> 模式的 dll，若要清除 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/basic-sdk/sdk003.png" alt="dk00"></p>
+<ol>
+<li>輸入 <code>dotnet clean -c Release</code> 清除以 <code>Release</code> 模式 build 的 <code>MyConsole.dll</code></li>
+<li>查看 <code>bin/Release/netcoreapp2.0</code> 目錄，確認所有檔案已經清除</li>
+</ol>
+<h2 id="發佈_Console_App">發佈 Console App</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyConsole</span> $ <span class="keyword">dotnet</span> publish -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet publish</code> 將編譯後的 dll 與其 dependency 整理到 <code>publish</code> 目錄，將來只要將此目錄 deploy 到 server 即可。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet publish</code> 是將 <code>Debug</code> 模式的 dll 整理至 <code>publish</code> 目錄，若要整理 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/basic-sdk/sdk004.png" alt="dk00"></p>
+<ol>
+<li>輸入 <code>dotnet publish -c Release</code> 將欲 deploy 的檔案整理到 <code>bin/Release/netcoreapp2.0/publish</code> 目錄</li>
+<li>在 <code>publish</code> 目錄下，我們總共發現有 4 個檔案<ul>
+<li><code>MyConsole.dll</code> : 以 IL 為內容的 assembly</li>
+<li><code>MyConsole.deps.json</code> : 描述執行 dll 所需要的 dependency</li>
+<li><code>MyConsole.runtimeconfig.json</code> : 描述 dll 所需要的 .NET Core runtime 版本，以及其他 runtime 設定 (Ex. Garbage Collection 方式)</li>
+<li><code>MyConsole.pdb</code> : 在 production 環境啟動 debug 時使用</li>
+</ul>
+</li>
+</ol>
+<h2 id="執行_Console_App-1">執行 Console App</h2><hr>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyProject $ dotnet bin/</span>Release<span class="regexp">/netcoreapp2.0/</span>publish<span class="regexp">/MyConsole.dll</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet</code> 執行 publish 後的 dll。</p>
+<p><img src="/images/netcore/basic-sdk/sdk005.png" alt="dk00"></p>
+<ol>
+<li>輸入 <code>dotnet</code> 直接執行  publish 過的 <code>MyConsole.dll</code></li>
+<li>馬上出現 <code>Hello Sam!</code> ，不用等待</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>藉由 <code>Hello World</code> 練習最基本的 .NET Core SDK 指令</li>
+<li><code>dotnet run</code> 因為要執行 <code>dotnet restore</code> 、<code>dotnet build</code> ，所以執行速度較慢</li>
+<li><code>dotnet publish</code> 會幫我們將 dependency 加以整理，方便 deployment</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/project-template/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/syntax-all/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-16 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

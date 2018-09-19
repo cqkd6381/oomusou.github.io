@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何重建由GitHub下載的Laravel專案? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="由Github抓下來的專案，並不是直接可以執行，需要透過一定步驟重建">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="由Github抓下來的專案，並不是直接可以執行，需要透過一定步驟重建">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何重建由GitHub下載的Laravel專案?">
+<meta property="og:url" content="https://oomusou.io/laravel/laravel-clone-from-github/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="由Github抓下來的專案，並不是直接可以執行，需要透過一定步驟重建">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-03-22T14:03:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何重建由GitHub下載的Laravel專案?">
+<meta name="twitter:description" content="由Github抓下來的專案，並不是直接可以執行，需要透過一定步驟重建">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何重建由GitHub下載的Laravel專案?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 由Github抓下來的專案，並不是直接可以執行，需要透過一定步驟重建			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#深入探討-gitignore"><span class="toc-article-text">深入探討.gitignore</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#還原Laravel專案"><span class="toc-article-text">還原Laravel專案</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#git_clone"><span class="toc-article-text">git clone</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#還原vendor目錄"><span class="toc-article-text">還原vendor目錄</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#還原node_modules目錄"><span class="toc-article-text">還原node_modules目錄</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#還原-env"><span class="toc-article-text">還原.env</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#重建Homestead-yaml"><span class="toc-article-text">重建Homestead.yaml</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#啟動Homestead"><span class="toc-article-text">啟動Homestead</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#重建資料庫"><span class="toc-article-text">重建資料庫</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>目前我都將所有範例的source code放在Github上，但有人跟我反應抓下來的Laravel專案無法執行，並不是我故意<code>留一手</code>，而是git採用了<code>.gitignore</code>機制，並沒有所有檔案都進Github，所以整個專案抓下來後，必須要有<code>重建</code>的步驟，整個專案才會還原。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.1.24</p>
+<h2 id="深入探討-gitignore">深入探討.gitignore</h2><hr>
+<p>在每個Laravel專案目錄下，都有一個隱藏的<code>.gitignore</code>檔，其內容如下 :<br><figure class="highlight php"><figcaption><span>.gitignore</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/vendor</span><br><span class="line">/node_modules</span><br><span class="line">Homestead.yaml</span><br><span class="line">Homestead.json</span><br><span class="line">.env</span><br></pre></td></tr></table></figure> </p>
+<p>它所描述的是<code>沒進</code>git repository的目錄與檔案。</p>
+<ul>
+<li><strong><em>/vendor</em></strong> : 負責放composer所下載的PHP package，其中包含Laravel的完整source code。</li>
+<li><strong><em>/node_modules </em></strong> : 負責放npm所下載的Node.js package。</li>
+<li><strong><em> Homestead.yaml </em></strong> : 負責描述Homestead vm資訊。</li>
+<li><strong><em> Homestead.json </em></strong> : 負責描述Homestead vm資訊。</li>
+<li><strong><em> .env </em></strong> : 負責放Laravel的全域資訊。</li>
+</ul>
+<p><code>Homestead.yaml</code>與<code>Homestead.json</code>只會使用一個而已，通常使用<code>Homestead.yaml</code>。<br>其中最重要的是<code>/vendor</code>與<code>.env</code>，沒有這兩個，Laravel會完全跑不起來。</p>
+<p>也因為這些檔案都沒有進git repository，所以當然也不會上Github，因此當你<code>git clone</code>一個專案下來時，Laravel一定跑不起來。</p>
+<h2 id="還原Laravel專案">還原Laravel專案</h2><hr>
+<h3 id="git_clone">git clone</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ git clone https://github.com/oomusou/xxx MyProject</span><br></pre></td></tr></table></figure>
+<h3 id="還原vendor目錄">還原vendor目錄</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/MyProject$ composer install</span><br></pre></td></tr></table></figure>
+<p>注意是<code>composer install</code>，不是<code>composer update</code>。</p>
+<h3 id="還原node_modules目錄">還原node_modules目錄</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/MyProject$ npm install</span><br></pre></td></tr></table></figure>
+<p>若你有用到一些Node packages，如Laravel Elixir，則可<code>選擇執行</code> <code>npm install</code>。</p>
+<h3 id="還原-env">還原.env</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/MyProject$ cp .env.example .env&#10;oomusou@mac:~/MyProject$ php artisan key:generate</span><br></pre></td></tr></table></figure>
+<p>只單純從<code>.env.example</code>複製而來的<code>.env</code>還無法執行Laravel，因為<code>.env.example</code>的<code>APP_KEY</code>為<code>SomeRandomString</code>，必須下<code>php artisan key:generate</code>重新產生<code>APP_KEY</code>。</p>
+<h3 id="重建Homestead-yaml">重建Homestead.yaml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/MyProject$ php vendor/bin/homestead make</span><br></pre></td></tr></table></figure>
+<h3 id="啟動Homestead">啟動Homestead</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/MyProject$ vagrant up</span><br></pre></td></tr></table></figure>
+<p>等開機完成，至少Laravel首頁就出現了。</p>
+<h3 id="重建資料庫">重建資料庫</h3><p>若要重建資料庫，就要連進去Homestead才能migration與seeding，無法在OS X做。<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/MyProject$ vagrant ssh&#10;vagrant@MyProject:~$ cd MyProject&#10;vagrant@MyProject:~/MyProject$ php artisan migrate&#10;vagrant@MyProject:~/MyProject$ php artisan db:seed</span><br></pre></td></tr></table></figure></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>這些步驟不只適用於Github，其他git server都適用，主要是因為這些package不應該進git repository，且<code>Homestead.yaml</code>與<code>.env</code>會存放<code>帳號</code>與<code>密碼</code>，會有security issue不適合放進git repository，所以特別在<code>.gitignore</code>加以排除，導致專案下載後，必須一些步驟才能還原專案。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/macos/macos-symbol-html/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/tdd/tdd-isolated-test/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-11-15 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Git/">Git<span>7</span></a></li> <li><a href="/tags/GitHub/">GitHub<span>5</span></a></li> <li><a href="/tags/Homestead/">Homestead<span>4</span></a></li> <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

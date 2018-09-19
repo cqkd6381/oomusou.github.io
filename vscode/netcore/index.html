@@ -1,0 +1,278 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 VS Code 建立 .NET Core 開發環境 ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="在 macOS 建立輕量級的 .NET Core 開發環境">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="在 macOS 建立輕量級的 .NET Core 開發環境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 VS Code 建立 .NET Core 開發環境 ?">
+<meta property="og:url" content="https://oomusou.io/vscode/netcore/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="在 macOS 建立輕量級的 .NET Core 開發環境">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-08T09:11:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 VS Code 建立 .NET Core 開發環境 ?">
+<meta name="twitter:description" content="在 macOS 建立輕量級的 .NET Core 開發環境">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 VS Code 建立 .NET Core 開發環境 ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 在 macOS 建立輕量級的 .NET Core 開發環境			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Download"><span class="toc-article-text">Download</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Extension"><span class="toc-article-text">Extension</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hello_World"><span class="toc-article-text">Hello World</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立專案"><span class="toc-article-text">建立專案</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#VS_Code_開啟專案"><span class="toc-article-text">VS Code 開啟專案</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#編譯_-NET_Core"><span class="toc-article-text">編譯 .NET Core</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#執行_-NET_Core"><span class="toc-article-text">執行 .NET Core</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>VS Code 是 Microsoft 這幾年最成功的 open source project，也是最多人使用的 Angular 與 .NET Core 開發工具。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.4<br>VS Code 1.21.0</p>
+<h2 id="Download">Download</h2><hr>
+<p><img src="/images/vscode/netcore/setup000.png" alt="setup000"></p>
+<p>到 <a href="https://code.visualstudio.com/" target="_blank" rel="external">VS Code</a> 官網，選擇你的平台下載。</p>
+<blockquote>
+<p>選擇 <code>Stable</code>，不要選擇 <code>Insiders</code> </p>
+<p><code>Insiders</code> 是測試版，有可能會當機   </p>
+</blockquote>
+<h2 id="Extension">Extension</h2><hr>
+<p><img src="/images/vscode/netcore/setup001.png" alt="setup001"></p>
+<ol>
+<li>按下左側 <code>Extension</code> icon</li>
+<li>輸入 <code>.NET Core Extension Pack</code></li>
+<li>選擇 Will 保哥所整理 .NET Core Extension Pack</li>
+</ol>
+<blockquote>
+<p>由於 VS Code 為 open source project，當然可以自行選擇各種 extension 使用，此為保哥所整理的好用 extension，基本上安裝保哥的版本就已經足夠使用</p>
+</blockquote>
+<h2 id="Hello_World">Hello World</h2><hr>
+<h3 id="建立專案">建立專案</h3><figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>new</strong> : 建立新專案</li>
+<li><strong>console</strong> : 建立 console 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，表建立在 <code>MyConsole</code> 目錄下</li>
+</ul>
+<p><img src="/images/vscode/netcore/setup002.png" alt="setup002"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動下載所需要的 NuGet package</li>
+</ol>
+<h3 id="VS_Code_開啟專案">VS Code 開啟專案</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接 <code>開啟目錄</code>名稱。</p>
+<p><img src="/images/vscode/netcore/setup003.png" alt="setup003"></p>
+<ol>
+<li>輸入 <code>code MyConsole</code> 要求 VS Code 直接開啟 <code>MyConsole</code> 目錄</li>
+</ol>
+<p><img src="/images/vscode/netcore/setup004.png" alt="setup004"></p>
+<ol>
+<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/vscode/netcore/setup005.png" alt="setup005"></p>
+<ol>
+<li><code>.vscode</code> 被 VS Code 自動建立</li>
+<li>點選 <code>Program.cs</code>，VS Code 已經能辨識出 C#，並支持語法變色與 Intellisense</li>
+</ol>
+<h3 id="編譯_-NET_Core">編譯 .NET Core</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>dotnet build</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>build</strong> : 編譯專案</li>
+</ul>
+<p><img src="/images/vscode/netcore/setup006.png" alt="setup006"></p>
+<ol>
+<li>按熱鍵 Ctrl + ` 開啟內建的 terminal，輸入 dotnet build 編譯目前專案</li>
+<li>.NET Core SDK 將編譯成 <code>MyConsole.dll</code>，將路徑複製下來</li>
+</ol>
+<h3 id="執行_-NET_Core">執行 .NET Core</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="regexp">/Users/</span>oomusou<span class="regexp">/Code/</span>CSharp<span class="regexp">/MyConsole/</span>bin<span class="regexp">/Debug/</span>netcorea</span><br><span class="line">pp2.<span class="number">0</span><span class="regexp">/MyConsole.dll</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet</code> 執行 <code>dll</code>。</p>
+<p><img src="/images/vscode/netcore/setup007.png" alt="setup007"></p>
+<ol>
+<li>輸入 <code>dotnet</code>，並將剛剛複製的 <code>dll</code> 路徑貼上</li>
+<li>顯示<code>Hello World!</code></li>
+</ol>
+<p>目前已經可以成功在 VS Code 編譯 C# 並執行之。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>VS Code 是個輕量的 .NET Core 開發環境，配合 .NET Core SDK，你可以在 macOS 寫 C#</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/vscode/ubuntu/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/design-pattern/state/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-10 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li> <li><a href="/tags/VS-Code/">VS Code<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

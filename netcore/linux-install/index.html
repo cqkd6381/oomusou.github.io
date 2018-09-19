@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 Ubuntu 安裝 .NET Core ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="自行在 Linux 安裝 .NET Core">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="自行在 Linux 安裝 .NET Core">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 Ubuntu 安裝 .NET Core ?">
+<meta property="og:url" content="https://oomusou.io/netcore/linux-install/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="自行在 Linux 安裝 .NET Core">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-19T02:13:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 Ubuntu 安裝 .NET Core ?">
+<meta name="twitter:description" content="自行在 Linux 安裝 .NET Core">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 Ubuntu 安裝 .NET Core ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 自行在 Linux 安裝 .NET Core			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_Dependency"><span class="toc-article-text">安裝 Dependency</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_microsoft-qpg"><span class="toc-article-text">安裝 microsoft.qpg</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_-NET_Core_SDK"><span class="toc-article-text">安裝 .NET Core SDK</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#測試_-NET_Core_SDK"><span class="toc-article-text">測試 .NET Core SDK</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>.NET Core 為 Microsoft 的跨平台解決方案，只要裝上 .NET Core SDK，就可在 Linux 執行與開發 .NET Core App，本文以 Ubuntu 為例。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>Parallel Desktop 13 for Mac 13.3.0 (43321)<br>Ubuntu 16.04<br>.NET Core SDK 2.1.4</p>
+<h2 id="安裝_Dependency">安裝 Dependency</h2><hr>
+<figure class="highlight q"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-<span class="built_in">get</span> <span class="keyword">update</span></span><br><span class="line">$ sudo apt-<span class="built_in">get</span> install curl</span><br></pre></td></tr></table></figure>
+<p>根據官網的 <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a>，若要在 Linux 安裝 .NET Core，在 Ubuntu 還必須安裝以下額外 package :</p>
+<ul>
+<li>libunwind8</li>
+<li>liblttng-ust0</li>
+<li>libcurl3</li>
+<li>libssl1.0.0</li>
+<li>libuuid1</li>
+<li>libkrb5-3</li>
+<li>zlib1g</li>
+<li>libicu52 (for 14.X)</li>
+<li>libicu55 (for 16.X)</li>
+<li>libicu57 (for 17.X)</li>
+</ul>
+<p>這些 package 在 Ubuntu 其實都已經內建，所以不用特別安裝。</p>
+<p>其中 <code>curl</code> 在並不算 .NET Core SDK 所需要的 package，但接下來要用 <code>curl</code> 安裝 <code>microsoft.qpg</code>，所以也需要特別安裝。 </p>
+<p><img src="/images/netcore/linux-install/linux000.png" alt="linux000"></p>
+<ol>
+<li>輸入 <code>sudo apt-get update</code> 更新本機套件清單</li>
+<li>輸入  <code>sudo apt-get install curl</code> 安裝 <code>curl</code></li>
+</ol>
+<h2 id="安裝_microsoft-qpg">安裝 microsoft.qpg</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl https:<span class="comment">//packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.gpg</span></span><br><span class="line">$ sudo mv microsoft<span class="class">.gpg</span> /etc/apt/trusted<span class="class">.gpg</span><span class="class">.d</span>/microsoft<span class="class">.gpg</span></span><br><span class="line">$ sudo sh -c <span class="string">'echo "deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-xenial-prod xenial main" &gt; /etc/apt/sources.list.d/dotnetdev.list'</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>curl</code> 下載 <code>microsoft.qpg</code> 並安裝之。</p>
+<p>加入 Microsoft 套件庫位置。</p>
+<p><img src="/images/netcore/linux-install/linux001.png" alt="linux001"></p>
+<ol>
+<li>輸入 <code>curl …</code> 下載 <code>microsoft.qpg</code> 到本機</li>
+<li>將 <code>microsoft.qpg</code> 移到適當目錄</li>
+<li>加入 Microsoft 套件庫位置</li>
+</ol>
+<h2 id="安裝_-NET_Core_SDK">安裝 .NET Core SDK</h2><hr>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get <span class="operator"><span class="keyword">install</span> apt-transport-https</span><br><span class="line">$ sudo apt-<span class="keyword">get</span> <span class="keyword">update</span></span><br><span class="line">$ sudo apt-<span class="keyword">get</span> <span class="keyword">install</span> -y <span class="keyword">dotnet</span>-sdk-<span class="number">2.1</span><span class="number">.4</span></span></span><br></pre></td></tr></table></figure>
+<p>安裝 <code>apt-transport-https</code> 套件。</p>
+<p>由於剛剛新加入了 Microsoft 自己的套件庫，所以需要在執行 <code>apt-get update</code> 更新一次。</p>
+<p>正式安裝 .NET Core SDK 2.1.4。</p>
+<p><img src="/images/netcore/linux-install/linux002.png" alt="linux002"></p>
+<ol>
+<li>輸入 <code>sudo apt-get install apt-transport-https</code> 安裝 <code>apt-transport-https</code> 套件</li>
+<li>輸入 <code>sudo apt-get update</code> 更新本機套件清單</li>
+<li>輸入 <code>sudo apt-get install -y dotnet-sdk-2.1.4</code> 安裝 .NET Core SDK </li>
+</ol>
+<h2 id="測試_-NET_Core_SDK">測試 .NET Core SDK</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">dotnet</span> <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
+<p>輸入 <code>dotnet —version</code> 確認 .NET Core SDK 已經安裝成功</p>
+<p><img src="/images/netcore/linux-install/linux003.png" alt="linux003"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Linux 有分不同 distribution，在不同 distribution 安裝 .NET Core 的方法大同小異，詳細請參考 .NET Core 官網的 <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a> ，自行選擇不同的 distribution</li>
+<li>在 Linux 上也可以選擇自行下載 <code>tar.gz</code> 方式安裝，詳情請參考 <a href="https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-linux-x64-binaries" target="_blank" rel="external">.NET Core 2.1.4 SDK (Binaries for Linux x64)</a></li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/linux-prerequisites?tabs=netcore2x" target="_blank" rel="external">Prerequisites for .NET Core on Linux</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/linux-package-manager/ubuntu16-04/sdk-current" target="_blank" rel="external">Install .NET Core SDK on Linux Ubuntu 16.04</a><br><a href="https://docs.microsoft.com/en-us/dotnet/core/index" target="_blank" rel="external">.NET Core</a>, <a href="https://www.microsoft.com/net/download/thank-you/dotnet-sdk-2.1.4-linux-x64-binaries" target="_blank" rel="external">.NET Core 2.1.4 SDK (Binaries for Linux x64)</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/Docker/jenkins-core/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/Docker/ubuntu-core/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-04 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li> <li><a href="/tags/Ubuntu/">Ubuntu<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

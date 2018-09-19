@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 PhpStorm 使用 Code Completion? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="讓我們忘記 Namespace，Class 與 Method">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="讓我們忘記 Namespace，Class 與 Method">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 PhpStorm 使用 Code Completion?">
+<meta property="og:url" content="https://oomusou.io/phpstorm/phpstorm-code-completion/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="讓我們忘記 Namespace，Class 與 Method">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-10-18T06:13:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 PhpStorm 使用 Code Completion?">
+<meta name="twitter:description" content="讓我們忘記 Namespace，Class 與 Method">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 PhpStorm 使用 Code Completion?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 讓我們忘記 Namespace，Class 與 Method			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Basic_Code_Completion"><span class="toc-article-text">Basic Code Completion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Smart_Type_Code_Completion"><span class="toc-article-text">Smart Type Code Completion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Class"><span class="toc-article-text">Class</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Field"><span class="toc-article-text">Field</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Method"><span class="toc-article-text">Method</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Collection"><span class="toc-article-text">Collection</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Service_Container"><span class="toc-article-text">Service Container</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Controller"><span class="toc-article-text">Controller</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Route"><span class="toc-article-text">Route</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#View"><span class="toc-article-text">View</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#config::get()"><span class="toc-article-text">config::get()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#DIR"><span class="toc-article-text">DIR</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>PHP 進入了物件導向與 framework 時代之後，出現了大量的 namespace、class、interface 與 method，基本上這些東西已經很難用記憶的方式來寫程式，必須靠工具輔助。PhpStorm 的 Code Completion 幫我們處理了大部分的東西，讓我們只要用選的就可以開發程式，一來開發速度變快，二來也可以減少 typo，是 modern PHP 的關鍵。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 7.0.8<br>Laravel 5.2.41<br>PhpStorm 2016.2</p>
+<h2 id="Basic_Code_Completion">Basic Code Completion</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code004.png" alt=""></p>
+<p>當任何地方需要使用 Code Completion 時，就可以按熱鍵 &#8963; + &#9251;。</p>
+<p>如 constructor 要依賴注入時，不知道要注入的 class 名稱，可以按熱鍵 &#8963; + &#9251;，Code Completion 會列出目前 scope 可用的 class 名稱讓你挑選。</p>
+<h2 id="Smart_Type_Code_Completion">Smart Type Code Completion</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code005.png" alt=""></p>
+<p>當任何地方需要使用 Code Completion 時，且希望 Code Completion 能根據型別自動選擇適當的變數，就可以按熱鍵 &#8963; + &#8679; + &#9251;。</p>
+<p>如 <code>getTitle()</code> 需要輸入變數時，不知道要輸入的變數名稱，可以按熱鍵 &#8963; + &#8679; + &#9251;，Smart Type Code Completion 會根據 <code>getType()</code> 的 scalar type hint 或 PHPDoc 的 <code>@param</code> 列出目前 scope 最適合的變數讓你挑選。</p>
+<h2 id="Class">Class</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code006.png" alt=""></p>
+<p>一般我們都會取將物件變數名稱以 class 名稱的 camelCase 命名，當 <code>new</code> 時，Code Completion 會自動依照變數名稱抓到 class 名稱讓你選擇。</p>
+<h2 id="Field">Field</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code007.png" alt=""></p>
+<ul>
+<li>若是一般 class，Code Completion 可以直接抓到 public field。</li>
+<li>若是 model，則必須透過 IDE Helper 幫 model 加上 PHPDoc 註解，Code Completion 才能抓到。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於 IDE Helper 的安裝與執行，詳細請參考<a href="/phpstorm/phpstorm-ide-helper/">如何在 PhpStorm 活用 PHPDoc?</a></span></span></span></li>
+</ul>
+<h2 id="Method">Method</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code000.png" alt=""></p>
+<p>PhpStorm 2016.2 之前的 Code Completion，讓你選擇可以選擇 method，並提供參數資訊，老實說這樣已經很好用了。</p>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code001.png" alt=""></p>
+<p>PhpStorm 2016.2 對於參數的 Code Completion 做了更強的支援，不過預設並沒有啟動。</p>
+<p><strong><em>PhpStorm -&gt; Preferences -&gt; Editor -&gt; General -&gt; Smart Keys</em></strong></p>
+<ul>
+<li>將 <code>Enable smart function parameters completion</code> 打勾。</li>
+</ul>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code002.png" alt=""></p>
+<p>以後選擇 method 後，PhpStorm 還會幫你將原 method 的參數名稱複製過來，讓你可以更清楚要填什麼參數。</p>
+<p>除此之外，若你使用的 PHP 7 的 type hint，或使用 PHPDoc 的 <code>@param</code> 描述參數型別，PhpStorm 會自動將相同型別的參數列在前面讓你挑選。</p>
+<p><img src="/images/phpstorm/phpstorm-code-completion/code003.png" alt=""></p>
+<p>按 enter 選擇了變數後，PhpStorm 會自動跳到下一個參數，也讓你用選的。</p>
+<h2 id="Collection">Collection</h2><hr>
+<p>Collection 並非 PHP 原生型別，是由 Laravel 所擴充，由於其實踐了 <code>ArrayAccess</code> 、 <code>Countable</code> 與 <code>IteratorAggregate</code> interface，因此 <code>Collection</code> 使用起來很像 array，若要描述 <code>Collection</code> 元素的型別，可搭配 PHPDoc。</p>
+<p><strong>PostRepository.php</strong><span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/33f673dcbde4a935e04364c4ce4d064c9371a3cc" target="_blank" rel="external">PostRepository 新增 getAllPosts()</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code008.png" alt=""></p>
+<p><code>getAllPosts()</code> 回傳的是 <code>Collection</code> 型別，若由 PhpStorm 的熱鍵 &#8997; + &#8617;，只會有 <code>@return Collection</code>，如此 <code>foreach</code> 時將無法顯示其元素的 field 與 method，必須加上 <code>|Post[]</code>，表示回傳值除了是 <code>Collection</code> 外，也是 <code>Post</code> 型別的 array。</p>
+<p><strong>PostService.php</strong><span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/70964d9bf2013ebc4b092f0f7699d42f40b26568" target="_blank" rel="external">PostService 新增 showAllPosts()</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code009.png" alt=""></p>
+<p>如此在 <code>foreach</code> 時，就可以顯示 <code>$post</code> 的屬性 <code>title</code>。</p>
+<h2 id="Service_Container">Service Container</h2><hr>
+<p><strong>PostServiceUnitTest.php</strong><span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/3b9d185307e4a64258fd8790439b820b44766931" target="_blank" rel="external">PostServiceUnitTest 使用 app::make()</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code010.png" alt=""></p>
+<p>使用 <code>App::make()</code> 或 <code>app()</code> 透過 service container 建立物件時，PhpStorm 也可以抓到該物件的 method。</p>
+<h2 id="Controller">Controller</h2><hr>
+<p><strong>routes.php</strong><br><img src="/images/phpstorm/phpstorm-code-completion/code011.png" alt=""></p>
+<p>在 <code>routes.php</code> 的 <code>uses</code>，可以抓到 controller 與其 method。</p>
+<h2 id="Route">Route</h2><hr>
+<p><strong>index.blade.php</strong><span class="margin-note-marker"><sup>6</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">6</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/988652b299d7bb6f2e17e91ca175b58e5f7cb325" target="_blank" rel="external">Blade 有 route 別名</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code012.png" alt=""></p>
+<p>Blade 的 <code>route()</code> 可以抓到 <code>routes.php</code> 所定義的 route 別名。</p>
+<h2 id="View">View</h2><hr>
+<p><strong>PostController.php</strong><span class="margin-note-marker"><sup>7</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">7</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/ee4f0fc1673c491e176bcf5858ce35afee38e465" target="_blank" rel="external">view() 可抓到 view</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code013.png" alt=""></p>
+<p>在 controller 內的 <code>return view()</code> 可以抓到 view 的名稱。</p>
+<h2 id="config::get()">config::get()</h2><hr>
+<p><strong>PostController.php</strong><span class="margin-note-marker"><sup>8</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">8</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/a6efc5f5bba41a79eab09abeeb7384c808d06653" target="_blank" rel="external">Config::get() 可抓到設定</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code014.png" alt=""></p>
+<p><code>Config::get()</code> 可以抓到 array 的 key 值.</p>
+<h2 id="DIR"><strong>DIR</strong></h2><hr>
+<p><strong>PostServiceUnitTest.php</strong><span class="margin-note-marker"><sup>9</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">9</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo/commit/3227a9b15a1f441433758becf7e294bbab8a7f4e" target="_blank" rel="external"><strong>DIR</strong> 可抓到目前目錄的檔案</a></span></span></span><br><img src="/images/phpstorm/phpstorm-code-completion/code015.png" alt=""></p>
+<p><code>__DIR__</code> 可抓到目前目錄的檔案，這在寫測試時特別好用，可以將測試案例檔案(如 Excel 檔)放在目前單元測試下，<code>__DIR</code> 會抓到 Excel 檔。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>寫程式重點不是在記憶力，而是在抽象化思考，Code Completion 讓我們從 namespace、class 與 method 解放，將注意力放在解決需求上。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Laravel52PhpStormCodeCompletion_demo" target="_blank" rel="external">GitHub</a> 上找到。</p>
+<h2 id="Reference">Reference</h2><hr>
+<p>Gary Hockin, <a href="https://blog.jetbrains.com/phpstorm/2016/07/parameter-code-completion-in-phpstorm-2016-2" target="_blank" rel="external">PhpStorm Code Completion in PhpStorm 2016.2</a><br>PhpStorm Online Help, <a href="https://www.jetbrains.com/help/phpstorm/2016.2/auto-completing-code.html" target="_blank" rel="external">Auto-Completing Code</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/phpstorm/phpstorm-code-generation/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/phpstorm-code-inspection/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-07-25 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

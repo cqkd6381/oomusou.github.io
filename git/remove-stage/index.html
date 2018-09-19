@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何將檔案從stage移除 ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="實務上常會遇到的問題，卻要使用兩個完全不同的指令才能達成">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="實務上常會遇到的問題，卻要使用兩個完全不同的指令才能達成">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何將檔案從stage移除 ?">
+<meta property="og:url" content="https://oomusou.io/git/remove-stage/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="實務上常會遇到的問題，卻要使用兩個完全不同的指令才能達成">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-04T06:21:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何將檔案從stage移除 ?">
+<meta name="twitter:description" content="實務上常會遇到的問題，卻要使用兩個完全不同的指令才能達成">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何將檔案從stage移除 ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 實務上常會遇到的問題，卻要使用兩個完全不同的指令才能達成			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將檔案commit進repository"><span class="toc-article-text">將檔案commit進repository</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#將檔案從stage移除"><span class="toc-article-text">將檔案從stage移除</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#git_rm_–cached"><span class="toc-article-text">git rm –cached</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#git_reset_HEAD"><span class="toc-article-text">git reset HEAD</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>git將檔案分成三個階段 : <strong>working directory</strong>、<strong>stage</strong>與<strong>repository</strong>，要進repository之前，必須先進stage，但實務上可能下了<code>git add</code>之後，才反悔發現這個檔案不應該進stage，必須從stage移除，由於必須考慮該檔案是否已經存在於repository，所以必須下不同的git指令才能達成效果。<br><a id="more"></a></p>
+<h2 id="Version">Version</h2><hr>
+<p>git 2.6.4</p>
+<h2 id="將檔案commit進repository">將檔案commit進repository</h2><hr>
+<p>我們知道在git裡，要將檔案commit進repository，需經過兩個步驟 :</p>
+<ol>
+<li>下<code>git add</code>將檔案寫進stage。</li>
+<li>下<code>git commit</code>將檔案寫進repository。</li>
+</ol>
+<h2 id="將檔案從stage移除">將檔案從stage移除</h2><hr>
+<p>實務上常遇到一個狀況 : 當下了<code>git add</code>之後，才發現加錯檔案了，必須將檔案從stage移除。</p>
+<p>一個看似很單純的需求，在git下卻要分兩個不同的狀況去思考：</p>
+<ol>
+<li>若該檔案<strong>不在</strong>repository內 : <code>git rm --cached 檔案名稱</code></li>
+<li>若檔案<strong>已經在</strong>repository內 : <code>git reset HEAD 檔案名稱</code></li>
+</ol>
+<div class="alert alert-info"><i class="fa fa-info"></i>  為什麼一個很簡單的需求，卻要使用完全不同的git指令呢？</div>
+<h2 id="git_rm_–cached">git rm –cached</h2><hr>
+<p>先了解<code>git rm --cached</code>的背後原理 :</p>
+<ol>
+<li>若檔案存在於stage與repository時，會將檔案從repository刪除，並且從stage刪除，但不會刪除working directory的實際檔案，不過由於檔案已經從repository刪除，檔案會從<code>tracked</code>變成<code>untracked</code>。</li>
+<li>若檔案存在於stage，卻不存在於repository，會將檔案從stage刪除，但不會刪除working director的實際檔案，因為repository本來就沒有這個檔案，所以一樣是<code>untracked</code>不變。</li>
+</ol>
+<p>回想我們的狀況 :</p>
+<ol>
+<li><p>若該檔案<strong>不在</strong>repository內 : <code>git rm --cached</code>會幫我們從stage刪除，且檔案本來就是untracked，執行完還是untracked，符合我們的預期。</p>
+</li>
+<li><p>若檔案<strong>已經在</strong>repository內 : <code>git rm --cached</code>會幫我們從repository刪除，並且從stage刪除，因為已經從repository刪除檔案，檔案會從<code>tracked</code>變成<code>untracked</code>，這並不是我們預期的。</p>
+</li>
+</ol>
+<p>這解釋了為什麼當檔案<strong>不在</strong>repository時，必須下<code>git rm --cached</code>。</p>
+<h2 id="git_reset_HEAD">git reset HEAD</h2><hr>
+<p>先了解<code>git reset HEAD</code>的背後原理：</p>
+<p>HEAD為目前最新的commit節點，<code>git reset HEAD</code>表示將檔案還原到目前最新的commit，若沒下任何參數，預設為<code>--mixed</code>：</p>
+<ol>
+<li><strong>–soft</strong> : repository的檔案會被還原到HEAD，但stage與working directory檔案不變。</li>
+<li><strong>–mixed</strong> : repository與stage的檔案都會被還原到HEAD，但working directory的檔案不變。</li>
+<li><strong>–hard</strong> : repository、stage與working directory的檔案<strong>都會</strong>被還原到HEAD。</li>
+</ol>
+<p>回想我們的狀況：</p>
+<ol>
+<li><p>若該檔案<strong>不在</strong>repository內 : <code>git reset HEAD</code>會出現以下錯誤：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fatal: ambiguous argument &#39;HEAD&#39;: unknown revision or path not in the working tree.&#10;Use &#39;--&#39; to separate paths from revisions, like this:&#10;&#39;git &#60;command&#62; [&#60;revision&#62;...] -- [&#60;file&#62;...]&#39;</span><br></pre></td></tr></table></figure>
+<p>因為檔案根本還沒進repository，也就是還沒有commit過，哪來的HEAD呢？git馬上給你錯誤訊息，，這並不是我們預期的。</p>
+</li>
+<li><p>若檔案<strong>已經在</strong>repository內 : <code>git reset HEAD</code>會幫我們將repository與stage還原到目前最新commit節點檔案，但working directory的檔案不會被還原，因為stage的檔案已經不是目前的檔案，所以檔案的狀態由原本的<code>stage</code>變成<code>modified</code>，符合我們的預期。</p>
+</li>
+</ol>
+<p>這解釋了為什麼當檔案<strong>已經在</strong>repository時，必須下<code>git reset HEAD</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>學習git時，最好要去了解每個指令背後的原理，否則只能死背指令，這樣很容易忘記，也無法活用。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/laravel/architecture/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/debug-testing/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-12-18 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Git/">Git<span>7</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

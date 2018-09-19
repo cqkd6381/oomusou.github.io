@@ -1,0 +1,300 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 Service 模式? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 Service 輔助 Controller">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 Service 輔助 Controller">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 Service 模式?">
+<meta property="og:url" content="https://oomusou.io/laravel/service/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 Service 輔助 Controller">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-10-18T06:13:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 Service 模式?">
+<meta name="twitter:description" content="使用 Service 輔助 Controller">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 Service 模式?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 Service 輔助 Controller			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#商業邏輯"><span class="toc-article-text">商業邏輯</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Service"><span class="toc-article-text">Service</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#牽涉到外部行為"><span class="toc-article-text">牽涉到外部行為</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用_PHP_寫的邏輯"><span class="toc-article-text">使用 PHP 寫的邏輯</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Controller"><span class="toc-article-text">Controller</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>若將商業邏輯都寫在 controller，會造成 controller 肥大而難以維護，基於<strong>SOLID</strong>原則，我們應該使用 <strong>Service</strong> 模式輔助 controller，將相關的商業邏輯封裝在不同的 service，方便中大型專案的維護。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.1.22</p>
+<h2 id="商業邏輯">商業邏輯</h2><hr>
+<p>商業邏輯中，常見的如 : </p>
+<ol>
+<li><strong>牽涉到外部行為</strong> : 如<code>發送Email</code>，<code>使用外部API</code>…。</li>
+<li><strong>使用PHP寫的邏輯</strong> : 如<code>根據購買的件數，有不同的折扣</code>。</li>
+</ol>
+<p>若將商業邏輯寫在 controller，會造成 controller 肥大，日後難以維護。</p>
+<h2 id="Service">Service</h2><hr>
+<h3 id="牽涉到外部行為">牽涉到外部行為</h3><p>如<code>發送Email</code>，初學者常會在 controller 直接調用 <code>Mail::queue()</code>:</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    Mail::queue(<span class="string">'email.index'</span>, <span class="variable">$request</span>-&gt;all(), <span class="function"><span class="keyword">function</span> <span class="params">(Message <span class="variable">$message</span>)</span> </span>&#123;</span><br><span class="line">        <span class="variable">$message</span>-&gt;sender(env(<span class="string">'MAIL_USERNAME'</span>));</span><br><span class="line">        <span class="variable">$message</span>-&gt;subject(env(<span class="string">'MAIL_SUBJECT'</span>));</span><br><span class="line">        <span class="variable">$message</span>-&gt;to(env(<span class="string">'MAIL_TO_ADDR'</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在中大型專案，會有幾個問題 : </p>
+<ol>
+<li>將牽涉到外部行為的商業邏輯寫在 controller，造成 controller 的肥大難以維護。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span><code>Mail::queue()</code>只有一行可能無感，但很多外部服務需要一連串 API，甚至還要有 <code>try/catch</code> 處理。</span></span></span></li>
+<li>違反 <strong>SOLID</strong> 的<strong>單一職責</strong>原則 : 外部行為不應該寫在 controller。</li>
+<li>controller 直接相依於外部行為，使得我們無法對 controller 做單元測試。</li>
+</ol>
+<p>比較好的方式是使用 service : </p>
+<ol>
+<li>將外部行為注入到 service。</li>
+<li>在 service 使用外部行為。</li>
+<li>將 service 注入到 controller。</li>
+</ol>
+<p><strong>EmailService.php</strong><span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel51ServiceExternal_demo/commit/d07b0200f447de85915dac444911ad22e2b3dbd7" target="_blank" rel="external">新增 EmailService</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/EmailService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Mail</span>\<span class="title">Mailer</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Mail</span>\<span class="title">Message</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EmailService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> Mailer */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$mail</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * EmailService constructor.</span><br><span class="line">     * <span class="doctag">@param</span> Mailer $mail</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Mailer <span class="variable">$mail</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;mail = <span class="variable">$mail</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 發送Email</span><br><span class="line">     * <span class="doctag">@param</span> array $request</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">(array <span class="variable">$request</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;mail-&gt;queue(<span class="string">'email.index'</span>, <span class="variable">$request</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Message <span class="variable">$message</span>)</span> </span>&#123;</span><br><span class="line">            <span class="variable">$message</span>-&gt;sender(env(<span class="string">'MAIL_USERNAME'</span>));</span><br><span class="line">            <span class="variable">$message</span>-&gt;subject(env(<span class="string">'MAIL_SUBJECT'</span>));</span><br><span class="line">            <span class="variable">$message</span>-&gt;to(env(<span class="string">'MAIL_TO_ADDR'</span>));</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第 8 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@var</span> Mailer */</span></span><br><span class="line"><span class="keyword">private</span> <span class="variable">$mail</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * EmailService constructor.</span><br><span class="line"> * <span class="doctag">@param</span> Mailer $mail</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Mailer <span class="variable">$mail</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;mail = <span class="variable">$mail</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將相依的<code>Mailer</code>注入到<code>EmailService</code>。</p>
+<p>20 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 發送Email</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span> array $request</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">send</span><span class="params">(array <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;mail-&gt;queue(<span class="string">'email.index'</span>, <span class="variable">$request</span>, <span class="function"><span class="keyword">function</span> <span class="params">(Message <span class="variable">$message</span>)</span> </span>&#123;</span><br><span class="line">        <span class="variable">$message</span>-&gt;sender(env(<span class="string">'MAIL_USERNAME'</span>));</span><br><span class="line">        <span class="variable">$message</span>-&gt;subject(env(<span class="string">'MAIL_SUBJECT'</span>));</span><br><span class="line">        <span class="variable">$message</span>-&gt;to(env(<span class="string">'MAIL_TO_ADDR'</span>));</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將發送 Emai的商業邏輯寫在<code>send()</code>。</p>
+<p>不是使用<code>Mail</code> facade，而是使用注入的<code>$this-&gt;mail</code>。</p>
+<p><strong>UserController.php</strong><span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel51ServiceExternal_demo/commit/6addfe7ee2d3247c5cf11a8d93b8b053785121cc" target="_blank" rel="external">新增 UserController</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>app/Http/Controllers/UserController.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Requests</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">MyBlog</span>\<span class="title">Services</span>\<span class="title">EmailService</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> EmailService */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$emailService</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * UserController constructor.</span><br><span class="line">     * <span class="doctag">@param</span> EmailService $emailService</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(EmailService <span class="variable">$emailService</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;emailService = <span class="variable">$emailService</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Store a newly created resource in storage.</span><br><span class="line">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line">     * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;emailService-&gt;send(<span class="variable">$request</span>-&gt;all());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第9行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@var</span>  EmailService */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="variable">$emailService</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * UserController constructor.</span><br><span class="line"> * <span class="doctag">@param</span> EmailService $emailService</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(EmailService <span class="variable">$emailService</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;emailService = <span class="variable">$emailService</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將相依的 <code>EmailService</code> 注入到 <code>UserController</code>。</p>
+<p>22行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Store a newly created resource in storage.</span><br><span class="line"> *</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line"> * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;emailService-&gt;send(<span class="variable">$request</span>-&gt;all());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>從原本直接相依於 <code>Mail</code> facade，改成相依於注入的 <code>EmailService</code>。</p>
+<div class="alert alert-success"><i class="fa fa-lightbulb-o"></i>  改用這種寫法，有幾個優點 :</div>
+<ol>
+<li>將外部行為寫在 service，解決 controller 肥大問題。</li>
+<li>符合 <strong>SOLID</strong> 的<strong>單一職責</strong>原則 : 外部行為寫在 service，沒寫在 controller。</li>
+<li>符合 <strong>SOLID</strong> 的<strong>依賴反轉</strong>原則 : controller 並非直接相依於 service，而是將 service 依賴注入進 controller。</li>
+</ol>
+<h3 id="使用_PHP_寫的邏輯">使用 PHP 寫的邏輯</h3><p>如<code>根據購買的件數，有不同的折扣</code>，初學者常會在 controller 直接寫 <code>if...else</code> 邏輯。<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$qty</span> = <span class="variable">$request</span>-&gt;input(<span class="string">'qty'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$price</span> = <span class="number">500</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$qty</span> == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="variable">$discount</span> = <span class="number">1.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> (<span class="variable">$qty</span> == <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="variable">$discount</span> = <span class="number">0.9</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">elseif</span> (<span class="variable">$qty</span> == <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="variable">$discount</span> = <span class="number">0.8</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="variable">$discount</span> = <span class="number">0.7</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="variable">$total</span> = <span class="variable">$price</span> * <span class="variable">$qty</span> * <span class="variable">$discount</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span>(<span class="variable">$total</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在中大型專案，會有幾個問題 : </p>
+<ol>
+<li>將 PHP 寫的商業邏輯直接寫在 controller，造成 controller 的肥大難以維護。</li>
+<li>違反 <strong>SOLID</strong>的<strong> 單一職責</strong>原則 : 商業邏輯不應該寫在 controller。</li>
+<li>違反 <strong>SOLID</strong>的<strong> 單一職責</strong>原則 : 若未來想要改變折扣與加總的算法，都需要改到此 method，也就是說，此 method 同時包含了計算折扣與計算加總的職責，因此違反 <strong>SOLID</strong> 的<strong>單一職責</strong>原則。</li>
+<li>直接寫在 controller 的邏輯無法被其他 controller 使用。</li>
+</ol>
+<p>比較好的方式是使用 service。</p>
+<ol>
+<li>將相依物件注入到 service。</li>
+<li>在 service 寫 PHP邏輯使用相依物件。</li>
+<li>將 service 注入到 controller。</li>
+</ol>
+<p><strong>OrderService.php</strong></p>
+<figure class="highlight php"><figcaption><span>app/Services/OrderService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 計算折扣</span><br><span class="line">     * <span class="doctag">@param</span> int $qty</span><br><span class="line">     * <span class="doctag">@return</span> float</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDiscount</span><span class="params">(<span class="variable">$qty</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$qty</span> == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="variable">$qty</span> == <span class="number">2</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.9</span>;</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="variable">$qty</span> == <span class="number">3</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0.7</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * 計算最後價錢</span><br><span class="line">     * <span class="doctag">@param</span> integer $qty</span><br><span class="line">     * <span class="doctag">@param</span> float $discount</span><br><span class="line">     * <span class="doctag">@return</span> float</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getTotal</span><span class="params">(<span class="variable">$qty</span>, <span class="variable">$discount</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">500</span> * <span class="variable">$qty</span> * <span class="variable">$discount</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第 5 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 計算折扣</span><br><span class="line"> * <span class="doctag">@param</span> int $qty</span><br><span class="line"> * <span class="doctag">@return</span> float</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getDiscount</span><span class="params">(<span class="variable">$qty</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$qty</span> == <span class="number">1</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (<span class="variable">$qty</span> == <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.9</span>;</span><br><span class="line">    &#125; <span class="keyword">elseif</span> (<span class="variable">$qty</span> == <span class="number">3</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.8</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0.7</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>為了符合 <strong>SOLID</strong> 的<strong>單一職責</strong>原則，將計算折扣獨立成 <code>getDiscount()</code>，將PHP寫的判斷邏輯寫在裡面。</p>
+<p>23 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * 計算最後價錢</span><br><span class="line"> * <span class="doctag">@param</span> int $qty</span><br><span class="line"> * <span class="doctag">@param</span> float $discount</span><br><span class="line"> * <span class="doctag">@return</span> float</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getTotal</span><span class="params">(<span class="variable">$qty</span>, <span class="variable">$discount</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">500</span> * <span class="variable">$qty</span> * <span class="variable">$discount</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>為了符合 <strong>SOLID</strong> 的<strong>單一職責</strong>原則，將計算加總獨立成 <code>getTotal()</code>，將PHP寫的計算邏輯寫在裡面。</p>
+<p><strong>OrderController.php</strong><br><figure class="highlight php"><figcaption><span>app/Http/Controllers/OrderController.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Requests</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">MyBlog</span>\<span class="title">Services</span>\<span class="title">OrderService</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Http</span>\<span class="title">Request</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> OrderService */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="variable">$orderService</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * OrderController constructor.</span><br><span class="line">     * <span class="doctag">@param</span> OrderService $orderService</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(OrderService <span class="variable">$orderService</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;orderService = <span class="variable">$orderService</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * Store a newly created resource in storage.</span><br><span class="line">     * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line">     * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$qty</span> = <span class="variable">$request</span>-&gt;input(<span class="string">'qty'</span>);</span><br><span class="line"></span><br><span class="line">        <span class="variable">$discount</span> = <span class="variable">$this</span>-&gt;orderService-&gt;getDiscount(<span class="variable">$qty</span>);</span><br><span class="line">        <span class="variable">$total</span> = <span class="variable">$this</span>-&gt;orderService-&gt;getTotal(<span class="variable">$qty</span>, <span class="variable">$discount</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">echo</span>(<span class="variable">$total</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第 9 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/** <span class="doctag">@var</span> OrderService */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="variable">$orderService</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * OrderController constructor.</span><br><span class="line"> * <span class="doctag">@param</span> OrderService $orderService</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(OrderService <span class="variable">$orderService</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;orderService = <span class="variable">$orderService</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將相依的 <code>OrderService</code> 注入到 <code>UserController</code>。</p>
+<p>21 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * Store a newly created resource in storage.</span><br><span class="line"> * <span class="doctag">@param</span>  \Illuminate\Http\Request  $request</span><br><span class="line"> * <span class="doctag">@return</span> \Illuminate\Http\Response</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$qty</span> = <span class="variable">$request</span>-&gt;input(<span class="string">'qty'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$discount</span> = <span class="variable">$this</span>-&gt;orderService-&gt;getDiscount(<span class="variable">$qty</span>);</span><br><span class="line">    <span class="variable">$total</span> = <span class="variable">$this</span>-&gt;orderService-&gt;getTotal(<span class="variable">$qty</span>, <span class="variable">$discount</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span>(<span class="variable">$total</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>將原本的 <code>if...else</code> 邏輯改成呼叫 <code>OrderService</code>，controller 變得非常乾淨，也達成原本 controller 接收 HTTP request，調用其他 class 的責任。</p>
+<div class="alert alert-success"><i class="fa fa-lightbulb-o"></i>  改用這種寫法，有幾個優點 :</div>
+<ol>
+<li>將PHP寫的商業邏輯寫在 service，解決 controller 肥大問題。</li>
+<li>符合 <strong>SOLID</strong> 的<strong>單一職責</strong>原則 : 商業邏輯寫在 service，沒寫在 controller。</li>
+<li>符合 <strong>SOLID</strong> 的<strong>單一職責</strong>原則 : 計算折扣與計算加總分開在不同 method，且歸屬於 <code>OrderService</code>，而非 <code>OrderController</code>。</li>
+<li>符合 <strong>SOLID</strong> 的<strong>依賴反轉</strong>原則 : controller 並非直接相依於 service，而是將 service<strong>依賴注入</strong>進 controller。</li>
+<li>其他 controller 也可以重複使用此段商業邏輯。</li>
+</ol>
+<h2 id="Controller">Controller</h2><hr>
+<p><strong>牽涉到外部行為</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;emailService-&gt;send(<span class="variable">$request</span>-&gt;all());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>使用 PHP 寫的邏輯</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">store</span><span class="params">(Request <span class="variable">$request</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$qty</span> = <span class="variable">$request</span>-&gt;input(<span class="string">'qty'</span>);</span><br><span class="line"></span><br><span class="line">    <span class="variable">$discount</span> = <span class="variable">$this</span>-&gt;orderService-&gt;getDiscount(<span class="variable">$qty</span>);</span><br><span class="line">    <span class="variable">$total</span> = <span class="variable">$this</span>-&gt;orderService-&gt;getTotal(<span class="variable">$qty</span>, <span class="variable">$discount</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">echo</span>(<span class="variable">$total</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>若使用了 service 輔助 controller，再搭配依賴注入與 service container，則 controller 就非常乾淨，能專心處理<code>接收HTTP request，調用其他class</code>的職責了。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>實務上會有很多 service，須自行依照 <strong>SOLID</strong> 原則去判斷是否該建立 service。</li>
+<li>Service 使得商業邏輯從 controller 中解放，不僅更容易維護、更容易擴展、更容易重複使用，且更容易測試。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的<a href="https://github.com/oomusou/" target="_blank" rel="external">GitHub</a>上找到。</p>
+<ol>
+<li><a href="https://github.com/oomusou/Laravel51ServiceExternal_demo" target="_blank" rel="external">External API</a></li>
+<li><a href="https://github.com/oomusou/Laravel51ServiceIfElse_demo" target="_blank" rel="external">If…else</a></li>
+</ol>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/laravel/presenter/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/laravel/repository/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-12-19 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/LaraDiner/">LaraDiner<span>14</span></a></li> <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

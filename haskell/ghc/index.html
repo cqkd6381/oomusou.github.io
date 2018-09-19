@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何執行 Haskell Script ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="Haskell 除了編譯，也提供 REPL 與 Script">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="Haskell 除了編譯，也提供 REPL 與 Script">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何執行 Haskell Script ?">
+<meta property="og:url" content="https://oomusou.io/haskell/ghc/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="Haskell 除了編譯，也提供 REPL 與 Script">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-08-19T00:31:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何執行 Haskell Script ?">
+<meta name="twitter:description" content="Haskell 除了編譯，也提供 REPL 與 Script">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何執行 Haskell Script ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> Haskell 除了編譯，也提供 REPL 與 Script			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_GHC"><span class="toc-article-text">安裝 GHC</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#REPL_執行_Haskell"><span class="toc-article-text">REPL 執行 Haskell</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編譯執行_Haskell"><span class="toc-article-text">編譯執行 Haskell</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Script_執行_Haskell"><span class="toc-article-text">Script 執行 Haskell</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>GHC 是 Haskell 最有名的 compiler，除了可編譯 Haskell 外，還提供了 REPL 與 Script 模式，讓我們甚至可以直接寫  Haskell Script，非常有趣。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>GHC 8.4.3</p>
+<h2 id="安裝_GHC">安裝 GHC</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install ghc</span><br></pre></td></tr></table></figure>
+<p>使用 Homebew 安裝 GHC。</p>
+<h2 id="REPL_執行_Haskell">REPL 執行 Haskell</h2><hr>
+<p><strong>修改 Prompt</strong></p>
+<p>預設 prompt 為 <code>Prelude&gt;</code>，可自行修改成 <code>ghci&gt;</code>。</p>
+<p><strong>.ghci</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:<span class="operator"><span class="keyword">set</span> <span class="keyword">prompt</span> <span class="string">"ghci&gt; "</span></span></span><br></pre></td></tr></table></figure>
+<p>在 home directory 建立 <code>.ghci</code>，設定 prompt 為 <code>ghci</code>。</p>
+<p><img src="/images/haskell/ghc/ghc000.png" alt="ghc000"></p>
+<p><strong>執行 GHCi</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>ghci</span><br></pre></td></tr></table></figure>
+<p>輸入 ghci 執行 GHC 的 REPL 模式。</p>
+<p><img src="/images/haskell/ghc/ghc001.png" alt="ghc001"></p>
+<ol>
+<li>輸入 <code>ghci</code></li>
+<li>在 REPL 模式輸入 <code>putStrLn &quot;Hello World&quot;</code> 顯示 <code>Hello World</code></li>
+</ol>
+<p><strong>離開 GHCi</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">ghci</span>&gt; <span class="pseudo">:quit</span></span><br></pre></td></tr></table></figure>
+<p>輸入 <code>:quit</code> 離開 GHCi。</p>
+<p><img src="/images/haskell/ghc/ghc002.png" alt="ghc002"></p>
+<h2 id="編譯執行_Haskell">編譯執行 Haskell</h2><hr>
+<p>GHC 可將 Haskell 編譯成執行檔執行。</p>
+<p><strong>建立 Hello World</strong></p>
+<p><strong>hello-world.hs</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">main</span> = putStrLn <span class="string">"Hello World"</span></span><br></pre></td></tr></table></figure>
+<p>以 Haskell 印出簡單的 <code>Hello World</code>。</p>
+<p><strong>GHC 編譯</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>ghc -o hello-world ./hello-world.hs</span><br></pre></td></tr></table></figure>
+<p>使用 <code>ghc</code> 編譯 <code>hello-world.hs</code>。</p>
+<ul>
+<li><strong>-o</strong> : <code>o</code> utput 執行檔的檔名</li>
+</ul>
+<p><img src="/images/haskell/ghc/ghc003.png" alt="ghc003"></p>
+<p><img src="/images/haskell/ghc/ghc004.png" alt="ghc004"></p>
+<ol>
+<li>編譯出 <code>hello-world</code> 執行檔，也一併編譯出 <code>.hi</code>、<code>.hs</code> 與 <code>.o</code> 等中間檔</li>
+</ol>
+<p><strong>執行 Hello World</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>./hello-world</span><br></pre></td></tr></table></figure>
+<p>直接執行 <code>hello-world</code> 執行檔。</p>
+<p><img src="/images/haskell/ghc/ghc005.png" alt="ghc005"></p>
+<h2 id="Script_執行_Haskell">Script 執行 Haskell</h2><hr>
+<p>Haskell 也可以不用編譯，直接以 Script 形式執行。</p>
+<p><strong>建立 Hello World Script</strong></p>
+<p><strong>hello-world.hs</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">#!/usr/bin/env runghc --</span></span><br><span class="line"></span><br><span class="line"><span class="title">main</span> = putStrLn <span class="string">"Hello World"</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/haskell/ghc/ghc006.png" alt="ghc006"></p>
+<p><strong>設定執行權限</strong></p>
+<p>Script 要能執行，必須先設定其有被執行權限。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>chmod +x hello-world.hs</span><br></pre></td></tr></table></figure>
+<p>使用 <code>chmod</code> 設定 <code>hello-world.hs</code> 能被執行。</p>
+<p><img src="/images/haskell/ghc/ghc007.png" alt="ghc007"></p>
+<ol>
+<li><code>紅色</code> 代表有執行權限。</li>
+</ol>
+<p><strong>執行 Hello World Script</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>./hello-world.hs</span><br></pre></td></tr></table></figure>
+<p>直接執行 <code>hello-world.hs</code>。</p>
+<p><img src="/images/haskell/ghc/ghc008.png" alt="ghc008"></p>
+<p>為了證明 GHC 沒有偷偷編譯，我們來看一下目前目錄。</p>
+<p><img src="/images/haskell/ghc/ghc009.png" alt="ghc009"></p>
+<ol>
+<li>仍然只有 <code>hello-world.hs</code>，證明 GHC 沒有偷偷編譯再執行</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Haskell 除了可編譯外，尚提供 REPL 與 Script</li>
+<li>尤其是 Haskell Script，讓 Haskell 的可用性又更上一層樓</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fp/hof/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fp/lazy-evaluation/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-08-18 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Haskell/">Haskell<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

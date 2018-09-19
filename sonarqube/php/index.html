@@ -1,0 +1,422 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 SonarQube 檢查 PHP 專案？ | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="SonarQube 現在也能用在 PHP">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="SonarQube 現在也能用在 PHP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 SonarQube 檢查 PHP 專案？">
+<meta property="og:url" content="https://oomusou.io/sonarqube/php/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="SonarQube 現在也能用在 PHP">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-03T06:48:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 SonarQube 檢查 PHP 專案？">
+<meta name="twitter:description" content="SonarQube 現在也能用在 PHP">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 SonarQube 檢查 PHP 專案？</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> SonarQube 現在也能用在 PHP			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#GitHub"><span class="toc-article-text">GitHub</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube"><span class="toc-article-text">SonarQube</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner"><span class="toc-article-text">SonarQube Scanner</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Jenkins"><span class="toc-article-text">Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#SonarQube_Scanner_for_Jenkins"><span class="toc-article-text">SonarQube Scanner for Jenkins</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Jenkins_Job"><span class="toc-article-text">Jenkins Job</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 code 的 bugs、 vulenrability、code smell 與 duplication，也屬於 <code>持續整合</code> 重要的一環。</p>
+<p>SonarQube 已經內建 SonarPHP，可以直接對 PHP 進行檢查，本文將以 Laravel 為例，並搭配 Jenkins 自動執行 SonarQube。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarPHP 2.1.3<br>SonarQube Scanner 3.1<br>Jenkins 2.107.1<br>SonarQube Scanner for Jenkins 2.6.1<br>PHP 7.1.14<br>Laravel 5.6.14</p>
+<h2 id="GitHub">GitHub</h2><hr>
+<p>將 Laravel 專案放到 GitHub。</p>
+<p><img src="/images/sonarqube/php/php015.png" alt="hp01"></p>
+<ol>
+<li>本文將 Laravel 專案放在 <code>https://github.com/oomusou/Laravel56Demo</code></li>
+</ol>
+<blockquote>
+<p>當然也可以將 git repository 放在不同的 git server，如 Bitbucket</p>
+</blockquote>
+<h2 id="SonarQube">SonarQube</h2><hr>
+<p><strong>安裝 SonarQube</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>update</span><br><span class="line">$ <span class="keyword">brew </span>install sonarqube</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew 安裝 SonarQube。</p>
+<p><img src="/images/sonarqube/php/php016.png" alt="hp01"></p>
+<ol>
+<li>輸入 <code>brew install sonarqube</code> 安裝</li>
+<li>若想在每次 Mac 重開機就自動執行 SonarQube，輸入 <code>brew services start sonarqube</code></li>
+<li>若想自行啟動 SonarQube，輸入 <code>sonar console</code></li>
+</ol>
+<p><strong>啟動 SonarQube</strong></p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sonar <span class="built_in">console</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>sonar console</code> 自行啟動 SonarQube。</p>
+<p><img src="/images/sonarqube/php/php025.png" alt="hp02"></p>
+<ol>
+<li>輸入 <code>sonar console</code> 自行啟動 SonarQube</li>
+</ol>
+<p><strong>測試 SonarQube</strong></p>
+<p><img src="/images/sonarqube/php/php017.png" alt="hp01"></p>
+<ol>
+<li>輸入 <code>localhost:9000</code>，若看到 SonarQube 首頁，則表示安裝成功</li>
+<li>右上角 <code>Log in</code> 可登入管理設定 SonarQube，預設為 <code>admin/admin</code></li>
+</ol>
+<h2 id="SonarQube_Scanner">SonarQube Scanner</h2><hr>
+<p>SonarQube 雖然已經包含 SonarPHP，但必須靠 SonarQube Scanner 才能執行，預設 SonarQube 並沒有包含 Scanner，必須自行安裝。</p>
+<p><strong>下載 Scanner</strong></p>
+<p><img src="/images/sonarqube/php/php000.png" alt="hp00"></p>
+<p>到 <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner" target="_blank" rel="external">Analyzing with SonarQube Scanner</a> 下載 Scanner，選擇 <code>Mac OS X 64 bit</code> 下載。</p>
+<p><img src="/images/sonarqube/php/php018.png" alt="hp01"></p>
+<p>下載後為一 <code>zip</code> 壓縮檔，解壓縮後可安裝在任何目錄。</p>
+<p><img src="/images/sonarqube/php/php019.png" alt="hp01"></p>
+<ol>
+<li>選擇 home directory</li>
+<li>將 <code>sonar-scanner-3.1.0.1141-macosx</code> 放在 home directory 下</li>
+</ol>
+<p><strong>設定 Server</strong></p>
+<p><strong>sonar-scanner.properties</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#----- Default SonarQube server</span><br><span class="line">sonar<span class="class">.host</span><span class="class">.url</span>=http:<span class="comment">//localhost:9000</span></span><br></pre></td></tr></table></figure>
+<p>設定 SonarQube server 位址，並將 <code>#</code> 註解拿掉。</p>
+<p><img src="/images/sonarqube/php/php020.png" alt="hp02"></p>
+<ol>
+<li><code>sonar-scanner.properties</code> 位於 <code>sonar-scanner-3.1.0.1141-macosx/conf/</code> 目錄下</li>
+</ol>
+<p><strong>測試 Scanner</strong></p>
+<p>將 SonarQube Scanner 加到 system path。</p>
+<p><strong>.zshrc</strong></p>
+<p><img src="/images/sonarqube/php/php022.png" alt="hp02"></p>
+<ol>
+<li>將 <code>~/sonar-scanner-3.1.0.1141-macosx/bin</code> 目錄加到 system path</li>
+</ol>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ sonar-scanner -Dsonar.projectKey=Laravel56 -Dsonar.sources=. -Dsonar.projectName=Laravel56 -Dsonar.projectVersion=1.0 -Dsonar.exclusions=vendor/<span class="keyword">*</span><span class="keyword">*</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>sonar-scanner</code> 對 Laravel 專案進行檢查。</p>
+<ul>
+<li><strong>-D</strong> : 對 SonarQube 的 property 進行設定</li>
+<li><strong>sonar.projectKey</strong>：SonarQube 對專案的 key，內部將以此 key 作為辨別，必須唯一</li>
+<li><strong>sonar.sources</strong>：SonarQube 要檢查的目錄，因為已經在專案目錄下，<code>.</code> 即為 <code>目前目錄</code></li>
+<li><strong>sonar.projectName</strong>：在 SonarQube 網頁上顯示的名稱</li>
+<li><strong>sonar.projectVersion</strong>：在 SonarQube 網頁上顯示的版本編號</li>
+<li><strong>sonar.exclusions</strong>：不受 SonarQube 檢查的目錄，如 PHP 套件的放在 <code>vendor</code> 目錄下，實務上我們不會想讓 SonarQube 去檢查 package 的程式碼品質，所以會加以排除</li>
+</ul>
+<blockquote>
+<p>SonarQube 預設也會檢查 JavaScript，若你有 JavaScript 的套件目錄不想檢查，也可以設定在 <code>sonar.exclusions</code></p>
+</blockquote>
+<p><img src="/images/sonarqube/php/php023.png" alt="hp02"></p>
+<ol>
+<li>在專案目錄下輸入 <code>sonar-scanner</code> 檢查 PHP</li>
+</ol>
+<p><img src="/images/sonarqube/php/php024.png" alt="hp02"></p>
+<ol>
+<li>若能看到 <code>EXECUTION SUCCESS</code>，則表示 SonarQube Scanner 安裝成功</li>
+</ol>
+<p><img src="/images/sonarqube/php/php001.png" alt="hp00"></p>
+<p>進入 SonarQube 網頁，就可看到 <code>Laravel56</code> 專案已經出現 SonarQube。</p>
+<p>到目前為止，SonarQube 對 PHP 的檢查已經完成，就算只將 SonarQube 裝在本機，也對 PHP 程式碼品質的檢查有很大的幫助。</p>
+<p>實務上 SonarQube 還會與其他 CI server 合作，接下來將以 Jenkins 為例，介紹如何以 Jenkins 自動化 SonarQube。</p>
+<h2 id="Jenkins">Jenkins</h2><hr>
+<p><strong>安裝 Jenkins</strong></p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install jenkins-lts</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew 安裝 Jenkins。</p>
+<p><img src="/images/sonarqube/php/php021.png" alt="hp02"></p>
+<ol>
+<li>輸入 <code>brew install jenkins-lts</code> 安裝</li>
+<li>若想在每次 Mac 重開機就自動執行 Jenkins，輸入 <code>brew services start jenkins-lts</code></li>
+<li>若想自行啟動 Jenkins，輸入 <code>jenkins-lts</code></li>
+</ol>
+<p><strong>啟動 Jenkins</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>jenkins-lts</span><br></pre></td></tr></table></figure>
+<p>使用 <code>jenkins-lts</code> 自行啟動 Jenkins。</p>
+<p><img src="/images/sonarqube/php/php026.png" alt="hp02"></p>
+<p><strong>Unlock Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php028.png" alt="hp02"></p>
+<ol>
+<li>輸入 <code>localhost:8080</code>，看到 Unlock Jenkins，開始設定 Jenkins</li>
+<li>預設密碼放在 <code>./jenkins/secrets/initialAdminPassword</code></li>
+</ol>
+<p><strong>Customize Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php029.png" alt="hp02"></p>
+<ol>
+<li>選擇 <code>Install suggested plugins</code> 即可</li>
+</ol>
+<p><strong>Getting Started</strong></p>
+<p><img src="/images/sonarqube/php/php030.png" alt="hp03"></p>
+<p>安裝 default plugin 中。</p>
+<p><strong>Create Admin User</strong></p>
+<p><img src="/images/sonarqube/php/php031.png" alt="hp03"></p>
+<ol>
+<li>建立管理者帳號。</li>
+</ol>
+<p><strong>Jenkins is Ready</strong></p>
+<p><img src="/images/sonarqube/php/php032.png" alt="hp03"></p>
+<ol>
+<li>Jenkins 安裝完成，按 <code>Start using jenkins</code> 開始使用 Jenkins</li>
+</ol>
+<p><strong>Welcome to Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php033.png" alt="hp03"></p>
+<ol>
+<li>Jenkins 安裝完成，按 <code>Start using jenkins</code> 開始使用 Jenkins</li>
+</ol>
+<h2 id="SonarQube_Scanner_for_Jenkins">SonarQube Scanner for Jenkins</h2><hr>
+<p>要讓 Jenkins 能自動執行 SonarQube Scanner，必須另外安裝 plugin。</p>
+<p><strong>安裝 SonarQube Scanner for Jenkins</strong></p>
+<p><img src="/images/sonarqube/php/php011.png" alt="hp01"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Manage Plugins</code></li>
+</ol>
+<p><img src="/images/sonarqube/php/php002.png" alt="hp00"></p>
+<ol>
+<li>選擇 <code>SonarQube Scanner</code></li>
+<li>按 <code>Download now and install after restart</code></li>
+</ol>
+<p><img src="/images/sonarqube/php/php003.png" alt="hp00"></p>
+<p>安裝 plugin 中。</p>
+<ol>
+<li>將 <code>Restart Jenkins when installation is complete and no jobs are running</code> 打勾</li>
+</ol>
+<p><strong>設定 SonarQube 環境變數</strong></p>
+<p><img src="/images/sonarqube/php/php006.png" alt="hp00"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Configure System</code></li>
+</ol>
+<p><img src="/images/sonarqube/php/php005.png" alt="hp00"></p>
+<ol>
+<li>找到 <code>SonarQube servers</code> 區段</li>
+<li>將 <code>Enable injection of SonarQube server configuration as build environment variables</code> 打勾</li>
+<li>設定 SonarQube server 名稱與網址</li>
+</ol>
+<p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
+<p><strong>設定 SonarQube Scanner 環境變數</strong></p>
+<p><img src="/images/sonarqube/php/php009.png" alt="hp00"></p>
+<ol>
+<li>左側選擇 <code>Manage Jenkins</code></li>
+<li>右側選擇 <code>Global Tool Configuration</code></li>
+</ol>
+<p><img src="/images/sonarqube/php/php008.png" alt="hp00"></p>
+<ol>
+<li>找到 <code>SonarQube Scanner</code> 區段</li>
+<li>設定 SonarQube Scanner 名稱</li>
+</ol>
+<p>最後按 <code>Apply</code> 與 <code>Save</code> 儲存設定。</p>
+<h2 id="Jenkins_Job">Jenkins Job</h2><hr>
+<p><strong>Source Code Management</strong></p>
+<p><img src="/images/sonarqube/php/php007.png" alt="hp00"></p>
+<ol>
+<li>選擇 Job，按左側 <code>Configure</code></li>
+</ol>
+<p><img src="/images/sonarqube/php/php027.png" alt="hp02"></p>
+<ol>
+<li>找到 <code>Source Code Management</code> 區段</li>
+<li>將 Git 的 <code>Repository URL</code> 設定到 <code>http://github.com/oomusou/Laravel56Demo</code></li>
+</ol>
+<p><strong>Build</strong><br><img src="/images/sonarqube/php/php004.png" alt="hp00"></p>
+<ol>
+<li>找到 <code>Build</code> 區段</li>
+<li>在 <code>Add build step</code> 選擇 <code>Execute SonarQube Scanner</code></li>
+</ol>
+<p><img src="/images/sonarqube/php/php010.png" alt="hp01"></p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sonar.projectKey=Laravel56 </span><br><span class="line">sonar.sources=. </span><br><span class="line">sonar.projectName=Laravel56 </span><br><span class="line">sonar.projectVersion=1.0 </span><br><span class="line">sonar.exclusions=vendor/<span class="keyword">*</span><span class="keyword">*</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>Analysis properties</code> 加上以上設定。</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ sonar-scanner -Dsonar.projectKey=Laravel56 -Dsonar.sources=. -Dsonar.projectName=Laravel56 -Dsonar.projectVersion=1.0 -Dsonar.exclusions=vendor/<span class="keyword">*</span><span class="keyword">*</span></span><br></pre></td></tr></table></figure>
+<p>還記得之前曾經下過以上指令嗎？就是將這些 SonarQube property 設定在 Jenkins，改由 Jenkins 幫我們傳。</p>
+<p><img src="/images/sonarqube/php/php013.png" alt="hp01"></p>
+<ol>
+<li>按左側 <code>Build Now</code> 執行 Job</li>
+</ol>
+<p><img src="/images/sonarqube/php/php012.png" alt="hp01"></p>
+<p>執行成功後會出現 <code>OK</code> 與 <code>Success</code>。</p>
+<p><img src="/images/sonarqube/php/php014.png" alt="hp01"></p>
+<p>也會看到剛剛 Jenkins 執行的 Project 出現在 SonarQube 上。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>SonarQube 已經內建 SonarPHP，也可以用來檢查 PHP</li>
+<li>就算不將 SonarQube 安裝在 server，安裝在本機也能有效的檢查 PHP 程式碼品質</li>
+<li>藉由 Jenkins 幫忙，我們就可以自動化執行 SonarQube</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Laravel56Demo" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://www.sonarqube.org" target="_blank" rel="external">SonarQube</a>, <a href="https://www.sonarqube.org/downloads/" target="_blank" rel="external">SonarQube Downloads</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/PLUG/SonarPHP" target="_blank" rel="external">SonarPHP</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner" target="_blank" rel="external">Analyzing with SonarQube Scanner</a><br><a href="https://docs.sonarqube.org/" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/display/SCAN/Analyzing+with+SonarQube+Scanner+for+Jenkins" target="_blank" rel="external">Analying with SonarQube Scanner for Jenkins</a><br><a href="https://jenkins.io/" target="_blank" rel="external">Jenkins</a>, <a href="https://plugins.jenkins.io/sonar" target="_blank" rel="external">SonarQube Scanner</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/unit-ignore/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/decorator/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-31 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/PHP/">PHP<span>17</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

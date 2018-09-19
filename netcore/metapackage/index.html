@@ -1,0 +1,264 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>.NET Core 之 Metapackage 簡介 | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="Package 懶人包概念">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="Package 懶人包概念">
+<meta property="og:type" content="article">
+<meta property="og:title" content=".NET Core 之 Metapackage 簡介">
+<meta property="og:url" content="https://oomusou.io/netcore/metapackage/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="Package 懶人包概念">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-23T07:43:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content=".NET Core 之 Metapackage 簡介">
+<meta name="twitter:description" content="Package 懶人包概念">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> .NET Core 之 Metapackage 簡介</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> Package 懶人包概念			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#NuGet"><span class="toc-article-text">NuGet</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Metapackage"><span class="toc-article-text">Metapackage</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Microsoft-AspNetCore-All"><span class="toc-article-text">Microsoft.AspNetCore.All</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#-NET_Core_1-1"><span class="toc-article-text">.NET Core 1.1</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#-NET_Core_2-0"><span class="toc-article-text">.NET Core 2.0</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Metapackage 為 .NET Core 2.0 所提出，目的在簡化對 package 的管理。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101 </p>
+<h2 id="NuGet">NuGet</h2><hr>
+<ul>
+<li><strong>.NET Framework</strong> : 將所有 class 包在 <code>一整包</code> .NET Framework 內</li>
+<li><strong>.NET Core</strong> : 將 class 拆分成 <code>小包</code> 的 NuGet package</li>
+</ul>
+<blockquote>
+<p>.NET Core 從以前 <code>一整包</code> framework 轉型成 <code>package-based framework</code>，也就是整個 framework 改由 package 所構成</p>
+<p>簡單的說，以前 .NET Framework 是一個 framework 包含很多 DLL；而 .NET Core 是一個 DLL 就一個 package，你可以自行根據專案需求選用你用的 DLL</p>
+<p>這也與目前主流 framework  思維相同，如 Angular、Laravel 都可以看到類似的設計</p>
+</blockquote>
+<p><strong>優點</strong></p>
+<ul>
+<li><strong>Package 更新速度快</strong>：若 package 有 bug，可單獨發行更新版本，不用等 framework 統一發行 patch 版本</li>
+<li><strong>選擇特定 OS 與 CPU 的 package</strong> : 若有特殊需求，需使對特定 OS 與 CPU 版本最佳化的 package</li>
+<li><strong>可選擇只更新部分 package 版本</strong>：若 package 有 bug，可選擇只更新某 package，而不用被 framework patch 逼得要更新其他 package</li>
+<li><strong>可選擇自己需要的 package</strong> : 若你只寫 ASP.NET，其實並不需要 Windows Form、Web Form、WPF 或 UWP 的 package，只需下載 ASP.NET 相關的 package 即可</li>
+</ul>
+<p><strong>缺點</strong></p>
+<ul>
+<li><strong>不同 Package 間可能有相容性問題</strong>：由於 package 各自發佈，沒經過與其他 package 的整合測試，有可能遇到 package 彼此相衝</li>
+<li><strong>Package 拆得太細，導致加入困難</strong>：.NET Core 由於 package 都最小化，隨便寫一個專案就可能要自己加入一堆 package</li>
+</ul>
+<p>針對這兩個缺點，.NET Core 2.0 提出了 Metapackage 概念。</p>
+<h2 id="Metapackage">Metapackage</h2><hr>
+<p>.NET Core 包含了以下幾個主要 Metapackage：</p>
+<ul>
+<li><strong>NETStandard.Library</strong>：包含 .NET Standard 所定義 API 的全部 package</li>
+<li><strong>Microsoft.NETCore.App</strong>：包含 .NET Core 所需要 API 的全部 package，也包含 .NET Standard，但沒有包含全部的 .NET Standard 的 package</li>
+<li><strong>Microsoft.AspNetCore.All</strong>：包含 ASP.NET 所需要 API 的全部 package，包括 <code>Microsoft.NETCore.App</code>，與其他與 ASP.NET 相關的 package。</li>
+</ul>
+<p>專案只要加入了 Metapackage，就相當於加了 pakcage 懶人包，會自動幫你加入其他相關的 package。</p>
+<p>除此之外，Microsoft 既然發行了 Metapckage，就會確保 Metapackage 所發行的版本中，各 package 的相容性已經過測試。</p>
+<blockquote>
+<p>若你獨立更新 package 版本，可能會有 package 相容性問題，但若更新 Metapackage，則經過 Microsoft 測試，會挑選擇彼此相容的 package 版本</p>
+</blockquote>
+<h2 id="Microsoft-AspNetCore-All">Microsoft.AspNetCore.All</h2><hr>
+<p>實際體驗一下有 Metapackage 與沒有 Metapackage 的差異：</p>
+<h3 id="-NET_Core_1-1">.NET Core 1.1</h3><p><strong>MyMVC.csproj</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Project</span> <span class="attribute">Sdk</span>=<span class="value">"Microsoft.NET.Sdk.Web"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TargetFramework</span>&gt;</span>netcoreapp1.1<span class="tag">&lt;/<span class="title">TargetFramework</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore"</span> <span class="attribute">Version</span>=<span class="value">"1.1.1"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore.Mvc"</span> <span class="attribute">Version</span>=<span class="value">"1.1.2"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore.StaticFiles"</span> <span class="attribute">Version</span>=<span class="value">"1.1.1"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.Extensions.Logging.Debug"</span> <span class="attribute">Version</span>=<span class="value">"1.1.1"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.VisualStudio.Web.BrowserLink"</span> <span class="attribute">Version</span>=<span class="value">"1.1.0"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>預設只安裝了 4 個 package，若你用到了其他 package，需要自行加入。</p>
+<h3 id="-NET_Core_2-0">.NET Core 2.0</h3><p><strong>MyMVC.csproj</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">Project</span> <span class="attribute">Sdk</span>=<span class="value">"Microsoft.NET.Sdk.Web"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">TargetFramework</span>&gt;</span>netcoreapp2.0<span class="tag">&lt;/<span class="title">TargetFramework</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">PropertyGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">PackageReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.AspNetCore.All"</span> <span class="attribute">Version</span>=<span class="value">"2.0.6"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">DotNetCliToolReference</span> <span class="attribute">Include</span>=<span class="value">"Microsoft.VisualStudio.Web.CodeGeneration.Tools"</span> <span class="attribute">Version</span>=<span class="value">"2.0.3"</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">ItemGroup</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">Project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>預設只安裝 <code>Microsoft.AspNetCore.All</code> Metapackage。</p>
+<p><img src="/images/netcore/metapackage/tech000.png" alt="ech00"></p>
+<p>但事實上 <code>Microsoft.AspNetCore.All</code> 已經包含了眾多 package。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Metapackage 並不包含實作，只定義了包含哪些 package 與版本，讓我們設計專案時不用一個 package 一個 package 地加入</li>
+<li>Metapackage 也確保 package 間經過整合測試，減少 package 之間相容性問題</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/core/packages" target="_blank" rel="external">Packages, metapackages and frameworks</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/type-forwarding/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/polymorphism/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-21 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

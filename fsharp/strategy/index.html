@@ -1,0 +1,283 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 F# 實現 Strategy Pattern ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以 FP 的角度思考解耦合">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以 FP 的角度思考解耦合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 F# 實現 Strategy Pattern ?">
+<meta property="og:url" content="https://oomusou.io/fsharp/strategy/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以 FP 的角度思考解耦合">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-22T02:18:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 F# 實現 Strategy Pattern ?">
+<meta name="twitter:description" content="以 FP 的角度思考解耦合">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 F# 實現 Strategy Pattern ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以 FP 的角度思考解耦合			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#OOP_思考方式"><span class="toc-article-text">OOP 思考方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FP_思考方式"><span class="toc-article-text">FP 思考方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Implemetation"><span class="toc-article-text">Implemetation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Strategy Pattern 是 OOP 中最著名的 Design Pattern，幾乎可以說是 OOP 中 『解耦合』最經典的應用，F# 既然是 Function First Language，就讓我們以 function 的角度重新思考什麼是 『解耦合』。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>假設你在處理訂單，訂單的折扣方式有兩種</p>
+<ul>
+<li>超過 1000 元，則 <code>滿千送百</code></li>
+<li>不到 1000 元，則 <code>全館8折</code></li>
+</ul>
+<h2 id="Task">Task</h2><hr>
+<p>直接使用 FP 的思維完成需求。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Strategy Pattern</p>
+<p>將不同演算法抽象化成相同 interface，讓高階模組與實際演算法解耦合，而彼此僅相依於 interface，進而可動態切換演算法</p>
+</blockquote>
+<p><img src="/images/fsharp/strategy/strategy000.svg" alt="trategy00"></p>
+<p>首先思考 Strategy Pattern 的本質：</p>
+<ol>
+<li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
+<li><code>Strategy</code> 必須能動態切換</li>
+</ol>
+<p>只要能達到這兩個目標，就算完成了 Strategy Pattern。</p>
+<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
+<p>OOP 強調是 data 與 function 合一，認為什麼都是物件，所以 strategy 也是物件。</p>
+<p>要將不同的 strategy <code>抽象化</code> 看成相同的物件，才能使用 <code>多型</code> 操作，所以要設計 <code>interface</code> 訂定 <code>抽象化</code> 的標準。</p>
+<p>也就是 OOP 是將焦點放在 <code>不同的部分</code>，進而將 <code>不同的部分</code> 抽象化成 Inteface。</p>
+<h2 id="FP_思考方式">FP 思考方式</h2><hr>
+<p>FP 強調是 data 與 function 分開，data 有 Type System，function 有 Higher Order Function、Function Composition，因為 strategy 只是功能，所以是 function。</p>
+<p>要將相同的部分抽出為 Higher Order Function，不同 strategy 抽成獨立 funciton，再將 strategy 以參數的方式傳入 Higher Order Function。</p>
+<p>也就是 FP 是將焦點放在 <code>相同的部分</code>，進而將 <code>相同的部分</code> 抽成 Higher Order Function。</p>
+<h2 id="Implemetation">Implemetation</h2><hr>
+<p><strong>Strategy.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> PriceStrategy =</span><br><span class="line">    <span class="keyword">let</span> rebateStrategy price = price - <span class="number">100.0</span></span><br><span class="line">    <span class="keyword">let</span> discountStrategy discount price = price * discount * <span class="number">1.0</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>買千送百</code> 以 <code>rebateStrategy()</code> 表示。</p>
+<p>將 <code>全館8折</code> 以 <code>discountStrategy()</code> 表示。</p>
+<p>特別注意 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 singnature 並不一樣，傳統 OOP 在使用 Strategy Pattern 時，必須先定義 strategy interface，但只要遇到 strategy 間 signature 不同時就很困擾，甚至要動用 Adapter Pattern。</p>
+<p>但因為 FP 沒有 interface 概念，所以不需要為不同的 strategy <code>抽象化</code> 成相同 interface，故也沒有 interface 很難開的困擾。</p>
+<p><strong>OrderService.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> OrderService =</span><br><span class="line">    <span class="keyword">let</span> strategyFactory price = </span><br><span class="line">        <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">        | <span class="keyword">true</span>  -&gt; PriceStrategy.rebateStrategy</span><br><span class="line">        | <span class="keyword">false</span> -&gt; PriceStrategy.discountStrategy <span class="number">0.8</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">let</span> getPrice price =</span><br><span class="line">        price</span><br><span class="line">        |&gt; strategyFactory price</span><br></pre></td></tr></table></figure>
+<p>第 4 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> strategyFactory price = </span><br><span class="line">    <span class="keyword">match</span> (price &gt; <span class="number">1000.0</span>) <span class="keyword">with</span></span><br><span class="line">    | <span class="keyword">true</span>  -&gt; PriceStrategy.rebateStrategy</span><br><span class="line">    | <span class="keyword">false</span> -&gt; PriceStrategy.discountStrategy <span class="number">0.8</span></span><br></pre></td></tr></table></figure>
+<p>既然有不同的 strategy，就會有選擇 strategy 的邏輯，所以 factory 少不了，只是從 OOP 的 factory class 退化成 factory function。</p>
+<p>Strategy 的選擇，使用 FP 的 Pattern Matching 最適合，根據不同的條件回傳不同的 function。</p>
+<p><img src="/images/fsharp/strategy/strategy001.png" alt="trategy00"></p>
+<p>F# 雖然不用寫型別，但對於型別檢查依然非常嚴格，<code>strategyFactory()</code> 被 Type Inference 推導為 <code>float -&gt; (float -&gt; float)</code>，也就是我們必須回傳一個 <code>float -&gt; float</code> 的 function。</p>
+<p>在 C# 我們必須明確使用 <code>delegate</code> 或 <code>Func&lt;float, float&gt;</code> 定義 strategy 的 signature，但在 F# 都省了，因此程式碼變得非常精簡，兼具強型別語言與弱型別語言的優點。</p>
+<p>但 <code>rebateStrategy()</code> 與 <code>discountStrategy()</code> 的 signature 畢竟不一樣，因此在使用 Pattern Matching 時，必須先將  <code>float -&gt; float</code> 整理好，因爲 F# 支援 Currying，<code>discountStrategy 0.8</code> 會自動回傳 <code>float -&gt; float</code> 的 function，如此將符合 Pattern Matching 對型別的要求。</p>
+<blockquote>
+<p>FP 不用 interface，不代表沒有型別要求，透過 Currying，可以解決 OOP 因為需求不同難開 interface 的老問題，只要在最後 signature 一樣即可，並不要求設計 function 時都要有相同的 signature，可使用 Currying 逐步完成 signature 要求</p>
+</blockquote>
+<p>第 9 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> getPrice price =</span><br><span class="line">    price</span><br><span class="line">    |&gt; strategyFactory price</span><br></pre></td></tr></table></figure>
+<p>將 price 以 Pipeline 方式傳給對的 strategy 計算，其中 <code>strategyFactory price</code> 將傳回對的 strategy。</p>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> OrderLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    <span class="number">1200.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line"></span><br><span class="line">    <span class="number">800.0</span></span><br><span class="line">    |&gt; OrderService.getPrice</span><br><span class="line">    |&gt; printfn <span class="string">"%f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span> <span class="comment">// return an integer exit code</span></span><br></pre></td></tr></table></figure>
+<p>將各種 price 以 Pipeline 方式傳給 <code>OrderService.getPrice()</code> 計算，並將結果傳給 <code>printfn()</code> 顯示。</p>
+<h2 id="Summary">Summary</h2><hr>
+<p>回想 Strategy Pattern 的本質：</p>
+<ol>
+<li><code>Strategy</code> 必須與 <code>Context</code> 解耦合</li>
+<li><code>Strategy</code> 必須能動態切換</li>
+</ol>
+<p>FP 雖然沒有定義 interface，但 strategy 已經與 context 實質解耦合，strategy 都必須嚴格遵守 <code>float -&gt; float</code> 的 signature，任何 <code>float -&gt; float</code> 的 function 都可視為 strategy。</p>
+<p>只要遵守 <code>float -&gt; float</code> 的 strategy，就能被 Pattern Matching 動態切換。</p>
+<p>所以 FP 版的 Strategy Pattern 雖然沒有 interface 也沒有 <code>多型</code>，但本質與 OOP 是相同的。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>不用很糾結一定要使用 interface 與 <code>多型</code>，重點在於 <code>解耦合</code> 與 <code>動態切換</code>，FP 使用 Higher Order Function 與 Pattern Matching 也能達成相同的目標</li>
+<li>FP 的 Higher Order Function，可以實現 <code>DRY</code> 原則，FP 設計時要將焦點放在 <code>相同的部分</code>，抽出 Higher Order Function 後，再透過 Function Composition 組合成新的 function</li>
+<li>FP 的 Pattern Matching，可以實現 OOP 的 <code>多型</code>，藉此達到 <code>動態切換</code> 需求</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpCore2OrderStrategy" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/option/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/type-forwarding/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-23 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Design-Pattern/">Design Pattern<span>17</span></a></li> <li><a href="/tags/F/">F#<span>22</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

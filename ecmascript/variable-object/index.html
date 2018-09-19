@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用變數建立物件? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用變數建立物件取代 if else">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用變數建立物件取代 if else">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用變數建立物件?">
+<meta property="og:url" content="https://oomusou.io/ecmascript/variable-object/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用變數建立物件取代 if else">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-19T04:42:55.414Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用變數建立物件?">
+<meta name="twitter:description" content="使用變數建立物件取代 if else">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用變數建立物件?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用變數建立物件取代 if else			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#JavaScript"><span class="toc-article-text">JavaScript</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#if_else"><span class="toc-article-text">if else</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Variable"><span class="toc-article-text">Variable</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#PHP"><span class="toc-article-text">PHP</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#if_else-1"><span class="toc-article-text">if else</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Variable-1"><span class="toc-article-text">Variable</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Type_Hint"><span class="toc-article-text">Type Hint</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>傳統我們會使用 <code>if else</code> 判斷，建立不同的物件，但由於 JavaScript 與 PHP 動態語言的特性，我們可以將要建立的物件的 <strong>class 名稱</strong>以<strong>變數</strong>表示，直接以該變數建立物件。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 5<br>PHP 7.0<br>Laravel 5.2.22</p>
+<h2 id="JavaScript">JavaScript</h2><hr>
+<h3 id="if_else">if else</h3><p>傳統若要根據不同的變數值，建立不同的物件，我們會使用 <code>if else</code> 方式 :<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>GitHub Commit : <a href="https://github.com/oomusou/VariableObject/commit/1d4e69d35a44a02d22a5bb60b8f33573cd6aaa2a" target="_blank" rel="external">JavaScript : 傳統使用 if else 建立物件</a></span></span></span></p>
+<figure class="highlight javascript"><figcaption><span>JavaScript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Customer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        print(<span class="string">'I am a customer'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Admin</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        print(<span class="string">'I am a admin'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> type = <span class="string">'admin'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (type == <span class="string">'admin'</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> user = <span class="keyword">new</span> Admin();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> user = <span class="keyword">new</span> Customer();</span><br><span class="line">&#125;</span><br><span class="line">user.show()</span><br></pre></td></tr></table></figure>
+<p>15行<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (type == <span class="string">'admin'</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> user = <span class="keyword">new</span> Admin();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> user = <span class="keyword">new</span> Customer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>if else</code> 去判斷變數值，建立不同物件。</p>
+<h3 id="Variable">Variable</h3><p>若將 class 名稱使用變數表示，則不需要 <code>if else</code>  判斷 : <span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>GitHub Commit : <a href="https://github.com/oomusou/VariableObject/commit/0a4a1219d0f5285e88507795e90538ee740ca643" target="_blank" rel="external">JavaScript:動態使用變數建立物件</a></span></span></span></p>
+<figure class="highlight javascript"><figcaption><span>JavaScript</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Customer</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        print(<span class="string">'I am a customer'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Admin</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.show = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        print(<span class="string">'I am a admin'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> type = <span class="string">'admin'</span>;</span><br><span class="line"><span class="keyword">var</span> className = (type == <span class="string">'admin'</span>) ? <span class="string">'Admin'</span> : <span class="string">'Customer'</span>;</span><br><span class="line"><span class="keyword">var</span> user = <span class="keyword">new</span> <span class="keyword">this</span>[className];</span><br><span class="line">user.show()</span><br></pre></td></tr></table></figure>
+<p>14行<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> className = (type == <span class="string">'admin'</span>) ? <span class="string">'Admin'</span> : <span class="string">'Customer'</span>;</span><br><span class="line"><span class="keyword">var</span> user = <span class="keyword">new</span> <span class="keyword">this</span>[className];</span><br></pre></td></tr></table></figure></p>
+<p>判斷 <code>type</code>，並將要建立物件的 class 名稱存入 <code>className</code> 變數。</p>
+<p>搭配 <code>this</code>，將 class 名稱以變數方式傳入 <code>[]</code>。</p>
+<h2 id="PHP">PHP</h2><hr>
+<p>PHP 也可以達到類似 JavaScript 的功能。</p>
+<h3 id="if_else-1">if else</h3><p>傳統若要根據不同的變數值，建立不同的物件，我們會使用 <code>if else</code> 方式 :<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>GitHub Commit : <a href="https://github.com/oomusou/VariableObject/commit/fc5a27608b246fd1648b78204e815ac50eed1906" target="_blank" rel="external">PHP : 傳統使用 if else 建立物件</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>PHP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="preprocessor">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Customer</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="string">'I am a customer'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Admin</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="string">'I am a admin'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$type</span> = <span class="string">'admin'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$type</span> == <span class="string">'admin'</span>) &#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="keyword">new</span> Admin();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="keyword">new</span> Customer();</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable">$user</span>-&gt;show();</span><br></pre></td></tr></table></figure>
+<p>20行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$type</span> == <span class="string">'admin'</span>) &#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="keyword">new</span> Admin();</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="keyword">new</span> Customer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>if else</code> 去判斷變數值，建立不同物件。</p>
+<h3 id="Variable-1">Variable</h3><p>若將 class 名稱使用變數表示，則不需要 <code>if else</code> 判斷 : <span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>GitHub Commit : <a href="https://github.com/oomusou/VariableObject/commit/0e06cb6748d7355137e5ca061b221b7edf4f5fa3" target="_blank" rel="external">PHP : 動態使用變數建立物件</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>PHP</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Customer</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span> </span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="string">'I am a customer'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Admin</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="string">'I am a admin'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$type</span> = <span class="string">'admin'</span>;</span><br><span class="line"><span class="variable">$className</span> = (<span class="variable">$type</span> == <span class="string">'admin'</span>) ? <span class="string">'Admin'</span> : <span class="string">'Customer'</span>;</span><br><span class="line"><span class="variable">$user</span> = <span class="keyword">new</span> <span class="variable">$className</span>;</span><br><span class="line"><span class="variable">$user</span>-&gt;show();</span><br></pre></td></tr></table></figure>
+<p>18行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$className</span> = (<span class="variable">$type</span> == <span class="string">'admin'</span>) ? <span class="string">'Admin'</span> : <span class="string">'Customer'</span>;</span><br><span class="line"><span class="variable">$user</span> = <span class="keyword">new</span> <span class="variable">$className</span>;</span><br></pre></td></tr></table></figure></p>
+<p>判斷 <code>$type</code>，並將要建立物件的 class 名稱存入 <code>$className</code> 變數。</p>
+<p>在 PHP，允許我們 <code>new</code> 之後直接加上變數建立物件。</p>
+<h3 id="Type_Hint">Type Hint</h3><p>談到這裡，雖然我們已經可以在 JavaScript 與 PHP 使用變數來建立物件，由於 class 名稱是<strong>字串</strong>，我們甚至可以將 class 名稱存在<strong>設定檔</strong>內，如<code>config/app.php</code>，將來若因為需求改變，需改變建立物件的 class 名稱時，只需修改設定檔即可，並透過 <code>config::get()</code> 讀取 class 名稱，原來程式碼完全不用修改，也算是達到<strong>開放封閉原則</strong>的要求。</p>
+<p>不過這種方式有個致命傷，就是那個 <code>show()</code> 函式並沒有硬性規定(如 interface 或 abstract class)，也就是動態語言所謂的 <strong>duck type</strong>，也因為並沒有任何機制規定 <code>show()</code>，只有程式設計師自己知道必須要有 <code>show()</code>，也因此 PhpStorm 將無法幫你對 <code>show()</code> 做<strong>語法提示</strong>與<strong>語法檢查</strong>。</p>
+<p>但隨著 PHP 的 Java 化之後 (type hint + service container)，PHP成為唯一一個同時擁有 duck type 與 strong type 的程式語言，尤其 PHP 7 之後的type hint 更加完整(scalar type hint + return type)，若搭配 service container，將可解決之前 <code>show()</code> 的問題。</p>
+<p><strong>routes.php</strong><span class="margin-note-marker"><sup>5</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">5</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/ea791292335418ff874e5403bedc69d18adca430" target="_blank" rel="external">修改 routes.php</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>app/Http/routes.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Route::get(<span class="string">'/show'</span>, <span class="string">'UserController@show'</span>);</span><br></pre></td></tr></table></figure>
+<p>在 routes.php 加上 URI 與其對應的 controller action。</p>
+<p><strong>UserController.php</strong><span class="margin-note-marker"><sup>6</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">6</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/f9dc64beb3983b2c2fd4aa24c630c6f3756237e3" target="_blank" rel="external">建立 UserController.php</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Http/Controllers/UserController.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Controllers</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Http</span>\<span class="title">Requests</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">UserService</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> UserService */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$userService</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * UserController constructor.</span><br><span class="line">     * <span class="doctag">@param</span> UserService $userService</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(UserService <span class="variable">$userService</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;userService = <span class="variable">$userService</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;userService-&gt;show(<span class="string">'admin'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第8行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** <span class="doctag">@var</span> UserService */</span></span><br><span class="line"><span class="keyword">private</span> <span class="variable">$userService</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * UserController constructor.</span><br><span class="line"> * <span class="doctag">@param</span> UserService $userService</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(UserService <span class="variable">$userService</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;userService = <span class="variable">$userService</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注入 <code>UserService</code>。</p>
+<p>20行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;userService-&gt;show(<span class="string">'admin'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在 <code>show()</code> 呼叫 <code>$this-&gt;userService</code> 的 <code>show()</code>，並將 <code>admin</code> 變數傳入。</p>
+<p><strong>UserService.php</strong><span class="margin-note-marker"><sup>7</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">7</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/7cffa929a1b9f7a07ad90faceda9a304ecd45e99" target="_blank" rel="external">建立 UserService.php</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/UserService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">User</span>\<span class="title">UserFactory</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/** <span class="doctag">@var</span> UserFactory */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$userFactory</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * UserService constructor.</span><br><span class="line">     * <span class="doctag">@param</span> UserFactory $userFactory</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(UserFactory <span class="variable">$userFactory</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;userFactory = <span class="variable">$userFactory</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">(string <span class="variable">$type</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$user</span> = <span class="variable">$this</span>-&gt;userFactory-&gt;create(<span class="variable">$type</span>);</span><br><span class="line">        <span class="variable">$user</span>-&gt;show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>第7行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">/** <span class="doctag">@var</span> UserFactory */</span></span><br><span class="line"> <span class="keyword">private</span> <span class="variable">$userFactory</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span><br><span class="line"> * UserService constructor.</span><br><span class="line"> * <span class="doctag">@param</span> UserFactory $userFactory</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(UserFactory <span class="variable">$userFactory</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$this</span>-&gt;userFactory = <span class="variable">$userFactory</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>注入 <code>UserFactory</code>，專門負責建立 <code>Admin</code> 或 <code>Customer</code> 物件。</p>
+<p>19行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">(string <span class="variable">$type</span>)</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$user</span> = <span class="variable">$this</span>-&gt;userFactory-&gt;create(<span class="variable">$type</span>);</span><br><span class="line">    <span class="variable">$user</span>-&gt;show();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用 <code>$this-&gt;userFactory</code> 的 <code>create()</code> 建立物件，將 <code>$type</code> 變數傳入，由 <code>UserFactory</code> 決定要建立哪個物件。</p>
+<p>無論建立什麼物件，都使用相同的 <code>show()</code>，這就是物件導向的<strong>多型</strong>。</p>
+<p><strong>AbstractUser.php</strong><span class="margin-note-marker"><sup>8</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">8</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/da4f54692febda4937d98834e3b2b68da219f152" target="_blank" rel="external">建立 AbstractUser.php</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>app/Services/User/AbstractUser.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbstractUser</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">abstract</span> <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由 <code>abstract class</code> 定義 <code>show()</code>，如此 PhpStorm 就能幫我們做語法提示與語法檢查了。</p>
+<p><strong>Admin.php</strong><span class="margin-note-marker"><sup>9</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">9</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/0f22afecf4be28d6102f3b86e0e5382a10ab0182" target="_blank" rel="external">建立 Admin.php</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>app/Services/User/Admin.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Admin</span> <span class="keyword">extends</span> <span class="title">AbstractUser</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="string">'I am a admin'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Admin</code> 繼承 <code>AbstractUser</code>，因為之前定義了 <code>show()</code> abstract method，所以必須在此實作 <code>show()</code>。</p>
+<p><strong>Customer.php</strong><span class="margin-note-marker"><sup>10</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">10</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/3e86bbab2e1e14d3807cbe70d3a25d89cec17ea6" target="_blank" rel="external">建立 Customer.php</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>app/Services/User/Customer.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Customer</span> <span class="keyword">extends</span> <span class="title">AbstractUser</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="string">'I am a customer'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Customer</code> 繼承 <code>AbstractUser</code>，因為之前定義了 <code>show()</code> abstract method，所以必須在此實作 <code>show()</code>。</p>
+<p><strong>UserFactory</strong><span class="margin-note-marker"><sup>11</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">11</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52ServiceContainer/commit/e2edbb3492b6d49b5e0a19186e28a142d4426b45" target="_blank" rel="external">建立 UserFactory.php</a></span></span></span></p>
+<figure class="highlight php"><figcaption><span>app/Services/User/UserFactory.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">User</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Support</span>\<span class="title">Facades</span>\<span class="title">App</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserFactory</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@param</span> string $type</span><br><span class="line">     * <span class="doctag">@return</span> AbstractUser</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">create</span><span class="params">(string <span class="variable">$type</span>)</span> : <span class="title">AbstractUser</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        App::bind(AbstractUser::class, <span class="string">'App\Services\User\\'</span> . ucfirst(<span class="variable">$type</span>));</span><br><span class="line">        <span class="keyword">return</span> App::make(AbstractUser::class);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重點在此，使用了 <code>App::bind()</code>，將 abstract class 與 concrete class 綁定，其中 concrete class 的 class 名稱為變數。</p>
+<p>然後再使用<code>App::make()</code>建立綁定後的物件。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>實務上 PHP 建議先考慮使用 type hint 的 strong type，這種方式 PhpStorm 支援較好，但是 duck type 也不是不能用，可以當成<strong>泛型</strong>使用，也就是當你不想考慮其型別時，就不要加上 type hint，故意模糊其型別。</li>
+<li>在 PHP 與 Laravel，透過 <code>App::bind()</code> 與 <code>App::make()</code> 也可以使用變數建立物件，還額外得到 type hint 與 PhpStorm 的支援。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的<a href="https://github.com/oomusou/" target="_blank" rel="external">GitHub</a>上找到。</p>
+<ol>
+<li><a href="https://github.com/oomusou/VariableObject/" target="_blank" rel="external">JavaScript 與 PHP 使用變數建立物件</a></li>
+<li><a href="https://github.com/oomusou/Laravel52ServiceContainer" target="_blank" rel="external">PHP 與 Laravel 使用 Service Container 建立物件</a></li>
+</ol>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/refactor/refactor-remove-assignments-to-parameters/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/ecmascript/variable-method/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-02-29 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>8</span></a></li> <li><a href="/tags/PHP/">PHP<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,285 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 VS Code 開發 Haskell ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 VS Code + Haskell IDE Engine">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 VS Code + Haskell IDE Engine">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 VS Code 開發 Haskell ?">
+<meta property="og:url" content="https://oomusou.io/haskell/hie/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 VS Code + Haskell IDE Engine">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-08-14T02:56:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 VS Code 開發 Haskell ?">
+<meta name="twitter:description" content="使用 VS Code + Haskell IDE Engine">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 VS Code 開發 Haskell ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 VS Code + Haskell IDE Engine			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Haskell_Stack"><span class="toc-article-text">Haskell Stack</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定路徑"><span class="toc-article-text">設定路徑</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立專案"><span class="toc-article-text">建立專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編譯專案"><span class="toc-article-text">編譯專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Haskell"><span class="toc-article-text">執行 Haskell</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Haskell_IDE_Engine"><span class="toc-article-text">Haskell IDE Engine</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#VS_Code"><span class="toc-article-text">VS Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Haskell 是個非常純的 FP 語言，如所有 data 都是 Immutable，所有 function 都是 Lazy Evaluation，這些觀念都是一般程式語言所沒有的，透過 Haskell，可以讓我們學習更純的 FP 概念，而不是 workaround 式的 FP，進而改變思考方式。</p>
+<p>Haskell IDE Engine 是基於 LSP (Language Service Protocol)，讓我們在 VS Code 就可以享受如 IDE 強大功能。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Stack 1.7.1<br>Haskell IDE Engine 0.2.2.0<br>Haskell Language Server 0.0.21<br>VS Code 1.25.1</p>
+<h2 id="Haskell_Stack">Haskell Stack</h2><hr>
+<p>Stack 為 Haskell 的 CLI，最大特色是將 GHC 安裝在專案目錄下，不會污染系統環境。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install haskell-stack</span><br></pre></td></tr></table></figure>
+<p>使用 Homebrew 安裝 Stack。</p>
+<p><img src="/images/haskell/hie/hie004.png" alt="hie004"></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ stack <span class="keyword">install</span> cabal-<span class="keyword">install</span></span><br></pre></td></tr></table></figure>
+<p>HIE 也需要 <code>cabal</code>，使用 Stack 安裝 <code>cabal-install</code>，<code>cabal</code> 將安裝到 <code>~/local/bin</code> 目錄下。</p>
+<p><img src="/images/haskell/hie/hie013.png" alt="hie013"></p>
+<h2 id="設定路徑">設定路徑</h2><hr>
+<p>HIE 所需的檔案都會放在 <code>~/.local/bin</code> 下，先設定好系統路徑。</p>
+<p><img src="/images/haskell/hie/hie010.png" alt="hie010"></p>
+<h2 id="建立專案">建立專案</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">stack</span> <span class="keyword">new</span> hello-world</span><br></pre></td></tr></table></figure>
+<p>使用 Stack 建立專案。</p>
+<p><img src="/images/haskell/hie/hie005.png" alt="hie005"></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd hello-world</span><br><span class="line">hello-world <span class="variable">$ </span>stack setup</span><br></pre></td></tr></table></figure>
+<p>使用 Stack 安裝 Haskell 專案所需要的 GHC。</p>
+<p><img src="/images/haskell/hie/hie006.png" alt="hie006"></p>
+<h2 id="編譯專案">編譯專案</h2><hr>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello-world $ <span class="built_in">stack</span> build</span><br></pre></td></tr></table></figure>
+<p>使用 Stack 編譯 Haskell 專案。</p>
+<p><img src="/images/haskell/hie/hie007.png" alt="hie007"></p>
+<h2 id="執行_Haskell">執行 Haskell</h2><hr>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello-world $ stack <span class="built_in">exec</span> hello-world-exe</span><br></pre></td></tr></table></figure>
+<p>Stack 預設會將專案編譯成 <code>專案名稱-exe</code>，使用 <code>stack exec</code> 執行 Haskell 執行檔。</p>
+<blockquote>
+<p>其實 <code>hello-world-exe</code> 已經是執行檔，只在目錄在很深，使用 <code>stack exec</code> 會自動幫我們找到執行檔執行，<code>stack exec</code> 並非 Haskell run-time</p>
+</blockquote>
+<p><img src="/images/haskell/hie/hie008.png" alt="hie008"></p>
+<h2 id="Haskell_IDE_Engine">Haskell IDE Engine</h2><hr>
+<p>Haskell IDE Engine 是基於 LSP (Language Service Protocol) 實作，簡稱 HIE。</p>
+<p>VS Code 透過 HIE，就能達成相當於 IDE 才有的功能，目前 HIE 還無法在 Homebrew 找到，必須親自編譯。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/haskell</span><span class="regexp">/haskell-ide-engine --recursive</span></span><br></pre></td></tr></table></figure>
+<p>Git clone 最新的 HIE 專案。</p>
+<p><img src="/images/haskell/hie/hie000.png" alt="hie000"></p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">cd</span> haskell-ide-engine</span><br><span class="line">haskell-ide-engine $ <span class="keyword">make</span> build-<span class="keyword">all</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>進入 <code>haskell-ide-engine</code> 目錄</li>
+<li>使用 Make 編譯 HIE</li>
+</ol>
+<p><img src="/images/haskell/hie/hie001.png" alt="hie001"></p>
+<blockquote>
+<p>這段時間會非常久，請耐心等待，在我的 Macbook Pro 15 Mid2014，需要約 40 分鐘時間編譯</p>
+</blockquote>
+<p><img src="/images/haskell/hie/hie003.png" alt="hie003"></p>
+<p>若 Make 沒錯誤，最後的訊息如上。</p>
+<p><img src="/images/haskell/hie/hie002.png" alt="hie002"></p>
+<p>除了 <code>cabal</code> 為剛剛 <code>stack install cabal-install</code> 所安裝，剩下的檔案都是 <code>make build-all</code>  所編譯。</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hie <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/haskell/hie/hie011.png" alt="hie011"></p>
+<ol>
+<li>能顯示 HIE 版本，表示 HIE 編譯成功</li>
+</ol>
+<h2 id="VS_Code">VS Code</h2><hr>
+<p>HIE 已經編譯成功，最後一哩路是 VS Code 的套件部分。</p>
+<p><img src="/images/haskell/hie/hie009.png" alt="hie009"></p>
+<ol>
+<li>在 VS Code 安裝 <code>Haskell Language Server</code></li>
+</ol>
+<p><img src="/images/haskell/hie/hie012.png" alt="hie012"></p>
+<p>VS Code 開啟 Haskell 專案，若沒有任何錯誤訊息，則表示 HIE 安裝成功。</p>
+<blockquote>
+<p><code>~/.local/bin</code> 設定在系統路徑非常重要，否則要在 VS Code 設定 HIE 路徑，非常麻煩</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Haskell IDE Engine 為 LSP，透過 HIE，我們就可以使用我們喜歡的 VS Code 編輯 Haskell，並享受 IDE 般支援</li>
+<li>HIE 目前在 macOS 尚無 Homebrew 可下載，必須親自編譯才能使用</li>
+<li>設定好 VS Code + HIE，就可以開心享受 Haskell 的純 FP 思維了 </li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://github.com/haskell" target="_blank" rel="external">Haskell</a>, <a href="https://github.com/haskell/haskell-ide-engine" target="_blank" rel="external">Haskell IDE Engine</a><br><a href="https://qiita.com/waddlaw" target="_blank" rel="external">Waddlaw</a>, <a href="https://qiita.com/waddlaw/items/b83cd10311200095fe87" target="_blank" rel="external">VS Code と haskell-ide-engine で Haskell 開発環境を構築する</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fp/lazy-evaluation/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fp/intro/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-08-13 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Haskell/">Haskell<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

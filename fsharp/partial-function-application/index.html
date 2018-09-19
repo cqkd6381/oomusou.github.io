@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入淺出 F# 之 Partial Function Application | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="更優雅的方式產生 function">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="更優雅的方式產生 function">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入淺出 F# 之 Partial Function Application">
+<meta property="og:url" content="https://oomusou.io/fsharp/partial-function-application/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="更優雅的方式產生 function">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-22T02:18:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入淺出 F# 之 Partial Function Application">
+<meta name="twitter:description" content="更優雅的方式產生 function">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入淺出 F# 之 Partial Function Application</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 更優雅的方式產生 function			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Lambda_Expression"><span class="toc-article-text">Lambda Expression</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Partial_Function_Application"><span class="toc-article-text">Partial Function Application</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>FP 既然強調 Higher Order Function，就會希望 argument 以 function 傳入，因此就會有 function 能夠傳回 function 的需求，除了回傳 Anonymous Function 或 Lambda Expression 外，F# 更提供了 Partial Function Application ，讓程式碼更優雅。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="Lambda_Expression">Lambda Expression</h2><hr>
+<p>舉一個最簡單的例子</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1.</span><span class="number">.5</span>]</span><br><span class="line">|&gt; List.iter (<span class="keyword">fun</span> i -&gt; printfn <span class="string">"%d"</span> i)</span><br></pre></td></tr></table></figure>
+<p>將 <code>1</code> 到 <code>5</code> 的 <code>List</code> 全部印出來。</p>
+<p><img src="/images/fsharp/partial/partial000.png" alt="artial00"></p>
+<p><code>List.iter()</code> 的 argument 要求 <code>&#39;T -&gt; unit</code> 的 function。</p>
+<p>在沒有提供 Partial Function Application 的程式語言，我們會傳進 Anonymous function 或 Lambda Expression。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">fun</span> i -&gt; printfn <span class="string">"%d"</span> i</span><br></pre></td></tr></table></figure>
+<p>這種寫法中規中矩，儘管語法不太一樣，在一般語言都看得到。</p>
+<h2 id="Partial_Function_Application">Partial Function Application</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">1.</span><span class="number">.5</span>]</span><br><span class="line">|&gt; List.iter (printfn <span class="string">"%d"</span>)</span><br></pre></td></tr></table></figure>
+<p>既然 <code>List.iter()</code> 的 argument 要求 <code>&#39;T -&gt; unit</code> 的 function，我們只要能產生 <code>T -&gt; unit</code> 就符合 <code>List.iter()</code> 的需求。</p>
+<p><code>printfn()</code> 的 singnature 為 <code>string -&gt; &#39;T -&gt; unit</code>，他的意思是：</p>
+<ul>
+<li>當傳入兩個參數為 <code>string</code> 與 <code>&#39;T</code> 時，回傳值為 <code>unit</code></li>
+<li>當傳入一個 參數為 <code>string</code> 時，回傳值回 <code>T -&gt; unit</code></li>
+</ul>
+<p><code>List.iter()</code> 要的正是 <code>&#39;T -&gt; unit</code>，所以我們只要傳入一個參數即可。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printfn <span class="string">"%d"</span></span><br></pre></td></tr></table></figure>
+<p>這種寫法是不是比 Lambda Expression 更優雅呢？</p>
+<h2 id="Summary">Summary</h2><hr>
+<ul>
+<li>在多參數的 function，只要提供 <code>部分參數</code>，就會回傳一個新的 function，而不必自己建立 Anonymous Function 或 Lambda Expression。</li>
+<li>在多參數的 function，其型別是以 <code>-&gt;</code> 隔開，如 <code>string -&gt; &#39;T -&gt; unit</code>，而不是 <code>string, &#39;T -&gt; unit</code>，因為 F# 的 function 可隨時提供 <code>部分參數</code>，而回傳新的 function，如只提供 <code>string</code>，就會回傳 <code>&#39;T -&gt; unit</code>，這也是為什麼 F# 在每個參數間以 <code>-&gt;</code> 隔開，而非 <code>,</code></li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Partial Function Application 並不是 F# 的獨門絕技，只要是 FP 語言都會有，算是 FP 語言的基本要求，但在一般語言如 C#、JavaScript 卻看不到，只能使用 Lambda Expression / Anonymous Function / Arrow Function 來處理，但 Partial Function Application 提供了更優雅的方式</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/sonarqube/angular/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fsharp/unit-ignore/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-03 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>22</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

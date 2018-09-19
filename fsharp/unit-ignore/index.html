@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入淺出 F# 之 Unit 與 Ignore | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="讓電腦 function 與數學 function 觀念相同">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="讓電腦 function 與數學 function 觀念相同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入淺出 F# 之 Unit 與 Ignore">
+<meta property="og:url" content="https://oomusou.io/fsharp/unit-ignore/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="讓電腦 function 與數學 function 觀念相同">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-22T02:20:29.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入淺出 F# 之 Unit 與 Ignore">
+<meta name="twitter:description" content="讓電腦 function 與數學 function 觀念相同">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入淺出 F# 之 Unit 與 Ignore</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 讓電腦 function 與數學 function 觀念相同			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Unit_與_()"><span class="toc-article-text">Unit 與 ()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#無_return"><span class="toc-article-text">無 return</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#無_input"><span class="toc-article-text">無 input</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#有_return_但不想用"><span class="toc-article-text">有 return 但不想用</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>F# 是 FP，強調 function 都要有 input 值，也要有 return 值，若 function 真的沒有 input 值，也沒有 return 值，在 F# 該如何表示呢？</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2017.3.1<br>F# 4.1</p>
+<h2 id="Unit_與_()">Unit 與 ()</h2><hr>
+<p>FP 的思考來自於數學函數，認為 function 都要有 <code>定義域</code> 與 <code>對應域</code>，如 <code>y = f(x)</code>，也就是 input  <code>x</code> 的型別就是 <code>定義域</code>，而 return  <code>y</code> 的型別就是 <code>對應域</code>。</p>
+<p>但在電腦語言的 function，可能沒有 input 值，也可能沒有 return 值，這就與數學 function 不同，針對這種需求，F# 特別設計出新的型別 <code>unit</code>，其值只有一個 <code>()</code>。</p>
+<h2 id="無_return">無 return</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> print msg = printfn <span class="string">"%s"</span> msg</span><br><span class="line"></span><br><span class="line">print <span class="string">"Hello World"</span></span><br></pre></td></tr></table></figure>
+<p><code>print()</code> 為 function，其內容只有 <code>printfn()</code> 印出 <code>msg</code>，這就是典型 I/O 類的 side effect，但沒有 return 值。</p>
+<p><img src="/images/fsharp/unit-ignore/unit000.png" alt="nit00"></p>
+<p>若觀察 <code>print()</code> 的型別，其為 <code>string -&gt; unit</code> ，也就是若沒 return 值，Type Inference 會推導為 <code>unit</code>。</p>
+<blockquote>
+<p>Q : 所以 <code>unit</code> 不就 C# 的 <code>void</code>？</p>
+</blockquote>
+<p>若以無 return 值的 function 觀點，<code>unit</code> 相當於 <code>void</code> 沒錯，但 <code>unit</code> 還有其他用途。</p>
+<h2 id="無_input">無 input</h2><hr>
+<p>若想要建立 <code>input()</code> ，但不用傳入任何值，就可以印出 <code>Hello World</code>。</p>
+<p>直覺會這樣寫：</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> print = printfn <span class="string">"%s"</span> <span class="string">"Hello World"</span></span><br></pre></td></tr></table></figure>
+<p>但別忘了 F# 強調是 Function Value，也就是 function 也視為是一種 value，因此都使用 <code>let</code> 。</p>
+<p><img src="/images/fsharp/unit-ignore/unit001.png" alt="nit00"></p>
+<p>Type Inference 推導為 <code>unit</code>，是 <code>unit</code> 型別的 value，而不是 function。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> print () = printfn <span class="string">"%s"</span> <span class="string">"Hello World"</span></span><br></pre></td></tr></table></figure>
+<p>正確寫法應該使用 <code>()</code> 代表其無 input 值，但其 <code>定義域</code> 為 <code>()</code> ，也就是 <code>unit</code> type。</p>
+<p><img src="/images/fsharp/unit-ignore/unit002.png" alt="nit00"></p>
+<p>Type Inference 推導的 <code>print</code> 為 <code>unit -&gt; unit</code>，是 <code>unit -&gt; unit</code> 型別的 function，而不是 value。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> print () = printfn <span class="string">"%s"</span> <span class="string">"Hello World"</span></span><br><span class="line"></span><br><span class="line">print ()</span><br></pre></td></tr></table></figure>
+<p>呼叫 <code>prinf()</code> 時，也要明確傳入 <code>()</code> 代表 no input。</p>
+<p><img src="/images/fsharp/unit-ignore/unit004.png" alt="nit00"></p>
+<h2 id="有_return_但不想用">有 return 但不想用</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sum x y  = x + y</span><br><span class="line"></span><br><span class="line">sum <span class="number">2</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>明明 <code>sum()</code> 有 return <code>x + y</code>，但呼叫 <code>sum()</code> 時卻沒處理 return 值，compiler 編譯後會抱怨。</p>
+<p><img src="/images/fsharp/unit-ignore/unit003.png" alt="nit00"></p>
+<p>有兩種解法：</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sum x y  = x + y</span><br><span class="line"><span class="keyword">let</span> result = sum <span class="number">2</span> <span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>明確將 <code>sum()</code> 結果 binding 到 <code>result</code> value，這是 FP 最標準做法。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> sum x y = x + y</span><br><span class="line">sum <span class="number">2</span> <span class="number">3</span> |&gt; ignore</span><br></pre></td></tr></table></figure>
+<p>將 <code>sum()</code> 結果 pipeline 到 <code>ignore()</code>，則 compiler 就不會抱怨。</p>
+<blockquote>
+<p>實務上若真的不想處理 function 的結果，建議使用 <code>ignore()</code></p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>FP 嚴格遵守數學 function 定義，但電腦 function 卻可能沒有 input 也沒有 return，因此 F# 特別設計出 <code>unit</code> 與 <code>()</code>，這樣就與數學的 <code>定義域</code> 與 <code>對應域</code> 的觀念相通</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://docs.microsoft.com/en-us/" target="_blank" rel="external">Microsoft Docs</a>, <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/unit-type" target="_blank" rel="external">Unit Type</a><br><a href="https://dev.to/josegonz321" target="_blank" rel="external">Jose Gonzales</a>, <a href="https://dev.to/josegonz321/whats-the-unit-type-in-fsharp" target="_blank" rel="external">What’s the Unit Type in F#?</a><br><a href="https://stackoverflow.com/" target="_blank" rel="external">Stack overflow</a>, <a href="https://stackoverflow.com/questions/17870937/what-does-this-notation-mean/17872004#17872004" target="_blank" rel="external">What does this () notation mean?</a><br><a href="http://www.oreilly.com/pub/au/3667" target="_blank" rel="external">Chris Smith</a>, <a href="http://shop.oreilly.com/product/0636920024033.do" target="_blank" rel="external">Pramming F# 3.0 2nd</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/partial-function-application/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/sonarqube/php/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-01 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/F/">F#<span>22</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

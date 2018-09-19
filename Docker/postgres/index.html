@@ -1,0 +1,294 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 Docker 安裝 PostgreSQL ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 Docker 安裝 PostgreSQL ?">
+<meta property="og:url" content="https://oomusou.io/Docker/postgres/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-07-31T01:50:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 Docker 安裝 PostgreSQL ?">
+<meta name="twitter:description" content="在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 Docker 安裝 PostgreSQL ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 在 Mac 最簡單使用 PostgreSQL 方式就是使用 Docker			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_docker_run"><span class="toc-article-text">使用 docker run</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_Docker-Compose"><span class="toc-article-text">使用 Docker-Compose</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Docker-compose-yml"><span class="toc-article-text">Docker-compose.yml</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#-env"><span class="toc-article-text">.env</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Docker-compose_up"><span class="toc-article-text">Docker-compose up</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Docker-compose_down"><span class="toc-article-text">Docker-compose down</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>若要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker 。本文分別使用 <code>docker run</code> 與 <code>docker-compose</code> 兩種方式。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.03.1-ce-mac65 (24312)<br>PostgreSQL 10.3</p>
+<h2 id="使用_docker_run">使用 docker run</h2><hr>
+<figure class="highlight stata"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="keyword">run</span> --name MyPostgres -<span class="keyword">d</span> -p 5432:5432 -v ~/Postgres:/<span class="keyword">var</span>/lib/postgresql/data -<span class="keyword">e</span> POSTGRES_DB=eflab -<span class="keyword">e</span> POSTGRES_USER=admin -<span class="keyword">e</span> POSTGRES_PASSWORD='12345' postgres:latest</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker run</code> 由 image 建立 container，當 Docker 發現本機沒有 image，會自動從 Docker Hub 下載。</p>
+<p><code>—name</code>：替 container 取一個人能夠識別的名字 <code>MyPostgres</code> (若省略，Docker 會自動以亂數建立 )<br><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<p><code>-v</code> : <code>v</code>olume，PostgresSQL 新增的資料會寫在 container 內的 <code>/var/lib/postgresql/data</code> 目錄，會改 mapping 到 host 的 <code>~/Postgres</code>，如此 container 刪除後，資料仍然會留在 host </p>
+<p><code>-p</code> : <code>p</code>ort mapping，host 與 container post 的對應，格式為 host port : container port<br><code>-e</code> : <code>e</code>nvironment，設定 PostgreSQL 所需要的環境變數</p>
+<ul>
+<li><code>POSTGRES_DB</code> : database 名稱</li>
+<li><code>POSTGRES_USER</code> : 帳號</li>
+<li><code>POSTGRES_PASSWORD</code> : 密碼</li>
+</ul>
+<p><code>postgress:latest</code> : image 名稱，其中 <code>latest</code> 為最新版的 image</p>
+<p><img src="/images/docker/postgres/post000.png" alt="post000"></p>
+<h2 id="使用_Docker-Compose">使用 Docker-Compose</h2><hr>
+<p><code>docker run</code> 方式雖然直接，但需要搭配一堆參數才能執行，若能將這些參數先寫在文字檔內，只要下 <code>docker-compose up -d</code> 就可執行 container。</p>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<h3 id="Docker-compose-yml">Docker-compose.yml</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  postgres:&#10;    image: postgres:latest&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;HOST_DIR&#125;:/var/lib/postgresql/data&#10;    expose:&#10;      - 5432&#10;    ports:&#10;      - $&#123;POSTGRES_PORT&#125;:5432&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>version</code> 設定 <code>docker-compose.yml</code> 格式的版本。</p>
+<p>因為 <code>docker-compose.yml</code> 的格式版本與 Docker 版本息息相關，若你要使用新版的 Docker 所提供的功能，在 <code>docker-compose.yml</code> 的版本就必須下的更細，如 <code>3.3</code>，在此只使用了 <code>docker-compose.yml</code> 基本功能而已，使用 <code>3</code> 即可。</p>
+<p>第 3 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">services:&#10;  postgres:</span><br></pre></td></tr></table></figure>
+<p>使用 <code>services</code> 設定有哪些 service 要一起跑。</p>
+<p><code>Docker-compose.yml</code> 理論上可以同時描述多個 service，也就是多個 container，如 .NET Core + PostgreSQL + Nginx + Redis 同時啟動，但本文只想使用 PostgreSQL 而已，因此僅建立  <code>postgres</code> service。</p>
+<p>第 4 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">postgres:&#10;  image: postgres:latest</span><br></pre></td></tr></table></figure>
+<p>設定 <code>postgres</code> service，此名稱可自行建立。</p>
+<ul>
+<li><strong>image</strong> :  設定使用的 image。</li>
+</ul>
+<blockquote>
+<p><code>latest</code> 表示最新版的 <code>postgres</code></p>
+</blockquote>
+<p>第 6 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyPostgres</span><br></pre></td></tr></table></figure>
+<p>使用 <code>container_name</code> 設定 container 名稱。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>--name</code></p>
+</blockquote>
+<p>第 7 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - $&#123;POSTGRES_HOST_DIR&#125;:/var/lib/postgresql/data</span><br></pre></td></tr></table></figure>
+<p>使用 <code>volumes</code> 設定 host 與 container 所對應的目錄，將來 PostgreSQL 所寫入資料，將寫入 host 目錄。</p>
+<p><code>:</code> 左側為 host 目錄，右側為 container 內目錄。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-v</code></p>
+</blockquote>
+<p><code>POSTGRES_HOST_DIR</code> 將在 <code>.env</code> 中設定。</p>
+<p>第 9 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">expose:&#10;  - 5432</span><br></pre></td></tr></table></figure>
+<p>使用 <code>expose</code> 設定 container 的 port。</p>
+<p>第 11 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - $&#123;POSTGRES_PORT&#125;:5432</span><br></pre></td></tr></table></figure>
+<p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port。</p>
+<p><code>:</code> 左側為 host 的 port，右側為 container 的 port。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-p</code></p>
+</blockquote>
+<p><code>POSTGRES_PORT</code> 將在 <code>.env</code> 中設定。</p>
+<p>13 行</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">environment:&#10;    - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;    - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;    - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;</span><br></pre></td></tr></table></figure>
+<p>設定 PostgreSQL 的 database、user 與 password，此為 PostgreSQL 所需要的環境變數。</p>
+<blockquote>
+<p>相當於 <code>docker run</code> 的 <code>-e</code></p>
+</blockquote>
+<p><code>POSTGRES_DB</code>、<code>POSTGRES_USER</code> 與 <code>POSTGRES_PASSWORD</code> 將在 <code>.env</code> 中設定。</p>
+<h3 id="-env">.env</h3><figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">HOST_DIR=<span class="value">~/Postgres</span></span></span><br><span class="line"><span class="setting">POSTGRES_PORT=<span class="value"><span class="number">1234</span></span></span></span><br><span class="line"><span class="setting">POSTGRES_DB=<span class="value">eflab</span></span></span><br><span class="line"><span class="setting">POSTGRES_USER=<span class="value">admin</span></span></span><br><span class="line"><span class="setting">POSTGRES_PASSWORD=<span class="value"><span class="number">12345</span></span></span></span><br></pre></td></tr></table></figure>
+<p>此為 <code>Docker-compose.yml</code> 所設定的環境變數，被獨立在 <code>.env</code> 中，可單獨設定，不用修改 <code>Docker-compose.yml</code>。</p>
+<h3 id="Docker-compose_up">Docker-compose up</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose up</code> 啟動 PostgreSQL。</p>
+<p><code>-d</code> : <code>d</code>etach，建立 container 後，就脫離目前 process</p>
+<p><img src="/images/docker/postgres/post001.png" alt="post001"></p>
+<h3 id="Docker-compose_down">Docker-compose down</h3><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>docker-compose down</span><br></pre></td></tr></table></figure>
+<p>使用 <code>docker-compose down</code> 結束 PostgreSQL，並且刪除 container。</p>
+<p><img src="/images/docker/postgres/post002.png" alt="post002"></p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>要在 Mac 使用 PostgreSQL，最簡單的方式就是使用 Docker</li>
+<li><code>docker-run</code> 與 <code>Docker-Compose</code> 都可以啟動 PostgreSQL，實務上建議使用 <code>Docker-Compose</code>，將變數寫在 <code>.env</code> 中，這樣可使用 <code>docker-compose up -d</code> 就可啟動 PostgreSQL，<code>docker-compose down</code> 就可結束 PostgreSQL，不用再擔心參數問題</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/PostgresDocker" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/hexo/https/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/csharp/extension-method/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-07-25 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Docker/">Docker<span>19</span></a></li> <li><a href="/tags/PostgreSQL/">PostgreSQL<span>6</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

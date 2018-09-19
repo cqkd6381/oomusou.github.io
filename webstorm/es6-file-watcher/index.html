@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 WebStorm 設定 ECMAScript 2015+ 與 File Watcher ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="讓 WebStorm 自動編譯 ECMAScript 2015+">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="讓 WebStorm 自動編譯 ECMAScript 2015+">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 WebStorm 設定 ECMAScript 2015+ 與 File Watcher ?">
+<meta property="og:url" content="https://oomusou.io/webstorm/es6-file-watcher/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="讓 WebStorm 自動編譯 ECMAScript 2015+">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-19T04:38:40.669Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 WebStorm 設定 ECMAScript 2015+ 與 File Watcher ?">
+<meta name="twitter:description" content="讓 WebStorm 自動編譯 ECMAScript 2015+">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 WebStorm 設定 ECMAScript 2015+ 與 File Watcher ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 讓 WebStorm 自動編譯 ECMAScript 2015+			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Babel_CLI"><span class="toc-article-text">Babel CLI</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立專案"><span class="toc-article-text">建立專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Babel-preset-env"><span class="toc-article-text">Babel-preset-env</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#支援_ECMAScript_2015+"><span class="toc-article-text">支援 ECMAScript 2015+</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#File_Watcher"><span class="toc-article-text">File Watcher</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hello_World"><span class="toc-article-text">Hello World</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>雖然可以搭配 Webpack 將 ECMAScript 2015+ 編譯成 ES5，但有時只是想簡單學習 ECMAScript 2015+，此時可以透過 WebStorm 內建的 File Watcher，只要 ECMAScript 一存檔，WebStorm 就會自動呼叫 Babel 幫我們編譯成 ES5。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>WebStorm 2018.2.3<br>Babel CLI 6.26.0<br>Babel-preset-env 1.7.0</p>
+<h2 id="Babel_CLI">Babel CLI</h2><hr>
+<figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="built_in">global</span> <span class="keyword">add</span> babel-<span class="keyword">cli</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/webstorm/es6-file-watcher/es6000.png" alt="es6000"></p>
+<p>WebStorm 必須依賴 Babel 才能將 ECMAScript 2015+ 編譯，因此必須先安裝 transpiler。</p>
+<p>以 global 方式安裝 <code>bable-cli</code>。</p>
+<p><img src="/images/webstorm/es6-file-watcher/es6001.png" alt="es6001"></p>
+<h2 id="建立專案">建立專案</h2><hr>
+<p><img src="/images/webstorm/es6-file-watcher/es6004.png" alt="es6004"></p>
+<ol>
+<li>建立一個簡單的專案，使用 <code>Empty Project</code> 即可</li>
+<li>設定專案所建立的目錄位置</li>
+</ol>
+<h2 id="Babel-preset-env">Babel-preset-env</h2><hr>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="built_ins">add</span> babel-preset-<span class="built_ins">env</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/webstorm/es6-file-watcher/es6002.png" alt="es6002"></p>
+<p>Babel CLI 只是包含 transpiler，但 ECMAScript 每年都有新的語言定義，因此要另外安裝 Babel-preset-env。</p>
+<p>將 <code>babel-preset-env</code> 安裝在專案目錄下。</p>
+<p><img src="/images/webstorm/es6-file-watcher/es6003.png" alt="es6003"></p>
+<h2 id="支援_ECMAScript_2015+">支援 ECMAScript 2015+</h2><hr>
+<p><img src="/images/webstorm/es6-file-watcher/es6009.png" alt="es6009"></p>
+<ol>
+<li><strong><em>Preferences -&gt; Language &amp; Frameworks -&gt; JavaScript</em></strong></li>
+<li><strong>JavaScript language version</strong> ： <code>ECMAScript 6</code></li>
+</ol>
+<h2 id="File_Watcher">File Watcher</h2><hr>
+<p><img src="/images/webstorm/es6-file-watcher/es6005.png" alt="es6005"></p>
+<ol>
+<li><strong><em>Preferences -&gt; Tools -&gt; File Watchers</em></strong></li>
+<li>按 <code>+</code> 新增 File Watcher</li>
+</ol>
+<p><img src="/images/webstorm/es6-file-watcher/es6006.png" alt="es6006"></p>
+<ol>
+<li>WebStorm 預設提供了很多 File Watcher 設定，選擇 <code>Babel</code></li>
+</ol>
+<p><img src="/images/webstorm/es6-file-watcher/es6007.png" alt="es6007"></p>
+<ol>
+<li>接受預設值即可，按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/webstorm/es6-file-watcher/es6008.png" alt="es6008"></p>
+<ol>
+<li>成功新增了 Babel File Watcher</li>
+</ol>
+<h2 id="Hello_World">Hello World</h2><hr>
+<p><img src="/images/webstorm/es6-file-watcher/es6010.png" alt="es6010"></p>
+<ol>
+<li>使用 ECMAScript 2015 語法的 <code>HelloWorld.js</code></li>
+</ol>
+<p><img src="/images/webstorm/es6-file-watcher/es6011.png" alt="es6011"></p>
+<ol>
+<li>只要一存檔，File Watcher 就會啟動 Babel，編譯成 ES5 的 <code>HelloWorld.js</code></li>
+</ol>
+<p><img src="/images/webstorm/es6-file-watcher/es6012.png" alt="es6012"></p>
+<ol>
+<li>使用 Node.js 執行 ES5 版本的 <code>HelloWorld.js</code></li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>由於 ECMAScript 2015+ 需要 transpile，因此很多人卻步，事實上在 WebStorm 只要配合 File Watcher，就會自動呼叫 Babel 編譯，開發體驗與 ES5 完全一樣</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://blog.jetbrains.com/webstorm/" target="_blank" rel="external">WebStorm Blog</a>, <a href="https://blog.jetbrains.com/webstorm/2015/05/ecmascript-6-in-webstorm-transpiling/" target="_blank" rel="external">ECMAScript 6 in WebStorm: Transpiling</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/linq/defaultifempty/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-19 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>8</span></a></li> <li><a href="/tags/WebStorm/">WebStorm<span>15</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

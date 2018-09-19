@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何重灌 macOS High Sierra ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="因為 APFS 所導致的問題">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="因為 APFS 所導致的問題">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何重灌 macOS High Sierra ?">
+<meta property="og:url" content="https://oomusou.io/macos/install-clean-high-sierra/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="因為 APFS 所導致的問題">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-30T02:45:59.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何重灌 macOS High Sierra ?">
+<meta name="twitter:description" content="因為 APFS 所導致的問題">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何重灌 macOS High Sierra ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 因為 APFS 所導致的問題			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sympton"><span class="toc-article-text">Sympton</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Root_Cause"><span class="toc-article-text">Root Cause</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Recipe"><span class="toc-article-text">Recipe</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>High Sierra 引入 APFS 新的磁碟格式後，優點是對 SSD 最佳化，效率很高，缺點是 APFS 使的 Time Machine 之前的備份面臨了極大的挑戰，除了無法整顆硬碟還原外，連要重新安裝 High Sierra 也很不方便。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>MacBook Pro Retina, 15”, Mid 2014<br>macOS 10.13.4</p>
+<h2 id="Sympton">Sympton</h2><hr>
+<ol>
+<li>雖然一直更新到 High Sierra，也都一直有做 Time Machine 備份，但真的要整顆 SSD 還原時卻無法還原，出現 <code>An error occurred while restoring from the backup</code> 錯誤訊息</li>
+<li>因為還原之前已經選擇 erase 整顆 SSD，因此只能選擇 reinstall macOS 一途</li>
+<li>真的重灌 High Sierra 時，到最後會出現 <code>Could not create preboot volumn for APFS install</code></li>
+</ol>
+<p>也就是面臨進退兩難，退無法使用 Time Machine 還原，進也無法重灌 High Sierra 的窘境。</p>
+<blockquote>
+<p>這些問題都是我在 MBPR Mid 2014 所遇到，不確定其他 MBPR 是否也如此</p>
+</blockquote>
+<h2 id="Root_Cause">Root Cause</h2><hr>
+<p>所有的問題都出在 APFS。</p>
+<ol>
+<li>Time Machine 目前對於 APFS  的支援，之前舊的備份無法整顆 SSD 還原</li>
+<li>High Sierra 無法直接安裝在 APFS 格式的 SSD，僅能由 <code>Mac OS Extented (Journaled)</code> 格式的 SSD 安裝，在升級成 APFS 格式</li>
+</ol>
+<p><code>1</code> 基本上無解，只能將原本 Time Machine 備份砍掉後，然後備份重新開始。</p>
+<p><code>2</code> 可自行將 SSD 重新格式化成 <code>Mac OS Extented (Journaled)</code> 格式後即可重灌。</p>
+<h2 id="Recipe">Recipe</h2><hr>
+<blockquote>
+<p>由於無法截圖，只能以文字描述</p>
+</blockquote>
+<ul>
+<li>以 ⌘ + R 開機，在 <code>Disk Utility</code> 將 APFS 格式的 SSD 刪除，使 MBPR 處於沒有 SSD 狀態</li>
+</ul>
+<blockquote>
+<p>SSD 一旦被格式化成 APFS 之後，就無法格式化成其他格式，因此只能將 SSD 刪除</p>
+</blockquote>
+<ul>
+<li>再以 ⌘ + R 重新開機，因為已經沒 SSD 可以開機，BIOS 會自動要求連上網路，下載最小可開機所需要的檔案</li>
+<li>進入 <code>Disk Utility</code>，將 SSD 格式化成 <code>Mac OS Extented (Journaled)</code></li>
+<li>離開 <code>Disk Utility</code>，進入 <code>Reinstall OS X</code>，會出現 <code>OS X Yosemite</code> 安裝畫面</li>
+</ul>
+<blockquote>
+<p>這裡預估不同 MBPR 的版本會不同，當時 MBPR Mid 2014 所附的版本就是 Yosemite</p>
+</blockquote>
+<ul>
+<li>Yosemite 安裝完成後，再由 App Store 更新成 High Sierra</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>APFS 格式雖然適合 SSD，但對於 Resintall OS X 與 Time Machine 並不友善，尤其舊的備份竟然無法在 APFS 整顆 SSD 還原</li>
+<li>High Sierra 無法直接安裝在 APFS，雖然可以手動格式化成 <code>Mac OS Extented (Journaled)</code>，但要先安裝 Yosemite，才能升級為 High Sierra，這也使得 Reinstall OS X 變得非常麻煩</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/sonarqube/sonarlint-analyzer-not-loaded/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/sonarqube/macos/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-30 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/macOS/">macOS<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

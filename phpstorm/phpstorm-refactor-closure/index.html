@@ -1,0 +1,274 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 PhpStorm 重構成 Closure? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="透過輔助線重構成 Closure">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="透過輔助線重構成 Closure">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 PhpStorm 重構成 Closure?">
+<meta property="og:url" content="https://oomusou.io/phpstorm/phpstorm-refactor-closure/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="透過輔助線重構成 Closure">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2016-08-06T03:11:22.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 PhpStorm 重構成 Closure?">
+<meta name="twitter:description" content="透過輔助線重構成 Closure">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 PhpStorm 重構成 Closure?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 透過輔助線重構成 Closure			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Motivation"><span class="toc-article-text">Motivation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#實際案例"><span class="toc-article-text">實際案例</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Extract_Method"><span class="toc-article-text">Extract Method</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Extract_Parameter"><span class="toc-article-text">Extract Parameter</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Surround_With"><span class="toc-article-text">Surround With</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#單元測試"><span class="toc-article-text">單元測試</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>在實務上，我們常常會遇到將重複程式碼重構成 closure 的需求，PhpStorm 沒辦法直接重構，需透過一些技巧。</p>
+<a id="more"></a>
+<h2 id="Motivation">Motivation</h2><hr>
+<p>以前一直不知道如何將 closure 用在自己的程式上，一直到看了 <a href="https://adamwathan.me/refactoring-to-collections/" target="_blank" rel="external">Refactoring to Collection</a> 之後，整理了一篇<a href="/php/php-closure-practice/">實務上如何活用 Closure?</a>，不過當時仍然不知道要如何在 PhpStorm 完成，都是手動複製貼上，本文以 PhpStorm 的 <code>Extract Method</code>、<code>Extract Parameter</code> 與 <code>Surround With</code> ，將重複的程式碼重構成 closure。</p>
+<h2 id="Version">Version</h2><hr>
+<p>PHP 7.0.0<br>Laravel 5.2.39<br>PhpStorm 2016.1.2</p>
+<h2 id="實際案例">實際案例</h2><hr>
+<p><strong> PostService.php </strong><span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52LearnClosureByLaravel_demo/commit/e27a224d1a15054f53965d73b8e3b690d0958caf" target="_blank" rel="external">新增 displayAllPost()</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/PostService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">PostRepository</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@var</span> PostRepository</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$postRepository</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * PostService constructor.</span><br><span class="line">     * <span class="doctag">@param</span> PostRepository $postRepository</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(PostRepository <span class="variable">$postRepository</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;postRepository = <span class="variable">$postRepository</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@return</span> int</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">displayAllPosts</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$posts</span> = <span class="variable">$this</span>-&gt;postRepository-&gt;getAllPosts();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$posts</span> <span class="keyword">as</span> <span class="variable">$post</span>) &#123;</span><br><span class="line">            <span class="variable">$txt</span> = <span class="string">"&#123;$post-&gt;id&#125; : &#123;$post-&gt;title&#125;"</span> . PHP_EOL;</span><br><span class="line">            <span class="keyword">echo</span>(<span class="variable">$txt</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$posts</span>-&gt;count();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>21 行<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span><br><span class="line"> * <span class="doctag">@return</span> int</span><br><span class="line"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">displayAllPosts</span><span class="params">()</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="variable">$posts</span> = <span class="variable">$this</span>-&gt;postRepository-&gt;getAllPosts();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="variable">$posts</span> <span class="keyword">as</span> <span class="variable">$post</span>) &#123;</span><br><span class="line">        <span class="variable">$txt</span> = <span class="string">"&#123;$post-&gt;id&#125; : &#123;$post-&gt;title&#125;"</span> . PHP_EOL;</span><br><span class="line">        <span class="keyword">echo</span>(<span class="variable">$txt</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="variable">$posts</span>-&gt;count();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>若我們發現以下程式碼是重複的，想將其提出成為一個 method<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$posts</span> = <span class="variable">$this</span>-&gt;postRepository-&gt;getAllPosts();</span><br><span class="line"></span><br><span class="line"><span class="keyword">foreach</span> (<span class="variable">$posts</span> <span class="keyword">as</span> <span class="variable">$post</span>) &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> <span class="variable">$posts</span>-&gt;count();</span><br></pre></td></tr></table></figure></p>
+<p>也就是除了<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$txt</span> = <span class="string">"&#123;$post-&gt;id&#125; : &#123;$post-&gt;title&#125;"</span> . PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span>(<span class="variable">$txt</span>);</span><br></pre></td></tr></table></figure></p>
+<p>之外，其他都是重複程式碼，想 <code>Extract Method</code>。</p>
+<h2 id="Extract_Method">Extract Method</h2><hr>
+<p>PhpStorm 內建的 <code>Extract Method</code> 無法簡單的萃取出這段程式碼，需靠一點技巧。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure000.png" alt=""></p>
+<p>先選擇全部程式碼，按熱鍵 &#8963; + T，顯示 <code>Refactor This</code> 選單，選擇 <code>Extract Method</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure001.png" alt=""></p>
+<p>輸入我們要重構的新 method 名稱。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure002.png" alt=""></p>
+<p>PhpStorm 會幫我們選擇的程式碼重構成 <code>loopAllPosts()</code>，並且自動加上 <code>return $this-&gt;loopAllPosts()</code>。</p>
+<p>但是這樣還沒完，因為<br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$txt</span> = <span class="string">"&#123;$post-&gt;id&#125; : &#123;$post-&gt;title&#125;"</span> . PHP_EOL;</span><br><span class="line"><span class="keyword">echo</span>(<span class="variable">$txt</span>);</span><br></pre></td></tr></table></figure></p>
+<p>並不是我們要的，而是希望由 closure 傳入的，所以我們必須將這段程式碼 <code>Extract Parameter</code>。</p>
+<h2 id="Extract_Parameter">Extract Parameter</h2><hr>
+<p>不過 PhpStorm 也沒有辦法簡單的的將一段程式碼 <code>Extract Parameter</code>。</p>
+<p>還記得國中幾何嗎? 我們常常需要加上<code>輔助線</code>才能證明，我們來替這段程式碼加上輔助線。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure003.png" alt=""></p>
+<p>因為 PhpStorm 只能將一個字串或一個數字使用 <code>Extract Parameter</code>，而無法將一段程式碼去 <code>Extract Parameter</code>，因此我們將我們要萃取的程式碼先用<code>單引號</code>括起來，騙 PhpStorm 這是一個<code>字串</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure004.png" alt=""></p>
+<p>將滑鼠游標放在<code>假字串</code>內，按熱鍵 &#8963; + T，顯示 <code>Refactor This</code> 選單，選擇 <code>Extract Parameter</code>。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure005.png" alt=""></p>
+<p>輸入 paramter 名稱。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure006.png" alt=""></p>
+<p>PhpStorm 或幫我們將<code>假字串</code>以 <code>$closure</code> 變數取代，並將<code>假字串</code>搬到<code>loopAllPosts()</code>的參數。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure007.png" alt=""></p>
+<p>將 <code>$post</code> 傳入 closure，這個 PhpStorm 沒辦法幫我們做，必須手動加上。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure008.png" alt=""></p>
+<p>這個<code>假字串</code>很像我們的 closure，但仍然不是，我們需要繼續重構。</p>
+<h2 id="Surround_With">Surround With</h2><hr>
+<p>一樣重施<code>輔助線</code>技巧，PhpStorm 無法將字串重構成 function，需加上 <code>return</code>，騙 PhpStorm 可以將此段程式碼重構。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure009.png" alt=""></p>
+<p>選擇 <code>return</code> 與 <code>假字串</code>，按熱鍵 &#8997; + &#8984; + T，出現 <code>Surround With</code> 對話框，選擇 <code>function</code>。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>選擇部分，可將滑鼠游標放在<code>假字串</code>內，按熱鍵 &#8997; + &#8593; 數次，直到選到你要的部分為止。</span></span></span></p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure010.png" alt=""></p>
+<p>PhpStorm 會幫我們加上 <code>function</code> 關鍵字，已經很接近 closure 了。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure011.png" alt=""></p>
+<p>手動將剛剛的<code>輔助線</code>全部刪除，並加上 <code>$post</code> 參數。</p>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure012.png" alt=""></p>
+<p>按熱鍵 &#8997; + &#8984; + T，PhpStorm 會將我們將程式重新 format 成漂漂亮亮符合 <code>PSR-2</code> 格式的程式碼。</p>
+<p><strong> PostService.php </strong><span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52LearnClosureByLaravel_demo/commit/fc815ed863aa1b605ed5363d668143c687a40715" target="_blank" rel="external">重構成 Closure</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/PostService.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Services</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Repositories</span>\<span class="title">PostRepository</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PostService</span></span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * <span class="doctag">@var</span> PostRepository</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$postRepository</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span><br><span class="line">     * PostService constructor.</span><br><span class="line">     * <span class="doctag">@param</span> PostRepository $postRepository</span><br><span class="line">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(PostRepository <span class="variable">$postRepository</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="variable">$this</span>-&gt;postRepository = <span class="variable">$postRepository</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">displayAllPosts</span><span class="params">()</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$this</span>-&gt;loopAllPosts(<span class="function"><span class="keyword">function</span> <span class="params">(Post <span class="variable">$post</span>)</span> </span>&#123;</span><br><span class="line">            <span class="variable">$txt</span> = <span class="string">"&#123;$post-&gt;id&#125; : &#123;$post-&gt;title&#125;"</span> . PHP_EOL;</span><br><span class="line">            <span class="keyword">echo</span>(<span class="variable">$txt</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">loopAllPosts</span><span class="params">(Closure <span class="variable">$closure</span>)</span></span><br><span class="line">    </span>&#123;</span><br><span class="line">          <span class="variable">$posts</span> = <span class="variable">$this</span>-&gt;postRepository-&gt;getAllPosts();</span><br><span class="line"></span><br><span class="line">          <span class="keyword">foreach</span> (<span class="variable">$posts</span> <span class="keyword">as</span> <span class="variable">$post</span>) &#123;</span><br><span class="line">            <span class="variable">$closure</span>(<span class="variable">$post</span>);</span><br><span class="line">          &#125;</span><br><span class="line">          </span><br><span class="line">          <span class="keyword">return</span> <span class="variable">$posts</span>-&gt;count();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="單元測試">單元測試</h2><hr>
+<p><img src="/images/phpstorm/phpstorm-refactor-closure/closure013.png" alt=""></p>
+<p>馬上跑單元測試，<span class="label label-success">綠燈</span> 打完收工。</p>
+<p><strong> PostServiceTest.php </strong><span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>GitHub Commit : <a href="https://github.com/oomusou/Laravel52LearnClosureByLaravel_demo/commit/93611680214f43c8f177b86e6159b3342204f75e" target="_blank" rel="external">單元測試 : 顯示所有 Post()</a></span></span></span><br><figure class="highlight php"><figcaption><span>app/Services/PostServiceTest.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Services</span>\<span class="title">PostService</span>;</span><br><span class="line"> </span><br><span class="line"> <span class="class"><span class="keyword">class</span> <span class="title">PostServiceTest</span> <span class="keyword">extends</span> <span class="title">TestCase</span></span><br><span class="line"> </span>&#123;</span><br><span class="line">     <span class="comment">/** <span class="doctag">@test</span> */</span></span><br><span class="line">     <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> 顯示所有<span class="title">Post</span><span class="params">()</span></span><br><span class="line">     </span>&#123;</span><br><span class="line">         <span class="comment">/** arrange */</span></span><br><span class="line">         <span class="variable">$expected</span> = <span class="number">10</span>;</span><br><span class="line">         <span class="variable">$target</span> = App::make(PostService::class);</span><br><span class="line"> </span><br><span class="line">         <span class="comment">/** act */</span></span><br><span class="line">         <span class="variable">$actual</span> = <span class="variable">$target</span>-&gt;displayAllPosts();</span><br><span class="line"> </span><br><span class="line">         <span class="comment">/** assert */</span></span><br><span class="line">         <span class="variable">$this</span>-&gt;assertEquals(<span class="variable">$expected</span>, <span class="variable">$actual</span>);</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Summary">Summary</h2><hr>
+<ol>
+<li>將全部程式碼以 <code>Extract Method</code> 提煉成新的 method。</li>
+<li>將不同的程式碼加上單引號變成字串，使用 <code>Extract Parameter</code> 提煉參數。</li>
+<li>將<code>假字串</code>使用 <code>Surround With</code> 變成 closure。</li>
+<li>將<code>輔助線</code>刪除。</li>
+<li>跑單元測試確認重構成功。</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>PhpStorm 內建的 <code>Extract Method</code> 與 <code>Extract Parameter</code>，搭配<code>輔助線</code>的小技巧，一樣的可以快速地重構出 closure。</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/Laravel52LearnClosureByLaravel_demo" target="_blank" rel="external">GitHub</a> 上找到。</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/phpstorm/phpstorm-refactor-di/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/phpstorm/phpstorm-github/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-07-07 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/PhpStorm/">PhpStorm<span>39</span></a></li> <li><a href="/tags/Refactoring/">Refactoring<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

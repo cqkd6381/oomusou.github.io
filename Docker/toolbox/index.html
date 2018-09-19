@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在 Windows 10 Home 安裝 Docker ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="透過 VirtualBox + Docker Toolbox">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="透過 VirtualBox + Docker Toolbox">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在 Windows 10 Home 安裝 Docker ?">
+<meta property="og:url" content="https://oomusou.io/Docker/toolbox/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="透過 VirtualBox + Docker Toolbox">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-05-23T12:59:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在 Windows 10 Home 安裝 Docker ?">
+<meta name="twitter:description" content="透過 VirtualBox + Docker Toolbox">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在 Windows 10 Home 安裝 Docker ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 透過 VirtualBox + Docker Toolbox			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#下載_Docker_Toolbox"><span class="toc-article-text">下載 Docker Toolbox</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_Docker_Toolbox"><span class="toc-article-text">安裝 Docker Toolbox</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Welcome"><span class="toc-article-text">Welcome</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#選擇安裝目錄"><span class="toc-article-text">選擇安裝目錄</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定安裝元件"><span class="toc-article-text">設定安裝元件</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#其他設定"><span class="toc-article-text">其他設定</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#即將安裝"><span class="toc-article-text">即將安裝</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝中"><span class="toc-article-text">安裝中</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#VirtualBox_安裝_Driver"><span class="toc-article-text">VirtualBox 安裝 Driver</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝完成"><span class="toc-article-text">安裝完成</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#第一次執行_CLI"><span class="toc-article-text">第一次執行 CLI</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>由於 Docker for Windows 底層用的是 Hyper-V，這必須在 Windows 10 Professional 才提供，因此無法安裝在 Windows 10 Home。</p>
+<p>若要在 Windows 10 Home 使用 Docker，就要改走 Docker Toolbox 這條路。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Windows 10 Home 1803 (17134.1)</p>
+<h2 id="下載_Docker_Toolbox">下載 Docker Toolbox</h2><hr>
+<p><img src="/images/docker/toolbox/docker000.png" alt="docker000"></p>
+<ol>
+<li>到 <a href="https://docs.docker.com/toolbox/toolbox_install_windows" target="_blank" rel="external">Docker 官網</a></li>
+<li>按 <code>Get Docker Toolbox for Windows</code> 下載 Docker Toolbox</li>
+</ol>
+<h2 id="安裝_Docker_Toolbox">安裝 Docker Toolbox</h2><hr>
+<p><img src="/images/docker/toolbox/docker001.png" alt="docker001"></p>
+<ol>
+<li>預設將 <code>DockerToolbox</code> 下載到 <code>Downloads</code> 目錄</li>
+<li>執行 <code>DockerToolbox</code></li>
+</ol>
+<h2 id="Welcome">Welcome</h2><hr>
+<p><img src="/images/docker/toolbox/docker002.png" alt="docker002"></p>
+<ol>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<h2 id="選擇安裝目錄">選擇安裝目錄</h2><hr>
+<p><img src="/images/docker/toolbox/docker003.png" alt="docker003"></p>
+<ol>
+<li>設定安裝目錄，接受預設值即可</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<h2 id="設定安裝元件">設定安裝元件</h2><hr>
+<p><img src="/images/docker/toolbox/docker004.png" alt="docker004"></p>
+<p>接受預設 <code>全部安裝</code> 即可，不過我們可以發現：</p>
+<ol>
+<li><strong>VirtualBox</strong>：由於 Docker Toolbox 沒有走 Hyper-V，所以必須安裝 VirtualBox</li>
+<li><strong>Git for Windows</strong>：由於 Docker 主要都是要下指令，安裝 Git for Windows 只是為了其 Git Bash 方便 CLI</li>
+<li>按 <code>Next</code> 繼續</li>
+</ol>
+<h2 id="其他設定">其他設定</h2><hr>
+<p><img src="/images/docker/toolbox/docker005.png" alt="docker005"></p>
+<ol>
+<li>接受預設值即可，按 <code>Next</code> 繼續</li>
+</ol>
+<h2 id="即將安裝">即將安裝</h2><hr>
+<p><img src="/images/docker/toolbox/docker006.png" alt="docker006"></p>
+<ol>
+<li>按 <code>Install</code> 開始安裝</li>
+</ol>
+<h2 id="安裝中">安裝中</h2><hr>
+<p><img src="/images/docker/toolbox/docker007.png" alt="docker007"></p>
+<h2 id="VirtualBox_安裝_Driver">VirtualBox 安裝 Driver</h2><hr>
+<p><img src="/images/docker/toolbox/docker008.png" alt="docker008"></p>
+<ol>
+<li>安裝 VirtualBox 所需要的 driver，按 <code>Install</code> 繼續</li>
+</ol>
+<h2 id="安裝完成">安裝完成</h2><hr>
+<p><img src="/images/docker/toolbox/docker009.png" alt="docker009"></p>
+<ol>
+<li>安裝完成，按 <code>Finish</code> 繼續</li>
+</ol>
+<p><img src="/images/docker/toolbox/docker010.png" alt="docker010"></p>
+<p>安裝完成後，會在桌面出現 VirtualBox、Kitematic 與 Docker Quickstart Terminal。</p>
+<p>其中 Docker Quickstart Terminal 是 Docker 環境已經整好的 CLI，若要下任何 Docker 指令，就在這裡下。</p>
+<h2 id="第一次執行_CLI">第一次執行 CLI</h2><hr>
+<p><img src="/images/docker/toolbox/docker011.png" alt="docker011"></p>
+<ol>
+<li>第一次執行 CLI 時，會安裝 Boot2Docker</li>
+</ol>
+<blockquote>
+<p>Docker 基本上是 Linux 的技術，也就是 Docker 必須跑在 Linux 環境下，而 Boot2Docker 就是個極小的 Linux，會跑在 VirtualBox 上，讓我們 Docker 能有 Linux 環境執行</p>
+</blockquote>
+<p><img src="/images/docker/toolbox/docker012.png" alt="docker012"></p>
+<ol>
+<li>VirtualBox 要安裝額外套件，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/docker/toolbox/docker013.png" alt="docker013"></p>
+<ol>
+<li><code>Waiting for an IP…</code> 會稍微久一點，是正常的</li>
+</ol>
+<p><img src="/images/docker/toolbox/docker014.png" alt="docker014"></p>
+<ol>
+<li>安裝完成，輸入 <code>docker —version</code> 能夠正確顯示 Docker 版本</li>
+</ol>
+<blockquote>
+<p>日後要執行 Docker，就啟動 <code>Docker Quickstart Terminal</code> 即可</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>雖然 Windows 10 Home 沒有 Hyper-V，但透過 VirtualBox + Docker Toolbox，也能夠在 Windows 10 Home 跑 Docker</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/nuget/create/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/datagrip/postgresql/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-05-23 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Docker/">Docker<span>19</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

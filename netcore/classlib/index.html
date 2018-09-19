@@ -1,0 +1,311 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 .NET Core CLI 建立 Class Library ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 .NET Core SDK 建立">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 .NET Core SDK 建立">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 .NET Core CLI 建立 Class Library ?">
+<meta property="og:url" content="https://oomusou.io/netcore/classlib/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 .NET Core SDK 建立">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-05-23T06:46:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 .NET Core CLI 建立 Class Library ?">
+<meta name="twitter:description" content="使用 .NET Core SDK 建立">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 .NET Core CLI 建立 Class Library ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 .NET Core SDK 建立			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Class_Library_專案"><span class="toc-article-text">建立 Class Library 專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_VS_Code_開啟專案"><span class="toc-article-text">使用 VS Code 開啟專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編輯_CalculatorService-cs"><span class="toc-article-text">編輯 CalculatorService.cs</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編譯_Class_Library"><span class="toc-article-text">編譯 Class Library</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建置_NuGet_Package"><span class="toc-article-text">建置 NuGet Package</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#發佈_Class_Library"><span class="toc-article-text">發佈 Class Library</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>除了 Console app 扮演 client 的角色，另外一個常見需求就是建立自己的 class library，我們可以使用 <code>ng new classlib</code> 建立 class library 型態專案。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="建立_Class_Library_專案">建立 Class Library 專案</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> classlib -o MyClassLib</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>classlib</strong> : 建立 class library 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyClassLib</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/classlib/lib000.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet new classlib -o MyClasLib</code> 將 class library 類型專案建立在 <code>MyClassLib</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyClassLib</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。 </p>
+<p><img src="/images/netcore/classlib/lib001.png" alt="ib00"></p>
+<ul>
+<li>使用 VS Code 開啟 <code>MyClassLib</code></li>
+</ul>
+<h2 id="編輯_CalculatorService-cs">編輯 CalculatorService.cs</h2><hr>
+<p><strong>CalculatorService.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyClassLib</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CalculatorService</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">Sum</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>) </span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x + y;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>建立 <code>CalculatorService</code>，並有一個 <code>Sum()</code>。</p>
+<p><img src="/images/netcore/classlib/lib002.png" alt="ib00"></p>
+<ol>
+<li>開啟 <code>CalculatorService.cs</code></li>
+<li>建立 <code>Sum()</code></li>
+</ol>
+<h2 id="編譯_Class_Library">編譯 Class Library</h2><hr>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyClassLib $ dotnet <span class="keyword">build </span>-c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet build</code> 編譯專案。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet build</code> 是以 <code>Debug</code> 模式編譯，若要以 <code>Release</code> 編譯，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/classlib/lib003.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet build -c Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>自動執行 <code>dotnet restore</code></li>
+<li>最後 build 出 <code>MyClassLib.dll</code></li>
+</ol>
+<blockquote>
+<p>注意是 build 到 <code>Release</code> 目錄</p>
+</blockquote>
+<p><strong>使用 MSBuild</strong></p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~<span class="regexp">/MyClassLib $ dotnet msbuild /p</span><span class="symbol">:Configuration=Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>msbuild</code> 編譯專案。</p>
+<p><img src="/images/netcore/classlib/lib004.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet msbuild /p:Configuration=Release</code> 以 <code>Release</code> 模式編譯</li>
+<li>最後 build 出 <code>MyClassLib.dll</code></li>
+</ol>
+<blockquote>
+<p>注意使用 MSBuild 時，並沒有執行 <code>dotnet restore</code></p>
+</blockquote>
+<h2 id="建置_NuGet_Package">建置 NuGet Package</h2><hr>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyClassLib $ dotnet <span class="built_in">pack</span> -c Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet pack</code> 將 class library 打包成 Nuget package。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet pack</code> 是以 <code>Debug</code> 模式打包，若要以 <code>Release</code> 打包，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p><img src="/images/netcore/classlib/lib005.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet pack -c Release</code> 以 <code>Release</code> 模式打包</li>
+<li>最後 build 出 <code>MyClassLib.1.0.0.nupkg</code></li>
+<li>在 <code>bin/Release/</code> 會看到 <code>MyClassLib.1.0.0.nupkg</code></li>
+</ol>
+<h2 id="發佈_Class_Library">發佈 Class Library</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/<span class="type">MyClassLib</span> $ <span class="keyword">dotnet</span> publish -c <span class="type">Release</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet publish</code> 將編譯後的 dll 與其 dependency 整理到 <code>publish</code> 目錄，將來只要將此目錄 deploy 到 server 即可。</p>
+<ul>
+<li><strong>-c</strong> : <code>c</code>onfiguration，預設 <code>dotnet publish</code> 是將 <code>Debug</code> 模式的 dll 整理至 <code>publish</code> 目錄，若要整理 <code>Release</code> 模式的的 dll，需要配合 <code>-c</code> 參數</li>
+</ul>
+<p>![ib00](/images/netcore/classlib</p>
+<ol>
+<li>輸入 <code>dotnet publish -c Release</code> 將欲 deploy 的檔案整理到 <code>bin/Release/netcoreapp2.0/publish</code> 目錄</li>
+<li>我們發現總共有 3 個檔案<ul>
+<li><code>MyClassLib.dll</code> : 以 IL 為內容的 assembly</li>
+<li><code>MyClassLib.deps.json</code> : 描述執行 dll 所需要的 dependency</li>
+<li><code>MyClassLib.pdb</code> : 在 production 環境啟動 debug 時使用</li>
+</ul>
+</li>
+</ol>
+<p><strong>使用 MSBuild</strong></p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="regexp">~/MyClassLib $ dotnet msbuild /</span><span class="string">t:</span>Publish /<span class="string">p:</span>Configuration=Release</span><br></pre></td></tr></table></figure>
+<p>使用 <code>msbuild</code> 發佈專案。</p>
+<p><img src="/images/netcore/classlib/lib007.png" alt="ib00"></p>
+<ol>
+<li>輸入 <code>dotnet msbuild /t:Publish /p:Configuration=Release</code> 以 <code>Release</code> 發佈</li>
+<li>一樣發布 <code>3</code> 個檔案</li>
+</ol>
+<blockquote>
+<p>注意使用 MSBuild 時，並沒有執行 <code>dotnet restore</code></p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Class library 與 console app 的建置模式並沒有什麼差別，因為 console app 其實也是 dll</li>
+<li>一樣可以使用 MSBuild 編譯與發佈 class library，但不會事先執行 <code>dotnet restore</code></li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/console/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/restore/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-16 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

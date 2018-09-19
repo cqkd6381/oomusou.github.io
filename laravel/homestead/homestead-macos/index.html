@@ -1,0 +1,450 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何在OS X安裝Homestead? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="在OS X享受Homestead的便利">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="在OS X享受Homestead的便利">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在OS X安裝Homestead?">
+<meta property="og:url" content="https://oomusou.io/laravel/homestead/homestead-macos/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="在OS X享受Homestead的便利">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-02-05T05:34:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在OS X安裝Homestead?">
+<meta name="twitter:description" content="在OS X享受Homestead的便利">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何在OS X安裝Homestead?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 在OS X享受Homestead的便利			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#簡介"><span class="toc-article-text">簡介</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Why_Homestead?"><span class="toc-article-text">Why Homestead?</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Vagrant"><span class="toc-article-text">Vagrant</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝流程"><span class="toc-article-text">安裝流程</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#安裝VirtualBox"><span class="toc-article-text">安裝VirtualBox</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#安裝Vagrant"><span class="toc-article-text">安裝Vagrant</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#下載Homestead"><span class="toc-article-text">下載Homestead</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#下載設定檔"><span class="toc-article-text">下載設定檔</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定SSH金鑰"><span class="toc-article-text">設定SSH金鑰</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#設定Homestead-yaml"><span class="toc-article-text">設定Homestead.yaml</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#修改hosts檔"><span class="toc-article-text">修改hosts檔</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#啟動Homestead"><span class="toc-article-text">啟動Homestead</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用SSH登入"><span class="toc-article-text">使用SSH登入</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#下載Laravel"><span class="toc-article-text">下載Laravel</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用瀏覽器驗證"><span class="toc-article-text">使用瀏覽器驗證</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#新增站台"><span class="toc-article-text">新增站台</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#結束Homestead"><span class="toc-article-text">結束Homestead</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#刪除Homestead"><span class="toc-article-text">刪除Homestead</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#重建Homestead"><span class="toc-article-text">重建Homestead</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#移除Homestead"><span class="toc-article-text">移除Homestead</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Homestead啟動原理"><span class="toc-article-text">Homestead啟動原理</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>初學者因為Laravel環境難安裝而卡很久嗎?Laravel官方已經幫我們將整個環境用VM打包好，讓初學者可以不用擔心如何在OS X安裝PHP、Composer、Nginx、MySQL，就可快速地享受Laravel所帶來的便利。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Laravel 5.2.23<br>Homestead 0.4.2<br>VirtualBox for OS X 5.0.16<br>Vagrant for OS X 1.8.1<br>OS X 10.11.3</p>
+<h2 id="簡介">簡介</h2><hr>
+<p>Homestead是Laravel官方以Vagrant為基礎建立的VM，已經幫我們安裝好以下軟體 :</p>
+<ul>
+<li><strong>Ubuntu 14.04</strong> : 2014年所推出的Ubuntu LTS版本。</li>
+<li><strong>PHP 7.0.3</strong> : PHP最新版，已經更新到PHP 7，符合Laravel 5.2對PHP版本要求，且所需extension已經裝好。</li>
+<li><strong>Composer</strong>：PHP套件管理工具，會在每次Homestead啟動時自動更新。</li>
+<li><strong>HHVM</strong> : Facebook對PHP的JIT compiler支援。</li>
+<li><strong>Nginx</strong> : 效能較Apache優異的Web server。</li>
+<li><strong>MySQL</strong> : 關聯式資料庫 (預設)。</li>
+<li><strong>Postgres</strong> : 關聯式資料庫。</li>
+<li><strong>Node.js</strong><ul>
+<li><strong>Bower</strong> : CSS、JavaScript套件管理工具。</li>
+<li><strong>Npm</strong> : Node.js套件管理工具。</li>
+<li><strong>Grunt</strong> : JavaScript壓縮、測試、部署工具。</li>
+<li><strong>Gulp</strong> : JavaScript環境管理工具。</li>
+</ul>
+</li>
+<li><strong>Redis</strong> : 非關聯式的Key-Value資料庫。</li>
+<li><strong>Memcached</strong> : 非關聯式的Key-Value資料庫。</li>
+<li><strong>Beanstalkd</strong> : Job Queue Server。</li>
+<li><strong>Laravel Envoy</strong> : Laravel官方提供的任務執行工具。</li>
+<li><strong>Fabric + HipChat extension</strong> : log管理工具。</li>
+<li><strong>Blackfire Profiler</strong> : 效能評估工具。</li>
+</ul>
+<p>這些工具當然可以自己慢慢裝，但需要時間，還可能遇到軟體相衝的問題，就算安裝完沒錯誤訊息，也不保證能正確執行Laravel。</p>
+<p>Laravel官方已經將這些軟體都幫你安裝好、測試好並打包好，這就是Homestead。</p>
+<h2 id="Why_Homestead?">Why Homestead?</h2><hr>
+<ul>
+<li>不再因為你的PHP缺少某個extension，而導致Laravel安裝失敗。</li>
+<li>不再因為軟體相衝或port相衝，而使得Laravel執行錯誤。</li>
+<li>不再因為要安裝與設定軟體，而浪費一整天的時間。</li>
+<li>不再因為你換了一個作業系統，而必須重新打造整個Laravel環境。</li>
+<li>不再因為團隊中每個人的環境不統一，而造成debug困難。</li>
+</ul>
+<p>Homestead是Laravel爸爸Taylor Otwell親手打造，也是Laravel開發測試時所使用的環境，若遇到bug時不用再懷疑是否環境有問題，因為你的環境與Taylor Otwell所使用的一樣。</p>
+<p>也因為Homestead是官方所打包的環境，若有問題也方便與社群討論。</p>
+<h2 id="Vagrant">Vagrant</h2><hr>
+<p>既然Homestead使用的是VM技術，用的是VirtualBox，為什麼還要使用Vagrant呢？這是很多Homestead初學者的問題，包括我自己在內。</p>
+<p>Vagrant是個用Ruby所寫的軟體，簡單的說，他的核心部分仍使用VirtualBox，Vagrant只能算是個VirtualBox管理工具。也就是說，你雖然需安裝VirtualBox，但安裝完後就再也碰不到它了，因為Vagrant已經全面接管VirtualBox，你所有的操作都在Vagrant上。</p>
+<p>Vagrant包含2個部分 :</p>
+<ol>
+<li><strong>Vagrant Box</strong> : 將應用程式環境與作業系統打包在一起。</li>
+<li><strong>Scripts</strong> : <ul>
+<li><strong>Vagrantfile</strong> : 使用Ruby開發，是Homestead執行時，第一個被執行的程式，負責設定Homestead環境變數，並調用其他scripts執行。我們不用去修改，Homestead已經幫我們建好了。</li>
+<li><strong>homestead.rb</strong> : 使用Ruby開發，Vagrantfile會調用<code>homestead.rb</code>，由<code>homestead.rb</code>去讀取<code>Homestead.yaml</code>，依其設定將VM provision起來。我們不用去修改，Homestead已經幫我們建好了。</li>
+<li><strong>Homestead.yaml</strong> : 使用Ruby開發，用來設定我們自己的Homestead，如CPU用幾個? 記憶體開多大? shared folder路徑怎麼設定? 資料庫建立…等，這個檔案我們必須自己設定。</li>
+<li><strong>after.sh</strong> : 使用Bash開發，當Homestead啟動之後，會執行<code>after.sh</code>內的內容，若我們希望Homestead啟動之後馬上啟動某些程式，可以寫在這裡。</li>
+<li><strong>aliases</strong> : 使用Bash開發，可以在此設定Homestead內的Bash alias。</li>
+</ul>
+</li>
+</ol>
+<p>事實上還有很多scripts沒有提到，這裏只提到最重要的幾個scripts。</p>
+<p>若還是對Vagrant很模糊沒關係，最後我們還會對Homestead啟動做更深入地解釋。</p>
+<p>簡單的說，Homestead就是 :</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  Homestead = VirtualBox + Vargrnt + Homestead Vagrant Box + Homestead Scripts。</div>
+<h2 id="安裝流程">安裝流程</h2><hr>
+<img src="/images/laravel/homestead/homestead-osx/home011.svg" width="280">
+<p>接下來我們將一步一步地將Homestead安裝起來。</p>
+<h3 id="安裝VirtualBox">安裝VirtualBox</h3><p>到<a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="external">VirtualBox Download</a>下載VirtualBox for OS X hosts，不必下載Extension Pack，因為不會在VirtualBox下使用GUI模式。</p>
+<p><strong>執行VirtualBox-5.0.16-105871-OSX.dmg</strong><br><img src="/images/laravel/homestead/homestead-osx/home000.png" alt=""></p>
+<p>滑鼠點兩下<code>VirtualBox.pkg</code>圖示開始安裝。</p>
+<p><strong>確認安裝</strong><br><img src="/images/laravel/homestead/homestead-osx/home001.png" alt=""></p>
+<p>因為是pkg格式，必須手動確認是否執行，按<code>continue</code>繼續。</p>
+<p><strong>歡迎畫面</strong><br><img src="/images/laravel/homestead/homestead-osx/home002.png" alt=""></p>
+<p>按<code>continue</code>繼續。</p>
+<p><strong>選取目標與安裝類型</strong><br><img src="/images/laravel/homestead/homestead-osx/home003.png" alt=""></p>
+<p>按<code>Install</code>繼續。</p>
+<p><strong>安裝成功</strong><br><img src="/images/laravel/homestead/homestead-osx/home004.png" alt=""></p>
+<p>按<code>Close</code>結束安裝程式。</p>
+<p><strong>執行VirtualBox</strong><br><img src="/images/laravel/homestead/homestead-osx/home005.png" alt=""></p>
+<p>在<code>Application</code>下選擇<code>VirtualBox</code>，滑鼠點兩下執行。</p>
+<p><strong>安裝完成</strong><br><img src="/images/laravel/homestead/homestead-osx/home006.png" alt=""></p>
+<p>若安裝成功，將顯示<strong>Oracle VM VirtualBox Manager</strong>。</p>
+<h3 id="安裝Vagrant">安裝Vagrant</h3><p>到<a href="http://www.vagrantup.com/downloads.html" target="_blank" rel="external">Vagrant Download</a>下載Vagrant for OSX。</p>
+<p><strong>執行vagrant_1.8.1.dmg</strong><br><img src="/images/laravel/homestead/homestead-osx/home007.png" alt=""></p>
+<p>滑鼠點兩下<code>Vagrant.pkg</code>圖示開始安裝。</p>
+<p><strong>歡迎畫面</strong><br><img src="/images/laravel/homestead/homestead-osx/home008.png" alt=""></p>
+<p>按<code>continue</code>繼續。</p>
+<p><strong>選取目標與安裝類型</strong><br><img src="/images/laravel/homestead/homestead-osx/home009.png" alt=""></p>
+<p>按<code>Install</code>繼續。</p>
+<p><strong>安裝成功</strong><br><img src="/images/laravel/homestead/homestead-osx/home010.png" alt=""></p>
+<p><strong>安裝完成</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ vagrant version</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home012.png" alt=""></p>
+<p>若成功會顯示目前Vagrant版本資訊。</p>
+<h3 id="下載Homestead">下載Homestead</h3><p>下載Homestead vagrant box。</p>
+<p><strong>使用vagrant box add下載Homestead vagrant box</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ vagrant box add laravel/homestead</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home013.png" alt=""></p>
+<p>選擇<code>1</code>：virtualbox格式</p>
+<p><img src="/images/laravel/homestead/homestead-osx/home014.png" alt=""></p>
+<p>大約需要10分鐘下載。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  為什麼我們要花10分鐘下載Homestead呢?</div>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ cd ~/.vagrant.d/boxes&#10;oomusou@mac:~/.vagrant.d/boxes$ ll</span><br></pre></td></tr></table></figure>
+<p><img src="/images/laravel/homestead/homestead-osx/home015.png" alt=""></p>
+<p>在<code>~/.vagrant.d/boxes</code>目錄下了多了<code>laravel-VAGRANTSLASH-homestead</code>目錄。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/.vagrant.d/boxes$ cd laravel-VAGRANTSLASH-homestead/0.4.2/virtualbox&#10;oomusou@mac:~/.vagrant.d/boxes/laravel-VAGRANTSLASH-homestead/0.4.2/virtualbox$ ll</span><br></pre></td></tr></table></figure>
+<p><img src="/images/laravel/homestead/homestead-osx/home016.png" alt=""></p>
+<p>其中<code>0.4.2</code>是Homestead的版本，若本機有下載多個Homestead版本，這邊就會有多個版本目錄。</p>
+<p>我們看到了<code>box-disk1.vmdk</code>，這超過1GB的<code>box-disk1.vmdk</code>是VirtualBox的檔案格式，這也是為什麼我們要花10分鐘下載的原因。</p>
+<h3 id="下載設定檔">下載設定檔</h3><p>下載Vagrantfile + Scripts。</p>
+<p><strong>下載Homestead設定檔</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ git clone https://github.com/laravel/homestead.git Homestead</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home017.png" alt=""></p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  Homestead設定檔包括哪些東西呢?</div>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ cd Homestead&#10;oomusou@mac:~/Homestead$ ll</span><br></pre></td></tr></table></figure>
+<p><img src="/images/laravel/homestead/homestead-osx/home018.png" alt=""></p>
+<p>在<code>~/Homestead</code>目錄下，我們看到了一些檔案：</p>
+<ul>
+<li><strong>Vagrantfile</strong> : 事實上將來每次下<code>vagrant up</code>指令時，就是在找這個檔案，這是Vagrant Box啟動時第一個執行的檔案，Homestead已經幫我們客製化了。</li>
+<li><strong>init.sh</strong> : 建立自己的<code>Homestead.yaml</code>、<code>after.sh</code>與<code>aliases</code>，稍後會用到。</li>
+<li><strong>scripts目錄</strong> : Homestead自己會用到的scripts，如<code>homestead.rb</code>就在此目錄下。</li>
+</ul>
+<h3 id="設定SSH金鑰">設定SSH金鑰</h3><p>將來會使用SSH方式連進Homestead，所以要設定SSH金鑰。</p>
+<p><strong>使用ssh-keygen建立SSH金鑰</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ ssh-keygen -t rsa -C &#34;oomusou@homestead&#34;</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home019.png" alt=""></p>
+<p><code>oomusou</code>為你的user名稱。</p>
+<p><code>id_rsa</code>接受預設目錄即可。</p>
+<p><code>passphrase</code>是設定密碼。</p>
+<h3 id="設定Homestead-yaml">設定Homestead.yaml</h3><p>之前提到<code>Vagrantfile</code>會調用<code>homestead.rb</code>，由<code>homestead.rb</code>去讀取<code>Homestead.yaml</code>，依其設定將Homestead provision起來。</p>
+<p><strong>使用init.sh建立Homestead.yaml</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ cd Homestead&#10;oomusou@mac:~/Homestead$ sh ./init.sh</span><br></pre></td></tr></table></figure>
+<p><img src="/images/laravel/homestead/homestead-osx/home020.png" alt=""></p>
+<p><code>init.sh</code>會幫我們在<code>~/.homestead/</code>目錄建立<code>Homestead.yaml</code>。</p>
+<p><img src="/images/laravel/homestead/homestead-osx/home021.png" alt=""></p>
+<p>事實上，<code>init.sh</code>還幫我們建立了<code>after.sh</code>與<code>aliases</code>。 若我們想修改<code>after.sh</code>與<code>aliases</code>，就是在這裡修改。</p>
+<p><strong>修改Homestead.yaml</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ cd .homestead&#10;oomusou@mac:~/.homestead$ vim Homestead.yaml</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home022.png" alt=""></p>
+<p>這是Homestead唯一需要我們手動修改設定的地方，<code>homestead.rb</code>會依照<code>Homestead.yaml</code>的設定為我們的Homestead做provision。</p>
+<p><img src="/images/laravel/homestead/homestead-osx/home023.png" alt=""></p>
+<ul>
+<li><p><strong>ip</strong> : 設定Homestead的IP，若IP沒有相衝，可以不用修改。</p>
+</li>
+<li><p><strong>memory</strong> : 單位為MB，預設開2GB，若你嫌這樣太耗記憶體，根據經驗，512MB就可以讓Homestead啟動，不過有些service會失敗，1GB以上service都會正常，不過因為記憶體較少，有時會因為swap memory到HDD/SSD導致效能較差。</p>
+</li>
+<li><p><strong>cpu</strong> : 維持預設1顆CPU即可。</p>
+</li>
+<li><p><strong>provider</strong> : 使用VirtualBox，不用修改。</p>
+</li>
+<li><p><strong>authorize</strong> : 設定SSH public key位置，若之前ssh-keygen使用預設位置建立，則不用修改。</p>
+</li>
+<li><p><strong>keys</strong> : 設定SSH private key位置，若之前ssh-keygen使用預設位置建立，則不用修改。</p>
+</li>
+<li><p><strong>folders</strong> : <code>Homestead.yaml</code>重要的設定，設定Mac本機與Homestead的對應路徑。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>事實上這就是VirtualBox的shared folder機制，我們知道VM最佳使用方式是環境灌在VM內，但專案放在本機，透過shared folder機制讓VM使用本機的專案，這樣的優點是儘管VM損毀開不了機，專案仍然不會受影響，因為專案是放在本機，只要再重新建立一個VM即可。</span></span></span></p>
+<ul>
+<li><strong>map</strong> : 設定Mac本機Laravel專案路徑，可自行修改。預設值是<code>~/Code</code>，目前接受預設值即可。</li>
+<li><strong>to</strong> : 設定Homestead內Laravel專案路徑，可自行修改。目前接受預設值即可。</li>
+</ul>
+</li>
+<li><p><strong>sites</strong> : <code>Homestead.yaml</code>重要的設定，讓你可以對Nginx設定網域主機名稱。</p>
+<ul>
+<li><p><strong>map</strong> : 網域主機名稱。預設為<code>homestead.app</code>，目前接受預設值即可。</p>
+</li>
+<li><p><strong>to</strong> : 此站台所對應的目錄名稱。預設為<code>/home/vagrant/Projects/Laravel/public</code>。因為Laravel的<code>index.php</code>放在<code>public</code>目錄下。目前接受預設值即可。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>databases</strong> : <code>Homestead.yaml</code>重要的設定，可以在此設定資料庫名稱，由Homestead幫你自動建立。目前維持預設homestead即可。</p>
+</li>
+<li><p><strong>variables</strong> :  設定Lavavel全域變數，目前使用預設值即可</p>
+</li>
+</ul>
+<p><strong>補建~/Code目錄</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/.homestead$ cd ..&#10;oomusou@mac:~$ mkdir Code</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home024.png" alt=""></p>
+<p>因為剛才設定Mac本機Laravel專案路徑為<code>~/Code</code>，但這麼目錄並不存在，所以要補建目錄。</p>
+<h3 id="修改hosts檔">修改hosts檔</h3><p>因為Homestead的IP為<code>192.168.10.10</code>，其網域主機名稱為<code>homestead.app</code>，要設定<code>hosts</code>將彼此對應起來。</p>
+<p><strong>修改/etc/hosts</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ sudo vim /etc/hosts</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home025.png" alt=""></p>
+<p>使用vim修改<code>hosts</code>。</p>
+<p><strong>加入IP與網域主機名稱對應</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.10.10 homestead.app</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home026.png" alt=""></p>
+<h3 id="啟動Homestead">啟動Homestead</h3><p><strong>使用vagrant up啟動Homestead</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ cd Homestead&#10;oomusou@mac:~/Homestead$ vagrant up</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home027.png" alt=""></p>
+<p>先cd進<code>Homestead</code>目錄，使用<code>vagrant up</code>指令啟動Homestead。</p>
+<p>先進入<code>Homestead</code>目錄是必須的，凡Vagrant指令在執行時都會找<code>Vagrantfile</code>，而<code>Vangrantfile</code>就是放在<code>~/Homestead</code>目錄下。</p>
+<p>Homestead啟動時還會上網檢查是不是最新版，並提醒你是否該更新。</p>
+<p><img src="/images/laravel/homestead/homestead-osx/home028.png" alt=""></p>
+<p>若此時打開VirtualBox，會發現有一個VM正在執行中，這也證明了Vagrant背後執行的是VirtualBox。</p>
+<h3 id="使用SSH登入">使用SSH登入</h3><p><strong>使用vagrant ssh登入Homestead</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~$ cd Homestead&#10;oomusou@mac:~/Homestead$ vagrant ssh</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home029.png" alt=""></p>
+<p>如同<code>vagrant up</code>一樣，下任何vagrant指令都要在<code>~/Homestead</code>目錄下。<span class="margin-note-marker"><sup>2</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">2</span>為什麼不需要login呢？因為我們之前已經設定了SSH金鑰，homestead ssh會自動去讀取金鑰登入，所以不用login。</span></span></span></p>
+<p>我們已經可以順利登入Ubuntu 14.04 LTS了。</p>
+<p><strong>顯示shared folder</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant@homestead:~$ ll</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home030.png" alt=""></p>
+<p>我們可以在home directory可以看到Mac本機的<code>~/Code</code>目錄。</p>
+<h3 id="下載Laravel">下載Laravel</h3><p>在Homestead使用Composer下載Laravel。</p>
+<p><strong>使用Composer建立Laravel專案</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant@homestead:~$ cd Code&#10;vagrant@homestead:~/Code$ composer create-project laravel/laravel Laravel --prefer-dist</span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home031.png" alt=""></p>
+<p>統一將專案放在<code>Code</code>目錄下，其中<code>Laravel</code>為你的專案目錄名稱。</p>
+<p>Composer將會建立一個<code>Laravel</code>目錄，並將Laravel所需要的檔案透過網路下載。</p>
+<p><strong>–prefer-dist</strong> : 此參數意思是下載用於distribution的穩定版本，而不是正在開發中的版本，對於應用來說，穩定版本較適當。</p>
+<p>由於Composer是透過網路去下載Laravel，所以請先確定網路是通的。</p>
+<h3 id="使用瀏覽器驗證">使用瀏覽器驗證</h3><p><strong>在瀏覽器輸入homestead.app</strong></p>
+<p><img src="/images/laravel/homestead/homestead-osx/home032.png" alt=""></p>
+<p>若能在瀏覽器看到Laravel 5，恭喜你，Homestead與Laravel環境已經大功告成了。</p>
+<h2 id="新增站台">新增站台</h2><hr>
+<p>實務上我們可能會有很多專案在Homestead跑，因此需要新增其他站台。</p>
+<p><strong>修改Homestead.yaml</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sites:</span><br><span class="line">    - map: homestead.app</span><br><span class="line">      to: /home/vagrant/Code/Laravel/<span class="keyword">public</span></span><br><span class="line"></span><br><span class="line">    - map: blog.local</span><br><span class="line">      to: /home/vagrant/Code/blog/<span class="keyword">public</span> </span><br><span class="line"></span><br><span class="line">databases:</span><br><span class="line">    - homestead</span><br><span class="line">    - blog</span><br></pre></td></tr></table></figure>
+<p>新增站台則新增<code>map</code>與<code>to</code>，如<code>blog.local</code>與其對應的路徑<code>/home/vagrant/Code/blog/public</code>。</p>
+<p>新增資料庫則新增<code>databases</code>，如<code>blog</code>為新增的資料庫。</p>
+<p><strong>修改hosts檔</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">192.168</span><span class="number">.10</span><span class="number">.10</span> blog.local</span><br></pre></td></tr></table></figure></p>
+<p><strong>重新Provision</strong><br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/Homestead$ vagrant provision</span><br></pre></td></tr></table></figure></p>
+<p>將自動根據<code>Homestead.yaml</code>的設定，重新啟動Homestead，並啟動新站台與建立<code>blog</code>資料庫。</p>
+<h2 id="結束Homestead">結束Homestead</h2><hr>
+<p>Homestead跑的就是Ubuntu，若我們想讓Ubuntu關機，也須依照正常程序關機。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant@homestead:~$ eixt&#10;oomusou@mac:~/Homestead$ vagrant halt</span><br></pre></td></tr></table></figure>
+<p><img src="/images/laravel/homestead/homestead-osx/home033.png" alt=""></p>
+<p><code>exit</code>離開<code>vagrant ssh</code>。</p>
+<p><code>vagrant halt</code>讓Homestead正常關機。</p>
+<h2 id="刪除Homestead">刪除Homestead</h2><hr>
+<p>若Homestead僅供測試用，想徹底刪除，請下以下指令 :<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/Homestead$ vagrant destroy --force</span><br></pre></td></tr></table></figure></p>
+<h2 id="重建Homestead">重建Homestead</h2><hr>
+<p>Homestead被刪除後，想重新建立，請下以下指令：<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oomusou@mac:~/Homestead$ vagrant up</span><br></pre></td></tr></table></figure></p>
+<h2 id="移除Homestead">移除Homestead</h2><hr>
+<p><strong>移除</strong>與<strong>刪除</strong>是不一樣的，之前刪除Homestead，是將VirtualBox的Homestead VM刪除，也就是將<code>vagrant up</code>所建立的VM刪除，之後可以隨時再用<code>vagrant up</code>建立。</p>
+<p>而移除Homestead是將之前使用 :</p>
+<ol>
+<li><code>vagrant box add laravel/homestead</code></li>
+<li><code>git clone https://github.com/laravel/homestead.git Homestead</code></li>
+<li><code>sh ./init.sh</code></li>
+</ol>
+<p>所下載與建立的檔案全部移除。</p>
+<p>當完全不再使用Homestead，或Homestead Vagrant Box與Homestead scripts與設定檔壞掉，須重新下載與安裝設定Homestead時才需要這樣做。<span class="margin-note-marker"><sup>3</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">3</span>Virtual Box與Vagrant一般來說不會壞掉，所以不需重新安裝，若連Virtual Box與Vagrant都想移除，請參考其官網說明。</span></span></span></p>
+<p>刪除以下3個目錄 :</p>
+<ol>
+<li><code>~/.vagrant.d</code></li>
+<li><code>~/Homestead</code></li>
+<li><code>~.homestead</code></li>
+</ol>
+<h2 id="Homestead啟動原理">Homestead啟動原理</h2><hr>
+<img src="/images/laravel/homestead/homestead-osx/home034.svg" width="800">
+<p>之前已經稍微講過Homestead的組成元素，事實上Homestead啟動時，是依以上步驟啟動。</p>
+<div class="alert alert-info"><i class="fa fa-info"></i>  給OS X使用者的特別建議</div>
+<p><img src="/images/laravel/homestead/homestead-osx/home035.png" alt=""></p>
+<p>OS X使用者較習慣使用休眠，而不像Windows使用者每天關機，建議在OS X需要重新開機時，要手動<code>vagrant halt</code>將Homestead關機，因為直接關機，Homestead並沒有任何警告訊息，但下次OS X重開機後，若去執行VirtualBox，會發現Homestead已被<strong>不正常關機</strong>，雖然下<code>vagrant up</code>後還是可以使用，但這樣很容易造成VM損毀。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Homestead讓我們可以快速建置Laravel開發環境，且若VM因測試而損毀，也可以快速刪除再重建，非常方便。<span class="margin-note-marker"><sup>4</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">4</span>本文為Homestead的基礎，一個OS X裝一個共用的VM，若你想每個專案有自己的VM，詳細請參考<a href="/laravel/homestead/homestead-per-project/">如何一個專案使用一個Homestead?</a></span></span></span></li>
+<li>Homestead雖然好用，但有一個致命傷 : <strong>非常耗電</strong>，尤其當你外出使用筆記型電腦時，會發現只要使用Homestead時，電池使用時間會減少一半，畢竟一顆電池要撐兩個作業系統同時運作。所以建議外出使用筆記型電腦時，若沒開發Laravel，一定要記得關閉Homestead。</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/laravel/homestead/homestead-per-project/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/tdd/tdd-phpunit-native-function/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2016-03-17 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Homestead/">Homestead<span>4</span></a></li> <li><a href="/tags/Laravel/">Laravel<span>48</span></a></li> <li><a href="/tags/macOS/">macOS<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

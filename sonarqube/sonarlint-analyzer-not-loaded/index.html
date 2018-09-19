@@ -1,0 +1,240 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="SonarTS 版本太舊所導致">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="SonarTS 版本太舊所導致">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?">
+<meta property="og:url" content="https://oomusou.io/sonarqube/sonarlint-analyzer-not-loaded/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="SonarTS 版本太舊所導致">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-30T02:57:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?">
+<meta name="twitter:description" content="SonarTS 版本太舊所導致">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何解決 SonarLint 的 Analyzer Not Loaded 錯誤訊息 ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> SonarTS 版本太舊所導致			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sympton"><span class="toc-article-text">Sympton</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Root_Cause"><span class="toc-article-text">Root Cause</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Recipe"><span class="toc-article-text">Recipe</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>當在 IntelliJ 平台使用 SonarLint 時，只要在 <code>SonarLint General Settings</code> 下按 <code>Update Binding</code> 就會出現 <code>Analyzer Not Loaded</code> 的錯誤訊息，這該如何解決呢？</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>SonarQube 6.7.2 LTS<br>SonarTS 1.6<br>PhpStorm 2018.1<br>SonarLint 3.3.0.2482</p>
+<h2 id="Sympton">Sympton</h2><hr>
+<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts000.png" alt="sonarts000"></p>
+<p><strong><em>PhpStorm -&gt; Other Settings -&gt; SonarLint General Settings</em></strong></p>
+<ol>
+<li>當按下 <code>Update binding</code>，欲將 SonarQube server 上的 project lists、rules、profile 下載到本機</li>
+<li>出現 <code>Analyzers Not Loaded</code> 錯誤訊息</li>
+</ol>
+<h2 id="Root_Cause">Root Cause</h2><hr>
+<p>SonarLint 3.3.0.2482 必須搭配使用 SonarTS 1.5 以上，但是 SonarQube 6.7.2 LTS 預設提供為 SonarTS 1.1，因此 SonarLint 無法載入 TypeScript analyzer。</p>
+<blockquote>
+<p>SonarQube 7.1 預設就提供 SonarTS 1.6，就不會有這個問題</p>
+</blockquote>
+<h2 id="Recipe">Recipe</h2><p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts001.png" alt="sonarts001"></p>
+<ol>
+<li>到 SonarTS 的 <a href="https://github.com/SonarSource/SonarTS/releases" target="_blank" rel="external">GitHub</a> 下載最新版 SonarTS 1.6</li>
+<li>選擇 <code>.jar</code> 格式下載</li>
+</ol>
+<p><img src="/images/sonarqube/sonarlint-analyzer-not-loaded/sonarts002.png" alt="sonarts002"></p>
+<ol>
+<li>到 SonarQube 安裝目錄下的 <code>extensions/plugins</code> </li>
+<li>將原本的 <code>sonar-typescript-plugin-1.1.0.1079.jar</code> 刪除，以 <code>sonar-typescript-plugin-1.6.0.2388.jar</code> 取代之</li>
+<li>重新啟動 SonarQube</li>
+</ol>
+<p>在 PhpStorm 重新 <code>Update binding</code> 就不會出現錯誤訊息了。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>若使用 SonarQube 最新版就不會有這個問題，但若使用 SonarQube LTS，因為 SonarTS 的版本較舊，與 SonarLint 搭配就會有問題</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/macos/finder-show-hidden-files/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/macos/install-clean-high-sierra/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-30 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/SonarLint/">SonarLint<span>3</span></a></li> <li><a href="/tags/SonarQube/">SonarQube<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

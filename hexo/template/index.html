@@ -1,0 +1,219 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何自訂 Hexo 文章範本 ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="將自己常用的文章格式自訂成範本">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="將自己常用的文章格式自訂成範本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何自訂 Hexo 文章範本 ?">
+<meta property="og:url" content="https://oomusou.io/hexo/template/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="將自己常用的文章格式自訂成範本">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-03-04T06:43:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何自訂 Hexo 文章範本 ?">
+<meta name="twitter:description" content="將自己常用的文章格式自訂成範本">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何自訂 Hexo 文章範本 ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 將自己常用的文章格式自訂成範本			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#解決方法"><span class="toc-article-text">解決方法</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#修改範本檔"><span class="toc-article-text">修改範本檔</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#我的範本檔"><span class="toc-article-text">我的範本檔</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>若你常常使用 Hexo 寫 blog，久而久之就會出現自己的格式與常用的 tag，若每次 <code>hexo new</code> 就得做相同的 <code>copy &amp; paste</code> 就會很煩，也就是 Hexo 預設的 <code>文章範本</code> 已經無法滿足我們，進而想自行修改，然後希望每次 <code>hexo new</code>時，都能套用自訂的範本。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Hexo 3.1.1</p>
+<h2 id="解決方法">解決方法</h2><hr>
+<h3 id="修改範本檔">修改範本檔</h3><p>事實上每次 <code>hexo new</code> 時，預設的範本檔為 <code>scaffolds/post.md</code>，而 <code>hexo new draft</code>時，預設的範本檔為 <code>scaffolds/draft.md</code>，因此只要去修改這兩個檔案即可。<span class="margin-note-marker"><sup>1</sup></span> <span class="block margin-div-outer"><span class="block margin-div-inner"><span class="block margin-note"><span class="margin-note-marker">1</span>關於 <code>hexo new draft</code>，請參考<a href="/hexo/draft/">如何使用Hexo寫草稿？</a></span></span></span></p>
+<h3 id="我的範本檔">我的範本檔</h3><p>以下提供我自訂的範本檔供大家參考：<br><figure class="highlight"><figcaption><span>scaffolds/post.md</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">title: &#25991;&#31456;&#27161;&#38988;&#10;tags:&#10;  - Laravel&#10;feature: images/feature/laravel.png&#10;description: &#34;&#27161;&#38988;&#25551;&#36848;&#34;&#10;toc: true&#10;date: 2015-12-01 12:23:43&#10;---&#10;&#24341;&#35328;&#10;&#60;!-- more --&#62;&#10;&#10;## Version&#10;---&#10;Laravel 5.1.22&#10;&#10;## Conclusion&#10;---&#10;&#10;## Sample Code&#10;---</span><br></pre></td></tr></table></figure> </p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>目前發現當使用 <code>hexo new</code> 時，對於 header 上的 tag 位置，並不會依照自訂範本的順序，而會重新排列過，如我自己以前是習慣 <code>tags</code> 是放在最後，但發現 <code>hexo new</code> 會自動將 <code>tags</code> 排在 <code>title</code> 下面，所以我後來範本的 tag 位置是配合 <code>hexo new</code> 所調出來的</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/phpstorm/debug-testing/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/hexo/uri-category/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2015-12-05 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Hexo/">Hexo<span>7</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

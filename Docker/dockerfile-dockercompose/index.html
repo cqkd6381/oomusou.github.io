@@ -1,0 +1,286 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入淺出 Dockerfile 與 Docker Compose | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="兩個初學者最容易卡關的概念">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="兩個初學者最容易卡關的概念">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入淺出 Dockerfile 與 Docker Compose">
+<meta property="og:url" content="https://oomusou.io/Docker/dockerfile-dockercompose/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="兩個初學者最容易卡關的概念">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-06-08T05:19:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入淺出 Dockerfile 與 Docker Compose">
+<meta name="twitter:description" content="兩個初學者最容易卡關的概念">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入淺出 Dockerfile 與 Docker Compose</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 兩個初學者最容易卡關的概念			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Image_與_Container"><span class="toc-article-text">Image 與 Container</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Image"><span class="toc-article-text">Image</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Container"><span class="toc-article-text">Container</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Dockerfile"><span class="toc-article-text">Dockerfile</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Docker_Compose"><span class="toc-article-text">Docker Compose</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FAQ"><span class="toc-article-text">FAQ</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Dockerfile 與 Docker Compose 是 Docker 兩個最重要的概念，也是初學者最容易卡關的地方，本文以 <code>使用需求</code> 為觀點解釋這兩者的差異。</p>
+<a id="more"></a>
+<h2 id="Image_與_Container">Image 與 Container</h2><hr>
+<p>在解釋 Dockerfile 與 Docker Compose 之前，先複習兩個更基礎的概念：</p>
+<h3 id="Image">Image</h3><hr>
+<p>將 Service 打包成 image，通常會從 Docker Hub 下載官方的 image 使用，也可以根據官方的 image 再包成自己的 image，或者完全自行製作自己的 image。</p>
+<h3 id="Container">Container</h3><hr>
+<p>Image 類似 template，基於壓好的 image 產生隔離的執行環境，稱之為 container。</p>
+<p>一般會以 Microservice 方式使用 container，也就是會同時啟動多個 container 形成 service。</p>
+<blockquote>
+<p>Image 與 container 都會佔硬碟空間，尤其 container 若執行完畢後，雖然 container 從記憶體釋放，但在硬碟仍然會留一份 container 的 <code>屍體</code> ，需要自行刪除，或者在 <code>docker run</code> 時增加 <code>--rm</code> 參數，在執行完自行從硬碟刪除 container</p>
+</blockquote>
+<h2 id="Dockerfile">Dockerfile</h2><hr>
+<p>實務上我們會從 Docker Hub 下載官方的 Docker Image 使用，但官方的 image 功能可能過於陽春，我們可能想根據自己的需求，再安裝其他的 app，最後再打包成自己的 Docker image。</p>
+<p>在傳統 VM 時代，要打造自己的 image，必須用 export 方式，但這樣有幾個缺點：</p>
+<ul>
+<li>Image 可能非常龐大</li>
+<li>安裝步驟無法進 git 版控</li>
+</ul>
+<p>Docker 以 <code>Infrastructure as Code</code> 概念，將  infrastructure 以 code 形式描述：</p>
+<p><strong>Dockerfile</strong></p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> ubuntu:latest</span><br><span class="line"></span><br><span class="line"><span class="comment"># Install Linux library dependency</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget apt-transport-https gpg</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install microsoft.gpg</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor &gt; microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://packages.microsoft.com/config/ubuntu/<span class="number">18.04</span>/prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mv prod.list /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chown root:root /etc/apt/sources.list.d/microsoft-prod.list</span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Install .NET Core SDK</span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y dotnet-sdk-<span class="number">2.1</span></span><br><span class="line"></span></span><br><span class="line"><span class="comment"># Display Greeting</span></span><br><span class="line"><span class="built_in">CMD</span> <span class="bash">[ <span class="string">"echo"</span>, <span class="string">"Ubuntu 18.04 LTS with .NET Core 2.1"</span>]</span></span><br></pre></td></tr></table></figure>
+<p>以上為典型的 <code>Dockerfile</code>，只需一個文字檔，就清楚描述一個 Docker image。</p>
+<p>以前若要在 Ubuntu 安裝其他 dependency，只能透過 Bash 安裝一堆 package，最後再 export 成 image，但 image 可能很龐大，且安裝步驟也無法 git 版控。</p>
+<p>但透過 Dockerfile 之後，整個新的 Ubuntu 都是以 code 形式描述，你只要將 <code>Dockerfile</code> 給其他人，對方只要使用 <code>docker build</code> 就能自行根據 <code>Dockerfile</code> 建立 Docker image，最後再根據 <code>docker run</code> 執行客製化過的 Ubuntu container。</p>
+<ul>
+<li><code>Dockerfile</code> 檔案很小，只是文字檔而已</li>
+<li>由於 <code>Dockerfile</code> 是文字檔，可以 git 版控</li>
+</ul>
+<blockquote>
+<p>簡單的說，<code>Dockerfile 就是描述如何產生客製化的 image</code>，只是採用 code 形式描述</p>
+</blockquote>
+<h2 id="Docker_Compose">Docker Compose</h2><hr>
+<p>實務上一個服務，一定由眾多 service 共同運作。如一個典型的 Web 服務，最少就必須有</p>
+<blockquote>
+<p>.NET Core Runtime + Nginx + Redis + PosgreSQL</p>
+</blockquote>
+<p>4 個 service 一起運行，若只使用 <code>docker run</code>，則勢必寫 Bash 來管理 4 個 service，還必須考慮：</p>
+<ul>
+<li>4 個 service 必須在同一個虛擬 network 下</li>
+<li>4 個 service 的啟動順序</li>
+</ul>
+<p>… 等問題。</p>
+<p>Docker 為此提出 Docker Compose 概念，在 <code>docker-compose.yml</code> 檔描述各 service 間的參數與關係：</p>
+<p><strong>docker-compose.yml</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  netcore:&#10;    image: microsoft/dotnet&#10;    container_name: MyNETCore&#10;    volumes:&#10;      - $&#123;NETCORE_HOST_DIR&#125;:/code/&#10;    tty: true&#10;    networks: &#10;      - netcore-dev&#10;    depends_on:&#10;      - postgres&#10;&#10;  postgres:&#10;    image: postgres&#10;    container_name: MyPostgres&#10;    volumes:&#10;      - $&#123;POSTGRES_HOST_DIR&#125;/data:/var/lib/postgresql/data&#10;    expose:&#10;      - &#34;5432&#34;&#10;    ports:&#10;      - &#34;$&#123;POSTGRES_PORT&#125;:5432&#34;&#10;    environment:&#10;      - POSTGRES_DB=$&#123;POSTGRES_DB&#125;&#10;      - POSTGRES_USER=$&#123;POSTGRES_USER&#125;&#10;      - POSTGRES_PASSWORD=$&#123;POSTGRES_PASSWORD&#125;&#10;    networks:&#10;      - netcore-dev&#10;&#10;networks:&#10;  netcore-dev:</span><br></pre></td></tr></table></figure>
+<p>以上為典型的 <code>docker-compose.yml</code>，只需一個文字檔，就清楚描述 .NET Core Runtime 與 PostgreSQL 兩個 service，將 <code>docker-compose.yml</code> 拿到任何裝有 Docker 的電腦，都成重現 .NET Core + PostreSQL 的環境，也就是 <code>Infrastructure as Code</code>。</p>
+<ul>
+<li><code>docker-compose.yml</code> 檔案很小，只是文字檔而已</li>
+<li>由於 <code>docker-compose.yml</code> 是文字檔，可以 git 版控</li>
+</ul>
+<blockquote>
+<p>間單的說，<code>docker-compose.yml 就是 container 的管理文件</code>，只是採用 code 形式描述</p>
+</blockquote>
+<h2 id="FAQ">FAQ</h2><hr>
+<blockquote>
+<p>Q：<code>Dockerfile</code> 與 <code>docker-compose.yml</code> 看起來很像，都是在描述 server，有什麼差別呢 ?</p>
+</blockquote>
+<ul>
+<li><code>Dockerfile</code> 是用來描述 image，也就是如何產生客製化的 image，通常用來安裝 package，將檔案複製進 image 用</li>
+<li><code>docker-compose.yml</code> 是用來描述 container，也就是管理一個以上的 container，彼此串連，把同一組架構寫在一起，通常用來設定 container 參數，設定 container 的網路，設定 container 啟動順序或 service 的環境變數 … 等</li>
+</ul>
+<blockquote>
+<p>Q：<code>Dockerfile</code> 是用來描述 image，<code>docker-compose.yml</code> 是用來描述 container，但若我們還有客製化的 <code>邏輯</code> 該怎麼辦 ?</p>
+</blockquote>
+<p>若在使用 <code>Dockerfile</code> 或 <code>docker-compose.yml</code> 時，還必須搭配額外的 <code>if else</code> 或 <code>for loop</code> 邏輯，就必須再搭配 Bash。</p>
+<p><code>Dockerfile</code> 與 <code>docker-composer.yml</code> 只是設計用來描述 <code>infrastructure</code>，並不是描述 <code>邏輯</code>。</p>
+<blockquote>
+<p>Q：單一 service 也適用 <code>docker-compose.yml</code> 嗎 ?</p>
+</blockquote>
+<p>由於實務上，儘管是單一 service，如只為了使用 PostgreSQL，也必須在 <code>docker run</code> 搭配一堆參數，但人的腦容量有限，很難記住所有的參數，與其寫在 Bash，建議寫在 <code>docker-compose.yml</code> ，統一由 <code>docker-compose</code> 管理。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>Dockerfile</code> 用來描述 image；而 <code>docker-compose.yml</code> 用來描述 container</li>
+<li>若 <code>Dockerfile</code> 與 <code>docker-compose.yml</code> 還無法達到客製化的需求，就必須搭配 Bash</li>
+<li><code>Dockerfile</code> 與 <code>docker-compose.yml</code> 都是文字檔，因此檔案很小，也容易 git 版控，實現 <code>Infrastructur as Code</code> 理想。</li>
+<li>儘管只有一個 container，也建議使用 <code>docker-compose.yml</code></li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/netcore/nuget/nuget-server/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/Docker/postgres-core/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-06-05 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Docker/">Docker<span>19</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,279 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何架設企業內部的 NuGet Server ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="可惜目前只有 .NET Framework 版本">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="可惜目前只有 .NET Framework 版本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何架設企業內部的 NuGet Server ?">
+<meta property="og:url" content="https://oomusou.io/netcore/nuget/nuget-server/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="可惜目前只有 .NET Framework 版本">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-06-07T10:09:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何架設企業內部的 NuGet Server ?">
+<meta name="twitter:description" content="可惜目前只有 .NET Framework 版本">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何架設企業內部的 NuGet Server ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 可惜目前只有 .NET Framework 版本			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_NuGet_Server"><span class="toc-article-text">建立 NuGet Server</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_ASP-NET_Web_Application"><span class="toc-article-text">建立 ASP.NET Web Application</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#安裝_NuGet-Server_Package"><span class="toc-article-text">安裝 NuGet.Server Package</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編輯_Web-config"><span class="toc-article-text">編輯 Web.config</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#設定_API_Key"><span class="toc-article-text">設定 API Key</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#測試_NuGet_Server"><span class="toc-article-text">測試 NuGet Server</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>.NET Core 目前仍延續 .NET Framework 使用 NuGet 為 package，除了使用公用的 NuGet server 外，企業也需要自己內部使用 NuGet server。</p>
+<p>NuGet Foundation 提供了 <code>NuGet.Server</code> 免費使用，但目前只有 .NET Framework 版本，因此還是只能安裝在 Windows Server 上。<br><a id="more"></a></p>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.4<br>Parallel Desktop 13 for Mac Pro Edition 13.3.1 (43365)<br>Windows 10 Pro 1803 17134.81<br>Visual Studio Enterprise 2017 15.7.3<br>NuGet.Server 3.1.2<br>.NET Framework 4.6.1<br>.NET Core 2.1</p>
+<h2 id="建立_NuGet_Server">建立 NuGet Server</h2><hr>
+<p>NuGet.Server 已經被封裝的 NuGet package，只要建立 ASP.NET MVC Application，並且加入 <code>NuGet.Server</code> package，不用寫任何一行 code，編譯後就是可用的 NuGet server。</p>
+<h2 id="建立_ASP-NET_Web_Application">建立 ASP.NET Web Application</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget000.png" alt="nuget000"></p>
+<ol>
+<li>選擇 <code>Web</code></li>
+<li>選擇 <code>ASP.NET Web Application</code> (不是 ASP.NET Core)</li>
+<li><strong>Name</strong>：輸入 project 名稱</li>
+<li><strong>Framework</strong>：注意是 <code>.NET Framework 4.6</code>，不是 .NET Core</li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget001.png" alt="nuget001"></p>
+<ol>
+<li>選擇 <code>Empty</code> ，其餘什麼都不用勾選</li>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<h2 id="安裝_NuGet-Server_Package">安裝 NuGet.Server Package</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget002.png" alt="nuget002"></p>
+<p><strong><em>Tools -&gt; NuGet Package Manager -&gt; Manage NuGet Package for Solution</em></strong></p>
+<p><img src="/images/netcore/nuget/nuget-server/nuget003.png" alt="nuget003"></p>
+<ol>
+<li>輸入 <code>NuGet.Server</code></li>
+<li>選擇 <code>NuGet.Server</code></li>
+<li>勾選 <code>NuGetServer</code> project</li>
+<li>按 <code>Install</code> 開始安裝 package</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget004.png" alt="nuget004"></p>
+<ol>
+<li>按 <code>OK</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget005.png" alt="nuget005"></p>
+<ol>
+<li>按 <code>I Accept</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/nuget/nuget-server/nuget006.png" alt="nuget006"></p>
+<ol>
+<li><code>NuGet.Server</code> package 安裝完成</li>
+</ol>
+<h2 id="編輯_Web-config">編輯 Web.config</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget007.png" alt="nuget007"></p>
+<ol>
+<li>將 18 行的 <code>&lt;compilation debug=&quot;true&quot; targetFramework=&quot;4.6&quot; /&gt;</code> 刪除，這算是 bug，重複兩個相同的 <code>targetFramework</code> 會無法執行</li>
+</ol>
+<h2 id="設定_API_Key">設定 API Key</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget009.png" alt="nuget009"></p>
+<ol>
+<li>當使用 <code>dotnet nuget push</code> 上傳時，會需要指定 API Key，可在 <code>Web.config</code> 內設定。</li>
+</ol>
+<h2 id="測試_NuGet_Server">測試 NuGet Server</h2><hr>
+<p><img src="/images/netcore/nuget/nuget-server/nuget008.png" alt="nuget008"></p>
+<ol>
+<li>按熱鍵 <code>Alt + Shift + R</code> Start Without Debug，此時會啟動 IIS Express 執行</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet nuget push MyClassLib<span class="number">.1</span><span class="number">.0</span><span class="number">.0</span>.nupkg -k <span class="number">12345</span> -s http:<span class="comment">//localhost:49771/nuget</span></span><br></pre></td></tr></table></figure>
+<p>使用 .NET Core CLI 的 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到 NuGet server。</p>
+<ul>
+<li><strong>-k</strong> : 指定 API Key</li>
+<li><strong>-s</strong> : 指定 NuGet server 網址</li>
+</ul>
+<p><img src="/images/netcore/nuget/nuget-server/nuget010.png" alt="nuget010"></p>
+<p>目前為止，<code>NuGet.Server</code> 已經正常啟動，也可接受 <code>dotnet nuget push</code> 將 <code>.nupkg</code> 上傳到 NuGet server，但 IIS Express 會動態選擇 port，只適合開發測試用，最後還是得將 NuGet.Server 安裝到 IIS 上。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>目前 NuGet.Server 還沒有 .NET Core 版本，這也意味著若使用 NuGet.Server，只能搭配 .NET Framework，也就是只能用於 Windows Server，還無法跨平台裝在 Linux 上</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://poychang.github.io" target="_blank" rel="external">Poy Chang</a>, <a href="https://poychang.github.io" target="_blank" rel="external">架設私有的 NuGet 伺服器</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/typora/typora-cli/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/Docker/dockerfile-dockercompose/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-06-07 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li> <li><a href="/tags/NET-Framework/">.NET Framework<span>2</span></a></li> <li><a href="/tags/NuGet/">NuGet<span>2</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

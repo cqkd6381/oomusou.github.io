@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 .NET Core CLI 管理 Package Reference ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 .NET Core SDK 管理 Package Reference">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 .NET Core SDK 管理 Package Reference">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 .NET Core CLI 管理 Package Reference ?">
+<meta property="og:url" content="https://oomusou.io/netcore/package-reference/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 .NET Core SDK 管理 Package Reference">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-05-23T06:42:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 .NET Core CLI 管理 Package Reference ?">
+<meta name="twitter:description" content="使用 .NET Core SDK 管理 Package Reference">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 .NET Core CLI 管理 Package Reference ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 .NET Core SDK 管理 Package Reference			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Console_App_專案"><span class="toc-article-text">建立 Console App 專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_VS_Code_開啟專案"><span class="toc-article-text">使用 VS Code 開啟專案</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#新增_Package_Reference"><span class="toc-article-text">新增 Package Reference</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#編輯_Program-cs"><span class="toc-article-text">編輯 Program.cs</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#執行_Console_App"><span class="toc-article-text">執行 Console App</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#其他相關指令"><span class="toc-article-text">其他相關指令</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>實務上我們一定會用到別人寫的 NuGet package，我們該如何使用 .NET Core SDK 加入 package reference 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101</p>
+<h2 id="建立_Console_App_專案">建立 Console App 專案</h2><hr>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet <span class="keyword">new</span> <span class="built_in">console</span> -o MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet new</code> 建立 project。</p>
+<ul>
+<li><strong>console</strong> : 建立 console 類型專案</li>
+<li><strong>-o</strong> : <code>o</code> output，建立在 <code>MyConsole</code> 目錄下</li>
+</ul>
+<p><img src="/images/netcore/package-reference/pkg000.png" alt="kg00"></p>
+<ol>
+<li>輸入 <code>dotnet new console -o MyConsole</code> 將 console 類型專案建立在 <code>MyConsole</code> 目錄下</li>
+<li>.NET Core SDK 開始建立專案所需的檔案</li>
+<li>自動 restore dependency</li>
+</ol>
+<h2 id="使用_VS_Code_開啟專案">使用 VS Code 開啟專案</h2><hr>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="tag">code</span> MyConsole</span><br></pre></td></tr></table></figure>
+<p>使用 <code>code</code> 執行 VS Code，後面接開啟目錄名稱。</p>
+<p><img src="/images/netcore/package-reference/pkg001.png" alt="onsole00"></p>
+<ol>
+<li>第一次使用 VS Code 開啟 .NET Core 專案，會要求建立 <code>.vscode</code> 設定檔目錄，按 <code>Yes</code> 繼續</li>
+</ol>
+<p><img src="/images/netcore/package-reference/pkg002.png" alt="onsole01"></p>
+<ol>
+<li><code>.vscode</code> 被 VS Code 自動建立</li>
+</ol>
+<h2 id="新增_Package_Reference">新增 Package Reference</h2><hr>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="built_in">add</span> <span class="keyword">package</span> Newtonsoft.Json</span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet add package</code> 加入 NuGet package。</p>
+<p><img src="/images/netcore/package-reference/pkg003.png" alt="kg00"></p>
+<ol>
+<li>輸入 <code>dotnet add package Newtonsoft.Json</code> 新增 <code>Newtonsoft.Json</code> package</li>
+</ol>
+<h2 id="編輯_Program-cs">編輯 Program.cs</h2><hr>
+<p><strong>program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> Newtonsoft.Json;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">MyConsole</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> students = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="string">"Sam"</span>,</span><br><span class="line">                <span class="string">"Kevin"</span>,</span><br><span class="line">                <span class="string">"Jessie"</span></span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> json = JsonConvert.SerializeObject(students);</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(json);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>JsonConvert.SerializeObject()</code> 將 <code>List</code> 轉成 JSON string。</p>
+<h2 id="執行_Console_App">執行 Console App</h2><hr>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/MyProject $ dotnet <span class="command">run</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>dotnet run</code> 執行專案。</p>
+<p><img src="/images/netcore/package-reference/pkg004.png" alt="kg00"></p>
+<ol>
+<li>輸入 <code>dotnet run</code> 顯示執行結果</li>
+</ol>
+<h2 id="其他相關指令">其他相關指令</h2><hr>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ dotnet remove <span class="package"><span class="keyword">package</span> <span class="title">Newtonsoft</span>.<span class="title">Json</span></span></span><br></pre></td></tr></table></figure>
+<p>移除 package reference。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>使用 <code>dotnet add package</code> 與 <code>dotnet remove package</code>，我們就可在 project 中新增與移除 NuGet package</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/fsharp/union/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/netcore/solution/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-03-17 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/NET-Core/">.NET Core<span>39</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何使用 F# 實現 Composite Pattern？ | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以 FP 重新思考 Composite Pattern">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以 FP 重新思考 Composite Pattern">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何使用 F# 實現 Composite Pattern？">
+<meta property="og:url" content="https://oomusou.io/fsharp/composite/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以 FP 重新思考 Composite Pattern">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-04-22T02:14:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何使用 F# 實現 Composite Pattern？">
+<meta name="twitter:description" content="以 FP 重新思考 Composite Pattern">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何使用 F# 實現 Composite Pattern？</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以 FP 重新思考 Composite Pattern			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#User_Story"><span class="toc-article-text">User Story</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Task"><span class="toc-article-text">Task</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#OOP_思考方式"><span class="toc-article-text">OOP 思考方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#FP_思考方式"><span class="toc-article-text">FP 思考方式</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Implementation"><span class="toc-article-text">Implementation</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Composite Pattern 是 OOP 中著名的 Design Pattern，無論是 <code>物件</code> 或 <code>容器</code>，都能使用相同 interface 一視同仁的操作，F# 既然是 Function First Language，就讓我們以 function 的角度重新實現 Composite Pattern。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.3<br>.NET Core SDK 2.1.101<br>Rider 2018.1<br>F# 4.1</p>
+<h2 id="User_Story">User Story</h2><hr>
+<p>由購物車計算商品價錢，但在活動期間，Apple 產品組合有特惠 ：</p>
+<ul>
+<li><strong>MacBook Pro 15”</strong>：6 萬</li>
+<li><strong>iPad Air</strong>：1 萬</li>
+<li><strong>Apple Watch</strong>：1 萬</li>
+<li><strong>Apple 套餐組合</strong> : (Macbook Pro + iPad Air + Apple Watch) 總價打九折：<code>(6 + 1 + 1) * 0.9</code> = 7.2 萬</li>
+</ul>
+<p><img src="/images/fsharp/composite/composite000.svg" alt="composite000"></p>
+<p>若同時買 MacBook Pro + iPad Air + Apple Watch + Apple 套餐為 15.2 萬。</p>
+<h2 id="Task">Task</h2><hr>
+<p>直接使用 FP 的思維完成需求。</p>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p>Composite Pattern</p>
+<p>當 <code>單一資料</code> 與 <code>組合資料</code> 同時存在時，讓 client 有一致性的操作方式</p>
+</blockquote>
+<p><img src="/images/fsharp/composite/composite002.svg" alt="composite002"></p>
+<p>首先思考 Composite Pattern 的本質：</p>
+<ol>
+<li>Leaf 與 Composite 之間的 interface 必須相同</li>
+<li>Client 操作 Leaf 與 Composite 都一視同仁</li>
+</ol>
+<p>只要能達到這兩個目標，就算完成了 Composite Pattern。</p>
+<h2 id="OOP_思考方式">OOP 思考方式</h2><hr>
+<ul>
+<li>為了讓 Leaf 與 Composite 的 interface 要相同，所以必須訂出共同的 interface</li>
+<li>Composite 必須以 state 記住 Leaf，並根據 state 加以操作</li>
+<li>Client 以相同方式操作 Composite 與 Leaf</li>
+</ul>
+<h2 id="FP_思考方式">FP 思考方式</h2><hr>
+<ul>
+<li>Data 與 function 分開</li>
+<li>將 Leaf 與 Composite 都設定成 type</li>
+<li>Composite 無需以 state 記住 Leaf，在建立 data 時就建立 Leaf</li>
+<li>只要建立單一 function 操作所有 data 即可，如此 Composite 與 Leaf 很自然地 interface 都相同</li>
+<li>由於 Composite 與 Leaf 的 interface 都相同，所以 Composite 會以 recursive 方式呼叫 Leaf 的 function</li>
+</ul>
+<h2 id="Implementation">Implementation</h2><hr>
+<p><strong>Product.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> ClassLibrary</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Apple</span> </span>= </span><br><span class="line">    | MacBookPro <span class="keyword">of</span> double</span><br><span class="line">    | IPadAir <span class="keyword">of</span> double</span><br><span class="line">    | AppleWatch <span class="keyword">of</span> double</span><br><span class="line">    | AppleCombo <span class="keyword">of</span> Apple List</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> Product =</span><br><span class="line">    <span class="keyword">let</span> macbookPro = MacBookPro <span class="number">60000.0</span></span><br><span class="line">    <span class="keyword">let</span> ipadAir = IPadAir <span class="number">10000.0</span></span><br><span class="line">    <span class="keyword">let</span> appleWatch = AppleWatch <span class="number">10000.0</span></span><br><span class="line">    <span class="keyword">let</span> appleCombo = (AppleCombo) [ macbookPro; ipadAir; appleWatch ]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">let</span> <span class="keyword">rec</span> getPrice product = </span><br><span class="line">        <span class="keyword">match</span> product <span class="keyword">with</span></span><br><span class="line">        | MacBookPro(price) </span><br><span class="line">        | IPadAir(price) </span><br><span class="line">        | AppleWatch(price)    -&gt; price</span><br><span class="line">        | AppleCombo(products) -&gt; products</span><br><span class="line">                                  |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; getPrice elm)</span><br><span class="line">                                  |&gt; (<span class="keyword">fun</span> elm -&gt; elm * <span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">type</span> <span class="title">Apple</span> </span>= </span><br><span class="line">    | MacBookPro <span class="keyword">of</span> double</span><br><span class="line">    | IPadAir <span class="keyword">of</span> double</span><br><span class="line">    | AppleWatch <span class="keyword">of</span> double</span><br><span class="line">    | AppleCombo <span class="keyword">of</span> Apple List</span><br></pre></td></tr></table></figure>
+<p>將各產品都設定成 type，其中 <code>AppleCombo of Apple List</code> 表示 <code>AppleCombo</code> 為各種 Apple 產品的組合。</p>
+<p>10 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> macbookPro = MacBookPro <span class="number">60000.0</span></span><br><span class="line"><span class="keyword">let</span> ipadAir = IPadAir <span class="number">10000.0</span></span><br><span class="line"><span class="keyword">let</span> appleWatch = AppleWatch <span class="number">10000.0</span></span><br></pre></td></tr></table></figure>
+<p>設定各產品的定價。</p>
+<p>13 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> appleCombo = (AppleCombo) [ macbookPro; ipadAir; appleWatch ]</span><br></pre></td></tr></table></figure>
+<p>設定 Apple 套餐該包含哪些產品，<code>(AppleCombo)</code> 轉型是必要的，若沒有轉型，Type Inference 會推斷成 <code>Apple list</code>，導致編譯錯誤，我們實際需要的型別為 <code>Apple</code>。</p>
+<p><img src="/images/fsharp/composite/composite001.png" alt="composite001"></p>
+<p>再次證明 F# 寫程式不需要型別，但型別的檢查依然非常嚴格，這就是 Type Inference 優越的地方。</p>
+<p>16 行</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="keyword">rec</span> getPrice product = </span><br><span class="line">        <span class="keyword">match</span> product <span class="keyword">with</span></span><br><span class="line">        | MacBookPro(price) </span><br><span class="line">        | IPadAir(price) </span><br><span class="line">        | AppleWatch(price)    -&gt; price</span><br><span class="line">        | AppleCombo(products) -&gt; products</span><br><span class="line">                                  |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; getPrice elm)</span><br><span class="line">                                  |&gt; (<span class="keyword">fun</span> elm -&gt; elm * <span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+<p><code>getPrice()</code> 計算單一商品與 Apple 套餐。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">match</span> product <span class="keyword">with</span></span><br><span class="line">      | MacBookPro(price) </span><br><span class="line">      | IPadAir(price) </span><br><span class="line">      | AppleWatch(price)    -&gt; price</span><br></pre></td></tr></table></figure>
+<p>Pattern Matching 會使用型別判斷，且將該型別的值 price 直接 extract 出來。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">| AppleCombo(products) -&gt; products</span><br><span class="line">                          |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; getPrice elm)</span><br><span class="line">                          |&gt; (<span class="keyword">fun</span> elm -&gt; elm * <span class="number">0.9</span>)</span><br></pre></td></tr></table></figure>
+<p>由 <code>AppleCombo</code> extract 出 <code>products</code>，其型別為 <code>List</code>，可由 <code>List.sumBy()</code> 去計算總和，值得注意的是再度使用 <code>getPrice()</code> 計算每個產品的價錢，因此 <code>getPrice()</code> 必須宣告成 <code>rec</code>。</p>
+<p> 最後再將 <code>List.sumBy()</code> 的結果打九折。</p>
+<blockquote>
+<p>我們可以發現在處理 <code>多型</code> 的議題上，OOP 與 FP 採用不同的方式，由於 OOP 是 data 與 function 合一，因此 <code>getPrice()</code> 會寫在各 data class 上，然後用 interface 強迫各 class 都要實作 <code>getPrice()</code>；但 FP 是 data 與 function 分開，因此只要一個 <code>getPrice()</code>，然後使用 Pattern Matching 根據不同型別有相對應的處理。</p>
+<p>但無論 OOP 或 FP，儘管處理方式不同，但對於 client 來說，只要是 <code>Apple</code> 型別，都使用相同的 <code>getPrice()</code>，符合 <code>開放封閉原則</code> 的要求。</p>
+</blockquote>
+<p><strong>ShoppingCart.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> ClassLibrary</span><br><span class="line"></span><br><span class="line"><span class="keyword">module</span> ShoppingCart =</span><br><span class="line">    <span class="keyword">let</span> calculatePrice products = </span><br><span class="line">        products</span><br><span class="line">        |&gt; List.sumBy (<span class="keyword">fun</span> elm -&gt; Product.getPrice elm)</span><br></pre></td></tr></table></figure>
+<p><code>products</code> 的型別為 <code>Apple list</code>，因此每個 element 都是 <code>Apple</code> 型別，都可放心使用 <code>getPrice()</code>，這就是 Composite Pattern 的精華。</p>
+<p><strong>Program.fs</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Learn more about F# at http://fsharp.org</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">open</span> System</span><br><span class="line"><span class="keyword">open</span> ClassLibrary</span><br><span class="line"></span><br><span class="line"><span class="annotation">[&lt;EntryPoint&gt;]</span></span><br><span class="line"><span class="keyword">let</span> main argv =</span><br><span class="line">    [ </span><br><span class="line">        Product.macbookPro</span><br><span class="line">        Product.ipadAir</span><br><span class="line">        Product.appleWatch</span><br><span class="line">        Product.appleCombo </span><br><span class="line">    ]</span><br><span class="line">    |&gt; ShoppingCart.calculatePrice </span><br><span class="line">    |&gt; printf <span class="string">"%.0f"</span></span><br><span class="line">    </span><br><span class="line">    <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>Client 呼叫 <code>ShoppingCart.calculatePrice()</code> 計算購物車內所有商品。</p>
+<h2 id="Summary">Summary</h2><hr>
+<p>回想 Composite Pattern 的本質：</p>
+<ol>
+<li>Leaf 與 Composite 之間的 interface 必須相同</li>
+<li>Client 操作 Leaf 與 Composite 都一視同仁</li>
+</ol>
+<p>FP 雖然沒有特別定義 interface，但所有 <code>Apple</code> type 的 data 統一都適用於 <code>getPrice()</code> function，由於在 <code>getPrice()</code> 內使用了 Pattern Matching，只要其中有一個 type 回傳型別不同，compiler 編譯就會報錯，與原本 Composite Pattern 定義 interface 本質相同。</p>
+<p>對於 <code>Apple</code> type，統一使用 <code>getPrice()</code> function 處理，與原本 Composite Pattern 在 <code>Component</code> interface 下的 <code>Leaf</code> 與 <code>Composite</code> 都一視同仁的本質相同。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Composite Pattern 本質就是 <code>多型</code>，OOP 使用 interface 讓 <code>物件</code> 與 <code>容器</code> 實踐相同 interface，讓兩者能使用相同的方式操作；FP 使用單一 function，再配合 Pattern Matching 對相同 type 的各種物件有不同的實作。雖然方式不同，但讓 client 以相同方式操作的本質都相同，也符合 <code>開放封閉原則</code> 的要求</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpComposite" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/rider/change-signature/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/design-pattern/composite/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-04-21 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Design-Pattern/">Design Pattern<span>17</span></a></li> <li><a href="/tags/F/">F#<span>22</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
