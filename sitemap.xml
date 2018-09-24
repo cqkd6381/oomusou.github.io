@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/linq/foreach/</loc>
+    <lastmod>2018-09-24T15:49:42.728Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/fp/pure-function/</loc>
-    <lastmod>2018-09-24T14:49:54.301Z</lastmod>
+    <lastmod>2018-09-24T15:49:01.272Z</lastmod>
   </url>
   
   <url>
@@ -44,11 +49,6 @@
   <url>
     <loc>https://oomusou.io/webstorm/es6-file-watcher/</loc>
     <lastmod>2018-09-19T04:38:40.669Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/linq/foreach/</loc>
-    <lastmod>2018-09-10T08:22:41.000Z</lastmod>
   </url>
   
   <url>
