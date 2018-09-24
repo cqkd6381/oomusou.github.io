@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/fp/pure-function/</loc>
+    <lastmod>2018-09-24T08:12:46.346Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/fp/currying/</loc>
     <lastmod>2018-09-19T04:43:41.742Z</lastmod>
   </url>

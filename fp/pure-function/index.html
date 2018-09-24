@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>深入探討 FP 之 Pure Function 與 Side Effect | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="定義 Pure Function 與 Side Effect">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="定義 Pure Function 與 Side Effect">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入探討 FP 之 Pure Function 與 Side Effect">
+<meta property="og:url" content="https://oomusou.io/fp/pure-function/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="定義 Pure Function 與 Side Effect">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-24T08:12:46.346Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入探討 FP 之 Pure Function 與 Side Effect">
+<meta name="twitter:description" content="定義 Pure Function 與 Side Effect">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 深入探討 FP 之 Pure Function 與 Side Effect</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 定義 Pure Function 與 Side Effect			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Side_Effect"><span class="toc-article-text">Side Effect</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Mutate_Global_State"><span class="toc-article-text">Mutate Global State</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Mutate_Input_Argument"><span class="toc-article-text">Mutate Input Argument</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Throw_Exception"><span class="toc-article-text">Throw Exception</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#Perform_I/O_Operation"><span class="toc-article-text">Perform I/O Operation</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Functional Programming 要求 Data 與 Function 分離，其中 Data 要求的是 Immutability，而 Function 要求的就是 Pure Function。這是 FP 的兩大基石，所有其他的特性都是由這兩個基本原則展開。</p>
+<p>Pure Function 最簡單的定義就是 <code>不能產生 Side Effect</code>，但究竟什麼是 Side Effect 呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>C# 7.2</p>
+<blockquote>
+<p>本文為 <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Funtional Programming in C#</a> 一書第二章的讀後心得</p>
+</blockquote>
+<h2 id="Definition">Definition</h2><hr>
+<blockquote>
+<p><strong>Pure Function</strong></p>
+<ul>
+<li>與 Mathematical Function 一致</li>
+<li>Ouput 僅與 Input Argument 相關</li>
+<li>不會產生 Side Effect</li>
+</ul>
+</blockquote>
+<p>與 Pure Function 相對的，就是 Impure Function：</p>
+<blockquote>
+<p><strong>Impure Function</strong></p>
+<ul>
+<li>大部分 Programming Function </li>
+<li>除了 Input Argument 外，尚有其他因素影響 Output (Field、Exception、I/O)</li>
+<li>會產生 Side Effect</li>
+</ul>
+</blockquote>
+<p>我們可發現 Pure Function 與 Impure Function 是相對的，其他定義都很容易理解，唯獨 Side Effect 需要另外解釋。</p>
+<h2 id="Side_Effect">Side Effect</h2><hr>
+<ul>
+<li>Mutate Global State</li>
+<li>Mutate Input Argument</li>
+<li>Throw Exception</li>
+<li>Perform I/O Operation</li>
+</ul>
+<h3 id="Mutate_Global_State">Mutate Global State</h3><p>凡在 function 以外的 scope，就算是 Global State，如 OOP 的 field，也被視為 Global State。</p>
+<p>修改 Global State 被視為有 Side Effect。</p>
+<p><strong>Program.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">var</span> counter = <span class="keyword">new</span> Counter(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">var</span> count = counter.AddOne()</span><br><span class="line">                           .AddOne()</span><br><span class="line">                           .Count;</span><br><span class="line"></span><br><span class="line">        Console.WriteLine(count);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>對 <code>counter</code> 增加 2 次，結果為 <code>2</code>。</p>
+<p><strong>Counter.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Counter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Count &#123; <span class="keyword">get</span>; <span class="keyword">private</span> <span class="keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Counter</span>(<span class="params"><span class="keyword">int</span> count</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        Count = count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Counter <span class="title">AddOne</span>(<span class="params"></span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        Count++;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>OOP 強調 Data 與 Function 合一，所以會將 <code>Count</code> 視為 field，封裝在 <code>Counter</code> class 內。</p>
+<p><code>AddOne()</code> 被視為有 Side Effect，因為其修改了 function 外部的 <code>Count</code> field，屬於 Global State。</p>
+<p>為了做 Fluent Interface，OOP 會以 <code>return this</code> 方式。</p>
+<p><strong>Counter.cs</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Counter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Count &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Counter</span>(<span class="params"><span class="keyword">int</span> count</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        Count = count;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">CounterExt</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Counter <span class="title">AddOne</span>(<span class="params"><span class="keyword">this</span> Counter counter</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Counter(counter.Count + <span class="number">1</span>); </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>FP 強調 Data 與 Function 分家，因此 Data 屬於 <code>Counter</code> class，而 Function 屬於 <code>CounterExt</code> class。</p>
+<p><code>AddOne()</code> 沒有 Side Effect，因為根據 argument 得到目前的 count，計算後回傳新的 <code>Counter</code> object，完全與 function 外部無關。</p>
+<p>FP 藉由 Extension Method 達成 Fluent Interface。</p>
+<blockquote>
+<p>儘管由 OOP 改用 FP，但 client 的寫法完全沒有改變</p>
+</blockquote>
+<h3 id="Mutate_Input_Argument">Mutate Input Argument</h3><p>修改 function 的 argument，而造成 function 外界的 data 被修改，也視為 Side Effect。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">decimal</span> <span class="title">RecomputeTotal</span>(<span class="params">Order order, List&lt;OrderLine&gt; linesToDelete</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="number">0</span>m;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">foreach</span>(<span class="keyword">var</span> line <span class="keyword">in</span> order.OrderLines)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (line.Quantity == <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            linesToDelete.Add(line);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            result += line.Product.Price * line.Quantity;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>RecomputeTotal</code> 被視為有 Side Effect，因為新增了<code>linesToDelete</code> List，造成對 <code>RecomputeTotal()</code> function 外部的 data 有影響。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="keyword">decimal</span>, IEnumerable&lt;OrderLine&gt;) RecomputeTotal(Order)</span><br><span class="line">    =&gt; (order.OrderLines.Sum(x =&gt; x.Product.Price * x.Quantity)),</span><br><span class="line">        order.OrderLines.Where(x =&gt; x.Quantity == <span class="number">0</span>));</span><br></pre></td></tr></table></figure>
+<p>使用回傳 <code>order.OrderLines.Where(x =&gt; x.Quantity == 0)</code> 取代新增 <code>linesToDelete</code> List，如此不會影響 function 外部 data，因此沒有 Side Effect。</p>
+<h3 id="Throw_Exception">Throw Exception</h3><p>因為以下兩個原因，Throw Exception 也被視為 Side Effect：</p>
+<ul>
+<li>Exception 屬於 function 外部 scope，也算 Global State</li>
+<li>Throw Exception 後，其他 fuction 必須去 <code>try catch</code> 處理，由於不是來自於 function argument，會使得其他 function 不是 Pure Function</li>
+</ul>
+<blockquote>
+<p>FP 也有自己的 Exception 處理機制，如 F# 的 <code>Result</code>、Haskell 的 <code>Either</code></p>
+</blockquote>
+<h3 id="Perform_I/O_Operation">Perform I/O Operation</h3><p>在現實世界中，不可能所有 function 都在計算或者 mapping，如</p>
+<ul>
+<li>呼叫 API</li>
+<li>寫入資料庫、寫到 console</li>
+<li>讀出系統時間</li>
+</ul>
+<p><img src="/images/fp/pure-function/pure000.png" alt="pure000"></p>
+<p>這些都屬於無法避免的 Side Effect，但我們可將 Side Effect 集中在 Pure Function 前後，而不是在 function 內隨意的 Side Effect。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Pure Function 與 Side Effect 為 FP 的入門磚，看似基本，但實務上並不容易實現，常常一不小心就寫出 Impure Function</li>
+<li>I/O 是無法避免的 Side Effect，但 FP 能將 Side Effect 降到最低</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/webstorm/es6-file-watcher/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-26 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/C/">C#<span>15</span></a></li> <li><a href="/tags/FP/">FP<span>7</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
