@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Refactoring to LINQ =&gt; Select | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以重構角度探討 LINQ">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以重構角度探討 LINQ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Refactoring to LINQ => Select">
+<meta property="og:url" content="https://oomusou.io/linq/select/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以重構角度探討 LINQ">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-26T15:59:59.921Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Refactoring to LINQ => Select">
+<meta name="twitter:description" content="以重構角度探討 LINQ">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Refactoring to LINQ =&gt; Select</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以重構角度探討 LINQ			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Imperative"><span class="toc-article-text">Imperative</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Refactor_to_HOF"><span class="toc-article-text">Refactor to HOF</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Refactor_to_Yield_Return"><span class="toc-article-text">Refactor to Yield Return</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Refactor_to_Generics"><span class="toc-article-text">Refactor to Generics</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Refactor_to_Extension_Method"><span class="toc-article-text">Refactor to Extension Method</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Refactor_to_LINQ"><span class="toc-article-text">Refactor to LINQ</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Refactor_to_Using_Static"><span class="toc-article-text">Refactor to Using Static</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>LINQ 是 C# 3.0 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator。</p>
+<p>本文將討論 <code>Select</code> Operator。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.2.3</p>
+<h2 id="Imperative">Imperative</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                result.Add(item * <span class="number">2</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Enumerable.Range()</code> 產生 <code>1, 2, 3</code>，建立暫存的 <code>result</code> List，將所有元素都乘以 <code>2</code>，最後使用 <code>foreach()</code> 印出每個值。</p>
+<p>由於資料的改變，建立新的暫存 List 處理，是 Imperative 慣用手法。</p>
+<h2 id="Refactor_to_HOF">Refactor to HOF</h2><p>實務上這種建立新暫存 list 處理的作法，常常會遇到，若每次都使用 <code>foreach</code> 這種 statement 寫法，重複使用能力為 0，就每次都要不斷的寫 <code>foreach</code>。</p>
+<p>若我們能將這種 <code>foreach</code> 配合新暫存 List 處理做法，抽成 <code>MyMap()</code> Higher Order Function，我們就能不斷 reuse <code>MyMap()</code>，只要將不同的商業邏輯以 function 傳進 <code>MyMap()</code> 即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> result = MyMap(data, Double);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(item);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">Double</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">MyMap</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; data, Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; func</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                result.Add(func(item));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>23 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">MyMap</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; data, Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; func</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        result.Add(func(item));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>自己以 <code>MyMap()</code> 實作出 <code>foreach</code> statement + 暫存 List 處理的 Higher Order Function 版本。</p>
+<p>第一個參數為 data，第二個參數為 function。</p>
+<p>如此 <code>MyMap()</code> function 就能被重複使用。</p>
+<p>13 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = MyMap(data, Double);</span><br></pre></td></tr></table></figure>
+<p>原來的 <code>foreach()</code> statement 重構成 <code>MyMap()</code> Higher Order Function，將 data 與 <code>Double</code> Local Function 傳入即可。 </p>
+<h2 id="Refactor_to_Yield_Return">Refactor to Yield Return</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> result = MyMap(data, Double);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(item);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">Double</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">MyMap</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; data, Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; func</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="function"><span class="keyword">yield</span> return <span class="title">func</span>(<span class="params">item</span>)</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>23 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">MyMap</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; data, Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; func</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">yield</span> return <span class="title">func</span>(<span class="params">item</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但要建立暫存 List 會影響執行效率，也浪費記憶體，尤其暫存 List 只是中繼資料，並不是最後執行結果，因此改用 <code>yield return</code> 實現 Lazy Evaluation，直到真正需要結果時，才會執行 <code>func(item)</code>，如此就不用建立暫存 List，繼能解省記憶體，又能增進執行效率。</p>
+<h2 id="Refactor_to_Generics">Refactor to Generics</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> result = MyMap(data, Double);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(item);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">Double</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;R&gt; MyMap&lt;T, R&gt;(IEnumerable&lt;T&gt; data, Func&lt;T, R&gt; func)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="function"><span class="keyword">yield</span> return <span class="title">func</span>(<span class="params">item</span>)</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>23 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;R&gt; MyMap&lt;T, R&gt;(IEnumerable&lt;T&gt; data, Func&lt;T, R&gt; func)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">yield</span> return <span class="title">func</span>(<span class="params">item</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>事實上 <code>MyMap()</code> 不只適用於 <code>int</code>，而且可適用於任何型別，因此重構成 <code>&lt;T, R&gt;</code>。</p>
+<h2 id="Refactor_to_Extension_Method">Refactor to Extension Method</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .MyMap(Double)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(Console.WriteLine);</span><br><span class="line">                </span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">Double</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;R&gt; MyMap&lt;T, R&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; data, Func&lt;T, R&gt; func)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="function"><span class="keyword">yield</span> return <span class="title">func</span>(<span class="params">item</span>)</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>20 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;R&gt; MyMap&lt;T, R&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; data, Func&lt;T, R&gt; func)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">yield</span> return <span class="title">func</span>(<span class="params">item</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>MyMap()</code> 需要兩個參數，使用上不是那麼方便，而且也無法 Pipeline 般使用，因此將第一個參數加上 <code>this</code>，成為 Extension Method，</p>
+<p>11 行</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Enumerable</span><br><span class="line">    .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">    .MyMap(Double)</span><br><span class="line">    .ToList()</span><br><span class="line">    .ForEach(Console.WriteLine);</span><br></pre></td></tr></table></figure>
+<p>如此 <code>MyMap()</code> 就與 <code>Range()</code> 串起來了，而且也減少了一個參數。</p>
+<h2 id="Refactor_to_LINQ">Refactor to LINQ</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(Double)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(Console.WriteLine);</span><br><span class="line">                </span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">Double</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>事實上 LINQ 早已提供 <code>Select()</code>，不必我們自己實作，其功能完全等效於自己實作的 <code>MyMap()</code>。</p>
+<blockquote>
+<p>一般 FP 世界，將這種 operator 稱為 Map，如 ECMAScript 有<code>Array.prototype.map()</code>，F# 有 <code>List.map()</code>，在 LINQ 則稱為 <code>Select()</code></p>
+</blockquote>
+<h2 id="Refactor_to_Using_Static">Refactor to Using Static</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(Double)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">Double</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x * <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>using static</code> 之後，則 <code>Range()</code> 與 <code>WriteLine()</code> 可進一步縮短，更符合 FP 風格。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>就算自己重構，也會重構出 <code>Select()</code> Higher Order Function，只是因為太常使用，LINQ 已經內建 <code>Select()</code></li>
+<li>Yield return 可實現 Lazy Evaluation，繼可節省記憶體，又可增進執行效率</li>
+<li>善用 <code>using static</code>，可讓 class 的 static method 更像 function</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/LINQSelect" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/ecmascript/var/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-26 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/C/">C#<span>16</span></a></li> <li><a href="/tags/LINQ/">LINQ<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
