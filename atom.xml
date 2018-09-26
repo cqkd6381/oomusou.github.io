@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-26T16:09:26.481Z</updated>
+  <updated>2018-09-26T16:11:08.530Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/linq/select/"/>
     <id>https://oomusou.io/linq/select/</id>
     <published>2018-09-26T14:23:43.000Z</published>
-    <updated>2018-09-26T16:09:26.481Z</updated>
+    <updated>2018-09-26T16:11:08.530Z</updated>
     <content type="html"><![CDATA[<p>LINQ 是 C# 3.0 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator。</p>
 <p>本文將討論 <code>Select</code> Operator。</p>
 <a id="more"></a>
@@ -203,7 +203,7 @@
     <link href="https://oomusou.io/linq/foreach/"/>
     <id>https://oomusou.io/linq/foreach/</id>
     <published>2018-09-25T13:23:43.000Z</published>
-    <updated>2018-09-26T16:09:34.276Z</updated>
+    <updated>2018-09-26T16:11:05.824Z</updated>
     <content type="html"><![CDATA[<p>LINQ 是 C# 3.0 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator。</p>
 <p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
 <a id="more"></a>
