@@ -107,7 +107,7 @@
     <link href="https://oomusou.io/ecmascript/essence/"/>
     <id>https://oomusou.io/ecmascript/essence/</id>
     <published>2018-09-27T12:23:43.000Z</published>
-    <updated>2018-09-27T14:23:53.673Z</updated>
+    <updated>2018-09-27T22:54:10.073Z</updated>
     <content type="html"><![CDATA[<p>大家在學習 JavaScript 時，是否覺得 JavaScript 跟主流 OOP 程式語言，如 C++ / Java / C# 不太一樣？為什麼 JavaScript 沒有 interface？為什麼 JavaScript 很難使用 OOP Design Pattern ？為什麼我會從很討厭 JavaScript 到很喜歡 JavaScript？</p>
 <p>這要從 JavaScript 的本質談起，因為我看到了JavaScript 可愛的一面。</p>
 <a id="more"></a>
@@ -179,7 +179,7 @@
 <li>JavaScript 的 object 僅用來處理 data，不是拿來當 <code>抽象</code> 使用</li>
 <li><code>Funtion as Data</code>，在 JavaScript 中，function 被視為 data 使用</li>
 <li>由於 JavaScript 語言特性不同，若以 OOP 語言，如 C++ / C# / Java 思維去思考 JavaScript，就會很難進步，會覺得 JavaScript 是很糟糕的語言</li>
-<li>但若以 FP 語言，如 F# / RestML / Haskell 思維去思考 JavaScript，就會豁然開朗，會覺得 JavaScript 是很棒的語言</li>
+<li>但若以 FP 語言，如 F# / ReasonML / Haskell 思維去思考 JavaScript，就會豁然開朗，會覺得 JavaScript 是很棒的語言</li>
 </ul>
 ]]></content>
     <summary type="html">
