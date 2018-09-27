@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 var 宣告變數">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-09-26T15:59:33.548Z">
+<meta property="og:updated_time" content="2018-09-27T09:03:21.685Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ECMAScript 之 Var">
 <meta name="twitter:description" content="使用 var 宣告變數">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Verson"><span class="toc-article-text">Verson</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Var"><span class="toc-article-text">Var</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Scope"><span class="toc-article-text">Scope</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Auto_Global"><span class="toc-article-text">Auto Global</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Undefined"><span class="toc-article-text">Undefined</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hoisting"><span class="toc-article-text">Hoisting</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Re-declare"><span class="toc-article-text">Re-declare</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Verson"><span class="toc-article-text">Verson</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Var"><span class="toc-article-text">Var</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Scope"><span class="toc-article-text">Scope</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Auto_Global"><span class="toc-article-text">Auto Global</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Undefined"><span class="toc-article-text">Undefined</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Hoisting"><span class="toc-article-text">Hoisting</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Redeclaration"><span class="toc-article-text">Redeclaration</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -173,14 +173,14 @@
 <blockquote>
 <p>實務上建議一行只 <code>var</code> 一個變數</p>
 </blockquote>
-<h2 id="Re-declare">Re-declare</h2><hr>
-<p><strong>re-declare01.js</strong></p>
+<h2 id="Redeclaration">Redeclaration</h2><hr>
+<p><strong>redeclaration01.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>ES5 與 ES6 都可執行。</p>
 <p>實際執行為</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"></span><br><span class="line">x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>因此 <code>var x</code> 被 Hoisting，所以結果都是 <code>2</code>。</p>
-<p><strong>re-declare02.js</strong></p>
+<p><strong>redeclaration02.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
 <p>ES5 與 ES6 都可執行。</p>
 <p>實際執行為</p>

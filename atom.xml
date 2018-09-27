@@ -92,7 +92,7 @@
     <link href="https://oomusou.io/ecmascript/var/"/>
     <id>https://oomusou.io/ecmascript/var/</id>
     <published>2018-09-26T12:23:43.000Z</published>
-    <updated>2018-09-26T15:59:33.548Z</updated>
+    <updated>2018-09-27T09:03:21.685Z</updated>
     <content type="html"><![CDATA[<p><code>var</code> 從 ES5 就存在，也是 ES5 的代表 keyword，看到 <code>var</code> 就可以判斷為 JavaScript。</p>
 <p>但 <code>var</code> 在 ES6 有了一些改變，重要性也不若以往，TC39 甚至建議完全不要使用 <code>var</code>，改用 <code>let</code> 與 <code>const</code>。</p>
 <a id="more"></a>
@@ -159,14 +159,14 @@
 <blockquote>
 <p>實務上建議一行只 <code>var</code> 一個變數</p>
 </blockquote>
-<h2 id="Re-declare">Re-declare</h2><hr>
-<p><strong>re-declare01.js</strong></p>
+<h2 id="Redeclaration">Redeclaration</h2><hr>
+<p><strong>redeclaration01.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>ES5 與 ES6 都可執行。</p>
 <p>實際執行為</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"></span><br><span class="line">x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>因此 <code>var x</code> 被 Hoisting，所以結果都是 <code>2</code>。</p>
-<p><strong>re-declare02.js</strong></p>
+<p><strong>redeclaration02.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
 <p>ES5 與 ES6 都可執行。</p>
 <p>實際執行為</p>

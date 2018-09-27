@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/ecmascript/var/</loc>
+    <lastmod>2018-09-27T09:03:21.685Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/linq/select/</loc>
     <lastmod>2018-09-26T16:13:14.563Z</lastmod>
   </url>
@@ -9,11 +14,6 @@
   <url>
     <loc>https://oomusou.io/linq/foreach/</loc>
     <lastmod>2018-09-26T16:11:05.824Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/var/</loc>
-    <lastmod>2018-09-26T15:59:33.548Z</lastmod>
   </url>
   
   <url>
