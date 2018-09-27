@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>JavaScript 的本質 | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="發現 JavaScript 可愛的一面">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="發現 JavaScript 可愛的一面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 的本質">
+<meta property="og:url" content="https://oomusou.io/ecmascript/essence/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="發現 JavaScript 可愛的一面">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-27T11:11:46.202Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 的本質">
+<meta name="twitter:description" content="發現 JavaScript 可愛的一面">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> JavaScript 的本質</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 發現 JavaScript 可愛的一面			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Feature"><span class="toc-article-text">Feature</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#JavaScript_是動態語言"><span class="toc-article-text">JavaScript 是動態語言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#JavaScript_是以_Function_為核心的語言"><span class="toc-article-text">JavaScript 是以 Function 為核心的語言</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#JavaScript_的世界觀"><span class="toc-article-text">JavaScript 的世界觀</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#JavaScript_與_OOP"><span class="toc-article-text">JavaScript 與 OOP</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>大家在學習 JavaScript 時，是否覺得 JavaScript 跟主流 OOP 程式語言，如 C++ / Java / C# 不太一樣？為什麼 JavaScript 沒有 interface？為什麼 JavaScript 很難使用 OOP Design Pattern ？為什麼我會從很討厭 JavaScript 到很喜歡 JavaScript？</p>
+<p>這要從 JavaScript 的本質談起，因為我看到了JavaScript 可愛的一面。</p>
+<a id="more"></a>
+<h2 id="Feature">Feature</h2><hr>
+<p>JavaScript 有兩大語言特色：</p>
+<ol>
+<li>JavaScript 是動態語言</li>
+<li>JavaScript 是以 Function 為核心的語言</li>
+</ol>
+<h2 id="JavaScript_是動態語言">JavaScript 是動態語言</h2><hr>
+<ul>
+<li>JavaScript 可輕易為 object 建立新的 property，這在 C# <code>很難做到</code></li>
+<li>JavaScript  可以輕易改變 <code>變數型別</code>，這在 C# <code>無法做到</code></li>
+</ul>
+<p>這種動態特性是好是壞見仁見智：</p>
+<p>優點：</p>
+<ul>
+<li>對於 library 開發者，動態特性可以實現很多黑魔法，在 run-time 改變很多行為，Vue 就是善用 JavaScript 這種特性</li>
+</ul>
+<p>缺點：</p>
+<ul>
+<li>對於 application 開發者，動態特性有太多黑魔法不容易維護</li>
+<li>太多行為都是 run-time 決定，不利於開發工具分析與重構</li>
+</ul>
+<blockquote>
+<p>JavaScript 族群也分兩派，一派很喜歡動態特型，另外一派則完全不使用其動態特性，這一類族群最後會偏向使用 TypeScript  (Angular、RxJS、VS Code)</p>
+<p>以我個人而言，若寫 application 時，我不會使用動態特性；若開發 library，為了 library 好用，會選擇性使用其動態特性</p>
+</blockquote>
+<h2 id="JavaScript_是以_Function_為核心的語言">JavaScript 是以 Function 為核心的語言</h2><hr>
+<p>以下幾點可以證明 JavaScript 是以 Function 為核心的語言，而非 Class：</p>
+<ul>
+<li>JavaScript 雖然有 Java 字眼，但本質與 Java 完全不同，就如同 <code>林志玲</code> 與 <code>林志炫</code> 的關係 (就是沒有關係)</li>
+<li>JavaScript 原型來自於 Scheme，而 Scheme 來自於 LISP，這都是典型的 Functional Programming Language，而非從 C++ 或 Java</li>
+<li>ES5 雖然有 class 觀念，但卻是利用 Constructor Function 模擬出來的</li>
+<li>ES5 雖然有 Inheritance 觀念，但卻是用 Function Prototype 實踐</li>
+<li>ES6 雖然有 class 與 extends，但其本質仍然是 Constructor Function 與 Function Prototype</li>
+</ul>
+<blockquote>
+<p>也就是 OOP 並非 JavaScript 的核心價值，僅僅提供最基本的 OOP 支援，而且 ECMAScript 2016 之後的發展，也沒再對 OOP 有更進一步的支援，但 ECMAScript 對 FP 的支援卻越來越完整</p>
+<p>也就是 JavaScript 對 OOP 支援僅屬於 Entry Level，連 C# 1.0 都不如</p>
+<p>而 JavaScript 也沒打算對 OOP 有進一步支援，如 OOP 必備的 Interface、Generics 都不可能出現在 ECMAScript，因為這些都不是 JavaScript 的核心價值，這也是為什麼會有 TypeScript 出現</p>
+<p>但 JavaScript 對 FP 支援則越來越完整，FP 的代表性功能都將陸續出現在新版 ECMAScript 中</p>
+</blockquote>
+<h2 id="JavaScript_的世界觀">JavaScript 的世界觀</h2><hr>
+<p>JavaScript 雖然也有 <code>物件</code>，但其世界觀與 OOP 的 <code>物件</code> 並不相同：</p>
+<ul>
+<li><strong>OOP</strong>：強調 <code>資料</code> 與 <code>功能</code> 合一，都封裝在 class 內，以 class 為封裝的最小單位，寫程式就是在寫 class，<code>資料</code> 就是 field，<code>功能</code> 就是 method，因為 field 的內容不同，因次有 object</li>
+<li><strong>JavaScript</strong>：強調 <code>資料</code> 與 <code>功能</code> 分家，<code>資料</code> 就是 object，<code>功能</code> 就是 function，以 function 為封裝的最小單位，寫程式就是在寫 function，若要將資料封裝在 function 內，會使用 closure</li>
+</ul>
+<blockquote>
+<p>也就是同樣是 <code>物件</code>，OOP 認為 class 是 <code>資料</code> 與 <code>功能</code> 的抽象，也因為有 <code>功能</code>，所以才必須要有 interface 定義 <code>功能</code> 的 <code>合約</code></p>
+<p>但 JavaScript 認為 <code>功能</code> 只放 <code>資料</code> 即可，<code>功能</code> 寫在 function 內，也因為 object 沒有 <code>功能</code>，所以不需要 interface 作為 <code>合約</code></p>
+<p>Q : JavaScript 的 object 明明可以放 function，這與 class 的 method 不是很類似嗎 ?</p>
+</blockquote>
+<p>JavaScript 認為 <code>Function as Data</code>，也稱為 <code>First Class Function</code>，因此 function 可以如 data 傳進其他 function，也可如 data 回傳 function，甚至將 function 放在 array 中，也就是你怎麼處理 data，就能怎麼處理 function。</p>
+<p>也因為 <code>Function as Data</code>    ，function 是被當成 data 掛進 object 中，而不是 class 的 method。</p>
+<blockquote>
+<p>C# 雖然也可以將 function 傳入到其他 function，但必須透過 Delegate，也就是將 function 封裝成 Delegate 物件後，才能提供類似 JavaScript 功能，因為 C# 本質是 OOP</p>
+</blockquote>
+<h2 id="JavaScript_與_OOP">JavaScript 與 OOP</h2><hr>
+<p>JavaScript 只是把 <code>物件</code> 用在處理 data，而不是如 OOP 將 <code>物件</code> 當成 <code>抽象</code> 使用，這是 JavaScript 與其他 OOP 語言最大的差異。</p>
+<p>這也是為什麼 OOP 的 Design Pattern 套用在 JavaScript 都很奇怪，但 FP 的 Design Pattern 套用在 JavaScript 都很順利。</p>
+<p>因為 JavaScript 的本質是 FP，不是 OOP，而且 ECMAScript 也沒打算將 JavaScript 繼續往 OOP 邁進。</p>
+<blockquote>
+<p>假如還是希望能以 OOP 寫 JavaScript，那就要挑選 TypeScript，TypeScript 持續對 OOP 進行強化，也有 Interface 與 Generics</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>JavaScript 的 object 僅用來處理 data，不是拿來當 <code>抽象</code> 使用</li>
+<li><code>Funtion as Data</code>，在 JavaScript 中，function 被視為 data 使用</li>
+<li>由於 JavaScript 語言特性不同，若以 OOP 語言，如 C++ / C# / Java 思維去思考 JavaScript，就會很難進步，會覺得 JavaScript 是很糟糕的語言</li>
+<li>但若以 FP 語言，如 F# / RestML / Haskell 思維去思考 JavaScript，就會豁然開朗，會覺得 JavaScript 是很棒的語言</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/linq/select/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-27 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>10</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
