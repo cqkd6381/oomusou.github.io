@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-27T11:11:46.202Z</updated>
+  <updated>2018-09-27T11:14:39.112Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title><![CDATA[JavaScript 的本質]]></title>
+    <title><![CDATA[發現 JavaScript 本質]]></title>
     <link href="https://oomusou.io/ecmascript/essence/"/>
     <id>https://oomusou.io/ecmascript/essence/</id>
     <published>2018-09-27T12:23:43.000Z</published>
-    <updated>2018-09-27T11:11:46.202Z</updated>
+    <updated>2018-09-27T11:14:39.112Z</updated>
     <content type="html"><![CDATA[<p>大家在學習 JavaScript 時，是否覺得 JavaScript 跟主流 OOP 程式語言，如 C++ / Java / C# 不太一樣？為什麼 JavaScript 沒有 interface？為什麼 JavaScript 很難使用 OOP Design Pattern ？為什麼我會從很討厭 JavaScript 到很喜歡 JavaScript？</p>
 <p>這要從 JavaScript 的本質談起，因為我看到了JavaScript 可愛的一面。</p>
 <a id="more"></a>
@@ -95,7 +95,7 @@
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[發現 JavaScript 可愛的一面]]>
+    <![CDATA[JavaScript 可愛的一面]]>
     
     </summary>
     
