@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-27T11:14:39.112Z</updated>
+  <updated>2018-09-27T14:21:29.836Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,99 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[ECMAScript 之 Let]]></title>
+    <link href="https://oomusou.io/ecmascript/let/"/>
+    <id>https://oomusou.io/ecmascript/let/</id>
+    <published>2018-09-27T13:23:43.000Z</published>
+    <updated>2018-09-27T14:21:29.836Z</updated>
+    <content type="html"><![CDATA[<p>ECMAScript 2015 是 JavaScript 歷史上最重要的一次升級，也讓 JavaScript 終於趕上主流程式語言的高度，若要明顯的分辨 ES5 與 ES6，最明顯的方式的方式就是看有沒有使用 <code>let</code> 與 <code>const</code>。</p>
+<a id="more"></a>
+<h2 id="Verson">Verson</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Let">Let</h2><hr>
+<p>宣告變數於 block <code>{}</code>、statement 或 expression 內。</p>
+<blockquote>
+<p><code>var</code> 宣告變數於 function 內或 function 外 (global)</p>
+</blockquote>
+<h2 id="Scope">Scope</h2><hr>
+<p><strong>scope01.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">varTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(x);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">varTest();</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>ES5 與 ES6 都可執行。</p>
+<p>實際執行為</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">varTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> x;</span><br><span class="line">  x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(x);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">varTest();</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>因為 Hoisting，<code>var x</code> 被移到最上層，scope 為 function 內，因此離開 <code>if (true)</code> 仍然為 <code>2</code>。</p>
+<p><strong>scope02.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">letTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(x);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">letTest();</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>ES5 沒有 <code>let</code> 無法執行。</p>
+<p>第 4 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> x = <span class="number">2</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>let</code> 後，其 scope 為 block <code>{}</code>，只有在 <code>{}</code> 為 <code>2</code>，離開 <code>{}</code> 就變回 <code>1</code>。</p>
+<blockquote>
+<p>以主流程式語言而言，變數的 scope 都是 block <code>{}</code>，而非 function，因此 ECMAScript 的 <code>let</code> 較符合大家的習慣，如此就可如 C# 一樣，將變數宣告在程式碼要用的地方，而不是宣告在 function 最前面，因此 TC39 建議全面使用 <code>let</code> 取代 <code>var</code></p>
+</blockquote>
+<p><strong>scope03.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (a === <span class="number">1</span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> a = <span class="number">11</span>;</span><br><span class="line">  <span class="keyword">let</span> b = <span class="number">22</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(a);</span><br><span class="line">  <span class="built_in">console</span>.log(b); </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line"><span class="built_in">console</span>.log(b);</span><br><span class="line"><span class="comment">// 11</span></span><br><span class="line"><span class="comment">// 22</span></span><br><span class="line"><span class="comment">// 11</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(b);  <span class="comment">// 22</span></span><br></pre></td></tr></table></figure>
+<p>因為 <code>let b = 22</code>，為 block level。</p>
+<p>13 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(b); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>因為 <code>var b = 2</code>，為 global level。</p>
+<p><strong>scope04.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">cnt</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; cnt; i++) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="number">5</span>);</span><br><span class="line"><span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
+<p><code>var</code> 為 function level，因此 <code>for</code> loop 執行完還存在。</p>
+<p><strong>scope05.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">cnt</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span>(<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; cnt; i++) &#123;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="number">5</span>);</span><br><span class="line"><span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
+<p><code>let</code> 為 block level，超出 <code>for</code> loop 就抓不到了。</p>
+<blockquote>
+<p><code>for</code> loop 應全面使用 <code>let</code> 避免 Side Effect</p>
+</blockquote>
+<h2 id="Redeclaration">Redeclaration</h2><hr>
+<p><strong>redeclaration01.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">//2</span></span><br><span class="line"><span class="comment">//3</span></span><br></pre></td></tr></table></figure>
+<p>ES5 與 ES6 都可以執行。</p>
+<p><code>var</code> 允許對變數重複宣告。</p>
+<p><strong>redeclaration02.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> x = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// SyntaxError</span></span><br></pre></td></tr></table></figure>
+<p>ES5 與 ES6 都無法執行。</p>
+<p><code>let</code> 不允許對變數重複宣告。</p>
+<p><strong>redeclaration03.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(x) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">      <span class="keyword">var</span> y = <span class="number">2</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">      <span class="keyword">var</span> y = <span class="number">3</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<p>ES5 與 ES6 都可執行。</p>
+<p>實際執行時</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> y;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">switch</span>(x) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">      y = <span class="number">2</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">      y = <span class="number">3</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="number">1</span>);</span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<p>因為 <code>var</code> 會 Hoisting，所以允許 redeclaration。</p>
+<p><strong>redeclaration04.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(x) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">      <span class="keyword">let</span> y = <span class="number">2</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">      <span class="keyword">let</span> y = <span class="number">3</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>若將 <code>var</code> 改成 <code>let</code>，則 ES5 與 ES6 都無法執行。</p>
+<p>因為 let 認 <code>{}</code> 為 scope，不允許 redeclaration。</p>
+<p><strong>redeclaration05.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params">x</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span>(x) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">0</span>: &#123;</span><br><span class="line">      <span class="keyword">let</span> y = <span class="number">2</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1</span>: &#123;</span><br><span class="line">      <span class="keyword">let</span> y = <span class="number">3</span>;</span><br><span class="line">      <span class="built_in">console</span>.log(y);</span><br><span class="line">      <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>在每個 <code>case</code> 加上 <code>{}</code>，則可以 redeclaration。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li><code>var</code> 為 function level 或 global level；而 <code>let</code> 為 block level</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/ecmascript_let" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN JavaScript</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let" target="_blank" rel="external">let</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 let 宣告變數]]>
+    
+    </summary>
+    
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[發現 JavaScript 本質]]></title>
     <link href="https://oomusou.io/ecmascript/essence/"/>
     <id>https://oomusou.io/ecmascript/essence/</id>
     <published>2018-09-27T12:23:43.000Z</published>
-    <updated>2018-09-27T11:14:39.112Z</updated>
+    <updated>2018-09-27T14:23:53.673Z</updated>
     <content type="html"><![CDATA[<p>大家在學習 JavaScript 時，是否覺得 JavaScript 跟主流 OOP 程式語言，如 C++ / Java / C# 不太一樣？為什麼 JavaScript 沒有 interface？為什麼 JavaScript 很難使用 OOP Design Pattern ？為什麼我會從很討厭 JavaScript 到很喜歡 JavaScript？</p>
 <p>這要從 JavaScript 的本質談起，因為我看到了JavaScript 可愛的一面。</p>
 <a id="more"></a>
@@ -66,7 +154,7 @@
 <h2 id="JavaScript_的世界觀">JavaScript 的世界觀</h2><hr>
 <p>JavaScript 雖然也有 <code>物件</code>，但其世界觀與 OOP 的 <code>物件</code> 並不相同：</p>
 <ul>
-<li><strong>OOP</strong>：強調 <code>資料</code> 與 <code>功能</code> 合一，都封裝在 class 內，以 class 為封裝的最小單位，寫程式就是在寫 class，<code>資料</code> 就是 field，<code>功能</code> 就是 method，因為 field 的內容不同，因次有 object</li>
+<li><strong>OOP</strong>：強調 <code>資料</code> 與 <code>功能</code> 合一，都封裝在 class 內，以 class 為封裝的最小單位，寫程式就是在寫 class，<code>資料</code> 就是 field，<code>功能</code> 就是 method，因為 field 的內容不同，因此有 object</li>
 <li><strong>JavaScript</strong>：強調 <code>資料</code> 與 <code>功能</code> 分家，<code>資料</code> 就是 object，<code>功能</code> 就是 function，以 function 為封裝的最小單位，寫程式就是在寫 function，若要將資料封裝在 function 內，會使用 closure</li>
 </ul>
 <blockquote>
@@ -2117,56 +2205,6 @@
       <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
     
       <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何在 Parallel Desktop 使用 Docker for Mac ?]]></title>
-    <link href="https://oomusou.io/Docker/parallel-docker/"/>
-    <id>https://oomusou.io/Docker/parallel-docker/</id>
-    <published>2018-07-29T12:23:43.000Z</published>
-    <updated>2018-07-29T08:00:56.000Z</updated>
-    <content type="html"><![CDATA[<p>雖然平時以 macOS 作為開發主力，偶爾還是會需要在 Parallel Desktop 使用 Windows，此時若要使用 Docker，雖然也能在 Parallel Destop 內跑 Docker for Windows，不過由於是 VM 中的 VM，Docker 並不穩定，比較建議的方式是 Windows 搭配 Docker for Mac 使用。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>PostgreSQL 10.4<br>Parallel Desktop 13 Pro 13.3.2 (43368)<br>Windows 10 Pro 1803 17134.191<br>Rider 2018.1.3 </p>
-<h2 id="Docker_for_Mac">Docker for Mac</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose up <span class="operator">-d</span></span><br></pre></td></tr></table></figure>
-<p>在 macOS 以 <code>docker-compose</code> 啟動 PostgreSQL container，且 port 為 <code>1234</code>。</p>
-<p><img src="/images/docker/parallel-docker/parallel000.png" alt="parallel000"></p>
-<p>由於將來 Parallel Desktop 內的 Windows 將連到 macOS 的 PostgreSQL container，目前已知其 port 為 <code>1234</code> ，但 IP 是多少呢 ?</p>
-<h2 id="Parallel_Desktop_Network">Parallel Desktop Network</h2><hr>
-<p><img src="/images/docker/parallel-docker/parallel001.png" alt="parallel001"></p>
-<p>Parallel Desktop 預設的 network 是以 <code>Shared Network</code> 方式。</p>
-<p><img src="/images/docker/parallel-docker/parallel002.png" alt="parallel002"></p>
-<p>什麼是 <code>Shared Network</code> 呢 ?</p>
-<p>上圖中的 Mac 有 <code>192.168.0.20</code> 與  <code>10.211.55.10</code> 兩個 <code>IP</code> 。</p>
-<p>而 Windows 的 IP 則為 <code>10.211.55.20</code>。</p>
-<p>簡單的說相當於 Mac 有兩張網卡，一張網卡為 <code>192.168.0.20</code>，而另一張網卡為 <code>10.211.55.10</code>，而 Windows 的 <code>10.211.55.20</code> 與  Mac 的 <code>10.211.55.10</code> 為同一個網段，可彼此互通，然後再透過 <code>192.168.0.20</code> 這張網卡連上 internet。</p>
-<p><img src="/images/docker/parallel-docker/parallel003.png" alt="parallel003"></p>
-<p>我們可發現 Parallel Desktop 自帶 DHCP，且 IP 從 <code>10.211.55.1</code> 開始到 <code>10.211.55.254</code>。</p>
-<p><img src="/images/docker/parallel-docker/parallel004.png" alt="parallel004"></p>
-<p>當 Parallel Desktop 啟動後，實際在 macOS 下 <code>ifconfig</code> 觀察，會發現多了 <code>vinc0</code> 這張網卡，其 IP 為 <code>10.211.55.2</code>。</p>
-<p>也就是說若要從 Parallel Desktop 的 Windows 連到 PostgreSQL container，IP 就是 <code>10.211.55.2</code>，port 為 <code>1234</code>。</p>
-<h2 id="Windows">Windows</h2><hr>
-<p><img src="/images/docker/parallel-docker/parallel005.png" alt="parallel005"></p>
-<ol>
-<li>在 Windows 內的 Rider 能夠以 <code>10.211.55.2 : 1234</code> 連到 Docker for Mac 的 PostgreSQL container</li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><ul>
-<li>Parallel Desktop 都會穩定以 <code>10.211.55.2</code> 當成 macOS 的 IP，所以任何 Docker container 都可以跑在 macOS，然後 Windows 再以 <code>10.211.55.2</code> 連上即可，這樣就不需要執行 Docker for Windows 了</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://www.parallels.com" target="_blank" rel="external">Parallels</a>, <a href="https://kb.parallels.com/en/4948" target="_blank" rel="external">Which networking mode (Bridged, Shared or Host-Only) should I use for the virtual machine?</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[不必再與 Docker for Windows 搏鬥]]>
-    
-    </summary>
-    
-      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
-    
-      <category term="Parallel Desktop" scheme="https://oomusou.io/tags/Parallel-Desktop/"/>
     
   </entry>
   
