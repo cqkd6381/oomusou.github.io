@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-28T01:56:00.540Z</updated>
+  <updated>2018-09-28T02:08:18.626Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,13 +19,13 @@
     <link href="https://oomusou.io/ecmascript/let/"/>
     <id>https://oomusou.io/ecmascript/let/</id>
     <published>2018-09-27T13:23:43.000Z</published>
-    <updated>2018-09-28T01:56:00.540Z</updated>
+    <updated>2018-09-28T02:08:18.626Z</updated>
     <content type="html"><![CDATA[<p>ECMAScript 2015 是 JavaScript 歷史上最重要的一次升級，也讓 JavaScript 終於趕上主流程式語言的高度，若要明顯的分辨 ES5 與 ES6，最明顯的方式的方式就是看有沒有使用 <code>let</code>。</p>
 <a id="more"></a>
 <h2 id="Verson">Verson</h2><hr>
 <p>ECMAScript 2015</p>
 <h2 id="Let">Let</h2><hr>
-<p>宣告變數於 block <code>{}</code>、statement 或 expression 內。</p>
+<p>宣告變數於 block <code>{}</code> 內。</p>
 <blockquote>
 <p><code>var</code> 宣告變數於 function 內或 function 外 (global)</p>
 </blockquote>
