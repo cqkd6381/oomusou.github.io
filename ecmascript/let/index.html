@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="使用 let 宣告變數">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-09-28T01:53:44.209Z">
+<meta property="og:updated_time" content="2018-09-28T01:56:00.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ECMAScript 之 Let">
 <meta name="twitter:description" content="使用 let 宣告變數">
@@ -151,7 +151,7 @@
 </blockquote>
 <p><strong>scope06.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="string">'global'</span>;</span><br><span class="line"><span class="keyword">let</span> y = <span class="string">'global'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.x);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.y);</span><br><span class="line"><span class="comment">// global</span></span><br><span class="line"><span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
-<p><code>var</code> 與 <code>let</code> 雖然都可建立 global 變數，但 <code>var</code> 會污染 DOM 的 <code>window</code> object，但 <code>let</code> ·不會。</p>
+<p><code>var</code> 與 <code>let</code> 雖然都可建立 global 變數，但 <code>var</code> 會污染 DOM 的 <code>window</code> object，但 <code>let</code> 不會。</p>
 <blockquote>
 <p>若要使用 global 變數，應全面使用 <code>let</code> 取代 <code>var</code></p>
 </blockquote>
