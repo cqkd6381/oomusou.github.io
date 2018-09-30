@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-30T11:51:59.576Z</updated>
+  <updated>2018-09-30T11:55:27.770Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/ecmascript/const/"/>
     <id>https://oomusou.io/ecmascript/const/</id>
     <published>2018-09-30T13:23:43.000Z</published>
-    <updated>2018-09-30T11:51:59.576Z</updated>
+    <updated>2018-09-30T11:55:27.770Z</updated>
     <content type="html"><![CDATA[<p><code>const</code> 也是 ECMAScript 2015+ 的代表 keyword，應盡量使用 <code>const</code> 避免 Side Effect，除非真的要修改變數。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
