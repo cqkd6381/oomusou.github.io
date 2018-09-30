@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/fp/lazy-evaluation/</loc>
+    <lastmod>2018-09-30T11:26:29.996Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/ecmascript/let/</loc>
     <lastmod>2018-09-28T02:08:18.626Z</lastmod>
   </url>
@@ -109,11 +114,6 @@
   <url>
     <loc>https://oomusou.io/haskell/ghc/</loc>
     <lastmod>2018-08-19T00:31:22.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/fp/lazy-evaluation/</loc>
-    <lastmod>2018-08-18T15:38:23.000Z</lastmod>
   </url>
   
   <url>
