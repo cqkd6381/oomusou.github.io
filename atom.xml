@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-09-30T11:30:09.321Z</updated>
+  <updated>2018-09-30T11:51:59.576Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,65 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ECMAScript 之 Const]]></title>
+    <link href="https://oomusou.io/ecmascript/const/"/>
+    <id>https://oomusou.io/ecmascript/const/</id>
+    <published>2018-09-30T13:23:43.000Z</published>
+    <updated>2018-09-30T11:51:59.576Z</updated>
+    <content type="html"><![CDATA[<p><code>const</code> 也是 ECMAScript 2015+ 的代表 keyword，應盡量使用 <code>const</code> 避免 Side Effect，除非真的要修改變數。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Definition">Definition</h2><hr>
+<p>宣告常數於 block <code>{}</code> 內。</p>
+<blockquote>
+<p>與 <code>let</code> 差異只有 <code>let</code> 是 <code>變數</code>，而 <code>const</code> 是 <code>常數</code>，且都是 block level</p>
+</blockquote>
+<h2 id="Scope">Scope</h2><hr>
+<p><strong>scope01.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">constTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(x);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">constTest();</span><br><span class="line"><span class="comment">// SyntaxError</span></span><br></pre></td></tr></table></figure>
+<p>與 <code>let</code> 一樣都是 <code>block</code> level，由於 <code>x = 2</code> 修改 <code>x</code> ，因此 SyntaxError。</p>
+<p><strong>scope02.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="string">'global'</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.x);</span><br><span class="line"><span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+<p>在 global level 使用 const，也不會污染 DOM 的 <code>window</code> object。</p>
+<h2 id="Initialization">Initialization</h2><hr>
+<p><strong>initialization01.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x;</span><br><span class="line">x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// SyntaxError</span></span><br></pre></td></tr></table></figure>
+<p><code>let</code> 可先宣告，然後再給值，但 <code>const</code> 一定要 <code>宣告同時給值</code>。</p>
+<p>只能寫成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>因為 const 強調不能被 reassign，因此 <code>宣告同時給值</code> 合理</p>
+</blockquote>
+<h2 id="Not_Immutable">Not Immutable</h2><hr>
+<p><strong>not-immutable.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">  name: <span class="string">'Sam'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">data.name = <span class="string">'Kevin'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(data.name);</span><br><span class="line"><span class="comment">// Kevin</span></span><br></pre></td></tr></table></figure>
+<p><code>const</code> 並不代表 data 是 Immutable，只代表變數不能被 reassign。</p>
+<h2 id="Define_Function">Define Function</h2><hr>
+<p><strong>define-function.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> f = (x, y) =&gt; x + y;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(f(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>理論上也可以使用 <code>let</code> 定義 function，但因為 function 經過定義後就不會被 reassign，所以實務上都是使用 <code>const</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>應優先使用 <code>const</code>  避免 Side Effect，也同時養成 Declarative Programming 習慣，盡量避免 Imperative 方式一直修改變數</li>
+<li><code>const</code> 並不是 Immutable，僅是變數不能被 reassign</li>
+<li>實務上建議使用 <code>const</code> 定義 function</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/ecmascript_let" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN JavaScript</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const" target="_blank" rel="external">const</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 const 讓變數不會被 reassign]]>
+    
+    </summary>
+    
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[深入探討 FP 之 Yield 與 Lazy Evaluation]]></title>
@@ -2067,163 +2126,6 @@
     </summary>
     
       <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 SonarQube 檢查 .NET Core 專案 ? (Docker)]]></title>
-    <link href="https://oomusou.io/sonarqube/netcore-docker/"/>
-    <id>https://oomusou.io/sonarqube/netcore-docker/</id>
-    <published>2018-07-31T12:23:43.000Z</published>
-    <updated>2018-08-02T02:48:16.000Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 是一套 <code>程式碼品質檢查工具</code>，可以幫我們檢查 C# 的 bugs、 vulenrability、code smell 與 duplication。</p>
-<p>本文使用 Docker Compose，並同時啟動 .NET Core 與 SonarQube 兩個 container，自動對 .NET 專案進行檢查。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>.NET Core 2.1<br>SonarQube 7.1<br>SonarScanner 4.3.1.1372<br>Rider 2018.1.3</p>
-<h2 id="Dockerfile">Dockerfile</h2><hr>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br><span class="line"></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_VERSION=<span class="number">4.3</span>.<span class="number">1.1372</span></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_HOME=/opt/scanner</span><br><span class="line"></span><br><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y unzip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y openjdk-<span class="number">8</span>-jre</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/<span class="variable">$SCANNER_VERSION</span>/sonar-scanner-msbuild-<span class="variable">$SCANNER_VERSION</span>-netcoreapp2.<span class="number">0</span>.zip -O /opt/sonar-scanner-msbuild.zip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mkdir -p <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">unzip /opt/sonar-scanner-msbuild.zip <span class="operator">-d</span> <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">rm /opt/sonar-scanner-msbuild.zip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chmod <span class="number">775</span> <span class="variable">$SCANNER_HOME</span>/ -R</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">./ ./</span><br><span class="line"></span><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"./scanner.sh"</span>]</span></span><br></pre></td></tr></table></figure>
-<p>因為要在 .NET Core container 安裝 SonarScanner，所以要對 .NET Core 客製化 image。</p>
-<p>第 1 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br></pre></td></tr></table></figure>
-<p>使用 <code>FROM</code> 設定所使用的基底 image。</p>
-<p>使用 Microsoft 官方的 <code>microsoft/dotnet</code> image。</p>
-<p>第 3 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ENV</span> SCANNER_VERSION=<span class="number">4.3</span>.<span class="number">1.1372</span></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_HOME=/opt/scanner</span><br></pre></td></tr></table></figure>
-<p>使用 <code>ENV</code> 設定 Dockerfile 的環境變數。</p>
-<p><code>SCANNER_VERSION</code> : 因為 SonarScanner 的下載路徑，會與版本有關，所以特別設定成變數。</p>
-<p><code>SCANNER_HOME</code> : 設定 SonarScanner 所安裝的目錄。</p>
-<p>第 6 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span></span><br></pre></td></tr></table></figure>
-<p>設定 container 的工作目錄，也就是預設目錄都會在 <code>/app</code> 下。</p>
-<p>第 8 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y unzip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y openjdk-<span class="number">8</span>-jre</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>RUN</code> 執行 CLI 指令。</p>
-<ul>
-<li>使用 <code>wget</code> 下載 SonarScanner</li>
-<li>使用 <code>unzip</code> 對 zip 解壓縮</li>
-<li><code>SonarScanner</code> 會使用 Java 執行，需要安裝 Java Runtime</li>
-</ul>
-<p>12 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -q https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/<span class="variable">$SCANNER_VERSION</span>/sonar-scanner-msbuild-<span class="variable">$SCANNER_VERSION</span>-netcoreapp2.<span class="number">0</span>.zip -O /opt/sonar-scanner-msbuild.zip</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>wget</code> 下載 SonarScanner 壓縮檔，並下載到 <code>/opt</code> 目錄下。</p>
-<p>13 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">mkdir -p <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">unzip /opt/sonar-scanner-msbuild.zip <span class="operator">-d</span> <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">rm /opt/sonar-scanner-msbuild.zip</span></span><br></pre></td></tr></table></figure>
-<p>建立 <code>/opt/scanner</code> 目錄，將 SonarScanner 壓縮檔解壓縮放到 <code>/opt/scanner</code> 目錄下，解壓縮完刪除 SonarScanner 壓縮檔。</p>
-<p>16 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">chmod <span class="number">775</span> <span class="variable">$SCANNER_HOME</span>/ -R</span></span><br></pre></td></tr></table></figure>
-<p>將 SonarScanner 目錄所有檔案賦予執行權力。</p>
-<p>18 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">COPY</span> <span class="bash">./ ./</span></span><br></pre></td></tr></table></figure>
-<p>將目前 solution 下所有檔案複製到 container 內，也就是 <code>/app</code> 目錄下。</p>
-<p>19 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"./scanner.sh"</span>]</span></span><br></pre></td></tr></table></figure>
-<p>最後會執行專案目錄下的 <code>./scanner.sh</code>，負責執行 SonarScanner 檢查。</p>
-<h2 id="Docker-compose-yml">Docker-compose.yml</h2><hr>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  net-core:&#10;    build: .&#10;    container_name: MyCore&#10;    volumes:&#10;      - &#34;$&#123;HOST_DIR&#125;:/code/&#34;&#10;    networks:&#10;      - netcore&#10;    depends_on:&#10;      - sonarqube&#10;&#10;  sonarqube:&#10;    image: sonarqube:latest&#10;    container_name: MySonarQube&#10;    ports:&#10;      - 9000:9000&#10;      - 9002:9002&#10;    networks:&#10;      netcore:&#10;        ipv4_address: 172.16.238.10&#10;     &#10;networks:&#10;  netcore:&#10;    ipam: &#10;      driver: default&#10;      config:&#10;        - subnet: 172.16.238.0/24</span><br></pre></td></tr></table></figure>
-<p>設定 .NET Core 與 SonarQube 兩個 container 同時啟動。</p>
-<p>第 4 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net-core:&#10;    build: .</span><br></pre></td></tr></table></figure>
-<p>使用 <code>build</code> 將同目錄下的 <code>Dockerfile</code> build 成 image，也就是剛才的 <code>Dockerfile</code>。</p>
-<p>第 6 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyCore</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 .NET Core 的 container 名稱。</p>
-<p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - &#34;$&#123;HOST_DIR&#125;:/code/&#34;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>volumes</code> 設定 host 與 container 的共用目錄，<code>:</code> 左方為 host 目錄，右方為 container 目錄。</p>
-<p>目的是能在 .NET Core container 內抓到 host 的 project。</p>
-<p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  - netcore</span><br></pre></td></tr></table></figure>
-<p>使用 <code>networks</code> 設定 .NET Core 與 SonarQube 共用 <code>netcore</code> 內部網路。</p>
-<p>11 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depends_on:&#10;  - sonarqube</span><br></pre></td></tr></table></figure>
-<p>.NET Core container 相依於 SonarQube container。</p>
-<p>14 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sonarqube:&#10;  image: sonarqube:latest</span><br></pre></td></tr></table></figure>
-<p>使用 <code>image</code> 設定 container 所使用的 image。</p>
-<p>16 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MySonarQube</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 SonarQube 的 container 名稱。</p>
-<p>17 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - 9000:9000&#10;  - 9002:9002</span><br></pre></td></tr></table></figure>
-<p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port，<code>:</code> 左側為 host port，右側為 container port。</p>
-<p>為了能在 host 以瀏覽器連上 SonarQube，要將 host 的 9000 與 9002 兩個 port 給 host。</p>
-<p>20 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  netcore:&#10;    ipv4_address: 172.16.238.10</span><br></pre></td></tr></table></figure>
-<p>使用 <code>network</code> 設定使用 <code>netcore</code> 網路，並設定其 IP 為 <code>172.16.238.10</code>。</p>
-<blockquote>
-<p>一般來說，我們不必為 container 設定固定 IP，只要使用 container 名稱就可彼此溝通，但稍後 SonarScanner 必須使用固定 IP 才能連上 SonarQube，所以在此特別要設定固定 IP</p>
-</blockquote>
-<p>24 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  netcore:&#10;    ipam: &#10;      driver: default&#10;      config:&#10;        - subnet: 172.16.238.0/24</span><br></pre></td></tr></table></figure>
-<p>設定 <code>netcore</code> 網路。</p>
-<h2 id="-env">.env</h2><hr>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOST_DIR=~/Code/CSharp</span><br></pre></td></tr></table></figure>
-<p>將 <code>HOST_DIR</code> 以環境變數設定，為 host 與 .NET Core container 所共享的目錄。</p>
-<h2 id="scanner-sh">scanner.sh</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#! /bin/bash</span></span><br><span class="line">sleep <span class="number">30</span></span><br><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll begin /k:core2 /n:Core2 /v:<span class="number">1.0</span> /d:sonar.login=admin /d:sonar.password=admin /d:sonar.host.url=http://<span class="number">172.16</span>.<span class="number">238.10</span>:<span class="number">9000</span></span><br><span class="line">dotnet build</span><br><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll end /d:sonar.login=admin /d:sonar.password=admin</span><br></pre></td></tr></table></figure>
-<p>使用 SonarScanner 檢查 .NET Core 專案，<code>scanner.sh</code> 會放在專案根目錄。</p>
-<p>第 2 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sleep <span class="number">30</span></span><br></pre></td></tr></table></figure>
-<p>主要是要等 SonarQube 啟動完成，比較好的方式是使用 Health Check 明確得知 SonarQube 已經啟動完成。</p>
-<p>這裡暫時先 sleep 30 秒，等 SonarQube 先啟動，.NET Core 才開始執行 SonarScanner。</p>
-<p>這裡還有改善的空間，也可以自行調整 sleep 時間。</p>
-<p>第 3 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll begin /k:core2 /n:Core2 /v:<span class="number">1.0</span> /d:sonar.login=admin /d:sonar.password=admin /d:sonar.host.url=http://<span class="number">172.16</span>.<span class="number">238.10</span>:<span class="number">9000</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet</code> 執行 <code>SonarScanner.MSBuild.dll</code>，一開始以 <code>begin</code> 開頭：</p>
-<ul>
-<li><strong>/k</strong> : SonarQube 對專案的 key，內部將以此 key 作為辨別，必須唯一</li>
-<li><strong>/n</strong> : 在 SonarQube 網頁上顯示的專案名稱</li>
-<li><strong>/v</strong> : 在 SonarQube 網頁上顯示的版本編號</li>
-<li><strong>/d:sonar.login</strong> : 指定 SonarQube 帳號</li>
-<li><strong>/d:sonar.password</strong> : 指定 SonarQube 密碼</li>
-<li><strong>/d:sonar.host.url</strong> : 指定 SonarQube server IP 與 port</li>
-</ul>
-<p>第 4 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet build</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet build</code> 編譯專案。</p>
-<blockquote>
-<p>Script 語言不用編譯，可以直接使用 SonarQube Scanner 就可以檢查，但 C# 需要編譯，因此必須 dotnet build</p>
-</blockquote>
-<p>第 5 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll end /d:sonar.login=admin /d:sonar.password=admin</span><br></pre></td></tr></table></figure>
-<p>最後需加上 <code>end</code>，scanner 正式將 <code>dotnet build</code> 檢查出的結果寫入 SonarQube project</p>
-<ul>
-<li>仍必須指定 SonarQube 的帳號密碼</li>
-</ul>
-<h2 id="執行_SonarScanner">執行 SonarScanner</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SonarScanner $ docker-compose up --build</span><br></pre></td></tr></table></figure>
-<p>啟動 .NET Core 與 SonarQube container，並且自動執行 SonarScanner。</p>
-<ul>
-<li><strong>–build</strong> : 重新建立 .NET Core 自訂 image，若有任何修改，將重新包進 image，確保 <code>docker-compose</code> 是最新的 image</li>
-</ul>
-<p><img src="/images/sonarqube/netcore-docker/core000.png" alt="core000"></p>
-<p><img src="/images/sonarqube/netcore-docker/core002.png" alt="core002"></p>
-<ol>
-<li>在 host 以 <code>http://localhost:9000</code> ，將可看到 SonarQube 的檢查結果</li>
-</ol>
-<h2 id="結束_Container">結束 Container</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose down</span><br></pre></td></tr></table></figure>
-<p><img src="/images/sonarqube/netcore-docker/core003.png" alt="core003"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>由於 SonarScanner 已經被包在 Dockerfile 內，host 就不用再安裝 SonarScanner</li>
-<li>沒有將 .NET Core 安裝在 SonarQube container 內，而是分別使用 .NET Core container 與 SonarQube container，符合 Microservice 精神</li>
-<li>只要執行 <code>docker-compose up --build</code>，SonarScanner 就會自動啟動進行檢查</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/sonarscanner" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[完全使用 Docker 版本 SonarQube]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Docker" scheme="https://oomusou.io/tags/Docker/"/>
-    
-      <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
     
   </entry>
   

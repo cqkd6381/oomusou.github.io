@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ECMAScript 之 Const | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 const 讓變數不會被 reassign">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 const 讓變數不會被 reassign">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript 之 Const">
+<meta property="og:url" content="https://oomusou.io/ecmascript/const/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 const 讓變數不會被 reassign">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-09-30T11:51:59.576Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript 之 Const">
+<meta name="twitter:description" content="使用 const 讓變數不會被 reassign">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> ECMAScript 之 Const</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 const 讓變數不會被 reassign			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Definition"><span class="toc-article-text">Definition</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Scope"><span class="toc-article-text">Scope</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Initialization"><span class="toc-article-text">Initialization</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Not_Immutable"><span class="toc-article-text">Not Immutable</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Define_Function"><span class="toc-article-text">Define Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p><code>const</code> 也是 ECMAScript 2015+ 的代表 keyword，應盡量使用 <code>const</code> 避免 Side Effect，除非真的要修改變數。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Definition">Definition</h2><hr>
+<p>宣告常數於 block <code>{}</code> 內。</p>
+<blockquote>
+<p>與 <code>let</code> 差異只有 <code>let</code> 是 <code>變數</code>，而 <code>const</code> 是 <code>常數</code>，且都是 block level</p>
+</blockquote>
+<h2 id="Scope">Scope</h2><hr>
+<p><strong>scope01.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">constTest</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">    x = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">console</span>.log(x);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">constTest();</span><br><span class="line"><span class="comment">// SyntaxError</span></span><br></pre></td></tr></table></figure>
+<p>與 <code>let</code> 一樣都是 <code>block</code> level，由於 <code>x = 2</code> 修改 <code>x</code> ，因此 SyntaxError。</p>
+<p><strong>scope02.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="string">'global'</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">window</span>.x);</span><br><span class="line"><span class="comment">// undefined</span></span><br></pre></td></tr></table></figure>
+<p>在 global level 使用 const，也不會污染 DOM 的 <code>window</code> object。</p>
+<h2 id="Initialization">Initialization</h2><hr>
+<p><strong>initialization01.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x;</span><br><span class="line">x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// SyntaxError</span></span><br></pre></td></tr></table></figure>
+<p><code>let</code> 可先宣告，然後再給值，但 <code>const</code> 一定要 <code>宣告同時給值</code>。</p>
+<p>只能寫成</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>因為 const 強調不能被 reassign，因此 <code>宣告同時給值</code> 合理</p>
+</blockquote>
+<h2 id="Not_Immutable">Not Immutable</h2><hr>
+<p><strong>not-immutable.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = &#123;</span><br><span class="line">  name: <span class="string">'Sam'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">data.name = <span class="string">'Kevin'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(data.name);</span><br><span class="line"><span class="comment">// Kevin</span></span><br></pre></td></tr></table></figure>
+<p><code>const</code> 並不代表 data 是 Immutable，只代表變數不能被 reassign。</p>
+<h2 id="Define_Function">Define Function</h2><hr>
+<p><strong>define-function.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> f = (x, y) =&gt; x + y;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(f(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>理論上也可以使用 <code>let</code> 定義 function，但因為 function 經過定義後就不會被 reassign，所以實務上都是使用 <code>const</code>。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>應優先使用 <code>const</code>  避免 Side Effect，也同時養成 Declarative Programming 習慣，盡量避免 Imperative 方式一直修改變數</li>
+<li><code>const</code> 並不是 Immutable，僅是變數不能被 reassign</li>
+<li>實務上建議使用 <code>const</code> 定義 function</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/ecmascript_let" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN JavaScript</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const" target="_blank" rel="external">const</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/fp/lazy-evaluation/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-09-30 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>12</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
