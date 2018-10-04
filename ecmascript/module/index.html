@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="Module 是 ECMAScript 發展的重要里程碑">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-10-04T09:22:56.931Z">
+<meta property="og:updated_time" content="2018-10-04T09:37:27.356Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ECMAScript 之 Module">
 <meta name="twitter:description" content="Module 是 ECMAScript 發展的重要里程碑">
@@ -139,7 +139,7 @@
 <h2 id="AMD">AMD</h2><hr>
 <blockquote>
 <p><strong>AMD</strong></p>
-<p>Asynchronous Module Defintion<br>針對 Browser 所設計 Module 解決方案，使用 Asynchronous 方式載入 Module</p>
+<p>Asynchronous Module Defintion<br>針對 Browser 所設計的 Module 解決方案，使用 Asynchronous 方式載入 Module</p>
 </blockquote>
 <p><strong>MouseCounterModule.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'MouseCounterModule'</span>, [<span class="string">'jQuery'</span>], $ =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">const</span> handleClick = () =&gt; </span><br><span class="line">    <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    countClick: () =&gt;</span><br><span class="line">      $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">  &#125;;  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>

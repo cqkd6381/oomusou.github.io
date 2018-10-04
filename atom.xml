@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-04T09:22:56.931Z</updated>
+  <updated>2018-10-04T09:37:27.356Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/ecmascript/module/"/>
     <id>https://oomusou.io/ecmascript/module/</id>
     <published>2018-10-04T12:23:43.000Z</published>
-    <updated>2018-10-04T09:22:56.931Z</updated>
+    <updated>2018-10-04T09:37:27.356Z</updated>
     <content type="html"><![CDATA[<p>ES5 很難寫大程式，主要是因為 JavaScript 沒有 Module 概念，常常一個檔案寫兩三千行程式，且大量使用 Global Variable 造成 Side Effect 很難維護。</p>
 <p>早期 JavaScript 是使用 Module Pattern 解決，稍後更有 CommonJS 與 AMD 試圖制定 Module 標準，一直到 TC39 出手，在 ECMAScript 2015 定義 Module 後，JavaScript 的模組化總算塵埃落定，是 JavaScript 發展的重要里程碑。</p>
 <a id="more"></a>
@@ -52,7 +52,7 @@
 <h2 id="AMD">AMD</h2><hr>
 <blockquote>
 <p><strong>AMD</strong></p>
-<p>Asynchronous Module Defintion<br>針對 Browser 所設計 Module 解決方案，使用 Asynchronous 方式載入 Module</p>
+<p>Asynchronous Module Defintion<br>針對 Browser 所設計的 Module 解決方案，使用 Asynchronous 方式載入 Module</p>
 </blockquote>
 <p><strong>MouseCounterModule.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'MouseCounterModule'</span>, [<span class="string">'jQuery'</span>], $ =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">const</span> handleClick = () =&gt; </span><br><span class="line">    <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    countClick: () =&gt;</span><br><span class="line">      $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">  &#125;;  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
