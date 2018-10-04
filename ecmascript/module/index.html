@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="Module 是 ECMAScript 發展的重要里程碑">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-10-04T10:01:33.656Z">
+<meta property="og:updated_time" content="2018-10-04T10:36:52.707Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ECMAScript 之 Module">
 <meta name="twitter:description" content="Module 是 ECMAScript 發展的重要里程碑">
@@ -139,7 +139,7 @@
 <h2 id="AMD">AMD</h2><hr>
 <blockquote>
 <p><strong>AMD</strong></p>
-<p>Asynchronous Module Defintion<br>針對 Browser 所設計的 Module 解決方案，使用 Asynchronous 方式載入 Module</p>
+<p>Asynchronous Module Defintion<br>針對 Browser 所設計的  Module 解決方案，使用 Asynchronous 方式載入 Module</p>
 </blockquote>
 <p><strong>MouseCounterModule.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'MouseCounterModule'</span>, [<span class="string">'jQuery'</span>], $ =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">const</span> handleClick = () =&gt; </span><br><span class="line">    <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    countClick: () =&gt;</span><br><span class="line">      $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">  &#125;;  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
@@ -178,9 +178,9 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $ = <span class="built_in">require</span>(<span class="string">'jQuery'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handleClick = () =&gt; </span><br><span class="line">  <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  countClick: () =&gt;</span><br><span class="line">    $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p><code>require()</code> 為 CommonJS 所提供的 function，負責載入 Dependency Module。</p>
 <ul>
-<li><p><strong>將 data 或 function 封裝在 Module 內</strong>：<code>numClicks</code> 與 <code>handleClick()</code> 看似 Global，但事實上其 scope 只有 Module level，不用特別使用 function 與 Closure 寫法就能達成封裝 data 與 function。</p>
+<li><p><strong>將 data 或 function 封裝在 Module 內</strong>：<code>numClicks</code> 與 <code>handleClick()</code> 看似 Global，但事實上其 scope 只有 Module level，不用特別使用 function 與 Closure 寫法就能達成封裝 data 與 function</p>
 </li>
-<li><p><strong>將 interface 暴露在 Module 外</strong>：將全新 object 指定給 <code>module.exports</code> 即可，不需特別 return</p>
+<li><p><strong>將 interface 暴露在 Module 外</strong>：將 interface 暴露在 Module 外</p>
 </li>
 </ul>
 <p><strong>main.js</strong></p>
@@ -189,7 +189,7 @@
 <p>CommonJS 有以下特色：</p>
 <ul>
 <li>Data 與 function 不需再使用 Closure，雖然看起來像 Global，但 CommonJS 會封裝在 Module 內</li>
-<li>使用 module.exports 公開 interface</li>
+<li>使用 <code>module.exports</code> 公開 interface</li>
 <li>一個檔案就是一個 Module</li>
 <li>語法比 AMD 優雅</li>
 </ul>
@@ -199,7 +199,7 @@
 <li>Browser 並未提供 <code>module</code> 與 <code>exports</code>，因此還要透過 <code>Browserify</code> 作轉換</li>
 </ul>
 <h2 id="ES_Module">ES Module</h2><hr>
-<p>由於 JavaScript 社群存在這兩大 Module 標準，TC39 決定融合 AMD 與 CommonJS 的優點制定出 ES6 Module，至此 JavaScript 有了正式的 Module 規格</p>
+<p>由於 JavaScript 社群存在這兩大 Module 標準，TC39 決定融合 AMD 與 CommonJS 的優點制定出 ES6 Module，至此 JavaScript 有了正式的 Module 規格。</p>
 <ul>
 <li>學習 CommonJS，一個檔案就是一個 Module</li>
 <li>學習 CommonJS 簡單優雅的語法</li>
@@ -300,7 +300,8 @@
 <p>無論對 variable / object / function / class 加以 Default Export，可不用事先明確命名 (當然要事先命名亦可，但沒有太大意義)，然後在 Named Import 時不用加上 <code>{}</code></p>
 <p>React 與 Vue 喜歡使用 Default Export，優點是可由 user 自行命名，彈性最高；Angular 則喜歡使用 Named Export，由 Framework 事先命名，優點是整個 community 名稱統一</p>
 </blockquote>
-<h2 id="Named_+_Default_Export">Named + Default Export</h2><p>一個 Module 只允許一個 Default Export，但可以有多個 Named Export。</p>
+<h2 id="Named_+_Default_Export">Named + Default Export</h2><hr>
+<p>一個 Module 只允許一個 Default Export，但可以有多個 Named Export。</p>
 <p><strong>my-module.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">'Sam'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> add = (x, y) =&gt; x + y;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> </span>&#123;</span><br><span class="line">  constructor(x, y) &#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  sum() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.x + <span class="keyword">this</span>.y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>name</code> 與 <code>add()</code> 為 Named Export，但 Anonymous Class 為 Default Export。</p>
@@ -308,7 +309,8 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; name &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"><span class="keyword">import</span> Counter <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(name);</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = <span class="keyword">new</span> Counter(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(counter.sum());</span><br><span class="line"><span class="comment">// Sam</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
 <p>Named Export 要搭配 Named Import。</p>
 <p>Default Export 則搭配 Default Export。</p>
-<h2 id="Import_Entire_Module">Import Entire Module</h2><p>實務上一個 Module 可能有很多 Export，要一個一個 Import 很辛苦，可以將整個 Module 都 Import 進來。</p>
+<h2 id="Import_Entire_Module">Import Entire Module</h2><hr>
+<p>實務上一個 Module 可能有很多 Export，要一個一個 Import 很辛苦，可以將整個 Module 都 Import 進來。</p>
 <p><strong>main.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> MyModule <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(MyModule.name);</span><br><span class="line"><span class="built_in">console</span>.log(MyModule.add(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = <span class="keyword">new</span> MyModule.default(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(counter.sum());</span><br></pre></td></tr></table></figure>
 <p>對於 Named Export 沒問題，名字會維持原來的名稱。</p>
@@ -335,7 +337,7 @@
 <li><code>export</code> 與 <code>import</code> 都可搭配 <code>as</code> 取別名</li>
 </ul>
 <h2 id="Reference">Reference</h2><hr>
-<p>John Resig, <a href="https://www.manning.com/books/secrets-of-the-javascript-ninja-second-edition" target="_blank" rel="external">Secret of the JavaScript Ninja, 2rd</a><br>MDN, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export" target="_blank" rel="external">export</a><br>MDN, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import" target="_blank" rel="external">import</a></p>
+<p><a href="https://en.wikipedia.org/wiki/John_Resig" target="_blank" rel="external">John Resig</a>, <a href="https://www.manning.com/books/secrets-of-the-javascript-ninja-second-edition" target="_blank" rel="external">Secret of the JavaScript Ninja, 2nd</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export" target="_blank" rel="external">export</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import" target="_blank" rel="external">import</a></p>
 	  
 	</div>
 
