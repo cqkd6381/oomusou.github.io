@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-01T01:54:05.479Z</updated>
+  <updated>2018-10-04T09:16:30.501Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,251 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ECMAScript 之 Module]]></title>
+    <link href="https://oomusou.io/ecmascript/module/"/>
+    <id>https://oomusou.io/ecmascript/module/</id>
+    <published>2018-10-04T12:23:43.000Z</published>
+    <updated>2018-10-04T09:16:30.501Z</updated>
+    <content type="html"><![CDATA[<p>ES5 很難寫大程式，主要是因為 JavaScript 沒有 Module 概念，常常一個檔案寫兩三千行程式，且大量使用 Global Variable 造成 Side Effect 很難維護。</p>
+<p>早期 JavaScript 是使用 Module Pattern 解決，稍後更有 CommonJS 與 AMD 試圖制定 Module 標準，一直到 TC39 出手，在 ECMAScript 2015 定義 Module 後，JavaScript 的模組化總算塵埃落定，是 JavaScript 發展的重要里程碑。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015</p>
+<h2 id="Why_Module_?">Why Module ?</h2><hr>
+<p>在 ES5 時代，Scope 只有兩種概念：Global 與 Function，而沒有如 C# 的 Namespace 或 Java 的 Package，因此很難將程式碼加以模組化，造成 JavaScript 很難寫大程式。</p>
+<p>Module 須提供兩大功能：</p>
+<ul>
+<li>將 data 或 function 封裝在 Module 內</li>
+<li>將 interface 暴露在 Module 外</li>
+</ul>
+<p>ES5 在語言層級並沒有提供以上支援。</p>
+<h2 id="Module_Pattern">Module Pattern</h2><hr>
+<p><strong>MouseCounterModule.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MouseCounterModule = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line">   </span><br><span class="line">  <span class="keyword">const</span> handleClick = () =&gt;</span><br><span class="line">  	<span class="built_in">console</span>.log(++numClicks);</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    countClick: () =&gt;</span><br><span class="line">      <span class="built_in">document</span>.addEventListener(<span class="string">'click'</span>, handleClick);</span><br><span class="line">  &#125;;  </span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
+<p>當語言不支援時，第一個會想用的就是 Design Pattern 自救。</p>
+<p>JavaScript 什麼都是用 function，Module 也用 function 就不意外了。</p>
+<ul>
+<li><strong>將 data 或 function 封裝在 Module 內</strong>：使用了 Closure + IIFE</li>
+<li><strong>將 interface 暴露在 Module 外</strong>：return 全新 object</li>
+</ul>
+<blockquote>
+<p><strong>IIFE</strong></p>
+<p>Immediately Invoked Function Expression<br>定義 function 的同時，也順便執行 function，若配合 Closure，可將 data 封裝在 function 內，避免 data 暴露在 Global Scope</p>
+</blockquote>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">"text/javascript"</span> src=<span class="string">"MouseCounterModule.js"</span>/&gt;</span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">type</span>=<span class="value">"texty/javascript"</span>&gt;</span><span class="undefined"></span><br><span class="line">  MouseCounterModule.counterClick();    </span><br><span class="line"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>使用 HTML 載入 Dependency Module，此時 JavaScript 的載入順序就很重要，需要自行控制。</p>
+<h2 id="AMD">AMD</h2><hr>
+<blockquote>
+<p><strong>AMD</strong></p>
+<p>Asynchronous Module Defintion<br>針對 Browser 所設計 Module 解決方案，使用 Asynchronous 方式載入 Module</p>
+</blockquote>
+<p><strong>MouseCounterModule.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">define(<span class="string">'MouseCounterModule'</span>, [<span class="string">'jQuery'</span>], $ =&gt; &#123;</span><br><span class="line">  <span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">const</span> handleClick = () =&gt; </span><br><span class="line">    <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    countClick: () =&gt;</span><br><span class="line">      $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">  &#125;;  </span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>define()</code> 為 AMD 所提供的 function：</p>
+<ul>
+<li>第一個參數：定義 Module 的 ID 作為識別</li>
+<li>第二個參數：陣列，傳入其他 Dependency Module 的 ID</li>
+<li>第三個參數：用來建立 Module 的 function</li>
+</ul>
+<p>除了 <code>define()</code> 外，該寫的 Module function 還是要寫。</p>
+<ul>
+<li><strong>將 data 或 function 封裝在 Module 內</strong>：在 function 內使用 Closure 封裝</li>
+<li><strong>將 interface 暴露在 Module 外</strong>：return 全新 object</li>
+</ul>
+<p>不必再使用 IIFE，<code>define()</code> 會幫你執行。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">require</span>([<span class="string">'MouseCounterModule'</span>], mouseCounterModule =&gt;</span><br><span class="line">    mouseCounterModule.countClick();</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><code>require()</code> 為 AMD 所提供的 function：</p>
+<ul>
+<li>第一個參數：相依的外部 Module ID</li>
+<li>第二個參數：使用 Module 的 function</li>
+</ul>
+<p>AMD 有以下特色：</p>
+<ul>
+<li>自動解析 Module 的 dependency，不用在乎 JavaScript 載入順序</li>
+<li>Module 以 asynchronous 載入，不會 blocking 影響使用者體驗</li>
+<li>允許一個檔案有多個 Module，也就是多個 <code>define()</code></li>
+</ul>
+<p>也因為 AMD 的 asynchronous 特性，特別適合在 Browser 使用。</p>
+<h2 id="CommonJS">CommonJS</h2><hr>
+<blockquote>
+<p><strong>CommonJS</strong></p>
+<p>為一般性 JavaScript 環境所設計的解決方案，Node.js 使用</p>
+</blockquote>
+<p><strong>MouseCounterModule.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> $ = <span class="built_in">require</span>(<span class="string">'jQuery'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handleClick = () =&gt; </span><br><span class="line">  <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  countClick: () =&gt;</span><br><span class="line">    $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>require()</code> 為 CommonJS 所提供的 function，負責載入 Dependency Module。</p>
+<ul>
+<li><p><strong>將 data 或 function 封裝在 Module 內</strong>：<code>numClicks</code> 與 <code>handleClick()</code> 看似 Global，但事實上其 scope 只有 Module level，不用特別使用 function 與 Closure 寫法就能達成封裝 data 與 function。</p>
+</li>
+<li><p><strong>將 interface 暴露在 Module 外</strong>：將全新 object 指定給 <code>module.exports</code> 即可，不需特別 return</p>
+</li>
+</ul>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MouseCounterModule = <span class="built_in">require</span>(<span class="string">'MouseCounterModule.js'</span>);</span><br><span class="line"></span><br><span class="line">MouseCounterModule.counterClick();</span><br></pre></td></tr></table></figure>
+<p>使用 <code>require()</code> 載入 Dependency Module 後即可使用，也不用搭配 Callback function。</p>
+<p>CommonJS 有以下特色：</p>
+<ul>
+<li>Data 與 function 不需再使用 Closure，雖然看起來像 Global，但 CommonJS 會封裝在 Module 內</li>
+<li>使用 module.exports 公開 interface</li>
+<li>一個檔案就是一個 Module</li>
+<li>語法比 AMD 優雅</li>
+</ul>
+<p>但 CommonJS 也有幾個缺點：</p>
+<ul>
+<li>但 <code>require()</code> 為 Synchronous，因此適合在 server 端使用</li>
+<li>Browser 並未提供 <code>module</code> 與 <code>exports</code>，因此還要透過 <code>Browserify</code> 作轉換</li>
+</ul>
+<h2 id="ES_Module">ES Module</h2><hr>
+<p>由於 JavaScript 社群存在這兩大 Module 標準，TC39 決定融合 AMD 與 CommonJS 的優點制定出 ES6 Module，至此 JavaScript 有了正式的 Module 規格</p>
+<ul>
+<li>學習 CommonJS，一個檔案就是一個 Module</li>
+<li>學習 CommonJS 簡單優雅的語法</li>
+<li>學習 AMD 以 Asynchronous 載入 Module</li>
+</ul>
+<p><strong>MouseCounterModule.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> $ from <span class="string">'jquery'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> numClicks = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> handleClick = () =&gt;</span><br><span class="line">  <span class="built_in">console</span>.log(++numClicks);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  countClick: () =&gt;</span><br><span class="line">    $(<span class="built_in">document</span>).on(<span class="string">'click'</span>, handleClick);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>import</code> 為 ECMAScript 2015 所提供的 keyword，負責載入 Dependency Module，可以 Synchronous 也可 Asynchronous。</p>
+<p><code>export</code>  為 ECMAScript 2015 所提供的 keyword，負責暴露 interface 於 Module 外。</p>
+<ul>
+<li><p><strong>將 data 或 function 封裝在 Module 內</strong>：<code>numClicks</code> 與 <code>handleClick()</code> 看似 Global，但事實上其 scope 只有 Module level，不用特別使用 function 與 Closure 寫法就能達成封裝 data 與 function，這點與 CommonJS 一樣</p>
+</li>
+<li><p><strong>將 interface 暴露在 Module 外</strong>：將全新 object  透過 <code>export</code> 即可，不需特別 return</p>
+</li>
+</ul>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> MouseCounterModule <span class="keyword">from</span> <span class="string">'MouseCounterModule.js'</span>;</span><br><span class="line"></span><br><span class="line">MouseCounterModule.counterClick();</span><br></pre></td></tr></table></figure>
+<p>使用 <code>import</code> 載入 Dependency Module 後即可使用，也不用搭配 Callback function，這點與 CommonJS 一樣。</p>
+<p>CommonJS 有以下特色：</p>
+<ul>
+<li>提供 <code>export</code> 與 <code>import</code> 兩個 keyword 就解決</li>
+<li>語法比 CommonJS 優雅</li>
+</ul>
+<h2 id="Definition">Definition</h2><hr>
+<p>你可以將 data (variable、object、function、class) 加以 imprt 與 export。</p>
+<p>Export 分為 Named Export 與 Default Export</p>
+<ul>
+<li><strong>Named Export</strong>：data 必須有名稱</li>
+<li><strong>Default Export</strong>：data 沒有名稱 (Anonymous Object、Anonymous Function、Anonymous Class)</li>
+<li>一個 Module 只能有一個 Default Export，但能有無限多個 Named Export</li>
+</ul>
+<blockquote>
+<p>Default Export 的 data 也可以有名稱，但因為回由 import 決定名稱，所以通常會使 data 沒有名稱</p>
+</blockquote>
+<h2 id="Named_Import_/_Export">Named Import / Export</h2><hr>
+<h3 id="Variable">Variable</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">let</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> y = <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<p>可直接對 <code>let</code> 與 <code>const</code> 變數加以 export 。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; x &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"><span class="keyword">import</span> &#123; y &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(x);</span><br><span class="line"><span class="built_in">console</span>.log(y);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<p>可對變數分別 import，但 Named Import 要搭配 <code>{}</code>。</p>
+<h3 id="Object">Object</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> y = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; x, y &#125;;</span><br></pre></td></tr></table></figure>
+<p>可直接對 object 加以 export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; x, y &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(x);</span><br><span class="line"><span class="built_in">console</span>.log(y);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<p>可對 object 直接 import，使用 Object Destructing 方式對 object 直接解構。</p>
+<h3 id="Function">Function</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>add()</code> 加以 export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(add(1, 1));</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>對 function 加以 Named Import 要加上 <code>{}</code>。</p>
+<p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> add = (x, y) =&gt; x + y;</span><br></pre></td></tr></table></figure>
+<p>將 <code>add()</code> Arrow Function 加以 export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(add(1, 1));</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>對 Arrow Function 加以 Named Import 也要加上 <code>{}</code>。</p>
+<h3 id="Class">Class</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="class"><span class="keyword">class</span> <span class="title">Counter</span> </span>&#123;</span><br><span class="line">  constructor(x, y) &#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  sum() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.x + <span class="keyword">this</span>.y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>將 <code>Counter</code> class 加以 export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Counter &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">const counter = new Counter(1, 1);</span><br><span class="line"><span class="built_in">console</span>.log(counter.sum());</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>對 class 加以 Named Import 要加上 <code>{}</code>。</p>
+<blockquote>
+<p>無論對 variable / object / function / class 加以 Named Export，都會事先明確命名，然後在 Named Import 時都加上 <code>{}</code></p>
+</blockquote>
+<h2 id="Default_Import_/_Export">Default Import / Export</h2><hr>
+<h3 id="Variable-1">Variable</h3><p>ES 6 無法對 <code>var</code>、<code>let</code> 與 <code>const</code> 使用 Default Export。</p>
+<h3 id="Object-1">Object</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> y = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123; x, y &#125;;</span><br></pre></td></tr></table></figure>
+<p>對於 Anonymous Object 可使用 Default Export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> MyObject <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(MyObject.x);</span><br><span class="line"><span class="built_in">console</span>.log(MyObject.y);</span><br></pre></td></tr></table></figure>
+<p>對 Anonymous Object 使用 Default Import，由於 Anonymous Object 本來就沒有名字，要在 Default Import 重新命名。</p>
+<p>Default Import 不用加上 <code>{}</code>。</p>
+<h3 id="Function-1">Function</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>對於 Anonymous Function 可使用 Default Export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> add <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(add(1, 1));</span><br></pre></td></tr></table></figure>
+<p>對 Anonymous Function 使用 Default Import，由於 Anonymous Function 本來就沒有名字，要在 Default Import 重新命名。</p>
+<p>Default Import 不用加上 <code>{}</code>。</p>
+<p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (x, y) =&gt; x + y;</span><br></pre></td></tr></table></figure>
+<p>對於 Arrow Function 可使用 Default Export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> add <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(add(1, 1));</span><br></pre></td></tr></table></figure>
+<p>對 Arrow Function 使用 Default Import，由於 Arrow Function 本來就沒有名字，要在 Default Import 重新命名。</p>
+<h3 id="Class-1">Class</h3><p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> </span>&#123;</span><br><span class="line">  constructor(x, y) &#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  sum() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.x + <span class="keyword">this</span>.y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>對於 Anonymous Class 可使用 Default Export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Counter <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">const counter = new Counter(1, 1);</span><br><span class="line"><span class="built_in">console</span>.log(counter.sum());</span><br></pre></td></tr></table></figure>
+<p>對 Anonymous Class 使用 Default Import，由於 Anonymous Class 本來就沒有名字，要在 Default Import 重新命名。</p>
+<blockquote>
+<p>無論對 variable / object / function / class 加以 Default Export，可不用事先明確命名 (當然要事先命名亦可，但沒有太大意義)，然後在 Named Import 時不用加上 <code>{}</code></p>
+<p>React 與 Vue 喜歡使用 Default Export，優點是可由 user 自行命名，彈性最高；Angular 則喜歡使用 Named Export，由 Framework 事先命名，優點是整個 community 名稱統一</p>
+</blockquote>
+<h2 id="Named_+_Default_Export_/_Import">Named + Default Export / Import</h2><p>一個 Module 只允許一個 Default Export，但可以有多個 Named Export。</p>
+<p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">'Sam'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> add = (x, y) =&gt; x + y;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> </span>&#123;</span><br><span class="line">  constructor(x, y) &#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  sum() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.x + <span class="keyword">this</span>.y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>name</code> 與 <code>add()</code> 為 Named Export，但 Anonymous Class 為 Default Export。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; name &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"><span class="keyword">import</span> Counter <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(name);</span><br><span class="line"><span class="built_in">console</span>.log(add(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = <span class="keyword">new</span> Counter(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(counter.sum());</span><br><span class="line"><span class="comment">// Sam</span></span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>Named Export 要搭配 Named Import。</p>
+<p>Default Export 則搭配 Default Export。</p>
+<h2 id="Import_Entire_Module">Import Entire Module</h2><p>實務上一個 Module 可能有很多 Export，要一個一個 Import 很辛苦，可以將整個 Module 都 Import 進來。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> MyModule <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(MyModule.name);</span><br><span class="line"><span class="built_in">console</span>.log(MyModule.add(<span class="number">1</span>, <span class="number">1</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> counter = <span class="keyword">new</span> MyModule.default(<span class="number">1</span>, <span class="number">1</span>);</span><br><span class="line"><span class="built_in">console</span>.log(counter.sum());</span><br></pre></td></tr></table></figure>
+<p>對於 Named Export 沒問題，名字會維持原來的名稱。</p>
+<p>但對於沒有名稱的 Default Export，會以 <code>default</code> 為名稱。</p>
+<h2 id="Alias">Alias</h2><hr>
+<p>若對原本 data 名稱覺得不滿意，在 Named Export 或 Named Import 時都可以重新取別名。</p>
+<p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> add = (x, y) =&gt; x + y;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; add <span class="keyword">as</span> sum &#125;;</span><br></pre></td></tr></table></figure>
+<p>在 Named Export 時，已經使用 <code>as</code> 將 <code>add</code> 取別名為 <code>sum</code>，需搭配  <code>{}</code>。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; sum &#125; from <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(sum(<span class="number">1</span>, <span class="number">1</span>));</span><br></pre></td></tr></table></figure>
+<p>既然已經取別名為 <code>sum</code>，就以 <code>sum</code> 為名稱 import 進來。</p>
+<p><strong>my-module.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> add = (x, y) =&gt; x + y;</span><br></pre></td></tr></table></figure>
+<p>直接使用 Named Export 將 <code>add()</code> export 出來。</p>
+<p><strong>main.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; add <span class="keyword">as</span> sum &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(sum(1, 1));</span><br></pre></td></tr></table></figure>
+<p>在 Named Import 時才使用 <code>as</code> 取別名亦可。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>ES6 Module 語法很簡單，只有 <code>export</code> 與 <code>import</code> 兩個 keyword</li>
+<li>ES6 Module 分成 Named Export 與 Default Export，一個 Module 只能有一個 Default Export，但可以有多個 Named Export</li>
+<li>可以使用 <code>import * as module</code> ，將整個 Module 都 import 進來</li>
+<li><code>export</code> 與 <code>import</code> 都可搭配 <code>as</code> 取別名</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>John Resig, <a href="https://www.manning.com/books/secrets-of-the-javascript-ninja-second-edition" target="_blank" rel="external">Secret of the JavaScript Ninja, 2rd</a><br>MDN, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/export" target="_blank" rel="external">export</a><br>MDN, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import" target="_blank" rel="external">import</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[Module 是 ECMAScript 發展的重要里程碑]]>
+    
+    </summary>
+    
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Refactor to LINQ => Select]]></title>
@@ -2077,61 +2322,6 @@
       <category term="NUnit" scheme="https://oomusou.io/tags/NUnit/"/>
     
       <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何讀取 JSON 格式設定檔 ?]]></title>
-    <link href="https://oomusou.io/netcore/json-config/"/>
-    <id>https://oomusou.io/netcore/json-config/</id>
-    <published>2018-07-31T13:23:43.000Z</published>
-    <updated>2018-07-31T15:36:03.000Z</updated>
-    <content type="html"><![CDATA[<p>在實務上不少資訊我們不想寫死在 code 中，會以 config 形式由 client 設定，目前最主流的 config 就屬 JSON 格式，.NET 也提供了 <code>ConfigurationBuilder</code> ，讓我們輕易的讀取 JSON 格式的 config 檔。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.1.3</p>
-<h2 id="安裝_Package">安裝 Package</h2><hr>
-<p><img src="/images/netcore/json-config/config000.png" alt="config000"></p>
-<p>要另外安裝 3 個 package :</p>
-<ul>
-<li><code>Microsoft.Extensions.Configuration</code></li>
-<li><code>Microsoft.Extensions.Configuration.FileExtensions</code></li>
-<li><code>Microsoft.Extensions.Configuration.Json</code> </li>
-</ul>
-<h2 id="ConfigurationBuilder">ConfigurationBuilder</h2><hr>
-<p><strong>Config.json</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"Name"</span>: <span class="string">"Sam"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>假設 <code>config.json</code> 放在 project 的根目錄下，想要讀取 key 為 <code>Name</code> 的 value。</p>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> Microsoft.Extensions.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> currentDirectory = Directory.GetCurrentDirectory();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> config =</span><br><span class="line">                <span class="keyword">new</span> ConfigurationBuilder()</span><br><span class="line">                    .SetBasePath(currentDirectory)</span><br><span class="line">                    .AddJsonFile(<span class="string">"config.json"</span>)</span><br><span class="line">                    .Build();</span><br><span class="line"></span><br><span class="line">            Console.WriteLine(config[<span class="string">"Name"</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>11 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> currentDirectory = Directory.GetCurrentDirectory();</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Directory.GetCurrentDirectory()</code> 讀取目前 project 的根目錄。</p>
-<p>14 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ConfigurationBuilder()</span><br><span class="line">    .SetBasePath(currentDirectory)</span><br></pre></td></tr></table></figure>
-<p>建立 <code>ConfigurationBuilder</code>，並由 <code>SetBasePath()</code> 設定其 working directory。</p>
-<p>16 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.AddJsonFile(<span class="string">"config.json"</span>)</span><br></pre></td></tr></table></figure>
-<p>由 <code>AddJsonFile()</code> 設定 config 檔案。</p>
-<p>17 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.Build();</span><br></pre></td></tr></table></figure>
-<p>最後由 <code>Build()</code> 建立 <code>config</code> 物件。</p>
-<p>19 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Console.WriteLine(config[<span class="string">"Name"</span>]);</span><br></pre></td></tr></table></figure>
-<p>由於 <code>IConfiguration</code> 有定義  indexer，因此我們可以 <code>Name</code> 當 key 直接存取。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>使用 <code>ConfigurationBuilder</code> 讓我們可以很簡單地讀取 JSON 格式的 config 檔</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/AppSettingsJson" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 Configuration Package]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
     
   </entry>
   
