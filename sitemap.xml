@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/ecmascript/asynchronous/</loc>
+    <lastmod>2018-10-07T14:46:06.077Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/event-loop-model/</loc>
+    <lastmod>2018-10-07T14:42:12.966Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/fp/pure-function/</loc>
     <lastmod>2018-10-07T14:03:07.036Z</lastmod>
   </url>

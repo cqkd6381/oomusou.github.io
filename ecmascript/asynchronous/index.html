@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ECMAScript 之 Asynchronous | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="解釋 Promise 與 Async Await">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="解釋 Promise 與 Async Await">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript 之 Asynchronous">
+<meta property="og:url" content="https://oomusou.io/ecmascript/asynchronous/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="解釋 Promise 與 Async Await">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-10-07T14:46:06.077Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript 之 Asynchronous">
+<meta name="twitter:description" content="解釋 Promise 與 Async Await">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> ECMAScript 之 Asynchronous</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 解釋 Promise 與 Async Await			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#API"><span class="toc-article-text">API</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Promise"><span class="toc-article-text">Promise</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Async_Await"><span class="toc-article-text">Async Await</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Why_Promise_?"><span class="toc-article-text">Why Promise ?</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>ECMAScript 對 Asynchronous 總共有 Promise、Generator 與 Async Await 三種支援，其中 Generator 屬於較進階的應用，主要是在寫 library，但 Promise 與 Async Await 則非常重要，寫 application 也很常用到。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015 (Promise)<br>ECMAScript 2017 (Async Await)</p>
+<h2 id="API">API</h2><hr>
+<p><strong>productApi.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; API &#125; <span class="keyword">from</span> <span class="string">'../environment'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  fetchProducts: () =&gt; axios.get(<span class="string">`<span class="subst">$&#123;API&#125;</span>/products`</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>實務上我們會將 API 部分另外寫在 <code>api</code> 目錄下，且另外寫 <code>fetchXXX()</code> method，但 <code>axios.get()</code> 回傳的到底是什麼型別呢？</p>
+<p>是 ECMAScript 2015 新的 <code>Promise</code> 型別。</p>
+<h2 id="Promise">Promise</h2><hr>
+<p>由於 Asynchronous 在所有 Synchronous 執行完才會執行，因此對於 AJAX 回傳的資料，對於 Synchronous 而言，屬於一種 <code>未來值</code>。</p>
+<p>也就是 AJAX 所回傳的資料，將來一定會有，但具體時間未知，只能先回傳 <code>Promise</code> 物件給你，一旦 AJAX 抓到資料，你就可以用 Promise 去換真實的資料。</p>
+<p><img src="/images/ecmascript/async/async000.jpg" alt="async000"></p>
+<p>就類似你去麥當勞買漢堡，錢都給了，但漢堡還沒做好，但未來一定會有，也是 <code>未來值</code>，因此店員會給你 <code>取餐單</code>，將來你可以用 <code>取餐單</code> 去換漢堡。</p>
+<p><code>取餐單</code> 就是 Promise。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mounted() &#123;</span><br><span class="line">  <span class="keyword">const</span> response = res =&gt;</span><br><span class="line">    <span class="keyword">this</span>.products = res.data;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> error = e =&gt;</span><br><span class="line">    <span class="built_in">console</span>.log(e);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> done = () =&gt;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'finally'</span>);</span><br><span class="line"></span><br><span class="line">  productApi</span><br><span class="line">    .fetchProducts()</span><br><span class="line">    .then(response)</span><br><span class="line">    .catch(error)</span><br><span class="line">    .finally(done);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><code>fetchProducts()</code> 會回傳 <code>Promise</code> 物件，該物件總共有 3 個  operator (也是 Higher Order Function)。</p>
+<ul>
+<li><strong>then()</strong>：傳入要獲取 AJAX 資料的 function，當 AJAX 抓到資料後，會自己執行 function</li>
+<li><strong>catch()</strong>：傳入若 AJAX 錯誤所執行的 function，當 AJAX 出錯時，會自己執行 function</li>
+<li><strong>finally()</strong>：傳入 AJAX 最後所執行的 function，當 AJAX 執行完正，會自己執行 function</li>
+</ul>
+<blockquote>
+<p><code>finally()</code> 目前在 ECMAScript 定義為 stage 4，也就是即將 ECMAScript 正式定義，重要是 Babel 已經率先支援，因此可安心使用</p>
+</blockquote>
+<h2 id="Async_Await">Async Await</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> mounted() &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> productApi.fetchProducts();</span><br><span class="line">    <span class="keyword">this</span>.products = response.data;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'finally'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>Promise 屬於 FP 觀念下的產物  (也就是 Monad Pattern)，若你習慣 Imperative 思維，也可以透過 <code>Async Await</code> 將 Asynchronous 寫的很 Synchronous。</p>
+<p>將 function 前面宣告 <code>async</code>，表示此為 Asynchronous Function，也就是內部將使用 <code>await</code>。</p>
+<p><code>response</code> 為 <code>productApi.fetchProducts()</code> 所回傳的 Promise，是 <code>未來值</code>，<code>觀念上</code> 會 await 等 <code>response</code> 成真後才會繼續執行。</p>
+<p>因為看起來很像 Synchronous 寫法，因此可以使用原本的 <code>try catch finally</code>。</p>
+<blockquote>
+<p>Async Await 只是程式碼看起來很像 Synchronous，但起本質仍然是 Asynchronous，因為 await 一定要對方回傳 Promise 才能使用，所以是百分之百的 Syntax Sugar</p>
+<p>Async Await 來自於 C# 5，在 ECMAScript 2017 正式定案，Babel 也完美支援</p>
+</blockquote>
+<h2 id="Why_Promise_?">Why Promise ?</h2><hr>
+<p>由 JavaScript 的 Event Loop Model 可知，有三種屬於 Asynchronous：</p>
+<ul>
+<li>DOM</li>
+<li>AJAX (XMLHttpRequest)</li>
+<li>setTimeout()</li>
+</ul>
+<p>由於前端一定要使用 AJAX 呼叫 API，這屬於 Asynchronous 行為，會被安排在 Callback Queue ，等 Synchronous 執行完，最後才執行 Asynchronous。</p>
+<p>在 ES5 之前，若 Asynchronous 之間有相依的先後關係，在 jQuery + Callback 只能這樣寫：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$.get(<span class="string">'/products'</span>, (err, res) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (err)</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> product = ret.json();</span><br><span class="line">        $.get(<span class="string">'/product/$&#123; product[0].id&#125;'</span>, (err, res) =&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (err)</span><br><span class="line">                <span class="built_in">console</span>.log(err);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">const</span> item = res.json();</span><br><span class="line">                <span class="built_in">console</span>.log(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這就是有名的 <strong>Callback Hell</strong>：</p>
+<ul>
+<li>很容易寫出巢狀很深的 code 難以維護</li>
+<li>每個 Callback 都要自己維護 Exception</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'/products'</span>)</span><br><span class="line">  .then(res =&gt; res.json())</span><br><span class="line">  .then(product =&gt; fetch(<span class="string">'/products/$&#123; prdouct[0].id&#125;'</span>))</span><br><span class="line">  .then(res =&gt; res.json())</span><br><span class="line">  .then(item =&gt; <span class="built_in">console</span>.log(item));</span><br><span class="line">  .catch(e =&gt; <span class="built_in">console</span>.log(e));</span><br></pre></td></tr></table></figure>
+<p>使用 Promise 後：</p>
+<ul>
+<li>程式碼風格改成 Pipeline 方式容易閱讀</li>
+<li>每個 <code>then()</code> 都回傳一個全新的 Promise</li>
+<li>統一處理 Exception</li>
+</ul>
+<blockquote>
+<p>Callback 雖然也能解決 Asynchronous，但會造成 Callback Hell，應盡量避免使用，且隨著 ECMAScript 2015 將 Promise 定為標準，越來越多 Library 直接回傳 <code>Promise</code> 型別 (Axios、Protractor …)，且 Async Await 也是基於 Promise 技術，所以 Promise 已經成為不能不會的東西</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Async Await 只是讓你程式碼看起來很像 Synchronous，但其本質仍然是 Asynchronous，因為 Async Await 一定要搭配 Promise，而 Promise 就是 Asynchronous，因此 Async Await 算是 Syntax Sugar</li>
+<li>雖然 Async Await 是 ECMAScript 2017 較新的東西，但個人認為 <code>語意</code> 其實並沒有 Promise 好，Async Await 會讓你使用 Imperative 方式思考，而 Promise  會讓你使用 Pipeline 方式思考，個人較喜歡 Promise</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-promise" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://github.com/tc39" target="_blank" rel="external">TC39</a>, <a href="https://github.com/tc39/proposal-promise-finally" target="_blank" rel="external">Promise.prototype.finally</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="external">Promise</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank" rel="external">async function</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await" target="_blank" rel="external">await</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/ecmascript/event-loop-model/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-10-07 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>15</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

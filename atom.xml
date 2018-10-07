@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-07T07:21:46.224Z</updated>
+  <updated>2018-10-07T14:46:06.077Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,183 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[ECMAScript 之 Asynchronous]]></title>
+    <link href="https://oomusou.io/ecmascript/asynchronous/"/>
+    <id>https://oomusou.io/ecmascript/asynchronous/</id>
+    <published>2018-10-07T13:23:43.000Z</published>
+    <updated>2018-10-07T14:46:06.077Z</updated>
+    <content type="html"><![CDATA[<p>ECMAScript 對 Asynchronous 總共有 Promise、Generator 與 Async Await 三種支援，其中 Generator 屬於較進階的應用，主要是在寫 library，但 Promise 與 Async Await 則非常重要，寫 application 也很常用到。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 2015 (Promise)<br>ECMAScript 2017 (Async Await)</p>
+<h2 id="API">API</h2><hr>
+<p><strong>productApi.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; API &#125; <span class="keyword">from</span> <span class="string">'../environment'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  fetchProducts: () =&gt; axios.get(<span class="string">`<span class="subst">$&#123;API&#125;</span>/products`</span>),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>實務上我們會將 API 部分另外寫在 <code>api</code> 目錄下，且另外寫 <code>fetchXXX()</code> method，但 <code>axios.get()</code> 回傳的到底是什麼型別呢？</p>
+<p>是 ECMAScript 2015 新的 <code>Promise</code> 型別。</p>
+<h2 id="Promise">Promise</h2><hr>
+<p>由於 Asynchronous 在所有 Synchronous 執行完才會執行，因此對於 AJAX 回傳的資料，對於 Synchronous 而言，屬於一種 <code>未來值</code>。</p>
+<p>也就是 AJAX 所回傳的資料，將來一定會有，但具體時間未知，只能先回傳 <code>Promise</code> 物件給你，一旦 AJAX 抓到資料，你就可以用 Promise 去換真實的資料。</p>
+<p><img src="/images/ecmascript/async/async000.jpg" alt="async000"></p>
+<p>就類似你去麥當勞買漢堡，錢都給了，但漢堡還沒做好，但未來一定會有，也是 <code>未來值</code>，因此店員會給你 <code>取餐單</code>，將來你可以用 <code>取餐單</code> 去換漢堡。</p>
+<p><code>取餐單</code> 就是 Promise。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mounted() &#123;</span><br><span class="line">  <span class="keyword">const</span> response = res =&gt;</span><br><span class="line">    <span class="keyword">this</span>.products = res.data;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> error = e =&gt;</span><br><span class="line">    <span class="built_in">console</span>.log(e);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> done = () =&gt;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'finally'</span>);</span><br><span class="line"></span><br><span class="line">  productApi</span><br><span class="line">    .fetchProducts()</span><br><span class="line">    .then(response)</span><br><span class="line">    .catch(error)</span><br><span class="line">    .finally(done);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><code>fetchProducts()</code> 會回傳 <code>Promise</code> 物件，該物件總共有 3 個  operator (也是 Higher Order Function)。</p>
+<ul>
+<li><strong>then()</strong>：傳入要獲取 AJAX 資料的 function，當 AJAX 抓到資料後，會自己執行 function</li>
+<li><strong>catch()</strong>：傳入若 AJAX 錯誤所執行的 function，當 AJAX 出錯時，會自己執行 function</li>
+<li><strong>finally()</strong>：傳入 AJAX 最後所執行的 function，當 AJAX 執行完正，會自己執行 function</li>
+</ul>
+<blockquote>
+<p><code>finally()</code> 目前在 ECMAScript 定義為 stage 4，也就是即將 ECMAScript 正式定義，重要是 Babel 已經率先支援，因此可安心使用</p>
+</blockquote>
+<h2 id="Async_Await">Async Await</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> mounted() &#123;</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> response = <span class="keyword">await</span> productApi.fetchProducts();</span><br><span class="line">    <span class="keyword">this</span>.products = response.data;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(err);</span><br><span class="line">  &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'finally'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>Promise 屬於 FP 觀念下的產物  (也就是 Monad Pattern)，若你習慣 Imperative 思維，也可以透過 <code>Async Await</code> 將 Asynchronous 寫的很 Synchronous。</p>
+<p>將 function 前面宣告 <code>async</code>，表示此為 Asynchronous Function，也就是內部將使用 <code>await</code>。</p>
+<p><code>response</code> 為 <code>productApi.fetchProducts()</code> 所回傳的 Promise，是 <code>未來值</code>，<code>觀念上</code> 會 await 等 <code>response</code> 成真後才會繼續執行。</p>
+<p>因為看起來很像 Synchronous 寫法，因此可以使用原本的 <code>try catch finally</code>。</p>
+<blockquote>
+<p>Async Await 只是程式碼看起來很像 Synchronous，但起本質仍然是 Asynchronous，因為 await 一定要對方回傳 Promise 才能使用，所以是百分之百的 Syntax Sugar</p>
+<p>Async Await 來自於 C# 5，在 ECMAScript 2017 正式定案，Babel 也完美支援</p>
+</blockquote>
+<h2 id="Why_Promise_?">Why Promise ?</h2><hr>
+<p>由 JavaScript 的 Event Loop Model 可知，有三種屬於 Asynchronous：</p>
+<ul>
+<li>DOM</li>
+<li>AJAX (XMLHttpRequest)</li>
+<li>setTimeout()</li>
+</ul>
+<p>由於前端一定要使用 AJAX 呼叫 API，這屬於 Asynchronous 行為，會被安排在 Callback Queue ，等 Synchronous 執行完，最後才執行 Asynchronous。</p>
+<p>在 ES5 之前，若 Asynchronous 之間有相依的先後關係，在 jQuery + Callback 只能這樣寫：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$.get(<span class="string">'/products'</span>, (err, res) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (err)</span><br><span class="line">        <span class="built_in">console</span>.log(err);</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> product = ret.json();</span><br><span class="line">        $.get(<span class="string">'/product/$&#123; product[0].id&#125;'</span>, (err, res) =&gt; &#123;</span><br><span class="line">            <span class="keyword">if</span> (err)</span><br><span class="line">                <span class="built_in">console</span>.log(err);</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">const</span> item = res.json();</span><br><span class="line">                <span class="built_in">console</span>.log(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>這就是有名的 <strong>Callback Hell</strong>：</p>
+<ul>
+<li>很容易寫出巢狀很深的 code 難以維護</li>
+<li>每個 Callback 都要自己維護 Exception</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">'/products'</span>)</span><br><span class="line">  .then(res =&gt; res.json())</span><br><span class="line">  .then(product =&gt; fetch(<span class="string">'/products/$&#123; prdouct[0].id&#125;'</span>))</span><br><span class="line">  .then(res =&gt; res.json())</span><br><span class="line">  .then(item =&gt; <span class="built_in">console</span>.log(item));</span><br><span class="line">  .catch(e =&gt; <span class="built_in">console</span>.log(e));</span><br></pre></td></tr></table></figure>
+<p>使用 Promise 後：</p>
+<ul>
+<li>程式碼風格改成 Pipeline 方式容易閱讀</li>
+<li>每個 <code>then()</code> 都回傳一個全新的 Promise</li>
+<li>統一處理 Exception</li>
+</ul>
+<blockquote>
+<p>Callback 雖然也能解決 Asynchronous，但會造成 Callback Hell，應盡量避免使用，且隨著 ECMAScript 2015 將 Promise 定為標準，越來越多 Library 直接回傳 <code>Promise</code> 型別 (Axios、Protractor …)，且 Async Await 也是基於 Promise 技術，所以 Promise 已經成為不能不會的東西</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Async Await 只是讓你程式碼看起來很像 Synchronous，但其本質仍然是 Asynchronous，因為 Async Await 一定要搭配 Promise，而 Promise 就是 Asynchronous，因此 Async Await 算是 Syntax Sugar</li>
+<li>雖然 Async Await 是 ECMAScript 2017 較新的東西，但個人認為 <code>語意</code> 其實並沒有 Promise 好，Async Await 會讓你使用 Imperative 方式思考，而 Promise  會讓你使用 Pipeline 方式思考，個人較喜歡 Promise</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-promise" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://github.com/tc39" target="_blank" rel="external">TC39</a>, <a href="https://github.com/tc39/proposal-promise-finally" target="_blank" rel="external">Promise.prototype.finally</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="external">Promise</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function" target="_blank" rel="external">async function</a><br><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await" target="_blank" rel="external">await</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[解釋 Promise 與 Async Await]]>
+    
+    </summary>
+    
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
+    
+  </entry>
+  
+  <entry>
+    <title><![CDATA[ECMAScript 之 Event Loop Model]]></title>
+    <link href="https://oomusou.io/ecmascript/event-loop-model/"/>
+    <id>https://oomusou.io/ecmascript/event-loop-model/</id>
+    <published>2018-10-07T12:23:43.000Z</published>
+    <updated>2018-10-07T14:42:12.966Z</updated>
+    <content type="html"><![CDATA[<p>由於 JavaScript 是 Single Thread 語言，由於其 Single Thread 特色，對於繁重的運算動作，就無法如 C# 使用 Multi Thread 解決，因此 Asynchronous 在 JavaScript 格外重要。</p>
+<p>Browser 使用獨特的 Event Loop Model 實現 Asynchronous，要能徹底了解其背後運作原理，才能掌握 JavaScript 的 Asynchronous。</p>
+<a id="more"></a>
+<h2 id="Single_Thread">Single Thread</h2><hr>
+<ul>
+<li>One call stack</li>
+<li>One thing at a time</li>
+</ul>
+<p>JavaScript 最大的特色就是 Runtime 為 Single Thread，也就是只有一個  Call Stack，因此一個時間只能做一件事情。</p>
+<p>也由於只有一個 Thread，只要遇到 <code>大量運算</code>，JavaScript 就會停住等待，因此使用者體驗就會不好。</p>
+<blockquote>
+<p>C# 只要遇到 <code>大量運算</code>，我們就會使用 Multi Thread，但 JavaScript 為 Single Thread，因此這招不能用在 JavaScript</p>
+</blockquote>
+<p>因此 Browser 做了擴充，有些東西並不是由 JavaScript Runtime 實作，而是由 Browser 提供：</p>
+<ul>
+<li>DOM</li>
+<li>AJAX (XMLHttpRequest)</li>
+<li>setTimout()</li>
+</ul>
+<p>也就是這三類 Browser 所提供的 API，屬於 Asynchronous 部分。</p>
+<h2 id="Event_Loop_Model">Event Loop Model</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'Hello '</span>);</span><br><span class="line">setTimeout(() =&gt; <span class="built_in">console</span>.log(<span class="string">'Sam'</span>), <span class="number">0</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'World '</span>);</span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
+<p>當 <code>setTimeout()</code> 為 <code>0</code> 秒時，會先執行 <code>console.log(&#39;Sam&#39;)</code> 還是 <code>console.log(&#39;World &#39;)</code> ?</p>
+<blockquote>
+<p>既然 dealy <code>0</code> 秒，且寫在前面，應該先執行吧 ?</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">concole.log(<span class="string">'Hello '</span>);</span><br><span class="line">$.get(<span class="string">'url'</span>, data =&gt; <span class="built_in">console</span>.log(data)); <span class="comment">// &#123; name: 'Sam' &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">' World'</span>);</span><br><span class="line"><span class="comment">// Hello World &#123; name: 'Sam' &#125;</span></span><br></pre></td></tr></table></figure>
+<p>當使用 AJAX 時，也會發現 <code>console.log(&#39; World&#39;)</code> 會先執行。</p>
+<p><img src="/images/ecmascript/event-loop-model/loop000.svg" alt="eventloop000"></p>
+<p>會先執行 Stack 內的 function，直到 Stack 都執行完，才會執行 Event Loop，將 Callback Queue 內的 function 執行完。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'Hello '</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ecmascript/event-loop-model/loop001.svg" alt="loop001"></p>
+<ul>
+<li><code>console.log(&#39;Hello &#39;)</code> 進 Stack</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop002.svg" alt="loop002"></p>
+<ul>
+<li>清空 Stack，在 Console 顯示 <code>Hello</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(() =&gt; <span class="built_in">console</span>.log(<span class="string">'Sam'</span>), <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ecmascript/event-loop-model/loop003.svg" alt="loop003"></p>
+<ul>
+<li><code>setTimeout()</code> 進 Stack</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop004.svg" alt="loop004"></p>
+<ul>
+<li>清空 Stack，執行 Browser Thread 的 <code>timer(0)</code> </li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop005.svg" alt="loop005"></p>
+<ul>
+<li><code>timer(0)</code> 時間一到，將 <code>callback</code> 塞進 Callback Queue</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'World '</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ecmascript/event-loop-model/loop006.svg" alt="loop006"></p>
+<ul>
+<li><code>console.log(&#39;World &#39;)</code> 進 Stack</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop007.svg" alt="loop007"></p>
+<ul>
+<li>清空 Stack，在 Console 顯示 <code>Hello World</code></li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop008.svg" alt="loop008"></p>
+<ul>
+<li>所有 Synchronous Function 都已經執行完，開始執行 Event Loop</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop009.svg" alt="loop009"></p>
+<ul>
+<li>清空 Callback Queue，在 Console 顯示 <code>Hello World Sam</code></li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Asynchronous Function 會將 Callback 先塞進 Callback Queue，不會立即執行</li>
+<li>等所有 Synchronous Function 都執行完，才開始執行 Event Loop 清空 Callback Queue 執行 Asynchronous Function</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Philp Robers : <a href="https://youtu.be/8aGhZQkoFbQ" target="_blank" rel="external">What the heck is the event loop anyway ?</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[解釋 JavaScript 非同步的運作原理]]>
+    
+    </summary>
+    
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[ECMAScript 之 Module]]></title>
@@ -1781,548 +1958,6 @@
     </summary>
     
       <category term="Haskell" scheme="https://oomusou.io/tags/Haskell/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Functional Programming 簡介]]></title>
-    <link href="https://oomusou.io/fp/intro/"/>
-    <id>https://oomusou.io/fp/intro/</id>
-    <published>2018-08-06T12:23:43.000Z</published>
-    <updated>2018-08-19T01:01:37.000Z</updated>
-    <content type="html"><![CDATA[<p>這幾年由於 Reactive Programming 興起，使得 FP 這古老的 Programming Paradigm 又成為顯學，FP 大都使用 JavaScript、Haskell … 等偏 FP 語言闡述，很少人使用 C# 來談 FP，本系列將使用大家的老朋友 C#，帶領大家一步一步進入 FP 世界。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>C# 7.2</p>
-<blockquote>
-<p>本文為 <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Funtional Programming in C#</a> 一書第一章的讀後心得</p>
-</blockquote>
-<h2 id="Introduction">Introduction</h2><hr>
-<ul>
-<li>FP 是一種 Programming Paradigm，不是 Design Pattern 也不是 Framework，更不是 Language</li>
-<li>是一種以 function 為中心的 <code>思考方式</code> 與 <code>程式風格</code></li>
-<li>有別於目前主流 Imperative、OOP，所以被稱為<code>邪教</code> ? </li>
-</ul>
-<blockquote>
-<p>Imperative</p>
-<p>以 command 或 statement 方式，一行一行的執行程式</p>
-</blockquote>
-<h2 id="Function">Function</h2><hr>
-<p>在討論什麼是 Functional Programming 之前，我們先來定義什麼是 <strong>Function</strong> :</p>
-<p><strong>Mathematical Function</strong></p>
-<p><img src="/images/fp/intro/fp000.svg" alt="fp000"></p>
-<p>在數學裡，function 就是 x 與 <code>y = f(x)</code> 的對應關係。</p>
-<blockquote>
-<p>f(x) 結果只與 x 的輸入有關，不會其他任何東西相關。</p>
-</blockquote>
-<p><img src="/images/fp/intro/fp001.svg" alt="fp001"></p>
-<ul>
-<li><strong>Domain</strong> : 所有的 <code>x</code> 稱為 <code>定義域</code></li>
-<li><strong>Codomain</strong> : 所有 <code>可能</code> 的 <code>f(x)</code> 稱為 <code>對應域</code></li>
-<li><strong>Range</strong> : 所有 <code>實際</code> 的 <code>f(x)</code> 稱為 <code>值域</code></li>
-</ul>
-<blockquote>
-<p>這些都不是什麼高深的數學，在國一的代數我們就會了</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span>(<span class="params"><span class="keyword">int</span> x</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>int</code> : 為 Codomain</li>
-<li><code>int x</code> :  為 Domain</li>
-</ul>
-<p>Pure Function : Codomain 只與 Domain 相關。</p>
-<blockquote>
-<p>Pure Function 就是 Mathematical Function 在程式語言的實踐</p>
-</blockquote>
-<p><strong>Programming Function</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> z = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">int</span> w = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">func</span>(<span class="params"><span class="keyword">int</span> x</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    w = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">2</span> * x + z + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>func()</code> 可以讀取 <code>func()</code> 外面的 <code>z</code>，甚至可以改寫 <code>func()</code> 外部的 <code>w</code>，這就是所謂的 Side Effect。</p>
-<p>因為讀取與寫入 function 的外部變數造成 Side Effect，使得變數改變的 <code>時機</code> 變得很重要，也就是所謂的 Race Condition。</p>
-<blockquote>
-<p>OS 恐龍書花了很多的篇幅都在解決 Race Condition (Lock、Mutex ….)。</p>
-</blockquote>
-<h2 id="Functional_Programming">Functional Programming</h2><hr>
-<blockquote>
-<p>把 function 當成 data 使用，並避免 State Mutation</p>
-</blockquote>
-<ul>
-<li>Function as data (把 function 當成 data 使用)</li>
-<li>No state mutation (不要修改 data，只要修改資料，就需擔心可能 Race Condition)</li>
-</ul>
-<h2 id="Function_as_Data">Function as Data</h2><hr>
-<blockquote>
-<p>比  function 當成 data 使用</p>
-</blockquote>
-<ul>
-<li>能把 function 當 input、把 function 當 return</li>
-<li>能將 function 指定給變數</li>
-<li>能將 function 存進 Collection</li>
-</ul>
-<blockquote>
-<p>以前 data 能怎麼用，function 就怎麼用</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">triple</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; (x * <span class="number">3</span>).ToString();</span><br><span class="line"></span><br><span class="line">            Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .Select(triple)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 3</span></span><br><span class="line"><span class="comment">// 6</span></span><br><span class="line"><span class="comment">// 9</span></span><br></pre></td></tr></table></figure>
-<p>10 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">triple</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; (x * <span class="number">3</span>).ToString();</span><br></pre></td></tr></table></figure>
-<p>使用 C# 7 的 Local Function 宣告 <code>triple()</code> 。</p>
-<p>12 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Range(<span class="number">1</span>, <span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Range()</code> 建立 <code>IEnumerable&lt;int&gt;</code>，因為有 <code>using static System.Linq.Enumerable;</code></p>
-<blockquote>
-<p><code>using static</code> 在 FP 建議使用，會讓 code 更精簡</p>
-</blockquote>
-<p>13 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.Select(triple)</span><br></pre></td></tr></table></figure>
-<p><code>Select()</code> 就是 FP 的 <code>Map()</code>，為 <code>IEnumerable</code> 的 Extension Method。</p>
-<p>與 <code>Map()</code> 一樣，<code>Select()</code> 並沒有修改原本的 <code>Range(1, 3)</code>，而是 return 新的 IEnumerable。</p>
-<p><code>triple</code> 為 function，但如 data 般傳進 <code>Select()</code>，<code>Select()</code> 也就是所謂的 Higher Order Function。</p>
-<blockquote>
-<p>在 LINQ 的 <code>.</code> ，若使用 Extension Method，則不是 OOP 的 Method，而是 FP 的 Pipeline</p>
-</blockquote>
-<p>14 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.ToList()</span><br><span class="line">.ForEach(WriteLine);</span><br></pre></td></tr></table></figure>
-<p>因為 List 才有 <code>ForEach()</code>，所以要先轉成 List。</p>
-<p>直接使用 <code>WriteLine</code>，因為有 <code>using static System.Console;</code>。</p>
-<h2 id="No_State_Mutation">No State Mutation</h2><hr>
-<blockquote>
-<p>不要修改 data</p>
-</blockquote>
-<p><code>7, 6, 1</code> 只取 <code>奇數</code>，並且 <code>由小到大</code> 排序。</p>
-<p><strong>Imperative</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> original = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>&#125;;</span><br><span class="line">            <span class="keyword">var</span> result = GetOddsByAsc(original);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> result)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(iter);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">GetOddsByAsc</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; original</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> original)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (iter % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">                &#123;</span><br><span class="line">                    result.Add(iter);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            result.Sort();</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
-<p>21 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> result = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt;();</span><br></pre></td></tr></table></figure>
-<p>Imperative 典型寫法會先建立一個 <code>result</code> 變數。</p>
-<p>23 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">foreach</span> (<span class="keyword">var</span> iter <span class="keyword">in</span> original)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (iter % <span class="number">2</span> == <span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        result.Add(iter);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>根據 <code>條件</code> 不斷修改變數。</p>
-<p>31 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">result.Sort();</span><br></pre></td></tr></table></figure>
-<p>直接修改 <code>result</code> 資料排序。</p>
-<p><strong>Functional</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> original = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>&#125;;</span><br><span class="line">            <span class="keyword">var</span> result = GetOddsByAsc(original);</span><br><span class="line"></span><br><span class="line">            result.ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">GetOddsByAsc</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; original</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">isOdd</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x % <span class="number">2</span> == <span class="number">1</span>;</span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">asc</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">return</span> original</span><br><span class="line">                .Where(isOdd)</span><br><span class="line">                .OrderBy(asc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1</span></span><br><span class="line"><span class="comment">// 7</span></span><br></pre></td></tr></table></figure>
-<p>22 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> original</span><br><span class="line">    .Where(isOdd)</span><br><span class="line">    .OrderBy(asc);</span><br></pre></td></tr></table></figure>
-<p><code>original</code> 經由 pipeline 方式，先經過 <code>Where()</code> 找出 <code>奇數</code>，最後再以 <code>asc</code> 排序。</p>
-<p>Code 就類似 <code>講話</code>，看不到實作細節，可讀性高。</p>
-<p>不需要建立 <code>result</code> 暫存變數，也沒有修改 <code>original</code> 與 <code>result</code>，從頭到尾都沒有修改 data，這就是所謂的 <code>No State Mutation</code>，而是每次 pipeline 都建立新的 data。</p>
-<blockquote>
-<ul>
-<li>LINQ 的 <code>Where()</code> 就是 FP 的 <code>filter()</code>，</li>
-<li>LINQ 的 <code>OrderBy()</code> 就是 FP 的 <code>sort()</code></li>
-</ul>
-</blockquote>
-<h2 id="Parallel_Computation">Parallel Computation</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> nums = Range(-<span class="number">10000</span>, <span class="number">20001</span>).Reverse().ToList();</span><br><span class="line"><span class="comment">// =&gt; [10000, 9999, ... , -9999, -10000]</span></span><br><span class="line">Action task1 = () =&gt; WriteLine(nums.Sum());</span><br><span class="line">Action task2 = () =&gt; &#123; nums.Sort(); WriteLine(nums.Sum()); &#125;;</span><br><span class="line"></span><br><span class="line">Parallel.Invoke(task1, task2);</span><br><span class="line"><span class="comment">// prints: 92332970</span></span><br><span class="line"><span class="comment">//         0</span></span><br></pre></td></tr></table></figure>
-<p>由於 <code>Sort</code> 會直接去改 <code>nums</code>，造成了 Race Condition。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> nums = Range(-<span class="number">10000</span>, <span class="number">20001</span>).Reverse().ToList();</span><br><span class="line"><span class="comment">// =&gt; [10000, 9999, ... , -9999, -10000]</span></span><br><span class="line">Action task1 = () =&gt; WriteLine(nums.Sum());</span><br><span class="line">Action task2 = () =&gt; WriteLine(nums.OrderBy(x =&gt; x).Sum());</span><br><span class="line"></span><br><span class="line">Parallel.Invoke(task1, task2);</span><br><span class="line"><span class="comment">// prints: 0</span></span><br><span class="line"><span class="comment">//         0</span></span><br></pre></td></tr></table></figure>
-<p><code>task2</code> 並不會去修改 <code>nums</code>，因此不會 Race Condition。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> original = <span class="keyword">new</span> List&lt;<span class="keyword">int</span>&gt; &#123;<span class="number">7</span>, <span class="number">6</span>, <span class="number">1</span>&#125;;</span><br><span class="line">            <span class="keyword">var</span> result = GetOddsByAsc(original);</span><br><span class="line"></span><br><span class="line">            result.ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> IEnumerable&lt;<span class="keyword">int</span>&gt; <span class="title">GetOddsByAsc</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; original</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="function"><span class="keyword">int</span> <span class="title">asc</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x;</span><br><span class="line">            <span class="function"><span class="keyword">bool</span> <span class="title">isOdd</span>(<span class="params"><span class="keyword">int</span> x</span>) </span>=&gt; x % <span class="number">2</span> == <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> original</span><br><span class="line">                .AsParallel()</span><br><span class="line">                .Where(isOdd)</span><br><span class="line">                .OrderBy(asc);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>22 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> original</span><br><span class="line">    .AsParallel()</span><br><span class="line">    .Where(isOdd)</span><br><span class="line">    .OrderBy(asc);</span><br></pre></td></tr></table></figure>
-<p>只要加上 <code>AsParallel()</code> 之後，完全無痛升級多核心。</p>
-<p>因為 <code>Where(isOdd)</code> 與 <code>OrderBy(asc)</code> 都是 Pure Function，沒有 Side Effect，也就沒有 Race Condition，因此可以放心使用多核心平行運算。</p>
-<h2 id="FP_vs-_OOP">FP vs. OOP</h2><hr>
-<p>OOP 是大家習慣的編程方式，FP 究竟有哪些觀念與 OOP 不同呢 ?</p>
-<p><strong>Encapsulation</strong></p>
-<ul>
-<li>OOP : data 與 logic 包在 class 內</li>
-<li>FP : data 與 logic 分家，data 就是 data，logic 就是 function，不使用 class</li>
-</ul>
-<p><strong>State Mutation</strong></p>
-<ul>
-<li>OOP : 繼續使用 Imperative 修改 state</li>
-<li>FP : No State Mutation =&gt; Immutable =&gt; No Side Effect =&gt; No Race Condition =&gt; Pure Function =&gt; Dataflow =&gt; Pipeline (其實都在講同一件事情)</li>
-</ul>
-<blockquote>
-<p>大部分人最難突破的 FP 點在此，這與傳統程式思維差異很大，為什麼不能改 data 呢 ?</p>
-</blockquote>
-<p><strong>Modularity</strong></p>
-<ul>
-<li>OOP : 以 class 為單位</li>
-<li>FP : 以 function 為單元</li>
-</ul>
-<p><strong>Dependency</strong></p>
-<ul>
-<li>OOP : Dependency Injection</li>
-<li>FP : Higher Order Function (Function Injection)</li>
-</ul>
-<p><strong>Loose Coupling</strong></p>
-<ul>
-<li>OOP : 使用 Interface</li>
-<li>FP : Function Signature 就是 interface，使用 Function Composition / Function Pipeline</li>
-</ul>
-<h2 id="SOLID">SOLID</h2><hr>
-<p><strong>SRP</strong></p>
-<ul>
-<li>OOP : Class 與 Method 要單一職責</li>
-<li>FP :  Module 與 Function 要單一職責</li>
-</ul>
-<p><strong>OCP</strong></p>
-<ul>
-<li>OOP : Interface，使用 Object Composition</li>
-<li>FP : Function Signature 就是 interface，使用 Function Composition</li>
-</ul>
-<p><strong>LSP</strong></p>
-<ul>
-<li>OOP : 有限度的繼承</li>
-<li>FP : N/A</li>
-</ul>
-<p><strong>ISP</strong></p>
-<ul>
-<li>OOP : Interface 要盡量小</li>
-<li>FP : Interface 小到極致就變成 function</li>
-</ul>
-<p><strong>DIP</strong></p>
-<ul>
-<li>OOP : Dependency Injection</li>
-<li>FP : Higher Order Function</li>
-</ul>
-<blockquote>
-<p>SOLID 原則在 OOP 與 FP 都適用，不過 OOP 與 FP 在實現手法並不一樣，OOP 以 class 實現，FP 以 function 實現</p>
-</blockquote>
-<h2 id="FP_鹹魚翻身">FP 鹹魚翻身</h2><hr>
-<p>FP 其實是比 OOP 更古老的技術，LISP 早在 1958 年就問世，而 Smalltalk 則在 1972 年發表，但因為 FP 基於數學，且強調 No State Mutation，與 CPU 設計理念不合 (CPU 就是要你不斷改暫存器與記憶體)，很多人無法接受而視為 <code>邪教</code>，一直到最近才鹹魚翻身： </p>
-<ol>
-<li>硬體單核心時脈出現瓶頸，CPU 已經無法做出時脈超過 5GHz 以上，因此單執行緒程式速度也面臨瓶頸，但隨著半導體製程進步，單位面積可以塞入更多電晶體，因此 CPU 可以放進更多核心，但 Imperative 寫法依賴 Side Effect，使得多核心很難發揮，但 FP 沒有 Side Effect，很容易多核心平行運算，發揮多核心威力</li>
-<li>Side Effect 寫法很難單元測試，因為不保證每次的結果都ㄧ樣，但 FP 的 Pure Function 很適合單元測試</li>
-<li>OOP 的 Object Compostion 需依賴 Interface，容易造成 interface 滿天飛與 Over Design，但 FP 的 Function Compostion 不需要額外 interface，只要求你使用 Dataflow 思考，並使用 Pure Function 避免 Side Effect 即可</li>
-<li>Reactive Programming 並不適合使用 OOP，但卻異常適合 FP，這使得 FP 找到了 <code>殺手級</code> 應用</li>
-</ol>
-<h2 id="C#_適合_FP_嗎_?">C# 適合 FP 嗎 ?</h2><hr>
-<p>回想 FP 定義 :</p>
-<ol>
-<li>Function as Data</li>
-<li>No State Mutation</li>
-</ol>
-<p><strong>Function as Data</strong></p>
-<ul>
-<li>C# 從 1.0 就有 Delegate，可以將 function 當成 input 與 output 使用</li>
-<li>C# 3.0 支援 Lambda，讓 Anonymous Function 更容易實現</li>
-<li>C# 3.0 支援 Func、Predicate、Action，讓 Anonyoua Delegate 更為方便</li>
-<li>C# 的 Type Inference 比較弱，必須明確指定 Delegate 或 Func 型別 (不滿意但可接受，希望 C# 對 Type Inference 持續加油) </li>
-</ul>
-<p><strong>No State Mutation</strong></p>
-<ul>
-<li>Primitive Type 只有 <code>string</code> 與 <code>datetime</code> 為 Immutable</li>
-<li>由於 C# 是從 Imperative 與 OOP 起家，任何 data 預設都是 Mutable，而不像 FP 語言預設 data 都是 Immutable，需自己加上 <code>readonly</code></li>
-<li>自訂型別預設是 Mutable</li>
-<li>Collection 預設是 Mutable，但已經提供 Immutable Collection</li>
-</ul>
-<p>所以大體上除了 Type Inference 與 Immutable 支援比較不足外，C# 7 算是個準 FP 語言，C# 亦持續朝更完整的 FP 邁進 :</p>
-<ul>
-<li>Record Type (Immutable 自訂 Type)</li>
-<li>Algebraic Data Type (適合 DDD)</li>
-<li>Pattern Matching</li>
-<li>更強的 Tuple</li>
-</ul>
-<p>C# 8 將會是更成熟的 FP 語言。</p>
-<h2 id="C#_對_FP_支援">C# 對 FP 支援</h2><p><strong>C# 3 與 LINQ</strong></p>
-<ul>
-<li>LINQ 本質上就是 FP，並不是使用 OOP 技術</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Enumerable</span><br><span class="line">    .Range(<span class="number">1</span>, <span class="number">100</span>)</span><br><span class="line">    .Where(i =&gt; i % <span class="number">20</span> == <span class="number">0</span>)</span><br><span class="line">    .OrderBy(i =&gt; -i)</span><br><span class="line">    .Select(i =&gt; $<span class="string">"&#123;i&#125;%"</span>)</span><br></pre></td></tr></table></figure>
-<p><code>Where()</code>、<code>OrderBy()</code>、<code>Select()</code> 都以 function 為參數，且並沒有去修改原本的 <code>Enumerable.Range(1, 100)</code>，完全符合 FP 的基本定義 :</p>
-<ul>
-<li>Function as Data</li>
-<li>No State Mutation</li>
-</ul>
-<p>且 C# 提供了 Lambda，讓我們以更精簡的方式撰寫 Delegate，對於 FP 這種只使用一次的 Anonymous Function 特別有效，這也使得 C# 更適合寫 FP。</p>
-<blockquote>
-<p>不過 C# 社群大都沒發現 LINQ 的 FP 的本質，只有在處理 <code>IEnumerable</code> 與 <code>IQueryable</code> 才會使用 FP，其他 code 又繼續使用 Imperative 與 OOP，並沒有完全發揮 Functional C# 的潛力，也就是 FP 思維其實沒有深入 C# 社群</p>
-</blockquote>
-<p><strong>C# 6、7</strong></p>
-<p>C# 6、7 乍看之下沒有提供實質功能，都是 syntax sugar，若以 OOP 角度來看的確如此，但若以 FP 角度，所有的 syntax sugar 都是為了讓 C# 成為更好的 FP 而準備。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Math;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">Circle</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Radius &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Circumference =&gt; PI * <span class="number">2</span> * Radius;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Circle</span>(<span class="params"><span class="keyword">double</span> radius</span>) </span>=&gt; Radius = radius;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">double</span> Area</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">get</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">            <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> (<span class="keyword">double</span> Circumference, <span class="keyword">double</span> Area) Stats =&gt; (Circumference, Area);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>Using Static</strong></p>
-<p>第 1 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Math;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Area</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">get</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>C# 6 的 <code>using static</code> 讓我們可以直接 <code>PI</code> 或 <code>Pow</code> 使用 <code>Math.PI</code> 與 <code>Math.Pow</code>。</p>
-<blockquote>
-<p>Q : 為什麼 <code>using static</code> 對 FP 重要 ?</p>
-</blockquote>
-<p>在 OOP，我們必須建立 object instance，然後才能用 method，主要是因為 OOP 的 instance method 會以 Imperative 與 Side Effect 方式使用 data，也就是 field，因此不同的 object instance 就有不同的 field，正就是 OOP 的 Encapsulation : data 與 logic 合一。</p>
-<p>但因為 FP 是 data 與 logic 分家，logic 會以 static method 實現，也沒有 field，因此就不須建立 object instance，因此類似 <code>Math</code> 這種 instance variable 在 FP 就顯得沒有意義且多餘，因為 static method 都是 Pure Function，根本不需要 instance variable。</p>
-<p><strong>Immutable Type</strong></p>
-<p>第 5 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Radius &#123; <span class="keyword">get</span>; &#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Circle</span>(<span class="params"><span class="keyword">double</span> radius</span>) </span>=&gt; Radius = radius;</span><br></pre></td></tr></table></figure>
-<p>C# 目前的缺點就是沒有 <code>直接</code> 支援  Immutable 自訂型別，C# 6 透過宣告 getter-only 的 auto-property，compiler 會自動建立 <code>readonly</code> 的 field，且只能透過 constructor 設定其值，達到 <code>No State Mutation</code> 的要求。</p>
-<p><strong>Expression Body</strong></p>
-<p>第 6 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">double</span> Circumference =&gt; PI * <span class="number">2</span> * Radius;</span><br></pre></td></tr></table></figure>
-<p>Property 可直接使用 Expression Body 語法。</p>
-<blockquote>
-<p>Q : 為什麼 Expression Body 對 FP 重要 ?</p>
-</blockquote>
-<p>因為 FP 很習慣寫 <code>小 property</code> 與 <code>小 function</code>，最後再靠 Function Composition 與 Function Pipeleine 組合起來，為了這種只有一行的 <code>小 function</code> ，還要加上 <code>{}</code>，除了浪費行數，也不符合 FP 的 Lambda 極簡風。</p>
-<p>C# 6 一開始只有在 Property 與 Method 支援 Expression Body，但 C# 7 可以在 Constructor、Destructor、Getter 與 Setter 全面使用 Expression Body。</p>
-<p><strong>Local Function</strong></p>
-<p>12 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">get</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">Square</span>(<span class="params"><span class="keyword">double</span> d</span>) </span>=&gt; Pow(d, <span class="number">2</span>);</span><br><span class="line">    <span class="keyword">return</span> PI * Square(Radius);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>Local Function 使我們在 Method 內可直接建立 function。</p>
-<blockquote>
-<p>Q : 為什麼 Local Function 對 FP 重要 ?</p>
-</blockquote>
-<p>由於 FP 常常需要建立 <code>小 function</code>，最後再 compose 或 pipeline，C# 7 之前只能宣告 <code>Func</code> 型別變數並配合 Lambda，但 <code>Func</code> 寫法可讀性實在不高，這也使的 C# 族群不太願意抽 <code>小 function</code>。</p>
-<p>但 Local Function 的可讀性就很高，也符合一般 function 的 syntax，讓我們更願意抽 <code>小 function</code> 來 compose。</p>
-<p><strong>Better Tuple</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> (<span class="keyword">double</span> Circumference, <span class="keyword">double</span> Area) Stats =&gt; (Circumference, Area);</span><br></pre></td></tr></table></figure>
-<p>為了回傳 Tuple 外，還可以對 element 指定有意義的名字，讓 client 使用 Tuple 時有 Intellisense 支援。</p>
-<blockquote>
-<p>Q : 為什麼 Tuple 對 FP 重要 ?</p>
-</blockquote>
-<p>因為 FP 會在 Function Composition 與 Function Pipeline 時，拆很多小 function 實現 Dataflow，而這些 <code>小 function</code> 在傳遞資料時，就會使用 Tuple，但為這種只使用一次的 data 定義自訂型別，又會造成自訂型別滿天飛的問題，但若使用 Tuple 就可避免此問題。</p>
-<h2 id="C#_如何實現_Function_?">C# 如何實現 Function ?</h2><hr>
-<p>這裡的 Function 是所謂的 Mathematical Function，也就是 Pure Function。</p>
-<p><strong>Static Method</strong></p>
-<p>由於 Pure Function 要求 output 只與 input 有關，也就是 Pure Function 沒有 Side Effect，因此會直接使用 Static Method，如 <code>System.Math</code> 一樣，且還可搭配 C# 6 的 <code>using static</code>，讓程式碼更精簡。</p>
-<p><strong>Delegate</strong></p>
-<p>FP 要求 <code>Function as Data</code>，也就是 Pure Function 會以參數方式傳進其他 function，C# 1.0 function 包成 Delegate 後，以 Delegate 形式傳進其它 function。</p>
-<p>Delegate 要求兩個步驟 :</p>
-<ul>
-<li>宣告 Delegate 型別</li>
-<li>實作符合 Delegate 型別的 function</li>
-</ul>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title">System</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">delegate</span> <span class="keyword">int</span> Comparison&lt;T&gt; (T x, Y x);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Delegate</code> 宣告 <code>Comparison</code> 型別。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = </span><br><span class="line">    Enumerable</span><br><span class="line">        .Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">        .Select(i =&gt; i * <span class="number">3</span>)</span><br><span class="line">        .ToList();</span><br><span class="line"></span><br><span class="line">Comparison&lt;<span class="keyword">int</span>&gt; alphabetically = </span><br><span class="line">    (<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString());</span><br><span class="line"></span><br><span class="line">list.Sort(alphabetically);</span><br></pre></td></tr></table></figure>
-<p>第 7 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Comparison&lt;<span class="keyword">int</span>&gt; alphabetically = </span><br><span class="line">    (<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString());</span><br></pre></td></tr></table></figure>
-<p>根據 <code>Comparison</code> delegate 型別定義 <code>alphabetically</code> 變數，以 Lambda 描述 function。</p>
-<blockquote>
-<p>若實作不符合 Delegate 定義，compiler 就會報錯，所以 Delegate 也被稱為 Type-Safe Function Pointer。</p>
-</blockquote>
-<p>第 10 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">list.Sort(alphabetically);</span><br></pre></td></tr></table></figure>
-<p>將 <code>alphabetically</code> delegate 傳入 <code>List.Sort()</code>。</p>
-<p><strong>Func &amp; Action</strong></p>
-<p>Delegate 讓我們實現 <code>Function as Data</code>，但對於只使用一次的 Anonymous Delegate 型別，到處宣告 Delegate 就類似 interface 一樣，造成檔案爆炸。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">delegate</span> Greeting <span class="title">Greeter</span>(<span class="params">Person p</span>)</span>;</span><br></pre></td></tr></table></figure>
-<p>其實相當於</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;Person, Greeting&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>.NET Framework 3 之後，以 Func 與 Action 取代 Custom Delegate</p>
-</blockquote>
-<p><strong>Lambda</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> list = </span><br><span class="line">    Enumerable</span><br><span class="line">        .Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">        .Select(i =&gt; i * <span class="number">3</span>)</span><br><span class="line">        .ToList();</span><br><span class="line"></span><br><span class="line">list.Sort((<span class="number">1</span>, r) =&gt; l.ToString().CompareTo(r.ToString();</span><br></pre></td></tr></table></figure>
-<p>不用再宣告 <code>Comparison&lt;T&gt;</code> Delegate，也不用建立 <code>Comparison&lt;T&gt;</code> 的實作，直接以 Lambda 傳入 <code>List.Sort()</code>。</p>
-<blockquote>
-<p>寫 Lambda 時，不用寫型別，compiler 會自動使用 Type Inference 導出參數型別，且會將 Lambda 轉型成 Delegate 型別，判斷是不是符合 <code>List.Sort()</code> 要求</p>
-<p>因此 Lamba 雖然寫起來像 <code>弱型別</code>，但絲毫不會影響原本 Delegate 強型別的特性，這就是 Type Inference 強大之處</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> days = Enum.GetValues(<span class="keyword">typeof</span>(DayOfWeek)).Cast&lt;DayOfWeek&gt;();</span><br><span class="line"><span class="comment">// =&gt; [Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday]</span></span><br><span class="line"></span><br><span class="line"><span class="function">IEnumerable&lt;DayOfWeek&gt; <span class="title">daysStartingWith</span>(<span class="params"><span class="keyword">string</span> pattern</span>)</span><br><span class="line">	</span>=&gt; days.Where(d =&gt; d.ToString().StartsWith(pattern));</span><br><span class="line"></span><br><span class="line">daysStartingWith(<span class="string">"S"</span>)</span><br><span class="line"><span class="comment">// =&gt; [Sunday, Saturday]</span></span><br></pre></td></tr></table></figure>
-<p>不只 JavaScript 有 Closure，事實上 C# 也是有 Closure。</p>
-<p> <code>daysStartingWith()</code> 會回傳 function，但傳入的參數 <code>S</code> 會以 Closure 方式存在於回傳的 function。</p>
-<p><strong>Dictionary</strong></p>
-<p>既然 Pure Function 只與 input 有關，我們甚至可以使用 <code>查表法</code> 的方式實作 function :</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> frenchFor = <span class="keyword">new</span> Dictionary&lt;<span class="keyword">bool</span>, <span class="keyword">string</span>&gt;</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">true</span>]  = <span class="string">"Vari"</span>,</span><br><span class="line">    [<span class="keyword">false</span>] = <span class="string">"Faux"</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">frenchFor[<span class="keyword">true</span>];</span><br></pre></td></tr></table></figure>
-<p>C# 6 提供了新的 Dictionary 初始化語法，甚至可以使用 <code>true</code> 與 <code>false</code> 當 key。</p>
-<blockquote>
-<p>實務上有兩種需求很適合使用 Dictionary</p>
-<ol>
-<li>沒有邏輯可言的 data 轉換</li>
-<li>花時間的運算</li>
-</ol>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>FP 的 function 指的是 Mathematical Function，也就是 Pure Function，而不是 Programming Function</li>
-<li>FP 屬於 Paradigm 層次，不是 framework 也不是程式語言，只要語言能支援 First-Class Function，就能以 FP 風格實現，若能支援 Immutable 與 Type Inference 更佳</li>
-<li>C# 目前已經支援大部分的 FP 功能，隨著 C# 8 的發佈，FP 支援將更為完整</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://www.mathsisfun.com" target="_blank" rel="external">Math is Fun</a>, <a href="https://www.mathsisfun.com/sets/domain-range-codomain.html" target="_blank" rel="external">Domain, Range and Codomain</a><br>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以大家的老朋友 C# 談 FP]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
-    
-      <category term="FP" scheme="https://oomusou.io/tags/FP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 SonarQube 顯示 .NET Core 專案 Code Coverage ? (Docker)]]></title>
-    <link href="https://oomusou.io/sonarqube/code-coverage/"/>
-    <id>https://oomusou.io/sonarqube/code-coverage/</id>
-    <published>2018-08-02T12:23:43.000Z</published>
-    <updated>2018-08-02T03:03:59.000Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 除了能檢查 C# 品質外，還可以當成 dashboard 使用，讓整個團隊有統一入口關注專案的 Code Coverage。</p>
-<p>SonarQube 支援 OpenCover 與 dotCover 兩種格式，本文將以 NUnit + Coverlet + OpenCover 介紹。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.0-ce-mac70 (26399)<br>.NET Core 2.1<br>SonarQube 7.1<br>SonarScanner 4.3.1.1372<br>NUnit 3.10.1<br>Coverlet 2.1.1<br>Rider 2018.1.3</p>
-<h2 id="Coverlet">Coverlet</h2><hr>
-<p><img src="/images/sonarqube/code-coverage/coverage000.png" alt="coverage000"></p>
-<p>在 NUnit 專案加入 Coverlet package，這是個基於 .NET Core，且能跨平台計算 Code Coverage 的 package。</p>
-<blockquote>
-<p>OpenCover 與 dotCover 算 .NET 生態圈兩大最有名的 package，但目前都只能跑在 Windows 平台，Coverlet 算目前跨平台最佳 solution</p>
-</blockquote>
-<h2 id="Dockerfile">Dockerfile</h2><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br><span class="line"></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_VERSION=<span class="number">4.3</span>.<span class="number">1.1372</span></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_HOME=/opt/scanner</span><br><span class="line"></span><br><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y unzip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y openjdk-<span class="number">8</span>-jre</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">wget -q https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/<span class="variable">$SCANNER_VERSION</span>/sonar-scanner-msbuild-<span class="variable">$SCANNER_VERSION</span>-netcoreapp2.<span class="number">0</span>.zip -O /opt/sonar-scanner-msbuild.zip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">mkdir -p <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">unzip /opt/sonar-scanner-msbuild.zip <span class="operator">-d</span> <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">rm /opt/sonar-scanner-msbuild.zip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">chmod <span class="number">775</span> <span class="variable">$SCANNER_HOME</span>/ -R</span><br><span class="line"></span></span><br><span class="line"><span class="built_in">COPY</span> <span class="bash">./ ./</span><br><span class="line"></span><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"./scanner.sh"</span>]</span></span><br></pre></td></tr></table></figure>
-<p>因為要在 .NET Core container 安裝 SonarScanner，所以要對 .NET Core 客製化 image。</p>
-<p>第 1 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">FROM</span> microsoft/dotnet</span><br></pre></td></tr></table></figure>
-<p>使用 <code>FROM</code> 設定所使用的基底 image。</p>
-<p>使用 Microsoft 官方的 <code>microsoft/dotnet</code> image。</p>
-<p>第 3 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ENV</span> SCANNER_VERSION=<span class="number">4.3</span>.<span class="number">1.1372</span></span><br><span class="line"><span class="built_in">ENV</span> SCANNER_HOME=/opt/scanner</span><br></pre></td></tr></table></figure>
-<p>使用 <code>ENV</code> 設定 Dockerfile 的環境變數。</p>
-<p><code>SCANNER_VERSION</code> : 因為 SonarScanner 的下載路徑，會與版本有關，所以特別設定成變數。</p>
-<p><code>SCANNER_HOME</code> : 設定 SonarScanner 所安裝的目錄。</p>
-<p>第 6 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">WORKDIR</span> <span class="bash">/app</span></span><br></pre></td></tr></table></figure>
-<p>設定 container 的工作目錄，也就是預設目錄都會在 <code>/app</code> 下。</p>
-<p>第 8 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">apt-get update </span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y wget</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y unzip</span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">apt-get install -y openjdk-<span class="number">8</span>-jre</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>RUN</code> 執行 CLI 指令。</p>
-<ul>
-<li>使用 <code>wget</code> 下載 SonarScanner</li>
-<li>使用 <code>unzip</code> 對 zip 解壓縮</li>
-<li><code>SonarScanner</code> 會使用 Java 執行，需要安裝 Java Runtime</li>
-</ul>
-<p>12 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">wget -q https://github.com/SonarSource/sonar-scanner-msbuild/releases/download/<span class="variable">$SCANNER_VERSION</span>/sonar-scanner-msbuild-<span class="variable">$SCANNER_VERSION</span>-netcoreapp2.<span class="number">0</span>.zip -O /opt/sonar-scanner-msbuild.zip</span></span><br></pre></td></tr></table></figure>
-<p>使用 <code>wget</code> 下載 SonarScanner 壓縮檔，並下載到 <code>/opt</code> 目錄下。</p>
-<p>13 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">mkdir -p <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">unzip /opt/sonar-scanner-msbuild.zip <span class="operator">-d</span> <span class="variable">$SCANNER_HOME</span></span><br><span class="line"></span><span class="built_in">RUN</span> <span class="bash">rm /opt/sonar-scanner-msbuild.zip</span></span><br></pre></td></tr></table></figure>
-<p>建立 <code>/opt/scanner</code> 目錄，將 SonarScanner 壓縮檔解壓縮放到 <code>/opt/scanner</code> 目錄下，解壓縮完刪除 SonarScanner 壓縮檔。</p>
-<p>16 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">RUN</span> <span class="bash">chmod <span class="number">775</span> <span class="variable">$SCANNER_HOME</span>/ -R</span></span><br></pre></td></tr></table></figure>
-<p>將 SonarScanner 目錄所有檔案賦予執行權力。</p>
-<p>18 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">COPY</span> <span class="bash">./ ./</span></span><br></pre></td></tr></table></figure>
-<p>將目前 solution 下所有檔案複製到 container 內，也就是 <code>/app</code> 目錄下。</p>
-<p>19 行</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ENTRYPOINT</span> <span class="bash">[<span class="string">"./scanner.sh"</span>]</span></span><br></pre></td></tr></table></figure>
-<p>最後會執行專案目錄下的 <code>./scanner.sh</code>，負責執行 SonarScanner 檢查。</p>
-<h2 id="Docker-compose-yml">Docker-compose.yml</h2><hr>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">version: &#34;3&#34;&#10;&#10;services:&#10;  net-core:&#10;    build: .&#10;    container_name: MyCore&#10;    volumes:&#10;      - &#34;$&#123;HOST_DIR&#125;:/code/&#34;&#10;    networks:&#10;      - netcore&#10;    depends_on:&#10;      - sonarqube&#10;&#10;  sonarqube:&#10;    image: sonarqube:latest&#10;    container_name: MySonarQube&#10;    ports:&#10;      - 9000:9000&#10;      - 9002:9002&#10;    networks:&#10;      netcore:&#10;        ipv4_address: 172.16.238.10&#10;     &#10;networks:&#10;  netcore:&#10;    ipam: &#10;      driver: default&#10;      config:&#10;        - subnet: 172.16.238.0/24</span><br></pre></td></tr></table></figure>
-<p>設定 .NET Core 與 SonarQube 兩個 container 同時啟動。</p>
-<p>第 4 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net-core:&#10;    build: .</span><br></pre></td></tr></table></figure>
-<p>使用 <code>build</code> 將同目錄下的 <code>Dockerfile</code> build 成 image，也就是剛才的 <code>Dockerfile</code>。</p>
-<p>第 6 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MyCore</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 .NET Core 的 container 名稱。</p>
-<p>第 7 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">volumes:&#10;  - &#34;$&#123;HOST_DIR&#125;:/code/&#34;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>volumes</code> 設定 host 與 container 的共用目錄，<code>:</code> 左方為 host 目錄，右方為 container 目錄。</p>
-<p>目的是能在 .NET Core container 內抓到 host 的 project。</p>
-<p>第 9 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  - netcore</span><br></pre></td></tr></table></figure>
-<p>使用 <code>networks</code> 設定 .NET Core 與 SonarQube 共用 <code>netcore</code> 內部網路。</p>
-<p>11 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depends_on:&#10;  - sonarqube</span><br></pre></td></tr></table></figure>
-<p>.NET Core container 相依於 SonarQube container。</p>
-<p>14 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sonarqube:&#10;  image: sonarqube:latest</span><br></pre></td></tr></table></figure>
-<p>使用 <code>image</code> 設定 container 所使用的 image。</p>
-<p>16 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">container_name: MySonarQube</span><br></pre></td></tr></table></figure>
-<p>使用 <code>container_name</code> 設定 SonarQube 的 container 名稱。</p>
-<p>17 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ports:&#10;  - 9000:9000&#10;  - 9002:9002</span><br></pre></td></tr></table></figure>
-<p>使用 <code>ports</code> 設定 host 與 container 所 mapping 的 port，<code>:</code> 左側為 host port，右側為 container port。</p>
-<p>為了能在 host 以瀏覽器連上 SonarQube，要將 host 的 9000 與 9002 兩個 port 給 host。</p>
-<p>20 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  netcore:&#10;    ipv4_address: 172.16.238.10</span><br></pre></td></tr></table></figure>
-<p>使用 <code>network</code> 設定使用 <code>netcore</code> 網路，並設定其 IP 為 <code>172.16.238.10</code>。</p>
-<blockquote>
-<p>一般來說，我們不必為 container 設定固定 IP，只要使用 container 名稱就可彼此溝通，但稍後 SonarScanner 必須使用固定 IP 才能連上 SonarQube，所以在此特別要設定固定 IP</p>
-</blockquote>
-<p>24 行</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">networks:&#10;  netcore:&#10;    ipam: &#10;      driver: default&#10;      config:&#10;        - subnet: 172.16.238.0/24</span><br></pre></td></tr></table></figure>
-<p>設定 <code>netcore</code> 網路。</p>
-<h2 id="-env">.env</h2><hr>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HOST_DIR=~/Code/CSharp</span><br></pre></td></tr></table></figure>
-<p>將 <code>HOST_DIR</code> 以環境變數設定，為 host 與 .NET Core container 所共享的目錄。</p>
-<h2 id="scanner-sh">scanner.sh</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="shebang">#! /bin/bash</span></span><br><span class="line">sleep <span class="number">35</span></span><br><span class="line"><span class="built_in">cd</span> ./ClassLib.Test</span><br><span class="line">dotnet <span class="built_in">test</span> /p:CollectCoverage=<span class="literal">true</span> /p:CoverletOutputFormat=opencover </span><br><span class="line"><span class="built_in">cd</span> ..</span><br><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll begin /k:core2 /n:Core2 /v:<span class="number">1.0</span> /d:sonar.login=admin /d:sonar.password=admin /d:sonar.host.url=http://<span class="number">172.16</span>.<span class="number">238.10</span>:<span class="number">9000</span> /d:sonar.cs.opencover.reportsPaths=/app/ClassLib.Test/coverage.opencover.xml /d:sonar.coverage.exclusions=**/Program.cs</span><br><span class="line">dotnet build</span><br><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll end /d:sonar.login=admin /d:sonar.password=admin</span><br></pre></td></tr></table></figure>
-<p>使用 SonarScanner 檢查 .NET Core 專案，<code>scanner.sh</code> 會放在專案根目錄。</p>
-<p>第 2 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sleep <span class="number">30</span></span><br></pre></td></tr></table></figure>
-<p>主要是要等 SonarQube 啟動完成，比較好的方式是使用 Health Check 明確得知 SonarQube 已經啟動完成。</p>
-<p>這裡暫時先 sleep 30 秒，等 SonarQube 先啟動，.NET Core 才開始執行 SonarScanner。</p>
-<p>這裡還有改善的空間，也可以自行調整 sleep 時間。</p>
-<p>第 4 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet <span class="built_in">test</span> /p:CollectCoverage=<span class="literal">true</span> /p:CoverletOutputFormat=opencover</span><br></pre></td></tr></table></figure>
-<p>執行 NUnit 單元測試。</p>
-<ul>
-<li><strong>/p:CollectCoverage=true</strong> : 命令 Coverlet 計算 Code Coverage</li>
-<li><strong>/p:CoverletOutputFormat=opencover</strong> : 命令 Coverlet 以 OpenCover 格式產出</li>
-</ul>
-<p>第 6 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll begin /k:core2 /n:Core2 /v:<span class="number">1.0</span> /d:sonar.login=admin /d:sonar.password=admin /d:sonar.host.url=http://<span class="number">172.16</span>.<span class="number">238.10</span>:<span class="number">9000</span> /d:sonar.cs.opencover.reportsPaths=/app/ClassLib.Test/coverage.opencover.xml /d:sonar.coverage.exclusions=**/Program.cs</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet</code> 執行 <code>SonarScanner.MSBuild.dll</code>，一開始以 <code>begin</code> 開頭：</p>
-<ul>
-<li><strong>/k</strong> : SonarQube 對專案的 key，內部將以此 key 作為辨別，必須唯一</li>
-<li><strong>/n</strong> : 在 SonarQube 網頁上顯示的專案名稱</li>
-<li><strong>/v</strong> : 在 SonarQube 網頁上顯示的版本編號</li>
-<li><strong>/d:sonar.login</strong> : 指定 SonarQube 帳號</li>
-<li><strong>/d:sonar.password</strong> : 指定 SonarQube 密碼</li>
-<li><strong>/d:sonar.host.url</strong> : 指定 SonarQube server IP 與 port</li>
-<li><strong>/d:sonar.cs.opencover.reportsPaths</strong> : 設定 OpenCover 格式的 XML 檔案位置</li>
-<li><strong>/d:sonar.coverage.exclusions</strong> : 設定 SonarQube 排除 Code Coverage 計算的檔案</li>
-</ul>
-<blockquote>
-<p>目前 SonarQube 設定 exclusions 的 regex 有些 bug，可能無法如文件那般設定 regex，假如遇到這個 bug，就先用最原始的方式指定 exclusions</p>
-</blockquote>
-<p>第 7 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet build</span><br></pre></td></tr></table></figure>
-<p>使用 <code>dotnet build</code> 編譯專案。</p>
-<blockquote>
-<p>Script 語言不用編譯，可以直接使用 SonarQube Scanner 就可以檢查，但 C# 需要編譯，因此必須 dotnet build</p>
-</blockquote>
-<p>第 8 行</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet /opt/scanner/SonarScanner.MSBuild.dll end /d:sonar.login=admin /d:sonar.password=admin</span><br></pre></td></tr></table></figure>
-<p>最後需加上 <code>end</code>，scanner 正式將 <code>dotnet build</code> 檢查出的結果寫入 SonarQube project</p>
-<ul>
-<li>仍必須指定 SonarQube 的帳號密碼</li>
-</ul>
-<h2 id="執行_SonarScanner">執行 SonarScanner</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SonarScanner $ docker-compose up --build</span><br></pre></td></tr></table></figure>
-<p>啟動 .NET Core 與 SonarQube container，並且自動執行 SonarScanner。</p>
-<ul>
-<li><strong>–build</strong> : 重新建立 .NET Core 自訂 image，若有任何修改，將重新包進 image，確保 <code>docker-compose</code> 是最新的 image</li>
-</ul>
-<p><img src="/images/sonarqube/code-coverage/coverage001.png" alt="core000"></p>
-<p><img src="/images/sonarqube/code-coverage/coverage002.png" alt="coverage002"></p>
-<ol>
-<li>Coverlet 計算出 Code Coverage，並且產生 <code>coverage.opencover.xml</code></li>
-</ol>
-<p><img src="/images/sonarqube/code-coverage/coverage003.png" alt="coverage003"></p>
-<ol>
-<li>在 host 以 <code>http://localhost:9000</code> ，將可看到 SonarQube 的檢查結果，並且正確顯示 Code Coverage</li>
-</ol>
-<h2 id="結束_Container">結束 Container</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker-compose down</span><br></pre></td></tr></table></figure>
-<p><img src="/images/sonarqube/code-coverage/coverage004.png" alt="core003"></p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>由於 SonarScanner 已經被包在 Dockerfile 內，host 就不用再安裝 SonarScanner</li>
-<li>沒有將 .NET Core 安裝在 SonarQube container 內，而是分別使用 .NET Core container 與 SonarQube container，符合 Microservice 精神</li>
-<li>Coverlet 為目前唯一的 .NET Core 跨平台 Code Coverage 解決方案，並且可以產出 OpenCover 格式 XML</li>
-<li>只要執行 <code>docker-compose up --build</code>，就會執行 NUnit 單元測試與 Coverlet 計算 Code Coverage，且 SonarScanner 也會自動進行檢查</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/sonarscanner" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://github.com/tonerdo" target="_blank" rel="external">Tonerdo</a>, <a href="https://github.com/tonerdo/coverlet" target="_blank" rel="external">Coverlet</a><br><a href="https://tattoocoder.com" target="_blank" rel="external">Shryne Boyer</a>, <a href="https://tattoocoder.com/cross-platform-code-coverage-arrives-for-net-core/" target="_blank" rel="external">Cross platform code coverage arrives for .NET Core</a><br><a href="https://docs.sonarqube.org" target="_blank" rel="external">SonarQube</a>, <a href="https://docs.sonarqube.org/pages/viewpage.action?pageId=6389770" target="_blank" rel="external">Code Coverage Result Import (C#, VB.NET)</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[SonarQube 也能顯示 Code Coverage]]>
-    
-    </summary>
-    
-      <category term=".NET Core" scheme="https://oomusou.io/tags/NET-Core/"/>
-    
-      <category term="Coverlet" scheme="https://oomusou.io/tags/Coverlet/"/>
-    
-      <category term="NUnit" scheme="https://oomusou.io/tags/NUnit/"/>
-    
-      <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
     
   </entry>
   

@@ -1,0 +1,284 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ECMAScript 之 Event Loop Model | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="解釋 JavaScript 非同步的運作原理">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="解釋 JavaScript 非同步的運作原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript 之 Event Loop Model">
+<meta property="og:url" content="https://oomusou.io/ecmascript/event-loop-model/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="解釋 JavaScript 非同步的運作原理">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-10-07T14:42:12.966Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript 之 Event Loop Model">
+<meta name="twitter:description" content="解釋 JavaScript 非同步的運作原理">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> ECMAScript 之 Event Loop Model</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 解釋 JavaScript 非同步的運作原理			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Single_Thread"><span class="toc-article-text">Single Thread</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Event_Loop_Model"><span class="toc-article-text">Event Loop Model</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>由於 JavaScript 是 Single Thread 語言，由於其 Single Thread 特色，對於繁重的運算動作，就無法如 C# 使用 Multi Thread 解決，因此 Asynchronous 在 JavaScript 格外重要。</p>
+<p>Browser 使用獨特的 Event Loop Model 實現 Asynchronous，要能徹底了解其背後運作原理，才能掌握 JavaScript 的 Asynchronous。</p>
+<a id="more"></a>
+<h2 id="Single_Thread">Single Thread</h2><hr>
+<ul>
+<li>One call stack</li>
+<li>One thing at a time</li>
+</ul>
+<p>JavaScript 最大的特色就是 Runtime 為 Single Thread，也就是只有一個  Call Stack，因此一個時間只能做一件事情。</p>
+<p>也由於只有一個 Thread，只要遇到 <code>大量運算</code>，JavaScript 就會停住等待，因此使用者體驗就會不好。</p>
+<blockquote>
+<p>C# 只要遇到 <code>大量運算</code>，我們就會使用 Multi Thread，但 JavaScript 為 Single Thread，因此這招不能用在 JavaScript</p>
+</blockquote>
+<p>因此 Browser 做了擴充，有些東西並不是由 JavaScript Runtime 實作，而是由 Browser 提供：</p>
+<ul>
+<li>DOM</li>
+<li>AJAX (XMLHttpRequest)</li>
+<li>setTimout()</li>
+</ul>
+<p>也就是這三類 Browser 所提供的 API，屬於 Asynchronous 部分。</p>
+<h2 id="Event_Loop_Model">Event Loop Model</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'Hello '</span>);</span><br><span class="line">setTimeout(() =&gt; <span class="built_in">console</span>.log(<span class="string">'Sam'</span>), <span class="number">0</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'World '</span>);</span><br><span class="line"><span class="comment">// Hello World Sam</span></span><br></pre></td></tr></table></figure>
+<p>當 <code>setTimeout()</code> 為 <code>0</code> 秒時，會先執行 <code>console.log(&#39;Sam&#39;)</code> 還是 <code>console.log(&#39;World &#39;)</code> ?</p>
+<blockquote>
+<p>既然 dealy <code>0</code> 秒，且寫在前面，應該先執行吧 ?</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">concole.log(<span class="string">'Hello '</span>);</span><br><span class="line">$.get(<span class="string">'url'</span>, data =&gt; <span class="built_in">console</span>.log(data)); <span class="comment">// &#123; name: 'Sam' &#125;</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">' World'</span>);</span><br><span class="line"><span class="comment">// Hello World &#123; name: 'Sam' &#125;</span></span><br></pre></td></tr></table></figure>
+<p>當使用 AJAX 時，也會發現 <code>console.log(&#39; World&#39;)</code> 會先執行。</p>
+<p><img src="/images/ecmascript/event-loop-model/loop000.svg" alt="eventloop000"></p>
+<p>會先執行 Stack 內的 function，直到 Stack 都執行完，才會執行 Event Loop，將 Callback Queue 內的 function 執行完。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'Hello '</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ecmascript/event-loop-model/loop001.svg" alt="loop001"></p>
+<ul>
+<li><code>console.log(&#39;Hello &#39;)</code> 進 Stack</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop002.svg" alt="loop002"></p>
+<ul>
+<li>清空 Stack，在 Console 顯示 <code>Hello</code></li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(() =&gt; <span class="built_in">console</span>.log(<span class="string">'Sam'</span>), <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ecmascript/event-loop-model/loop003.svg" alt="loop003"></p>
+<ul>
+<li><code>setTimeout()</code> 進 Stack</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop004.svg" alt="loop004"></p>
+<ul>
+<li>清空 Stack，執行 Browser Thread 的 <code>timer(0)</code> </li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop005.svg" alt="loop005"></p>
+<ul>
+<li><code>timer(0)</code> 時間一到，將 <code>callback</code> 塞進 Callback Queue</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'World '</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/ecmascript/event-loop-model/loop006.svg" alt="loop006"></p>
+<ul>
+<li><code>console.log(&#39;World &#39;)</code> 進 Stack</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop007.svg" alt="loop007"></p>
+<ul>
+<li>清空 Stack，在 Console 顯示 <code>Hello World</code></li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop008.svg" alt="loop008"></p>
+<ul>
+<li>所有 Synchronous Function 都已經執行完，開始執行 Event Loop</li>
+</ul>
+<p><img src="/images/ecmascript/event-loop-model/loop009.svg" alt="loop009"></p>
+<ul>
+<li>清空 Callback Queue，在 Console 顯示 <code>Hello World Sam</code></li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Asynchronous Function 會將 Callback 先塞進 Callback Queue，不會立即執行</li>
+<li>等所有 Synchronous Function 都執行完，才開始執行 Event Loop 清空 Callback Queue 執行 Asynchronous Function</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Philp Robers : <a href="https://youtu.be/8aGhZQkoFbQ" target="_blank" rel="external">What the heck is the event loop anyway ?</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+				
+    	<li class="prev"><a href="/ecmascript/asynchronous/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/ecmascript/module/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-10-07 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>15</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
