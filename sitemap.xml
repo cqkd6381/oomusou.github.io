@@ -2,6 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/fp/pure-function/</loc>
+    <lastmod>2018-10-07T14:03:07.036Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/fp/point-free/</loc>
+    <lastmod>2018-10-07T14:02:55.359Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/fp/lazy-evaluation/</loc>
+    <lastmod>2018-10-07T14:02:43.696Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/fp/hof/</loc>
+    <lastmod>2018-10-07T14:02:28.718Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/fp/currying/</loc>
+    <lastmod>2018-10-07T14:01:52.532Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/ecmascript/module/</loc>
     <lastmod>2018-10-07T07:21:46.224Z</lastmod>
   </url>
@@ -14,11 +39,6 @@
   <url>
     <loc>https://oomusou.io/ecmascript/const/</loc>
     <lastmod>2018-09-30T12:00:38.024Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/fp/lazy-evaluation/</loc>
-    <lastmod>2018-09-30T11:30:09.321Z</lastmod>
   </url>
   
   <url>
@@ -39,16 +59,6 @@
   <url>
     <loc>https://oomusou.io/linq/foreach/</loc>
     <lastmod>2018-09-26T16:11:05.824Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/fp/pure-function/</loc>
-    <lastmod>2018-09-24T15:49:01.272Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/fp/currying/</loc>
-    <lastmod>2018-09-19T04:43:41.742Z</lastmod>
   </url>
   
   <url>
@@ -74,11 +84,6 @@
   <url>
     <loc>https://oomusou.io/ecmascript/mixin/</loc>
     <lastmod>2018-09-19T04:42:00.553Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/fp/point-free/</loc>
-    <lastmod>2018-09-19T04:40:05.630Z</lastmod>
   </url>
   
   <url>
@@ -109,11 +114,6 @@
   <url>
     <loc>https://oomusou.io/fp/using/</loc>
     <lastmod>2018-08-21T13:51:56.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/fp/hof/</loc>
-    <lastmod>2018-08-21T12:58:01.000Z</lastmod>
   </url>
   
   <url>
