@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="Module 是 ECMAScript 發展的重要里程碑">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-10-04T10:36:52.707Z">
+<meta property="og:updated_time" content="2018-10-07T07:21:46.224Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ECMAScript 之 Module">
 <meta name="twitter:description" content="Module 是 ECMAScript 發展的重要里程碑">
@@ -180,7 +180,7 @@
 <ul>
 <li><p><strong>將 data 或 function 封裝在 Module 內</strong>：<code>numClicks</code> 與 <code>handleClick()</code> 看似 Global，但事實上其 scope 只有 Module level，不用特別使用 function 與 Closure 寫法就能達成封裝 data 與 function</p>
 </li>
-<li><p><strong>將 interface 暴露在 Module 外</strong>：將 interface 暴露在 Module 外</p>
+<li><p><strong>將 interface 暴露在 Module 外</strong>：將全新 object  指定給 <code>module.exports</code> 即可，不需特別 return</p>
 </li>
 </ul>
 <p><strong>main.js</strong></p>
@@ -224,7 +224,7 @@
 <li>語法比 CommonJS 優雅</li>
 </ul>
 <h2 id="Definition">Definition</h2><hr>
-<p>你可以將 data (variable、object、function、class) 加以 imprt 與 export。</p>
+<p>你可以將 data (variable、object、function、class) 加以 import 或 export。</p>
 <p>Export 分為 Named Export 與 Default Export：</p>
 <ul>
 <li><strong>Named Export</strong>：data 必須有名稱</li>
@@ -232,7 +232,7 @@
 <li>一個 Module 只能有一個 Default Export，但能有無限多個 Named Export</li>
 </ul>
 <blockquote>
-<p>Default Export 的 data 也可以有名稱，但因為回由 import 決定名稱，所以通常會使 data 沒有名稱</p>
+<p>Default Export 的 data 也可以有名稱，但因為會由 import 決定名稱，所以通常會使 data 沒有名稱</p>
 </blockquote>
 <h2 id="Named_Export">Named Export</h2><hr>
 <h3 id="Variable">Variable</h3><p><strong>my-module.js</strong></p>
@@ -242,13 +242,13 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; x &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"><span class="keyword">import</span> &#123; y &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(x);</span><br><span class="line"><span class="built_in">console</span>.log(y);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
 <p>可對變數分別 import，但 Named Import 要搭配 <code>{}</code>。</p>
 <h3 id="Object">Object</h3><p><strong>my-module.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> y = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; x, y &#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">const</span> y = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> &#123; x, y &#125;;</span><br></pre></td></tr></table></figure>
 <p>可直接對 object 加以 export。</p>
 <p><strong>main.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; x, y &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(x);</span><br><span class="line"><span class="built_in">console</span>.log(y);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p>可對 object 直接 import，使用 Object Destructing 方式對 object 直接解構。</p>
+<p>可對 object 直接 import，使用 Destructing Assignment 方式對 object 直接解構。</p>
 <h3 id="Function">Function</h3><p><strong>my-module.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>將 <code>add()</code> 加以 export。</p>
 <p><strong>main.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">'my-module'</span></span><br><span class="line"></span><br><span class="line">console.log(add(1, 1));</span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
@@ -300,8 +300,7 @@
 <p>無論對 variable / object / function / class 加以 Default Export，可不用事先明確命名 (當然要事先命名亦可，但沒有太大意義)，然後在 Named Import 時不用加上 <code>{}</code></p>
 <p>React 與 Vue 喜歡使用 Default Export，優點是可由 user 自行命名，彈性最高；Angular 則喜歡使用 Named Export，由 Framework 事先命名，優點是整個 community 名稱統一</p>
 </blockquote>
-<h2 id="Named_+_Default_Export">Named + Default Export</h2><hr>
-<p>一個 Module 只允許一個 Default Export，但可以有多個 Named Export。</p>
+<h2 id="Named_+_Default_Export">Named + Default Export</h2><p>一個 Module 只允許一個 Default Export，但可以有多個 Named Export。</p>
 <p><strong>my-module.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> name = <span class="string">'Sam'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> add = (x, y) =&gt; x + y;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> </span>&#123;</span><br><span class="line">  constructor(x, y) &#123;</span><br><span class="line">    <span class="keyword">this</span>.x = x;</span><br><span class="line">    <span class="keyword">this</span>.y = y;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  sum() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.x + <span class="keyword">this</span>.y;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>name</code> 與 <code>add()</code> 為 Named Export，但 Anonymous Class 為 Default Export。</p>
