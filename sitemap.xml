@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/ecmascript/module/</loc>
+    <lastmod>2018-10-08T05:39:43.567Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/ecmascript/asynchronous/</loc>
     <lastmod>2018-10-07T14:46:06.077Z</lastmod>
   </url>
@@ -34,11 +39,6 @@
   <url>
     <loc>https://oomusou.io/fp/currying/</loc>
     <lastmod>2018-10-07T14:01:52.532Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/module/</loc>
-    <lastmod>2018-10-07T07:21:46.224Z</lastmod>
   </url>
   
   <url>
