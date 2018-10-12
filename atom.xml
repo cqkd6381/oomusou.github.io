@@ -196,7 +196,7 @@
     <link href="https://oomusou.io/ecmascript/module/"/>
     <id>https://oomusou.io/ecmascript/module/</id>
     <published>2018-10-04T12:23:43.000Z</published>
-    <updated>2018-10-08T05:39:43.567Z</updated>
+    <updated>2018-10-12T07:43:24.226Z</updated>
     <content type="html"><![CDATA[<p>ES5 很難寫大程式，主要是因為 JavaScript 沒有 Module 概念，常常一個檔案寫兩三千行程式，且大量使用 Global Variable 造成 Side Effect 很難維護。</p>
 <p>早期 JavaScript 是使用 Module Pattern 解決，稍後更有 CommonJS 與 AMD 試圖制定 Module 標準，一直到 TC39 出手，在 ECMAScript 2015 定義 Module 後，JavaScript 的模組化總算塵埃落定，是 JavaScript 發展的重要里程碑。</p>
 <a id="more"></a>
@@ -308,7 +308,7 @@
 <p><strong>main.js</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> MouseCounterModule <span class="keyword">from</span> <span class="string">'MouseCounterModule.js'</span>;</span><br><span class="line"></span><br><span class="line">MouseCounterModule.counterClick();</span><br></pre></td></tr></table></figure>
 <p>使用 <code>import</code> 載入 Dependency Module 後即可使用，也不用搭配 Callback function，這點與 CommonJS 一樣。</p>
-<p>CommonJS 有以下特色：</p>
+<p>ES Module 有以下特色：</p>
 <ul>
 <li>提供 <code>export</code> 與 <code>import</code> 兩個 keyword 就解決</li>
 <li>語法比 CommonJS 優雅</li>
