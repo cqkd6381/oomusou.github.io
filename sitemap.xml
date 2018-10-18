@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/haskell/function/</loc>
+    <lastmod>2018-10-18T10:08:21.966Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/haskell/ghc/</loc>
     <lastmod>2018-10-18T01:38:55.799Z</lastmod>
   </url>

@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-18T01:38:55.799Z</updated>
+  <updated>2018-10-18T10:08:21.966Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,57 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Haskell 之 Function]]></title>
+    <link href="https://oomusou.io/haskell/function/"/>
+    <id>https://oomusou.io/haskell/function/</id>
+    <published>2018-10-18T13:23:43.000Z</published>
+    <updated>2018-10-18T10:08:21.966Z</updated>
+    <content type="html"><![CDATA[<p>Function 為 Haskell 最重要的元素，首先來看 Haskell 如何定義 function，也順便複習 F# 、ECMAScript 與 C#。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>GHC 8.4.3</p>
+<h2 id="Haskell">Haskell</h2><hr>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">foo</span> x y = x + y</span><br><span class="line"><span class="title">too</span> = \x y -&gt; x + y</span><br></pre></td></tr></table></figure>
+<ul>
+<li>直接定義 <code>foo</code> function，parameter 以 space 隔開，而 parameter 與 body 之間以 <code>=</code> 隔開</li>
+<li>使用 Lambda Function，Haskell 規定一開始用 <code>\</code> 表示 Lambda Function，而 parameter 與 body 之間以 <code>-&gt;</code> 隔開</li>
+</ul>
+<h2 id="FSharp">FSharp</h2><hr>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> foo x y = x + y</span><br><span class="line"><span class="keyword">let</span> too = <span class="keyword">fun</span> x y -&gt; x + y</span><br></pre></td></tr></table></figure>
+<p>F# 與 Haskell 已經非常類似：</p>
+<ul>
+<li><p>直接定義 <code>foo</code> function，一開始使用 <code>let</code>，之後寫法與 Haskell 相同</p>
+</li>
+<li><p>使用 Lambda Function，F# 規定一開始使用 <code>fun</code>，之後寫法與 Haskell 相同</p>
+</li>
+</ul>
+<h2 id="ECMAScript">ECMAScript</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> foo = <span class="function"><span class="keyword">function</span> (<span class="params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> x + y;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">const</span> too = (x, y) =&gt; x + y;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>ES5 使用 Anonymous Function 定義 function</li>
+<li>ES6 使用 Arrow Function 表示定義 function</li>
+</ul>
+<h2 id="CSharp">CSharp</h2><hr>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>&gt; foo = (x, y) =&gt; x + y;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">too</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>) </span>=&gt; x + y;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>C# 3 使用 Func 使用 Delegate 定義 function</li>
+<li>C# 7 使用 Local Function 定義 fuction</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>各語言間只是語法稍有差異，但使用 function 的觀念都是相同的</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[學而時習之，不亦悅乎]]>
+    
+    </summary>
+    
+      <category term="Haskell" scheme="https://oomusou.io/tags/Haskell/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[如何執行 Haskell ?]]></title>
@@ -1874,99 +1925,6 @@
       <category term="C#" scheme="https://oomusou.io/tags/C/"/>
     
       <category term="FP" scheme="https://oomusou.io/tags/FP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何使用 VS Code 開發 Haskell ?]]></title>
-    <link href="https://oomusou.io/haskell/hie/"/>
-    <id>https://oomusou.io/haskell/hie/</id>
-    <published>2018-08-13T15:23:43.000Z</published>
-    <updated>2018-08-14T02:56:12.000Z</updated>
-    <content type="html"><![CDATA[<p>Haskell 是個非常純的 FP 語言，如所有 data 都是 Immutable，所有 function 都是 Lazy Evaluation，這些觀念都是一般程式語言所沒有的，透過 Haskell，可以讓我們學習更純的 FP 概念，而不是 workaround 式的 FP，進而改變思考方式。</p>
-<p>Haskell IDE Engine 是基於 LSP (Language Service Protocol)，讓我們在 VS Code 就可以享受如 IDE 強大功能。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Stack 1.7.1<br>Haskell IDE Engine 0.2.2.0<br>Haskell Language Server 0.0.21<br>VS Code 1.25.1</p>
-<h2 id="Haskell_Stack">Haskell Stack</h2><hr>
-<p>Stack 為 Haskell 的 CLI，最大特色是將 GHC 安裝在專案目錄下，不會污染系統環境。</p>
-<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">brew </span>install haskell-stack</span><br></pre></td></tr></table></figure>
-<p>使用 Homebrew 安裝 Stack。</p>
-<p><img src="/images/haskell/hie/hie004.png" alt="hie004"></p>
-<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ stack <span class="keyword">install</span> cabal-<span class="keyword">install</span></span><br></pre></td></tr></table></figure>
-<p>HIE 也需要 <code>cabal</code>，使用 Stack 安裝 <code>cabal-install</code>，<code>cabal</code> 將安裝到 <code>~/local/bin</code> 目錄下。</p>
-<p><img src="/images/haskell/hie/hie013.png" alt="hie013"></p>
-<h2 id="設定路徑">設定路徑</h2><hr>
-<p>HIE 所需的檔案都會放在 <code>~/.local/bin</code> 下，先設定好系統路徑。</p>
-<p><img src="/images/haskell/hie/hie010.png" alt="hie010"></p>
-<h2 id="建立專案">建立專案</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">stack</span> <span class="keyword">new</span> hello-world</span><br></pre></td></tr></table></figure>
-<p>使用 Stack 建立專案。</p>
-<p><img src="/images/haskell/hie/hie005.png" alt="hie005"></p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>cd hello-world</span><br><span class="line">hello-world <span class="variable">$ </span>stack setup</span><br></pre></td></tr></table></figure>
-<p>使用 Stack 安裝 Haskell 專案所需要的 GHC。</p>
-<p><img src="/images/haskell/hie/hie006.png" alt="hie006"></p>
-<h2 id="編譯專案">編譯專案</h2><hr>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello-world $ <span class="built_in">stack</span> build</span><br></pre></td></tr></table></figure>
-<p>使用 Stack 編譯 Haskell 專案。</p>
-<p><img src="/images/haskell/hie/hie007.png" alt="hie007"></p>
-<h2 id="執行_Haskell">執行 Haskell</h2><hr>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hello-world $ stack <span class="built_in">exec</span> hello-world-exe</span><br></pre></td></tr></table></figure>
-<p>Stack 預設會將專案編譯成 <code>專案名稱-exe</code>，使用 <code>stack exec</code> 執行 Haskell 執行檔。</p>
-<blockquote>
-<p>其實 <code>hello-world-exe</code> 已經是執行檔，只在目錄在很深，使用 <code>stack exec</code> 會自動幫我們找到執行檔執行，<code>stack exec</code> 並非 Haskell run-time</p>
-</blockquote>
-<p><img src="/images/haskell/hie/hie008.png" alt="hie008"></p>
-<h2 id="Haskell_IDE_Engine">Haskell IDE Engine</h2><hr>
-<p>Haskell IDE Engine 是基於 LSP (Language Service Protocol) 實作，簡稱 HIE。</p>
-<p>VS Code 透過 HIE，就能達成相當於 IDE 才有的功能，目前 HIE 還無法在 Homebrew 找到，必須親自編譯。</p>
-<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/haskell</span><span class="regexp">/haskell-ide-engine --recursive</span></span><br></pre></td></tr></table></figure>
-<p>Git clone 最新的 HIE 專案。</p>
-<p><img src="/images/haskell/hie/hie000.png" alt="hie000"></p>
-<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">cd</span> haskell-ide-engine</span><br><span class="line">haskell-ide-engine $ <span class="keyword">make</span> build-<span class="keyword">all</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li>進入 <code>haskell-ide-engine</code> 目錄</li>
-<li>使用 Make 編譯 HIE</li>
-</ol>
-<p><img src="/images/haskell/hie/hie001.png" alt="hie001"></p>
-<blockquote>
-<p>這段時間會非常久，請耐心等待，在我的 Macbook Pro 15 Mid2014，需要約 40 分鐘時間編譯</p>
-</blockquote>
-<p><img src="/images/haskell/hie/hie003.png" alt="hie003"></p>
-<p>若 Make 沒錯誤，最後的訊息如上。</p>
-<p><img src="/images/haskell/hie/hie002.png" alt="hie002"></p>
-<p>除了 <code>cabal</code> 為剛剛 <code>stack install cabal-install</code> 所安裝，剩下的檔案都是 <code>make build-all</code>  所編譯。</p>
-<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hie <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
-<p><img src="/images/haskell/hie/hie011.png" alt="hie011"></p>
-<ol>
-<li>能顯示 HIE 版本，表示 HIE 編譯成功</li>
-</ol>
-<h2 id="VS_Code">VS Code</h2><hr>
-<p>HIE 已經編譯成功，最後一哩路是 VS Code 的套件部分。</p>
-<p><img src="/images/haskell/hie/hie009.png" alt="hie009"></p>
-<ol>
-<li>在 VS Code 安裝 <code>Haskell Language Server</code></li>
-</ol>
-<p><img src="/images/haskell/hie/hie012.png" alt="hie012"></p>
-<p>VS Code 開啟 Haskell 專案，若沒有任何錯誤訊息，則表示 HIE 安裝成功。</p>
-<blockquote>
-<p><code>~/.local/bin</code> 設定在系統路徑非常重要，否則要在 VS Code 設定 HIE 路徑，非常麻煩</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>Haskell IDE Engine 為 LSP，透過 HIE，我們就可以使用我們喜歡的 VS Code 編輯 Haskell，並享受 IDE 般支援</li>
-<li>HIE 目前在 macOS 尚無 Homebrew 可下載，必須親自編譯才能使用</li>
-<li>設定好 VS Code + HIE，就可以開心享受 Haskell 的純 FP 思維了 </li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://github.com/haskell" target="_blank" rel="external">Haskell</a>, <a href="https://github.com/haskell/haskell-ide-engine" target="_blank" rel="external">Haskell IDE Engine</a><br><a href="https://qiita.com/waddlaw" target="_blank" rel="external">Waddlaw</a>, <a href="https://qiita.com/waddlaw/items/b83cd10311200095fe87" target="_blank" rel="external">VS Code と haskell-ide-engine で Haskell 開発環境を構築する</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 VS Code + Haskell IDE Engine]]>
-    
-    </summary>
-    
-      <category term="Haskell" scheme="https://oomusou.io/tags/Haskell/"/>
     
   </entry>
   
