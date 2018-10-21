@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-18T10:08:21.966Z</updated>
+  <updated>2018-10-21T04:15:26.045Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,97 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Haskell 之 Variable]]></title>
+    <link href="https://oomusou.io/haskell/variable/"/>
+    <id>https://oomusou.io/haskell/variable/</id>
+    <published>2018-10-21T12:23:43.000Z</published>
+    <updated>2018-10-21T04:15:26.045Z</updated>
+    <content type="html"><![CDATA[<p>在 Haskell 中的 variable 因為是 Immutable，所以算是 definition，負責程式碼中重複的部分；且有別於一般程式語言的是，由於 Haskell 將 function 也視為 data，因此 variable 也能是 function。</p>
+<p>若使用 IIFE，則有另外一種使用 Lambda 方式。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>GHC 8.4.3</p>
+<h2 id="Haskell">Haskell</h2><hr>
+<p><strong>Function</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">calChange</span> given owed = </span><br><span class="line">  <span class="keyword">if</span> given - owed &gt; <span class="number">0</span></span><br><span class="line">  <span class="keyword">then</span> given - owed</span><br><span class="line">  <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>以上簡單的 function，我們發現幾個問題：</p>
+<ul>
+<li><code>given - owed</code> 不容易閱讀，應該取一個有意義的名稱代表其意義</li>
+<li><code>given - owed</code> 在 function 中重複運算</li>
+</ul>
+<p>在 Haskell 中有三種解法：</p>
+<ul>
+<li>where</li>
+<li>let</li>
+<li>lambda</li>
+</ul>
+<p><strong>Where</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">calChange</span> given owed = </span><br><span class="line">  <span class="keyword">if</span> change &gt; <span class="number">0</span></span><br><span class="line">  <span class="keyword">then</span> change</span><br><span class="line">  <span class="keyword">else</span> <span class="number">0</span></span><br><span class="line">  <span class="keyword">where</span> change = given - owed</span><br></pre></td></tr></table></figure>
+<p>使用 <code>where</code> 定義 <code>change</code>，如此 <code>if</code> 與 <code>then</code> 之後都可使用 <code>change</code> variable。 </p>
+<p><strong>Let</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">calChange</span> given owed = </span><br><span class="line">  <span class="keyword">let</span> change = given - owed</span><br><span class="line">  <span class="keyword">in</span> <span class="keyword">if</span> change &gt; <span class="number">0</span></span><br><span class="line">     <span class="keyword">then</span> change</span><br><span class="line">     <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p><code>where</code> 是定義在最後面，但也可使用 <code>let</code> 將 variable 定義在一開始，然後加上 <code>in</code>。</p>
+<p><strong>Lambda</strong></p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">calChange</span> given owed = </span><br><span class="line">  (\change -&gt; <span class="keyword">if</span> change &gt; <span class="number">0</span></span><br><span class="line">              <span class="keyword">then</span> change</span><br><span class="line">              <span class="keyword">else</span> <span class="number">0</span>) (given - owed)</span><br></pre></td></tr></table></figure>
+<p>將非共用的部分抽成 Lambda，再將 <code>given - owed</code> 共用的部分以 parameter 傳入 Lambda。</p>
+<p>其實這就是 ECMAScript 的 IIFE。</p>
+<h2 id="FSharp">FSharp</h2><hr>
+<p><strong>Function</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> calChange given owed =</span><br><span class="line">  <span class="keyword">if</span> given - owed &gt; <span class="number">0</span></span><br><span class="line">  <span class="keyword">then</span> given - owed</span><br><span class="line">  <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>let</code> 定義 function，F# 與 Haskell 風格相當接近。</p>
+<p><strong>Let</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> calChange given owed =</span><br><span class="line">  <span class="keyword">let</span> change = given - owed</span><br><span class="line">  <span class="keyword">if</span> change &gt; <span class="number">0</span></span><br><span class="line">  <span class="keyword">then</span> change</span><br><span class="line">  <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>let</code> 定義 <code>change</code> variable。</p>
+<p><strong>Lambda</strong></p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> calChange given owed =</span><br><span class="line">  (<span class="keyword">fun</span> change -&gt; <span class="keyword">if</span> change &gt; <span class="number">0</span></span><br><span class="line">                 <span class="keyword">then</span> change</span><br><span class="line">                 <span class="keyword">else</span> <span class="number">0</span>) (given - owed)</span><br></pre></td></tr></table></figure>
+<p>F# 的 Lambda 使用 <code>fun</code>，因為 F# 也支援 IIFE，因此寫法與 Haskell 很類似。</p>
+<h2 id="ECMAScript">ECMAScript</h2><hr>
+<p><strong>Function</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calChange = (given, owed) =&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (given - owed &gt; <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> given - owed</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>最基本的寫法，使用 Arrow Function 定義 <code>calChange()</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calChange = (given, owed) =&gt;</span><br><span class="line">  given - owed &gt; <span class="number">0</span> ? given - owed : <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>由於 ECMAScript 支援 <code>?:</code> 寫法，可以稍微化簡。</p>
+<p><strong>Const</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calChange = (given, owed) =&gt; &#123;</span><br><span class="line">  <span class="keyword">const</span> change = given - owed;</span><br><span class="line">  <span class="keyword">return</span> change &gt; <span class="number">0</span> ? change : <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>類似 Haskell 的 <code>let</code> 寫法，先定義 <code>change</code> variable。</p>
+<p><strong>Arrow Function</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> calChange = (given, owed) =&gt;</span><br><span class="line">  (change =&gt; change &gt; <span class="number">0</span> ? change : <span class="number">0</span>)(given - owed);</span><br></pre></td></tr></table></figure>
+<p>如同 Haskell 的 Lambda 一樣，將非共用部分以 Arrow Function 表示，將共用的 <code>given - owed</code> 以 parameter 傳入。</p>
+<p>這就是 IIFE，因為 ECMAScript 與 Haskell 都有 IIFE，所以能使用 Lambda 或 Arrow Function 抽出非共用部分。</p>
+<h2 id="CSharp">CSharp</h2><hr>
+<p><strong>Function</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>&gt; CalChange = (given, owed) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">if</span> (given - owed &gt; <span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> given - owed;</span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>Func</code> 定義 function，其餘寫法一樣。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>&gt; CalChange = (given, owed) =&gt; </span><br><span class="line">  given - owed &gt; <span class="number">0</span> ? given - owed : <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>由於 C# 支援 <code>?:</code> 寫法，可以稍微化簡。</p>
+<p><strong>Var</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>&gt; CalChange = (given, owed) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">var</span> change = given - owed;</span><br><span class="line">  <span class="keyword">return</span> change &gt; <span class="number">0</span> ? change : <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>類似 Haskell 的 <code>let</code> 寫法，先定義 <code>change</code> variable。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">int</span>&gt; CalChange = (given, owed) =&gt;</span><br><span class="line">&#123;</span><br><span class="line">  Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; Body = change =&gt; change &gt; <span class="number">0</span> ? change : <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">return</span> Body(given - owed);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>因為 C# 沒有 IIFE，因此只能先定義好 <code>Body</code> function，然後將 <code>given - owed</code> 傳入。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>傳統都會將共用部分抽成 Lambda 或 Arrow Function，但配合 IIFE，也看到另外一種用法，將非共用部分以 Lambda 表示，將共用部分以 parameter 傳入</li>
+<li>C# 因為沒有 IIFE，所以使用 Lambda 的效果較不顯著</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Will Kurt, <a href="https://www.manning.com/books/get-programming-with-haskell" target="_blank" rel="external">Get Programming with Haskell</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[在 function 中定義 Variable]]>
+    
+    </summary>
+    
+      <category term="Haskell" scheme="https://oomusou.io/tags/Haskell/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[Haskell 之 Function]]></title>
     <link href="https://oomusou.io/haskell/function/"/>
     <id>https://oomusou.io/haskell/function/</id>
     <published>2018-10-18T13:23:43.000Z</published>
-    <updated>2018-10-18T10:08:21.966Z</updated>
+    <updated>2018-10-21T02:22:48.734Z</updated>
     <content type="html"><![CDATA[<p>Function 為 Haskell 最重要的元素，首先來看 Haskell 如何定義 function，也順便複習 F# 、ECMAScript 與 C#。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -55,6 +141,8 @@
 <ul>
 <li>各語言間只是語法稍有差異，但使用 function 的觀念都是相同的</li>
 </ul>
+<h2 id="Reference">Reference</h2><hr>
+<p>Will Kurt, <a href="https://www.manning.com/books/get-programming-with-haskell" target="_blank" rel="external">Get Programming with Haskell</a></p>
 ]]></content>
     <summary type="html">
     <![CDATA[學而時習之，不亦悅乎]]>
@@ -1774,155 +1862,6 @@
       <category term="C#" scheme="https://oomusou.io/tags/C/"/>
     
       <category term="F#" scheme="https://oomusou.io/tags/F/"/>
-    
-      <category term="FP" scheme="https://oomusou.io/tags/FP/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[FP 之 Higher Order Function]]></title>
-    <link href="https://oomusou.io/fp/hof/"/>
-    <id>https://oomusou.io/fp/hof/</id>
-    <published>2018-08-19T12:23:43.000Z</published>
-    <updated>2018-10-07T14:02:28.718Z</updated>
-    <content type="html"><![CDATA[<p>Higher Order Function (HOF) 可以說是 FP 的精華，就算是目前主流 OOP，也大都接受了 HOF 概念，但實務上要活用 HOF 並不容易，需要時間與訓練，本文整理出實務上最常使用 HOF 的 4 種 Pattern，讓大家更容易運用在日常開發中。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>C# 7.2</p>
-<blockquote>
-<p>本文為 <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Funtional Programming in C#</a> 一書第一章的讀後心得</p>
-</blockquote>
-<h2 id="Definition">Definition</h2><hr>
-<blockquote>
-<p><strong>Higher Order Function</strong> </p>
-<ul>
-<li>以 function 作為 function 的 input</li>
-<li>以 function 作為 function 的 outpt</li>
-<li>符合以上其中之一條件就算 Higer Order Function，簡稱 <strong>HOF</strong></li>
-</ul>
-</blockquote>
-<p>在 C# 中，最典型的 HOF 就是 LINQ，如最常用的 <code>Select()</code>、<code>Where()</code> 就是 HOF。</p>
-<blockquote>
-<p>本文將以 HOF 稱呼 Higher Order Function</p>
-</blockquote>
-<h2 id="實務上的應用">實務上的應用</h2><hr>
-<p>HOF 在實務上可歸納出以下 4 種 Pattern：</p>
-<ul>
-<li><p>Inversion of Control</p>
-</li>
-<li><p>Adapter Function</p>
-</li>
-<li><p>Function Factory</p>
-</li>
-<li><p>To Avoid Duplication</p>
-</li>
-</ul>
-<h2 id="Inversion_of_Control">Inversion of Control</h2><hr>
-<blockquote>
-<p><strong>Inversion of Control</strong></p>
-<p>原本由高階模組決定 <code>控制流程</code>，改成由 <code>低階模組</code> 決定 <code>控制流程</code>，高階模組只決定 <code>實作部分</code></p>
-<p>可將 <code>控制流程</code> 寫成 Library 或 Framework，實現 Separation of Concerns (關注點分離)：低階模組關注於 <code>控制流程</code>，而高階模組專心於 <code>實作部分</code></p>
-<p>HOF 目的在實現 Inversion of Control</p>
-</blockquote>
-<p>以 LINQ 的 <code>Where()</code> 為例 (相當於 FP 的 <code>Filter()</code>) </p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> IEnumerable&lt;T&gt; Where&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; data, Func&lt;T, <span class="keyword">bool</span>&gt; predicate)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span>(T iter <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (predicate(iter))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">yield</span> <span class="keyword">return</span> iter;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>低階模組 LINQ 的 <code>Where</code> 決定了整個 <code>控制流程</code>，包含 <code>foreach</code> 與 <code>if</code>， 高階模組只決定 predicate 的 <code>實作部分</code>，這就是 Inversion of Control。</p>
-<p><img src="/images/fp/hof/hof000.png" alt="hof000"></p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class Cache&lt;T&gt; where T : class</span><br><span class="line">&#123;</span><br><span class="line">    public T Get(Guid id) =&gt; ...</span><br><span class="line">        </span><br><span class="line">    public T Get(Guid id, Func&lt;T&gt; onMiss) =&gt; Get(id) ?? onMiss();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>若可由 Guid 對 <code>Cache</code> 抓資料，若有資料則從 Cache 傳回，若沒資料則執行高階模組提供的 function。</p>
-<p>我們可發現低階模組 <code>Cache</code> 決定 <code>控制流程</code>，高階模組則提供 <code>onMiss</code> function 的實作，可能是複雜的演算法計算，也可能是實際從資料庫抓資料。</p>
-<p>HOF 最常使用的場景就是為了實現 Inversion of Control。</p>
-<blockquote>
-<p>IoC 與 DIP (Dependency Inversion Principle 依賴反轉原則) 並不一樣，IoC 強調的是 <code>控制流程</code> 的反轉，而 DIP 強調的是藉由 interface 達到 <code>依賴</code> 的反轉</p>
-</blockquote>
-<h2 id="Adapter_Function">Adapter Function</h2><hr>
-<blockquote>
-<p><strong>Adapter Function</strong></p>
-<p>HOF 的目的在於改變 function 的 Signature</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">divide</span>(<span class="params"><span class="keyword">int</span> x, <span class="keyword">int</span> y</span>) </span>=&gt; x / y;</span><br><span class="line"><span class="keyword">var</span> result = divide(<span class="number">10</span>, <span class="number">2</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
-<p>原本  <code>divide()</code> 的 <code>被除數</code> 是 <code>x</code>，<code>除數</code> 是 <code>y</code>。</p>
-<p>因為需求改變，<code>被除數</code> 改成 <code>y</code>，而 <code>除數</code> 改成 <code>x</code>，也就是 Signature 會改變，argument 會對調。</p>
-<p>當然可以直接修改 code，基於 <code>開放封閉原則</code>，且這也是常見的需求，決定將此功能 <code>一般化</code>，將寫一個 function 來處理。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> Func&lt;T2, T1, R&gt; SwapArgs&lt;T1, T2, R&gt;(<span class="keyword">this</span> Func&lt;T1, T2, R&gt; f)</span><br><span class="line">    =&gt; (t2, t1) =&gt; f(t1, t2);</span><br></pre></td></tr></table></figure>
-<p><code>SwapArgs()</code> 回傳一個新的 function，其 argument 由原本的 <code>(t1, t2)</code> 改成 <code>(t2, t1)</code>。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> divideBy = divide.SwapArgs();</span><br><span class="line"><span class="keyword">var</span> result = divideBy(<span class="number">2</span>, <span class="number">10</span>); <span class="comment">// 5</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>在 OOP 中，若 Interface 不同，我們會使用 Adapter Pattern，將 interface 加以轉換</li>
-<li>在 FP 中，Function Signature 就是 Interface，若 Signature 不同，我們可使用 HOF 加以轉換，也稱為 Adapter Function</li>
-</ul>
-<h2 id="Function_Factory">Function Factory</h2><hr>
-<blockquote>
-<p><strong>Function Factory</strong></p>
-<p>HOF 的目的就是建立新的 function</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">                     .Where(x =&gt; x % <span class="number">2</span> == <span class="number">0</span>);</span><br><span class="line"><span class="comment">// [2, 4, 6, 8, 10]</span></span><br></pre></td></tr></table></figure>
-<p>目前只能找出 <code>偶數</code>，也就是 <code>除以 2</code> 整除。</p>
-<p>若我們想讓功能更 <code>一般化</code>，能找出 <code>除以 n</code> 整除的資料。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;<span class="keyword">int</span>, <span class="keyword">bool</span>&gt; isMod(<span class="keyword">int</span> n) =&gt; x =&gt; x % n == <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> data1 = Enumerable.Range(<span class="number">1</span>, <span class="number">10</span>).Where(isMod(<span class="number">2</span>)); <span class="comment">// 2, 4, 6, 8, 10</span></span><br><span class="line"><span class="keyword">var</span> data2 = Enumerable.Range(<span class="number">1</span>, <span class="number">10</span>).Where(isMod(<span class="number">3</span>)); <span class="comment">// 3, 6, 9</span></span><br></pre></td></tr></table></figure>
-<p><code>isMod()</code> HOF 不只更 <code>一般化</code>，<code>可讀性</code> 也更高。</p>
-<p><code>isMod()</code> HOF 目的並不是回傳 data，而是回傳 <code>Where()</code> 所需要的 function。</p>
-<p><img src="/images/fp/hof/hof001.png" alt="hof001"></p>
-<h2 id="To_Avoid_Duplication">To Avoid Duplication</h2><hr>
-<blockquote>
-<p><strong>To Avoid Duplication</strong></p>
-<p>HOF 的目的在抽出程式碼共用部分</p>
-</blockquote>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Foo1</span>(<span class="params">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; f1, ...</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">var</span> x = f1(...);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Foo2</span>(<span class="params">Func&lt;<span class="keyword">int</span>, <span class="keyword">int</span>&gt; f2, ...</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">var</span> x = f2(...);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>實務上常會發現不同 function，前面 setup 部分都相同，最後 teardown 部分也相同，只有中間 body 部分不同，這種時機就很適合使用 HOF，將共用部分抽出來。</p>
-<p><strong>將 Setup / Teardown 抽成共用</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Dapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DbLogger</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">string</span> connString;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">CreateLog</span>(<span class="params">LogMessage logMessage</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> SqlConnection(connString))</span><br><span class="line">        &#123;</span><br><span class="line">            conn.Open();</span><br><span class="line">            conn.Execute(<span class="string">"sp_create_log"</span>, logMessage, CommandType.StoredProcedure);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerable&lt;LogMessage&gt; <span class="title">GetLogs</span>(<span class="params">DateTime since</span>)</span><br><span class="line">    </span>&#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> SqlConnection(connString))</span><br><span class="line">        &#123;</span><br><span class="line">            conn.Open();</span><br><span class="line">            conn.Query&lt;LogMessage&gt;(<span class="string">@"SELECT * FROM [Logs] WHERE [Timestamp] &gt; @since"</span>, <span class="keyword">new</span> &#123;since = since&#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>我們可以發現 <code>CreateLog()</code> 與 <code>GetLogs()</code> 在 <code>using</code> 部份有重複，因此可以建立 HOF 將共用部分抽出來。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Data;</span><br><span class="line"><span class="keyword">using</span> System.Data.SqlClient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">ConnectionHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> R Connect&lt;R&gt;(<span class="keyword">string</span> connString, Func&lt;IDbConnection, R&gt; f)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> SqlConnection(connString))</span><br><span class="line">        &#123;</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="keyword">return</span> f(conn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>建立 <code>ConnectionHelper.Connect()</code> HOF，將 <code>CreateLog()</code> 與  <code>GetLogs()</code> 共用部分抽出來。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> Dapper;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> ConnectionHelper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">DbLogger</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">string</span> connString;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">CreateLog</span>(<span class="params">LogMessage logMessage</span>)</span><br><span class="line">        </span>=&gt; Connect(connString, c =&gt; c.Execute(<span class="string">"sp_create_log"</span>, logMessage, CommandType.StoredProcedure));</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> IEnumerable&lt;LogMessage&gt; <span class="title">GetLogs</span>(<span class="params">DateTime since</span>)</span><br><span class="line">        </span>=&gt; Connect(connString, c =&gt; c.Query&lt;LogMessage&gt;(<span class="string">@"SELECT * FROM [Logs] WHERE [Timestamp] &gt; @since"</span>, <span class="keyword">new</span> &#123;since = since&#125;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>抽出共用到 <code>ConnectionHelper</code> 之後，<code>DbLogger</code> 就不再有程式碼重複的部分。</p>
-<blockquote>
-<p>實務上常將程式碼中 setup 與 teardown 部分抽成 HOF 共用</p>
-</blockquote>
-<p><strong>將 using 重構成 HOF</strong><br><figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Data;</span><br><span class="line"><span class="keyword">using</span> System.Data.SqlClient;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">static</span> <span class="title">class</span> <span class="title">ConnectionHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> R Connect&lt;R&gt;(<span class="keyword">string</span> connString, Func&lt;IDbConnection, R&gt; f)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">using</span> (<span class="keyword">var</span> conn = <span class="keyword">new</span> SqlConnection(connString))</span><br><span class="line">        &#123;</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="keyword">return</span> f(conn);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p><code>using</code> 為 C# 內建的 statement，其實仔細一看，<code>using</code> 也是在做 setup 與 teardown 的事情：</p>
-<ul>
-<li><strong>Setup</strong> : 獲得 <code>IDisposable</code> resource</li>
-<li><strong>Body</strong> : 執行 <code>{}</code> 內的程式碼</li>
-<li><strong>Teardown</strong>：呼叫 <code>Dispose()</code> 釋放 resource</li>
-</ul>
-<p>我們可以也可以比照將 <code>foreach</code> statement 重構成 <code>ForEach()</code> function，將 <code>using</code> statement 重構成 <code>Using()</code> function。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">LaYumba.Functional</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">F</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">using</span>(disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將 <code>Using()</code> 建立在自己的 Functional Library 內。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> LaYumba.Functional.F;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">ConnectionHelper</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> R Connect&lt;R&gt;(<span class="keyword">string</span> connString, Func&lt;IDbConnection, R&gt; f)</span><br><span class="line">        =&gt; Using(<span class="keyword">new</span> SqlConnection(connStr), conn =&gt; &#123; conn.Open(); <span class="keyword">return</span> f(conn); &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>將 <code>using</code> 由 statement 重構成 <code>Using()</code> function 後，有幾個優點 :</p>
-<ul>
-<li><code>Connect()</code> 程式碼更加簡潔，可以使用 Expression Body</li>
-<li><code>Using()</code> 是 function，不是 statement，因此能夠再與其他 function 作 compose</li>
-</ul>
-<h2 id="HOF_的優點與缺點">HOF 的優點與缺點</h2><hr>
-<p><strong>優點</strong></p>
-<ul>
-<li><strong>Conciseness</strong> : 使用 function 後，能夠再與其他 function 作 compose，幾乎都是一行就能解決，這也是為什麼 C# 要全面提供 Expression Body</li>
-<li><strong>Avoid Duplication</strong> : Setup 與 teardown 的邏輯不再重複</li>
-<li><strong>Separation of Concerns</strong> : <code>ConnectionHelper</code> 關注 connection 管理；而 <code>DbLogger</code> 關注於 log 相關邏輯</li>
-</ul>
-<p><strong>缺點</strong><br><img src="/images/fp/hof/hof002.png" alt="hof002"></p>
-<ul>
-<li>HOF 會使得 call stack 增加，可能會對效能有所影響，不過這是 CPU 層級，差異只是在幾個 clock cycle，所以可以忽略不計</li>
-<li>由於 call stack 的增加，debug 會比較複雜</li>
-</ul>
-<p>不過 HOF 所帶給我們的優點，仍然是一個值得投資 trade off。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>HOF 已經是算是目前所有程式語言都能接受的觀念，儘管是 OOP，也都能夠接受 HOF</li>
-<li>過度使用 HOF 反而會使得 code 過度抽象化而難以理解，記得要以 <code>可讀性</code> 為前提，適當地使用 HOF</li>
-<li>HOF 雖然可能造成 call stack 增加而難以 debug，但 HOF 所帶來的優點更多，仍然值得投資</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[歸納出 HOF 常用的 4 種 Pattern]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
     
       <category term="FP" scheme="https://oomusou.io/tags/FP/"/>
     
