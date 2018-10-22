@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-22T07:28:42.040Z</updated>
+  <updated>2018-10-22T07:49:15.702Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/vue/env-mode/"/>
     <id>https://oomusou.io/vue/env-mode/</id>
     <published>2018-10-22T12:23:43.000Z</published>
-    <updated>2018-10-22T07:28:42.040Z</updated>
+    <updated>2018-10-22T07:49:15.702Z</updated>
     <content type="html"><![CDATA[<p>實務上一定會遇到在不同 server ( <code>development</code>、<code>lab</code>、<code>staging</code> 與 <code>production</code>) ，且各有各的 <code>環境變數</code>，該如何設定這些環境變數並且自動切換呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -40,7 +40,7 @@
 <li><strong>env.[mode].local</strong>：特定 mode 會載入，但不會進 Git，適合每個人本機自行設定</li>
 </ul>
 <blockquote>
-<p>若 key 同時存在於 <code>.env</code>、<code>.env.[mode]</code> 與 <code>env.[mode].local</code> 時，則優先權：</p>
+<p>若 key 同時存在 <code>.env</code>、<code>.env.[mode]</code> 與 <code>env.[mode].local</code> 時，則優先權：</p>
 <p><code>env.[mode].local</code> &gt; <code>env.[mode]</code> &gt; <code>env.local</code></p>
 </blockquote>
 <p><strong>.env.development.local</strong></p>
