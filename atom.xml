@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-21T04:15:26.045Z</updated>
+  <updated>2018-10-22T07:28:42.040Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,191 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Vue CLI 之 Mode 與 .env]]></title>
+    <link href="https://oomusou.io/vue/env-mode/"/>
+    <id>https://oomusou.io/vue/env-mode/</id>
+    <published>2018-10-22T12:23:43.000Z</published>
+    <updated>2018-10-22T07:28:42.040Z</updated>
+    <content type="html"><![CDATA[<p>實務上一定會遇到在不同 server ( <code>development</code>、<code>lab</code>、<code>staging</code> 與 <code>production</code>) ，且各有各的 <code>環境變數</code>，該如何設定這些環境變數並且自動切換呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Vue 2.5.17<br>Vue CLI 3.0.3</p>
+<h2 id="Modes">Modes</h2><hr>
+<p>Vue CLI 內建 3 種 mode：</p>
+<ul>
+<li><strong>development</strong>：執行 <code>yarn serve</code> 與 <code>yarn lint</code> 時使用此模式</li>
+<li><strong>production</strong>：<code>yarn build</code> 與 <code>yarn test:e2e</code> 使用此模式</li>
+<li><strong>test</strong>：<code>yarn test:unit</code> 使用此模式</li>
+</ul>
+<p>我們也可以自行新增 mode，如 <code>lab</code> 與 <code>staging</code>。</p>
+<h2 id="-env">.env</h2><hr>
+<ul>
+<li><strong>.env</strong>：所有 mode 都會載入</li>
+<li><strong>env.local</strong>：所有 mode 都會載入，但不會進 Git，適合每個人本機自行設定</li>
+<li><strong>env.[mode]</strong>：特定 mode 會載入</li>
+<li><strong>env.[mode].local</strong>：特定 mode 會載入，但不會進 Git，適合每個人本機自行設定</li>
+</ul>
+<blockquote>
+<p>若 key 同時存在於 <code>.env</code>、<code>.env.[mode]</code> 與 <code>env.[mode].local</code> 時，則優先權：</p>
+<p><code>env.[mode].local</code> &gt; <code>env.[mode]</code> &gt; <code>env.local</code></p>
+</blockquote>
+<p><strong>.env.development.local</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"https://jsonplaceholder.typicode.com"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>NODE_ENV</strong>：指定使用 Vue CLI 內建的 3 個 mode 之一</li>
+<li><strong>VUE_APP_API</strong>：所有變數以 <code>VUE_APP_</code> 為開頭</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process.env.VUE_APP_API);</span><br></pre></td></tr></table></figure>
+<p>任何在 <code>.env</code> 所設定的變數，可以使用 <code>process.env.VUE_APP_xxx</code> 讀取。</p>
+<h2 id="實務案例">實務案例</h2><hr>
+<blockquote>
+<ol>
+<li>前後端分離後，當 API spec 定義好，前後端就可以同時進行開發，此時後端的 API 還沒開發好，前端可根據 API spec 的 example 製造 <code>假 API</code> 先行開發</li>
+<li>執行 e2e testing 時，由於實際打 <code>真 API</code> 的測試速度較慢，因此會希望只打 local 的 <code>假 API</code>，加快測試速度</li>
+<li>希望假 API 能留下來進 Git，能透過 CLI 切換使用 <code>真 API</code> 或 <code>假 API</code>，不用修改 code</li>
+</ol>
+</blockquote>
+<ul>
+<li>使用 Node.js 建立假 API</li>
+<li>使用 <code>.env</code> 切換 API</li>
+</ul>
+<h2 id="使用_Node-js_建立假_API">使用 Node.js 建立假 API</h2><hr>
+<h3 id="安裝_Express_與_Cors">安裝 Express 與 Cors</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="keyword">add </span>express</span><br></pre></td></tr></table></figure>
+<p>安裝 express framework。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="keyword">add </span>cors</span><br></pre></td></tr></table></figure>
+<p>安裝 express 的解 CORS 套件。</p>
+<p><img src="/images/vue/env-mode/envmode000.png" alt="envmode000"></p>
+<ul>
+<li>在 <code>package.json</code> 的 <code>dependencies</code> 會看到 <code>cors</code> 與 <code>express</code> 兩個 package 被安裝</li>
+</ul>
+<h3 id="建立_node_目錄與檔案">建立 node 目錄與檔案</h3><p><img src="/images/vue/env-mode/envmode001.png" alt="envmode001"></p>
+<ol>
+<li>在專案根目錄建立 <code>node</code> 目錄與 <code>index.js</code></li>
+</ol>
+<p><strong>node/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> cors = <span class="built_in">require</span>(<span class="string">'cors'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> todos = <span class="built_in">require</span>(<span class="string">'./todos'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express().use(cors());</span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/todos'</span>, todos);</span><br><span class="line"></span><br><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Serving running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br></pre></td></tr></table></figure>
+<p>Import <code>express</code> module。</p>
+<p>第 2 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cors = <span class="built_in">require</span>(<span class="string">'cors'</span>);</span><br></pre></td></tr></table></figure>
+<p>Import <code>cors</code> module。</p>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = <span class="built_in">require</span>(<span class="string">'./todos'</span>);</span><br></pre></td></tr></table></figure>
+<p>Import 自己寫的 <code>todos</code> module，為假 API。</p>
+<p>第 6 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = express().use(cors());</span><br></pre></td></tr></table></figure>
+<p>使用 <code>express()</code> 建立 <code>app</code>，並且 use <code>cors()</code> 所建立的物件。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hostname = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>hostname</code> 位置與 port。</p>
+<p>第 10 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/todos'</span>, todos);</span><br></pre></td></tr></table></figure>
+<p>將 <code>/todos</code> 設定為 GET，其資料由 <code>todos()</code> function 所提供。</p>
+<p>12 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Serving running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用 <code>app.listen()</code> 啟動 Node.js 服務。</p>
+<p><strong>node/todos.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = (req, res) =&gt;</span><br><span class="line">  res.send([</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'delectus aut autem'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">2</span>,</span><br><span class="line">      title: <span class="string">'quis ut nam facilis et officia qui'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">3</span>,</span><br><span class="line">      title: <span class="string">'fugiat veniam minus'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">4</span>,</span><br><span class="line">      title: <span class="string">'et porro tempora'</span>,</span><br><span class="line">      completed: <span class="literal">true</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">5</span>,</span><br><span class="line">      title: <span class="string">'laboriosam mollitia et enim quasi adipisci quia provident illum'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">6</span>,</span><br><span class="line">      title: <span class="string">'qui ullam ratione quibusdam voluptatem quia omnis'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ]);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = todos;</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = (req, res) =&gt;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>todos</code> function，其 argument 為 <code>req</code> 與 <code>res</code>。</p>
+<p>第 2 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.send();</span><br></pre></td></tr></table></figure>
+<p>API 要傳回的 JSON 資料。</p>
+<p>41 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = todos;</span><br></pre></td></tr></table></figure>
+<p>使用 CommonJS 方式 export 出 <code>todos()</code>。</p>
+<h2 id="使用_-env_切換_API">使用 .env 切換 API</h2><hr>
+<h3 id="建立_-env">建立 .env</h3><p><strong>.env</strong></p>
+<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">NODE_ENV</span>=<span class="string">production</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>整個專案的 <code>.env</code>，會進 Git</p>
+</li>
+<li><p><code>NODE_ENV</code> 預設為 Vue CLI 的 <code>production</code> mode</p>
+</li>
+</ul>
+<p><strong>.env.development</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"https://jsonplaceholder.typicode.com"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>設定 <code>development</code> mode 的 <code>.env</code>，會進 Git</p>
+</li>
+<li><p><code>NODE_ENV</code> 設定為 Vue CLI 的 <code>development</code> mode</p>
+</li>
+<li><p><code>VUE_APP_API</code> 變數為 <code>真 API</code> 位址</p>
+</li>
+</ul>
+<p><strong>.env.development.local</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"http://localhost:3000"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>設定 <code>development</code> mode 的 <code>env</code>，<code>不會</code> 進 Git</p>
+</li>
+<li><p><code>NODE_ENV</code> 設定為 Vue CLI 的 <code>development</code> mode</p>
+</li>
+<li><code>VUE_APP_API</code> 變數為 <code>假 API</code> 位址</li>
+</ul>
+<blockquote>
+<p>因為 <code>.env.development.local</code> 不會進 Git，自己開發用的環境變數可以設定在此</p>
+</blockquote>
+<p><strong>.env.lab</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"https://jsonplaceholder.typicode.com"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>設定 <code>lab</code> mode，此為自訂的新 mode，會進 Git</li>
+<li><code>NODE_ENV</code> 設定為 Vue CLI 的 <code>production</code> mode</li>
+<li><code>VUE_APP_API</code> 變數為 <code>真 API</code> 位址</li>
+</ul>
+<h3 id="讀取_-env">讀取 .env</h3><p><strong>api/todo.api.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> API = process.env.VUE_APP_API;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchTodos = () =&gt; axios.get(<span class="string">`<span class="subst">$&#123;API&#125;</span>/todos`</span>);</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> API = process.env.VUE_APP_API;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>process.env.VUE_APP_API</code> 讀取 <code>.env</code> 的 <code>VUE_APP_API</code> 變數。</p>
+<h3 id="使用假_API">使用假 API</h3><p><strong>package.json</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"vue-todo-lis-api"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"0.1.0"</span></span>,</span><br><span class="line">  "<span class="attribute">private</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">serve</span>": <span class="value"><span class="string">"vue-cli-service serve"</span></span>,</span><br><span class="line">    "<span class="attribute">build</span>": <span class="value"><span class="string">"vue-cli-service build"</span></span>,</span><br><span class="line">    "<span class="attribute">lint</span>": <span class="value"><span class="string">"vue-cli-service lint"</span></span>,</span><br><span class="line">    "<span class="attribute">api</span>": <span class="value"><span class="string">"node ./node/index.js"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">axios</span>": <span class="value"><span class="string">"^0.18.0"</span></span>,</span><br><span class="line">    "<span class="attribute">cors</span>": <span class="value"><span class="string">"^2.8.4"</span></span>,</span><br><span class="line">    "<span class="attribute">express</span>": <span class="value"><span class="string">"^4.16.4"</span></span>,</span><br><span class="line">    "<span class="attribute">vue</span>": <span class="value"><span class="string">"^2.5.17"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">devDependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">@vue/cli-plugin-babel</span>": <span class="value"><span class="string">"^3.0.3"</span></span>,</span><br><span class="line">    "<span class="attribute">@vue/cli-plugin-eslint</span>": <span class="value"><span class="string">"^3.0.3"</span></span>,</span><br><span class="line">    "<span class="attribute">@vue/cli-service</span>": <span class="value"><span class="string">"^3.0.3"</span></span>,</span><br><span class="line">    "<span class="attribute">@vue/eslint-config-airbnb</span>": <span class="value"><span class="string">"^3.0.5"</span></span>,</span><br><span class="line">    "<span class="attribute">vue-template-compiler</span>": <span class="value"><span class="string">"^2.5.17"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"api"</span>: <span class="string">"node ./node/index.js"</span></span><br></pre></td></tr></table></figure>
+<p>輸入 <code>yarn api</code> 將執行 Node.js 的 <code>假 API</code>。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>yarn api</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/env-mode/envmode002.png" alt="envmode002"></p>
+<ol>
+<li>執行 <code>假 API</code></li>
+</ol>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>yarn serve</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/env-mode/envmode003.png" alt="envmode003"></p>
+<ol>
+<li><code>yarn serve</code> 會使用 <code>development</code> mode，因為有提供 <code>.env.development.local</code>，所以 <code>VUE_APP_API</code> 應為 <code>http://localhost:3000</code>，也就是 <code>假 API</code> </li>
+</ol>
+<h3 id="使用真_API">使用真 API</h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn serve <span class="comment">--mode lab</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/env-mode/envmode004.png" alt="envmode004"></p>
+<ol>
+<li><code>yarn serve</code> 使用 <code>lab</code> mode，也就是 <code>真 API</code></li>
+</ol>
+<h2 id="-env-local-sample">.env.local.sample</h2><hr>
+<p><strong>.env.development.local.sample</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"http://localhost:3000"</span></span></span></span><br></pre></td></tr></table></figure>
+<p>由於 <code>env.local.sample</code> 沒有進 Git，其他人直接 <code>git clone</code> 下整個專案時，會因為不會設定 <code>.env.development.local</code>，導致無法執行 <code>假 API</code> 模式，可另外提供 <code>.env.development.local.sample</code>，此檔會進 Git，在自行由 <code>.env.development.local.sample</code> 命名為 <code>.env.development.local</code> 即可。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>透過 Node.js，就可解決 JSON Server 無法建立 POST 回傳資料的問題，因為 JSON Server 是純 RESTful</li>
+<li>靈活的運用 <code>.env.development.local</code> 與 <code>yarn serve --mode</code>，就可靈活的切換 <code>假 API</code> 與 <code>真 API</code></li>
+<li>可將 <code>.env.development.local.sample</code> 也存進 Git，如此其他人 <code>git clone</code> 下來，可根據此檔建立 <code>.env.development.local</code></li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://cli.vuejs.org" target="_blank" rel="external">Vue CLI</a>, <a href="https://cli.vuejs.org/guide/mode-and-env.html#modes" target="_blank" rel="external">Environment Variables and Modes</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[使用 .env 靈活切換真 API 與 假 API]]>
+    
+    </summary>
+    
+      <category term="Node.js" scheme="https://oomusou.io/tags/Node-js/"/>
+    
+      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
+    
+      <category term="Vue CLI" scheme="https://oomusou.io/tags/Vue-CLI/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Haskell 之 Variable]]></title>
@@ -1777,93 +1962,6 @@
     </summary>
     
       <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[將 Using Statement 重構成 Using() Function]]></title>
-    <link href="https://oomusou.io/fp/using/"/>
-    <id>https://oomusou.io/fp/using/</id>
-    <published>2018-08-21T12:23:43.000Z</published>
-    <updated>2018-08-21T13:51:56.000Z</updated>
-    <content type="html"><![CDATA[<p>C# 有個著名的 <code>using</code> statement，對於實踐 <code>IDisposable</code> 的物件特別好用，但 <code>using</code> 是個 statement，在 Imperative 世界沒問題，但在 Functional 世界，statement 就類似 <code>句點</code>，讓我們無法繼續 Pipeline 或對其他 function 做 Compose，我們能否比照將 <code>foreach</code> statement 重構成 <code>ForEach()</code> function，也將 <code>using</code> statement 重構成 <code>using()</code> function 呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>F# 4.5<br>Rider 2018.1.4</p>
-<h2 id="C#_之_Using_Statement">C# 之 Using Statement</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">using</span> (<span class="keyword">var</span> streamReader = <span class="keyword">new</span> StreamReader(<span class="string">"TestFile.txt"</span>))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">var</span> line = streamReader.ReadToEnd();</span><br><span class="line">                Console.WriteLine(line);</span><br><span class="line">                <span class="comment">// Hello World</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>StreamReader</code> 是個典型實踐 <code>IDisposable</code> 的物件，所以在使用時都會使用 <code>using statement</code> 包起來，等離開 <code>{}</code> scope 時，自動呼叫 <code>Dispose()</code> 釋放 resource。</p>
-<p>這些都是我們都習慣的 C#。</p>
-<p>但 <code>using</code> 是 statement，在 Imperative 世界沒問題，反正程式碼都是一行一行循序執行。</p>
-<p>但在 Functional 世界，我們要求 code 要 Pipeline，要 Compose，所以 FP 喜歡使用 expression，不喜歡 statement。</p>
-<p>Statemet 就類似 <code>句點</code>，讓所有的 Pipeline 都中斷了。</p>
-<p>其實仔細看 <code>using</code> statement，其實包含幾個部分：</p>
-<ul>
-<li><strong>Setup</strong> : 獲得 resource</li>
-<li><strong>Body</strong> : 執行 resource </li>
-<li><strong>Teardown</strong> : 釋放 resource</li>
-</ul>
-<p>其中 <code>using</code> statement 就是幫我們做 teardown 部分。</p>
-<p>因此我們可以自己寫一個 <code>Using()</code> function，將 setup 與 body 傳入 <code>Using()</code>。</p>
-<h2 id="C#_之_Using()_Function">C# 之 Using() Function</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> Functional.F;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"></span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Using(<span class="keyword">new</span> StreamReader(<span class="string">"TestFile.txt"</span>), ReadFile)</span><br><span class="line">                .WriteLine();</span><br><span class="line">                       </span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">ReadFile</span>(<span class="params">StreamReader streamReader</span>) </span>=&gt; streamReader.ReadToEnd();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>10 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Using(<span class="keyword">new</span> StreamReader(<span class="string">"TestFile.txt"</span>), ReadFile)</span><br><span class="line">	.WriteLine();</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Using()</code> function，將 setup 傳入第一個參數，將 body 傳入第二個參數。</p>
-<p>由於 <code>ReadFile()</code> 回傳為 <code>string</code>，因此 <code>Using()</code> 也是回傳 <code>string</code>，這樣就可以使用 Pipeline 方式 <code>WriteLine()</code> 直接印出。</p>
-<p>13 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">ReadFile</span>(<span class="params">StreamReader streamReader</span>) </span>=&gt; streamReader.ReadToEnd();</span><br></pre></td></tr></table></figure>
-<p>Body 以 local function 定義。</p>
-<p>至於 <code>Using()</code> 與 <code>WriteLine()</code> 怎麼來的呢 ? 是我們自己寫的 Higher Order Function。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">Functional</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">F</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">using</span> (disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WriteLine</span>(<span class="params"><span class="keyword">this</span> <span class="keyword">string</span> data</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Console.WriteLine(data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>第 7 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> R Using&lt;TDisp, R&gt;(TDisp disposable, Func&lt;TDisp, R&gt; f) <span class="keyword">where</span> TDisp : IDisposable</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">using</span> (disposable) <span class="keyword">return</span> f(disposable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>自己寫一個 <code>Using()</code> HOF，第一個參數傳入 <code>IDisposable</code> 物件，第二個參數傳入 body function。</p>
-<p>12 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">WriteLine</span>(<span class="params"><span class="keyword">this</span> <span class="keyword">string</span> data</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    Console.WriteLine(data);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>自己為 <code>string</code> 加上 <code>WriteLine()</code> Extension Method，這就就可以對 <code>string</code> 繼續 Pipeline 印出。</p>
-<blockquote>
-<p>C# 為了讓 <code>using</code> 用起來更 FP，我們必須自己實作 <code>Using()</code> 與 <code>WriteLine()</code>，但在 Functional First 的 F#，除了提供 Imperative 的 <code>use</code> 外，也提供了 Functional 的 <code>using()</code>，我們完全不用自己另外實作</p>
-</blockquote>
-<h2 id="F#_之_Use_Bind">F# 之 Use Bind</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System.IO</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> readFromFile (fileName: string) = </span><br><span class="line">    <span class="keyword">use</span> streamReader = <span class="keyword">new</span> StreamReader(fileName)</span><br><span class="line">    streamReader.ReadToEnd()</span><br><span class="line">    </span><br><span class="line">readFromFile <span class="string">"TestFile.txt"</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br></pre></td></tr></table></figure>
-<p>F# 之 <code>use</code> 類似於 <code>let</code>，差別是 <code>use</code> 在離開 function 就會呼叫 <code>Dispose()</code>，不需特別加上 <code>{}</code> 縮排一層。</p>
-<p>由於 <code>readFromFile()</code> 回傳 <code>string</code>，可以直接 Pipeline 接內建的 <code>printf()</code>。</p>
-<p>但 <code>use</code> 仍然是個 statement。</p>
-<h2 id="F#_之_Using()_Function">F# 之 Using() Function</h2><hr>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">open</span> System.IO</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> readFile (streamReader: StreamReader) =</span><br><span class="line">    streamReader.ReadToEnd()</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> readFromFile (fileName: string) =</span><br><span class="line">    using(<span class="keyword">new</span> StreamReader(fileName)) readFile </span><br><span class="line">    </span><br><span class="line">readFromFile <span class="string">"TestFile.txt"</span></span><br><span class="line">|&gt; printf <span class="string">"%A"</span></span><br></pre></td></tr></table></figure>
-<p>第 6 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> readFromFile (fileName: string) =</span><br><span class="line">    using(<span class="keyword">new</span> StreamReader(fileName)) readFile</span><br></pre></td></tr></table></figure>
-<p>改用 F# 內建的 <code>using()</code>，第一個參數傳入 <code>IDisposable</code> 物件，第二個參數傳入 body function，其實跟自己用 C# 實作的 <code>Using()</code> 是一樣的。</p>
-<p>第 3 行</p>
-<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> readFile (streamReader: StreamReader) =</span><br><span class="line">    streamReader.ReadToEnd()</span><br></pre></td></tr></table></figure>
-<p>定義 body function。</p>
-<blockquote>
-<p>由於 <code>using()</code> 與 <code>printf()</code> 都是 F# 內建，因此我們就不必再自己實作了</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>將 C# 由 <code>using</code> statement 改成 <code>using()</code> function，乍看之下意義不大；但若去看 F# 同時提供 <code>use</code> statement 與 <code>using()</code> function 時，就可看出 F# 的用心良苦，同時支援了 Imperative 與 Functional 兩種 paradigm</li>
-<li>由於 F# 每個 function 都是 composable，因此我們就不必再自已寫 <code>WriteLine()</code> 了，直接 <code>printf()</code> 就可以 pipeline 起來</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<ul>
-<li>C# : 完整的範例可以在我的 <a href="https://github.com/oomusou/CSharpUsing" target="_blank" rel="external">GitHub</a> 上找到</li>
-<li>F# : 完整的範例可以在我的 <a href="https://github.com/oomusou/FSharpUsing" target="_blank" rel="external">GitHub</a> 上找到</li>
-</ul>
-<h2 id="Reference">Reference</h2><hr>
-<p>Enrico Buonanno, <a href="https://www.manning.com/books/functional-programming-in-c-sharp" target="_blank" rel="external">Functional Programming in C#</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使 using 更適合 FP 操作]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
-    
-      <category term="F#" scheme="https://oomusou.io/tags/F/"/>
-    
-      <category term="FP" scheme="https://oomusou.io/tags/FP/"/>
     
   </entry>
   

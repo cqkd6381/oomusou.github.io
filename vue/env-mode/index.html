@@ -1,0 +1,373 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Vue CLI 之 Mode 與 .env | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="使用 .env 靈活切換真 API 與 假 API">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="使用 .env 靈活切換真 API 與 假 API">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue CLI 之 Mode 與 .env">
+<meta property="og:url" content="https://oomusou.io/vue/env-mode/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="使用 .env 靈活切換真 API 與 假 API">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-10-22T07:28:42.040Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue CLI 之 Mode 與 .env">
+<meta name="twitter:description" content="使用 .env 靈活切換真 API 與 假 API">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Vue CLI 之 Mode 與 .env</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 使用 .env 靈活切換真 API 與 假 API			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Modes"><span class="toc-article-text">Modes</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#-env"><span class="toc-article-text">.env</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#實務案例"><span class="toc-article-text">實務案例</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_Node-js_建立假_API"><span class="toc-article-text">使用 Node.js 建立假 API</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#安裝_Express_與_Cors"><span class="toc-article-text">安裝 Express 與 Cors</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立_node_目錄與檔案"><span class="toc-article-text">建立 node 目錄與檔案</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#使用_-env_切換_API"><span class="toc-article-text">使用 .env 切換 API</span></a><ol class="toc-article-child"><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#建立_-env"><span class="toc-article-text">建立 .env</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#讀取_-env"><span class="toc-article-text">讀取 .env</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用假_API"><span class="toc-article-text">使用假 API</span></a></li><li class="toc-article-item toc-article-level-3"><a class="toc-article-link" href="#使用真_API"><span class="toc-article-text">使用真 API</span></a></li></ol></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#-env-local-sample"><span class="toc-article-text">.env.local.sample</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>實務上一定會遇到在不同 server ( <code>development</code>、<code>lab</code>、<code>staging</code> 與 <code>production</code>) ，且各有各的 <code>環境變數</code>，該如何設定這些環境變數並且自動切換呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Vue 2.5.17<br>Vue CLI 3.0.3</p>
+<h2 id="Modes">Modes</h2><hr>
+<p>Vue CLI 內建 3 種 mode：</p>
+<ul>
+<li><strong>development</strong>：執行 <code>yarn serve</code> 與 <code>yarn lint</code> 時使用此模式</li>
+<li><strong>production</strong>：<code>yarn build</code> 與 <code>yarn test:e2e</code> 使用此模式</li>
+<li><strong>test</strong>：<code>yarn test:unit</code> 使用此模式</li>
+</ul>
+<p>我們也可以自行新增 mode，如 <code>lab</code> 與 <code>staging</code>。</p>
+<h2 id="-env">.env</h2><hr>
+<ul>
+<li><strong>.env</strong>：所有 mode 都會載入</li>
+<li><strong>env.local</strong>：所有 mode 都會載入，但不會進 Git，適合每個人本機自行設定</li>
+<li><strong>env.[mode]</strong>：特定 mode 會載入</li>
+<li><strong>env.[mode].local</strong>：特定 mode 會載入，但不會進 Git，適合每個人本機自行設定</li>
+</ul>
+<blockquote>
+<p>若 key 同時存在於 <code>.env</code>、<code>.env.[mode]</code> 與 <code>env.[mode].local</code> 時，則優先權：</p>
+<p><code>env.[mode].local</code> &gt; <code>env.[mode]</code> &gt; <code>env.local</code></p>
+</blockquote>
+<p><strong>.env.development.local</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"https://jsonplaceholder.typicode.com"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>NODE_ENV</strong>：指定使用 Vue CLI 內建的 3 個 mode 之一</li>
+<li><strong>VUE_APP_API</strong>：所有變數以 <code>VUE_APP_</code> 為開頭</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(process.env.VUE_APP_API);</span><br></pre></td></tr></table></figure>
+<p>任何在 <code>.env</code> 所設定的變數，可以使用 <code>process.env.VUE_APP_xxx</code> 讀取。</p>
+<h2 id="實務案例">實務案例</h2><hr>
+<blockquote>
+<ol>
+<li>前後端分離後，當 API spec 定義好，前後端就可以同時進行開發，此時後端的 API 還沒開發好，前端可根據 API spec 的 example 製造 <code>假 API</code> 先行開發</li>
+<li>執行 e2e testing 時，由於實際打 <code>真 API</code> 的測試速度較慢，因此會希望只打 local 的 <code>假 API</code>，加快測試速度</li>
+<li>希望假 API 能留下來進 Git，能透過 CLI 切換使用 <code>真 API</code> 或 <code>假 API</code>，不用修改 code</li>
+</ol>
+</blockquote>
+<ul>
+<li>使用 Node.js 建立假 API</li>
+<li>使用 <code>.env</code> 切換 API</li>
+</ul>
+<h2 id="使用_Node-js_建立假_API">使用 Node.js 建立假 API</h2><hr>
+<h3 id="安裝_Express_與_Cors">安裝 Express 與 Cors</h3><figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="keyword">add </span>express</span><br></pre></td></tr></table></figure>
+<p>安裝 express framework。</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn <span class="keyword">add </span>cors</span><br></pre></td></tr></table></figure>
+<p>安裝 express 的解 CORS 套件。</p>
+<p><img src="/images/vue/env-mode/envmode000.png" alt="envmode000"></p>
+<ul>
+<li>在 <code>package.json</code> 的 <code>dependencies</code> 會看到 <code>cors</code> 與 <code>express</code> 兩個 package 被安裝</li>
+</ul>
+<h3 id="建立_node_目錄與檔案">建立 node 目錄與檔案</h3><p><img src="/images/vue/env-mode/envmode001.png" alt="envmode001"></p>
+<ol>
+<li>在專案根目錄建立 <code>node</code> 目錄與 <code>index.js</code></li>
+</ol>
+<p><strong>node/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br><span class="line"><span class="keyword">const</span> cors = <span class="built_in">require</span>(<span class="string">'cors'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> todos = <span class="built_in">require</span>(<span class="string">'./todos'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express().use(cors());</span><br><span class="line"><span class="keyword">const</span> hostname = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br><span class="line"></span><br><span class="line">app.get(<span class="string">'/todos'</span>, todos);</span><br><span class="line"></span><br><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Serving running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>);</span><br></pre></td></tr></table></figure>
+<p>Import <code>express</code> module。</p>
+<p>第 2 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> cors = <span class="built_in">require</span>(<span class="string">'cors'</span>);</span><br></pre></td></tr></table></figure>
+<p>Import <code>cors</code> module。</p>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = <span class="built_in">require</span>(<span class="string">'./todos'</span>);</span><br></pre></td></tr></table></figure>
+<p>Import 自己寫的 <code>todos</code> module，為假 API。</p>
+<p>第 6 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = express().use(cors());</span><br></pre></td></tr></table></figure>
+<p>使用 <code>express()</code> 建立 <code>app</code>，並且 use <code>cors()</code> 所建立的物件。</p>
+<p>第 7 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> hostname = <span class="string">'127.0.0.1'</span>;</span><br><span class="line"><span class="keyword">const</span> port = <span class="number">3000</span>;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>hostname</code> 位置與 port。</p>
+<p>第 10 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.get(<span class="string">'/todos'</span>, todos);</span><br></pre></td></tr></table></figure>
+<p>將 <code>/todos</code> 設定為 GET，其資料由 <code>todos()</code> function 所提供。</p>
+<p>12 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">`Serving running at http://<span class="subst">$&#123;hostname&#125;</span>:<span class="subst">$&#123;port&#125;</span>/`</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>使用 <code>app.listen()</code> 啟動 Node.js 服務。</p>
+<p><strong>node/todos.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = (req, res) =&gt;</span><br><span class="line">  res.send([</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">1</span>,</span><br><span class="line">      title: <span class="string">'delectus aut autem'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">2</span>,</span><br><span class="line">      title: <span class="string">'quis ut nam facilis et officia qui'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">3</span>,</span><br><span class="line">      title: <span class="string">'fugiat veniam minus'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">4</span>,</span><br><span class="line">      title: <span class="string">'et porro tempora'</span>,</span><br><span class="line">      completed: <span class="literal">true</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">5</span>,</span><br><span class="line">      title: <span class="string">'laboriosam mollitia et enim quasi adipisci quia provident illum'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      userId: <span class="number">1</span>,</span><br><span class="line">      id: <span class="number">6</span>,</span><br><span class="line">      title: <span class="string">'qui ullam ratione quibusdam voluptatem quia omnis'</span>,</span><br><span class="line">      completed: <span class="literal">false</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  ]);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = todos;</span><br></pre></td></tr></table></figure>
+<p>第 1 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> todos = (req, res) =&gt;</span><br></pre></td></tr></table></figure>
+<p>定義 <code>todos</code> function，其 argument 為 <code>req</code> 與 <code>res</code>。</p>
+<p>第 2 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">res.send();</span><br></pre></td></tr></table></figure>
+<p>API 要傳回的 JSON 資料。</p>
+<p>41 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = todos;</span><br></pre></td></tr></table></figure>
+<p>使用 CommonJS 方式 export 出 <code>todos()</code>。</p>
+<h2 id="使用_-env_切換_API">使用 .env 切換 API</h2><hr>
+<h3 id="建立_-env">建立 .env</h3><p><strong>.env</strong></p>
+<figure class="highlight fix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">NODE_ENV</span>=<span class="string">production</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>整個專案的 <code>.env</code>，會進 Git</p>
+</li>
+<li><p><code>NODE_ENV</code> 預設為 Vue CLI 的 <code>production</code> mode</p>
+</li>
+</ul>
+<p><strong>.env.development</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"https://jsonplaceholder.typicode.com"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>設定 <code>development</code> mode 的 <code>.env</code>，會進 Git</p>
+</li>
+<li><p><code>NODE_ENV</code> 設定為 Vue CLI 的 <code>development</code> mode</p>
+</li>
+<li><p><code>VUE_APP_API</code> 變數為 <code>真 API</code> 位址</p>
+</li>
+</ul>
+<p><strong>.env.development.local</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"http://localhost:3000"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>設定 <code>development</code> mode 的 <code>env</code>，<code>不會</code> 進 Git</p>
+</li>
+<li><p><code>NODE_ENV</code> 設定為 Vue CLI 的 <code>development</code> mode</p>
+</li>
+<li><code>VUE_APP_API</code> 變數為 <code>假 API</code> 位址</li>
+</ul>
+<blockquote>
+<p>因為 <code>.env.development.local</code> 不會進 Git，自己開發用的環境變數可以設定在此</p>
+</blockquote>
+<p><strong>.env.lab</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"https://jsonplaceholder.typicode.com"</span></span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>設定 <code>lab</code> mode，此為自訂的新 mode，會進 Git</li>
+<li><code>NODE_ENV</code> 設定為 Vue CLI 的 <code>production</code> mode</li>
+<li><code>VUE_APP_API</code> 變數為 <code>真 API</code> 位址</li>
+</ul>
+<h3 id="讀取_-env">讀取 .env</h3><p><strong>api/todo.api.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> axios <span class="keyword">from</span> <span class="string">'axios'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> API = process.env.VUE_APP_API;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> fetchTodos = () =&gt; axios.get(<span class="string">`<span class="subst">$&#123;API&#125;</span>/todos`</span>);</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> API = process.env.VUE_APP_API;</span><br></pre></td></tr></table></figure>
+<p>使用 <code>process.env.VUE_APP_API</code> 讀取 <code>.env</code> 的 <code>VUE_APP_API</code> 變數。</p>
+<h3 id="使用假_API">使用假 API</h3><p><strong>package.json</strong></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  "<span class="attribute">name</span>": <span class="value"><span class="string">"vue-todo-lis-api"</span></span>,</span><br><span class="line">  "<span class="attribute">version</span>": <span class="value"><span class="string">"0.1.0"</span></span>,</span><br><span class="line">  "<span class="attribute">private</span>": <span class="value"><span class="literal">true</span></span>,</span><br><span class="line">  "<span class="attribute">scripts</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">serve</span>": <span class="value"><span class="string">"vue-cli-service serve"</span></span>,</span><br><span class="line">    "<span class="attribute">build</span>": <span class="value"><span class="string">"vue-cli-service build"</span></span>,</span><br><span class="line">    "<span class="attribute">lint</span>": <span class="value"><span class="string">"vue-cli-service lint"</span></span>,</span><br><span class="line">    "<span class="attribute">api</span>": <span class="value"><span class="string">"node ./node/index.js"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">dependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">axios</span>": <span class="value"><span class="string">"^0.18.0"</span></span>,</span><br><span class="line">    "<span class="attribute">cors</span>": <span class="value"><span class="string">"^2.8.4"</span></span>,</span><br><span class="line">    "<span class="attribute">express</span>": <span class="value"><span class="string">"^4.16.4"</span></span>,</span><br><span class="line">    "<span class="attribute">vue</span>": <span class="value"><span class="string">"^2.5.17"</span></span><br><span class="line">  </span>&#125;</span>,</span><br><span class="line">  "<span class="attribute">devDependencies</span>": <span class="value">&#123;</span><br><span class="line">    "<span class="attribute">@vue/cli-plugin-babel</span>": <span class="value"><span class="string">"^3.0.3"</span></span>,</span><br><span class="line">    "<span class="attribute">@vue/cli-plugin-eslint</span>": <span class="value"><span class="string">"^3.0.3"</span></span>,</span><br><span class="line">    "<span class="attribute">@vue/cli-service</span>": <span class="value"><span class="string">"^3.0.3"</span></span>,</span><br><span class="line">    "<span class="attribute">@vue/eslint-config-airbnb</span>": <span class="value"><span class="string">"^3.0.5"</span></span>,</span><br><span class="line">    "<span class="attribute">vue-template-compiler</span>": <span class="value"><span class="string">"^2.5.17"</span></span><br><span class="line">  </span>&#125;</span><br><span class="line"></span>&#125;</span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"api"</span>: <span class="string">"node ./node/index.js"</span></span><br></pre></td></tr></table></figure>
+<p>輸入 <code>yarn api</code> 將執行 Node.js 的 <code>假 API</code>。</p>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>yarn api</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/env-mode/envmode002.png" alt="envmode002"></p>
+<ol>
+<li>執行 <code>假 API</code></li>
+</ol>
+<figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>yarn serve</span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/env-mode/envmode003.png" alt="envmode003"></p>
+<ol>
+<li><code>yarn serve</code> 會使用 <code>development</code> mode，因為有提供 <code>.env.development.local</code>，所以 <code>VUE_APP_API</code> 應為 <code>http://localhost:3000</code>，也就是 <code>假 API</code> </li>
+</ol>
+<h3 id="使用真_API">使用真 API</h3><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn serve <span class="comment">--mode lab</span></span><br></pre></td></tr></table></figure>
+<p><img src="/images/vue/env-mode/envmode004.png" alt="envmode004"></p>
+<ol>
+<li><code>yarn serve</code> 使用 <code>lab</code> mode，也就是 <code>真 API</code></li>
+</ol>
+<h2 id="-env-local-sample">.env.local.sample</h2><hr>
+<p><strong>.env.development.local.sample</strong></p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"http://localhost:3000"</span></span></span></span><br></pre></td></tr></table></figure>
+<p>由於 <code>env.local.sample</code> 沒有進 Git，其他人直接 <code>git clone</code> 下整個專案時，會因為不會設定 <code>.env.development.local</code>，導致無法執行 <code>假 API</code> 模式，可另外提供 <code>.env.development.local.sample</code>，此檔會進 Git，在自行由 <code>.env.development.local.sample</code> 命名為 <code>.env.development.local</code> 即可。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>透過 Node.js，就可解決 JSON Server 無法建立 POST 回傳資料的問題，因為 JSON Server 是純 RESTful</li>
+<li>靈活的運用 <code>.env.development.local</code> 與 <code>yarn serve --mode</code>，就可靈活的切換 <code>假 API</code> 與 <code>真 API</code></li>
+<li>可將 <code>.env.development.local.sample</code> 也存進 Git，如此其他人 <code>git clone</code> 下來，可根據此檔建立 <code>.env.development.local</code></li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://cli.vuejs.org" target="_blank" rel="external">Vue CLI</a>, <a href="https://cli.vuejs.org/guide/mode-and-env.html#modes" target="_blank" rel="external">Environment Variables and Modes</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/haskell/variable/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-10-22 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Node-js/">Node.js<span>1</span></a></li> <li><a href="/tags/Vue/">Vue<span>1</span></a></li> <li><a href="/tags/Vue-CLI/">Vue CLI<span>1</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
