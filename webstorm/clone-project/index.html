@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何複製 WebStorm 專案 ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="直接 Hack .idea 目錄">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="直接 Hack .idea 目錄">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何複製 WebStorm 專案 ?">
+<meta property="og:url" content="https://oomusou.io/webstorm/clone-project/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="直接 Hack .idea 目錄">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-10-23T14:21:12.770Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何複製 WebStorm 專案 ?">
+<meta name="twitter:description" content="直接 Hack .idea 目錄">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何複製 WebStorm 專案 ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 直接 Hack .idea 目錄			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Symptons"><span class="toc-article-text">Symptons</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Recipes"><span class="toc-article-text">Recipes</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>有時想以一 Project 為基底，將該專案複製後再重新命名，這樣雖然可行，但在 WebStorm 的 Project Explorer 總算顯示原本 Project 名稱，非常礙眼。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS Mojave 10.14<br>WebStorm 2018.2.5</p>
+<h2 id="Symptons">Symptons</h2><hr>
+<p><img src="/images/webstorm/clone-project/name000.png" alt="name000"></p>
+<ol>
+<li>雖然已經將目錄名稱改成 <code>vue-todo</code>，但右側仍然顯示原本的目錄的 <code>vue-todo-lis-api</code>，非常礙眼</li>
+</ol>
+<h2 id="Recipes">Recipes</h2><hr>
+<p><img src="/images/webstorm/clone-project/name001.png" alt="name001"></p>
+<ol>
+<li>在專案目錄下的 <code>.idea</code> 目錄下，這是個隱藏目錄</li>
+<li>找到原本專案名稱的 <code>.iml</code> 檔案</li>
+</ol>
+<p><img src="/images/webstorm/clone-project/name002.png" alt="name002"></p>
+<ol>
+<li>一樣在 <code>.idea</code> 目錄下</li>
+<li>將 <code>.iml</code> 檔名改成新的目錄名稱</li>
+</ol>
+<p><img src="/images/webstorm/clone-project/name003.png" alt="name003"></p>
+<ol>
+<li>選擇 <code>.idea</code> 目錄下的 <code>modules.xml</code></li>
+<li>以 Sublime Text 開啟</li>
+</ol>
+<p><img src="/images/webstorm/clone-project/name004.png" alt="name004"></p>
+<ul>
+<li>將兩個 <code>.iml</code> 改成新的檔案名稱</li>
+</ul>
+<p><img src="/images/webstorm/clone-project/name005.png" alt="name005"></p>
+<ol>
+<li>重新用 WebStorm 開啟專案，一切就正常了</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>這並不是正規做法，算是 hack WebStorm 了，不過實務上卻非常好用</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/webstorm/vue/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-10-23 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/WebStorm/">WebStorm<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

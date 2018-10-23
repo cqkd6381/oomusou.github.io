@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-23T13:44:09.023Z</updated>
+  <updated>2018-10-23T14:21:12.770Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,64 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[如何複製 WebStorm 專案 ?]]></title>
+    <link href="https://oomusou.io/webstorm/clone-project/"/>
+    <id>https://oomusou.io/webstorm/clone-project/</id>
+    <published>2018-10-23T15:23:43.000Z</published>
+    <updated>2018-10-23T14:21:12.770Z</updated>
+    <content type="html"><![CDATA[<p>有時想以一 Project 為基底，將該專案複製後再重新命名，這樣雖然可行，但在 WebStorm 的 Project Explorer 總算顯示原本 Project 名稱，非常礙眼。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>macOS Mojave 10.14<br>WebStorm 2018.2.5</p>
+<h2 id="Symptons">Symptons</h2><hr>
+<p><img src="/images/webstorm/clone-project/name000.png" alt="name000"></p>
+<ol>
+<li>雖然已經將目錄名稱改成 <code>vue-todo</code>，但右側仍然顯示原本的目錄的 <code>vue-todo-lis-api</code>，非常礙眼</li>
+</ol>
+<h2 id="Recipes">Recipes</h2><hr>
+<p><img src="/images/webstorm/clone-project/name001.png" alt="name001"></p>
+<ol>
+<li>在專案目錄下的 <code>.idea</code> 目錄下，這是個隱藏目錄</li>
+<li>找到原本專案名稱的 <code>.iml</code> 檔案</li>
+</ol>
+<p><img src="/images/webstorm/clone-project/name002.png" alt="name002"></p>
+<ol>
+<li>一樣在 <code>.idea</code> 目錄下</li>
+<li>將 <code>.iml</code> 檔名改成新的目錄名稱</li>
+</ol>
+<p><img src="/images/webstorm/clone-project/name003.png" alt="name003"></p>
+<ol>
+<li>選擇 <code>.idea</code> 目錄下的 <code>modules.xml</code></li>
+<li>以 Sublime Text 開啟</li>
+</ol>
+<p><img src="/images/webstorm/clone-project/name004.png" alt="name004"></p>
+<ul>
+<li>將兩個 <code>.iml</code> 改成新的檔案名稱</li>
+</ul>
+<p><img src="/images/webstorm/clone-project/name005.png" alt="name005"></p>
+<ol>
+<li>重新用 WebStorm 開啟專案，一切就正常了</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>這並不是正規做法，算是 hack WebStorm 了，不過實務上卻非常好用</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[直接 Hack .idea 目錄]]>
+    
+    </summary>
+    
+      <category term="WebStorm" scheme="https://oomusou.io/tags/WebStorm/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[如何使用 WebStorm 開發 Vue ?]]></title>
     <link href="https://oomusou.io/webstorm/vue/"/>
     <id>https://oomusou.io/webstorm/vue/</id>
     <published>2018-10-23T14:23:43.000Z</published>
-    <updated>2018-10-23T13:44:09.023Z</updated>
+    <updated>2018-10-23T13:58:21.590Z</updated>
     <content type="html"><![CDATA[<p>WebStorm 已經提供 Vue 的 plugin，支援 Vue 完整，唯一只有 <code>.vue</code> 格式縮排部分，Webstorm 與 Vue 的看法迥異，在 Reformat  Code 之後，縮排會完全跑掉，需要特別設定。</p>
 <p>在 Unit Test 與 Jest 部分，WebStorm 支援還不夠，但目前仍然可以做一些設定。</p>
 <a id="more"></a>
@@ -1938,65 +1991,6 @@
       <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
     
       <category term="WebStorm" scheme="https://oomusou.io/tags/WebStorm/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[使用 DefaultIfEmpty() 取代 null 判斷]]></title>
-    <link href="https://oomusou.io/linq/defaultifempty/"/>
-    <id>https://oomusou.io/linq/defaultifempty/</id>
-    <published>2018-09-06T13:23:43.000Z</published>
-    <updated>2018-09-08T02:11:15.000Z</updated>
-    <content type="html"><![CDATA[<p>在使用 LINQ 的 <code>Where()</code>，大部分人都會再搭配 <code>FirstOrDefault()</code>，如此 <code>Where()</code> 找不到時就不會拋出 Exception，而是改判斷 <code>null</code> 。</p>
-<p>但判斷 <code>null</code> 也不是什麼好事，因為 <code>null</code> 就像癌細胞，只要出現 <code>null</code>，就到處都要判斷 <code>null</code>，而且還很容易忘記判斷 <code>null</code> 導致 run-time 錯誤。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.2</p>
-<h2 id="Imperative">Imperative</h2><hr>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> members = <span class="keyword">new</span> List&lt;Member&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Member &#123;Username = <span class="string">"Sam"</span>, Password = <span class="string">"1234"</span>&#125;,</span><br><span class="line">                <span class="keyword">new</span> Member &#123;Username = <span class="string">"You"</span>, Password = <span class="string">"4567"</span>&#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> user = <span class="keyword">new</span> Member &#123;Username = <span class="string">"Sam"</span>, Password = <span class="string">"1234"</span>&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> member = members</span><br><span class="line">                .Where(x =&gt; x.Username == user.Username &amp;&amp; x.Password == user.Password)</span><br><span class="line">                .FirstOrDefault();</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">string</span> result;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (member != <span class="keyword">null</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                result = member.Username;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                result = <span class="string">""</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            Console.WriteLine($<span class="string">"Welcome &#123;result&#125;"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>19 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> member = members</span><br><span class="line">  .Where(x =&gt; x.Username == user.Username &amp;&amp; x.Password == user.Password)</span><br><span class="line">  .FirstOrDefault();</span><br></pre></td></tr></table></figure>
-<p>大部分人會採用 <code>Where()</code> 搭配 <code>FirstOrDefault()</code> 寫法。</p>
-<p>25 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (member != <span class="keyword">null</span>)</span><br><span class="line">&#123;</span><br><span class="line">    result = member.Username;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    result = <span class="string">""</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>然後再搭配 <code>null</code> 判斷。</p>
-<p>這是典型 Imperative 寫法。</p>
-<h2 id="FP">FP</h2><hr>
-<p><strong>Program.cs</strong></p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> members = <span class="keyword">new</span> List&lt;Member&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">new</span> Member &#123;Username = <span class="string">"Sam"</span>, Password = <span class="string">"1234"</span>&#125;,</span><br><span class="line">                <span class="keyword">new</span> Member &#123;Username = <span class="string">"You"</span>, Password = <span class="string">"4567"</span>&#125;</span><br><span class="line">            &#125;;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">var</span> user = <span class="keyword">new</span> Member &#123;Username = <span class="string">"Sam"</span>, Password = <span class="string">"1234"</span>&#125;;</span><br><span class="line"></span><br><span class="line">            members</span><br><span class="line">                .Where(IsMember(user))</span><br><span class="line">                .DefaultIfEmpty(DefaultMember())</span><br><span class="line">                .Select(ToFormat)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line"></span><br><span class="line">            Func&lt;Member, <span class="keyword">bool</span>&gt; IsMember(Member member)</span><br><span class="line">                =&gt; x =&gt; x.Username == member.Username &amp;&amp; x.Password == member.Password;</span><br><span class="line"></span><br><span class="line">            <span class="function">Member <span class="title">DefaultMember</span>(<span class="params"></span>)</span><br><span class="line">                </span>=&gt; <span class="keyword">new</span> Member &#123;Username = <span class="keyword">string</span>.Empty, Password = <span class="keyword">string</span>.Empty&#125;;</span><br><span class="line"></span><br><span class="line">            <span class="function"><span class="keyword">string</span> <span class="title">ToFormat</span>(<span class="params">Member x</span>) </span>=&gt; $<span class="string">"Welcome : &#123;x.Username&#125;"</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>20 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">members</span><br><span class="line">    .Where(IsMember(user))</span><br><span class="line">    .DefaultIfEmpty(DefaultMember())</span><br><span class="line">    .Select(ToFormat)</span><br><span class="line">    .ToList()</span><br><span class="line">    .ForEach(WriteLine);</span><br></pre></td></tr></table></figure>
-<p>一樣使用 <code>Where()</code>，但 <code>IsMember()</code> 為 Higher Order Function，傳入 <code>user</code> 後，會傳回 <code>Where()</code> 所需要的 Predicate Function。</p>
-<p>為了避免 <code>Where()</code> 找不到資料，馬上加上 <code>DefaultIfEmpty()</code>，指定什麼叫做 Default，這樣就不用判斷 <code>null</code> 了，找不到的資料就是 Default。</p>
-<p>然後執行 <code>Select()</code> 轉換要顯示的格式。</p>
-<p>目前為止都屬於 FP 的 Pure Function 部分，沒有 Side Effect。</p>
-<p>最後要印出來，屬於 Side Effect 部分，從 <code>IEnumerable</code> 轉成 <code>List</code> ，呼叫 <code>ForEach()</code> 執行 Side Effect 的 <code>WriteLine</code>。</p>
-<p>全部以 Data Flow 方式執行，非常漂亮。</p>
-<p>27 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Func&lt;Member, <span class="keyword">bool</span>&gt; IsMember(Member member)</span><br><span class="line">    =&gt; x =&gt; x.Username == member.Username &amp;&amp; x.Password == member.Password;</span><br></pre></td></tr></table></figure>
-<p>此為 Higher Order Function，目的在傳回 <code>Func&lt;Member, bool&gt;</code> ，提供 <code>Where()</code> 所需要的 Predicate Function，可傳入任何 user 資料。</p>
-<p>30 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Member <span class="title">DefaultMember</span>(<span class="params"></span>)</span><br><span class="line">    </span>=&gt; <span class="keyword">new</span> Member &#123;Username = <span class="keyword">string</span>.Empty, Password = <span class="keyword">string</span>.Empty&#125;;</span><br></pre></td></tr></table></figure>
-<p>提供 <code>DefaultIfEmpty()</code> 所需要的 Default Member。</p>
-<p>33 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">string</span> <span class="title">ToFormat</span>(<span class="params">Member x</span>) </span>=&gt; $<span class="string">"Welcome : &#123;x.Username&#125;"</span>;</span><br></pre></td></tr></table></figure>
-<p>提供 <code>Select()</code> 所需要的 Selector Function。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>由於使用了 <code>DefaultIfEmpty()</code>，我們就不用再判斷 <code>null</code> ，可以使用 FP 的 Data Flow 方式加以處理，完全 Pure Function 沒有 Side Effect，直到最後 <code>Select()</code> 完，才呼叫 <code>ForEach()</code> 執行 Side Effect 的 <code>WriteLine</code></li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/LINQDefaultIfEmpty" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[更 FP 的方式使用 LINQ]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
-    
-      <category term="LINQ" scheme="https://oomusou.io/tags/LINQ/"/>
     
   </entry>
   
