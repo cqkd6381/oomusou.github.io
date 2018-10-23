@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-22T08:23:16.705Z</updated>
+  <updated>2018-10-23T06:23:09.146Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -13,6 +13,90 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Vue Component 之 Slot]]></title>
+    <link href="https://oomusou.io/vue/slot/"/>
+    <id>https://oomusou.io/vue/slot/</id>
+    <published>2018-10-23T12:23:43.000Z</published>
+    <updated>2018-10-23T06:23:09.146Z</updated>
+    <content type="html"><![CDATA[<p>關於顯示於 Component 的 data，除了使用 prop 傳遞外，也可使用 slot 傳遞。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Vue 2.5.17<br>Vue CLI 3.0.3</p>
+<h2 id="Slot_Content">Slot Content</h2><hr>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">navigation-link</span> <span class="attribute">url</span>=<span class="value">"/profile"</span>&gt;</span></span><br><span class="line">  Your Profile</span><br><span class="line"><span class="tag">&lt;/<span class="title">navigation-link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p> 在自己寫了 component 間夾了 data。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">a</span> <span class="attribute">v-bind:href</span>=<span class="value">"url"</span><span class="value">class="nav-link"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">slot</span>&gt;</span><span class="tag">&lt;/<span class="title">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 component 的 HTML template 中使用 <code>&lt;slot&gt;&lt;/slot&gt;</code>，則 component 間夾的 data 將取代 <code>&lt;slot&gt;&lt;/slot&gt;</code>。</p>
+<blockquote>
+<p>若 HTML template 內沒有 <code>&lt;slot&gt;&lt;/slot&gt;</code>，則 data 將不會顯示</p>
+</blockquote>
+<p>最後 HTML 為：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">a</span> <span class="attribute">v-bind:href</span>=<span class="value">"url"</span><span class="value">class="nav-link"</span>&gt;</span></span><br><span class="line">  Your Profile</span><br><span class="line"><span class="tag">&lt;/<span class="title">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>&lt;slot&gt;&lt;/slot&gt;</code> 可視為 placeholder，專門顯示 component tag 間的 data，如此就不必什麼 data 都靠 prop 傳遞。</p>
+<blockquote>
+<p>Slot 可是為傳遞 data 的另外一種方式，尤其是 <code>顯示型</code> 的 data</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">navigation-link</span> <span class="attribute">url</span>=<span class="value">"/profile"</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Add a Font Awesome icon --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"fa fa-user"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span></span><br><span class="line">  Your Profile</span><br><span class="line"><span class="tag">&lt;/<span class="title">navigation-link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Component tag 間不單只能放 data，也可以放其他 HTML。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">navigation-link</span> <span class="attribute">url</span>=<span class="value">"/profile"</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- Use a component to add an icon --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">font-awesome-icon</span> <span class="attribute">name</span>=<span class="value">"user"</span>&gt;</span><span class="tag">&lt;/<span class="title">font-awesome-icon</span>&gt;</span></span><br><span class="line">  Your Profile</span><br><span class="line"><span class="tag">&lt;/<span class="title">navigation-link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Component tag 間也可以放其他 component。</p>
+<h2 id="Named_Slot">Named Slot</h2><hr>
+<p>Vue 也允許在一個 component 間有多個 slot，此時必須使用 <strong>Named Slot</strong>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">header</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">slot</span> <span class="attribute">name</span>=<span class="value">"header"</span>&gt;</span><span class="tag">&lt;/<span class="title">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">main</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">slot</span>&gt;</span><span class="tag">&lt;/<span class="title">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">main</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">footer</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">slot</span> <span class="attribute">name</span>=<span class="value">"footer"</span>&gt;</span><span class="tag">&lt;/<span class="title">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">footer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我們希望 <code>base-layout</code> component 的 <code>header</code>、<code>main</code> 與 <code>footer</code> 三部分都使用 slot，由 user 提供 data。</p>
+<blockquote>
+<p> 一個 component 只能有一個 <strong>default slot</strong>，其他都必須是 <strong>named slot</strong></p>
+</blockquote>
+<p>所以在 <code>header</code> 與 <code>footer</code> 使用了 named slot，在 <code>&lt;slot&gt;&lt;/slot&gt;</code> 多了 <code>name</code>，設定 slot 的名稱為 <code>header</code> 與 <code>footer</code>。</p>
+<p><code>main</code> 則使用 default slot，不特別為 slot 取名稱。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">base-layout</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">template</span> <span class="attribute">slot</span>=<span class="value">"header"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Here might be a page title<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>A paragraph for the main content.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>And another one.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">template</span> <span class="attribute">slot</span>=<span class="value">"footer"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">p</span>&gt;</span>Here's some contact info<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">base-layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用 <code>base-layout</code> component 時，由於有多個 slot，要搭配 <code>template</code> tag 將 data 與 HTML 包起來，並使用 <code>slot</code> attribute 指定 slot 名稱。</p>
+<p>沒使用 <code>template</code> tag 部分，則為 default slot。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">base-layout</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">h1</span> <span class="attribute">slot</span>=<span class="value">"header"</span>&gt;</span>Here might be a page title<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>A paragraph for the main content.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span>And another one.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span> <span class="attribute">slot</span>=<span class="value">"footer"</span>&gt;</span>Here's some contact info<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">base-layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>也可以直接對 HTML 加上 <code>slot</code> attribute。</p>
+<p>最後 HTML 為：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"container"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">header</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">h1</span>&gt;</span>Here might be a page title<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">header</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">main</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">p</span>&gt;</span>A paragraph for the main content.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">p</span>&gt;</span>And another one.<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">main</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">footer</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">p</span>&gt;</span>Here's some contact info<span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">footer</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>3 個 slot 完全被取代。</p>
+<h2 id="Default_Slot_Content">Default Slot Content</h2><hr>
+<p>Slot 雖然目的就是由 user 提供 data 顯示，但有時候會想在 component 內提供預設顯示 data。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">slot</span>&gt;</span>Submit<span class="tag">&lt;/<span class="title">slot</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>submit-button</code> component 預設顯示 <code>Submit</code>，但也允許 user 提供其他 data 顯示，如 <code>Save</code> 與 <code>Upload</code>，就可在 <code>&lt;slot&gt;</code> 與 <code>&lt;/slot&gt;</code> 之間夾預設顯示 data。</p>
+<h2 id="Scoped_Slot">Scoped Slot</h2><hr>
+<p>若想由 user 自訂 slot，但實際 data 卻是在 component 內，此時就要使用 <strong>Scoped Slot</strong>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">li</span> <span class="attribute">v-for</span>=<span class="value">"(todo, index) in todos"</span> <span class="attribute">:key</span>=<span class="value">"index"</span>&gt;</span></span><br><span class="line">    &#123;&#123; todo.title &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>todo-list</code> component  雖然已經提供 <code>todo.title</code> 的顯示，但為了讓 component 更有彈性，想提供 slot 由 user 能夠提供不同顯示方式。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">li</span> <span class="attribute">v-for</span>=<span class="value">"(todo, index) in todos"</span> <span class="attribute">:key</span>=<span class="value">"index"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">slot</span> <span class="attribute">:todo</span>=<span class="value">"todo"</span>&gt;</span></span><br><span class="line">      &#123;&#123; todo.title &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="title">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">ul</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>todo</code> 以 prop 方式傳進  slot，此為預設顯示方式。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">todo-list</span> <span class="attribute">:todos</span>=<span class="value">"todos"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">template</span> <span class="attribute">slot-scope</span>=<span class="value">"slotProps"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">span</span> <span class="attribute">v-if</span>=<span class="value">"slotProps.todo.completed"</span>&gt;</span>✓<span class="tag">&lt;/<span class="title">span</span>&gt;</span></span><br><span class="line">    &#123;&#123; slotProps.todo.text &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">todo-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>User 提供了不同的顯示方式取代 slot。</p>
+<p>在 <code>&lt;template&gt;</code> 加上 <code>slot-scope</code> attribute 指定 scope 名稱，然後使用 scope 名稱存取 component 內的 data。</p>
+<blockquote>
+<p>不一定得使用 <code>&lt;template&gt;</code> tag，任何 HTML tag 加上 <code>slot-scope</code> 皆可</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">todo-list</span> <span class="attribute">:todos</span>=<span class="value">"todos"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">template</span> <span class="attribute">slot-scope</span>=<span class="value">"&#123; todo &#125;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">span</span> <span class="attribute">v-if</span>=<span class="value">"todo.completed"</span>&gt;</span>✓<span class="tag">&lt;/<span class="title">span</span>&gt;</span></span><br><span class="line">    &#123;&#123; todo.text &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="title">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">todo-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>若搭配 ECMAScript 2015 的 Object Destructuring，則有更好的寫法。</p>
+<p>因為 <code>slotProps</code> 本質就是有 <code>todo</code> property 的 object。</p>
+<p>可使用 <code>{ todo }</code> 將 <code>todo</code> 取出為變數直接使用，則不必在定義 <code>slotProps</code> 這種中介變數。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>有了 Slot，顯示型的 data 就不必再使用 prop，可直接使用 slot 傳遞</li>
+<li>若 component 提供多個 slot，則要使用 Named Slot</li>
+<li>Slot 也可提供預設顯示 data</li>
+<li>若想提供 user 自訂 slot，卻要讀取 component 內的資料，則要使用 Scoped Slot；若搭配 ECMAScript 2015 的 Object Destructuring 寫法，則非常精簡</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://vuejs.org" target="_blank" rel="external">Vue</a>, <a href="https://vuejs.org/v2/guide/components-slots.html" target="_blank" rel="external">Slots</a></p>
+]]></content>
+    <summary type="html">
+    <![CDATA[傳遞顯示型 Data]]>
+    
+    </summary>
+    
+      <category term="Vue" scheme="https://oomusou.io/tags/Vue/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Vue CLI 之 Mode 與 .env]]></title>
@@ -1894,80 +1978,6 @@
       <category term="LINQ" scheme="https://oomusou.io/tags/LINQ/"/>
     
       <category term="Web API" scheme="https://oomusou.io/tags/Web-API/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[如何不啟用 SonarQube 內建的 Rule ?]]></title>
-    <link href="https://oomusou.io/sonarqube/deactivate-rule/"/>
-    <id>https://oomusou.io/sonarqube/deactivate-rule/</id>
-    <published>2018-09-03T12:23:43.000Z</published>
-    <updated>2018-09-03T07:18:41.000Z</updated>
-    <content type="html"><![CDATA[<p>SonarQube 內建很多檢查 rule，但有些 rule 可能不適合團隊，暫時不想啟用，該如何在 SonarQube 設定呢 ?</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>Docker for Mac 18.06.1-ce-mac59 (26764)<br>SonarQube 7.1 (build 11001)</p>
-<h2 id="Rules">Rules</h2><hr>
-<p><img src="/images/sonarqube/deactivate-rule/rule000.png" alt="rule000"></p>
-<p><strong><em>Rule -&gt; C#</em></strong></p>
-<p>若第一個 rule :  <code>=+ should not be used instead of +=</code>  不適合團隊，想暫時不啟用檢查。</p>
-<blockquote>
-<p>並不是這個 rule 不好，只是因為是第一個 C# rule，所以以此為範例</p>
-</blockquote>
-<p>SonarQube 舊版允許你直接不啟用某個 rule，但新版取消了這個功能，無法直接不啟用。</p>
-<h2 id="Quality_Profiles">Quality Profiles</h2><hr>
-<p><img src="/images/sonarqube/deactivate-rule/rule001.png" alt="rule001"></p>
-<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
-<p>SonarQube 預設使用的 Quality Profile 是 <code>Sonar way</code>，目前 <code>Sonar way</code> 無法取消 rule。</p>
-<p>若要取消 rule，必須建立自己的 Quality Profile，然後才能取消。</p>
-<p><img src="/images/sonarqube/deactivate-rule/rule002.png" alt="rule002"></p>
-<ul>
-<li>選擇右側  <code>option</code> 的 <code>Copy</code></li>
-</ul>
-<p><img src="/images/sonarqube/deactivate-rule/rule003.png" alt="rule003"></p>
-<ol>
-<li>輸入新的 Quality Profile 名稱</li>
-<li>按 <code>Copy</code> 確定</li>
-</ol>
-<p><img src="/images/sonarqube/deactivate-rule/rule004.png" alt="rule004"></p>
-<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
-<ul>
-<li>選擇 <code>My way</code>，選擇右側  <code>option</code> 的 <code>Set as Default</code></li>
-</ul>
-<p><img src="/images/sonarqube/deactivate-rule/rule005.png" alt="rule005"></p>
-<ul>
-<li><code>My way</code> 成為 C# project 預設的 Quality Profile</li>
-</ul>
-<h2 id="Deactivate_Rule">Deactivate Rule</h2><hr>
-<p><img src="/images/sonarqube/deactivate-rule/rule006.png" alt="rule006"></p>
-<p><strong><em>Quality Profiles -&gt; C#</em></strong></p>
-<ul>
-<li>點擊 <code>My way</code> Quality Profile</li>
-</ul>
-<p><img src="/images/sonarqube/deactivate-rule/rule007.png" alt="rule007"></p>
-<ol>
-<li>點擊 <code>Active</code> 下所有的 rule</li>
-</ol>
-<p><img src="/images/sonarqube/deactivate-rule/rule008.png" alt="rule008"></p>
-<ol>
-<li>找到我們想取消的 <code>=+ should not be used instead of +=</code> rule</li>
-<li>按 <code>Deactivate</code> 取消</li>
-</ol>
-<p><img src="/images/sonarqube/deactivate-rule/rule009.png" alt="rule009"></p>
-<ol>
-<li><code>=+ should not be used instead of +=</code> rule 已被 <code>Deactivate</code></li>
-</ol>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>原本認為很簡單的功能，但因為 SonarQube 的設計有改變，竟然花了一些時間才搞定，特別記錄下來</li>
-</ul>
-]]></content>
-    <summary type="html">
-    <![CDATA[SonarQube 無法修改預設的 Sonar way]]>
-    
-    </summary>
-    
-      <category term="SonarQube" scheme="https://oomusou.io/tags/SonarQube/"/>
     
   </entry>
   
