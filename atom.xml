@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-10-23T06:23:09.146Z</updated>
+  <updated>2018-10-23T09:35:08.764Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/vue/slot/"/>
     <id>https://oomusou.io/vue/slot/</id>
     <published>2018-10-23T12:23:43.000Z</published>
-    <updated>2018-10-23T06:23:09.146Z</updated>
+    <updated>2018-10-23T09:35:08.764Z</updated>
     <content type="html"><![CDATA[<p>關於顯示於 Component 的 data，除了使用 prop 傳遞外，也可使用 slot 傳遞。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -86,6 +86,8 @@
 <li>Slot 也可提供預設顯示 data</li>
 <li>若想提供 user 自訂 slot，卻要讀取 component 內的資料，則要使用 Scoped Slot；若搭配 ECMAScript 2015 的 Object Destructuring 寫法，則非常精簡</li>
 </ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-slot" target="_blank" rel="external">GitHub</a> 上找到</p>
 <h2 id="Reference">Reference</h2><hr>
 <p><a href="https://vuejs.org" target="_blank" rel="external">Vue</a>, <a href="https://vuejs.org/v2/guide/components-slots.html" target="_blank" rel="external">Slots</a></p>
 ]]></content>
@@ -103,7 +105,7 @@
     <link href="https://oomusou.io/vue/env-mode/"/>
     <id>https://oomusou.io/vue/env-mode/</id>
     <published>2018-10-22T12:23:43.000Z</published>
-    <updated>2018-10-22T08:23:16.705Z</updated>
+    <updated>2018-10-23T09:29:16.559Z</updated>
     <content type="html"><![CDATA[<p>實務上一定會遇到在不同 server ( <code>development</code>、<code>lab</code>、<code>staging</code> 與 <code>production</code>) ，且各有各的 <code>環境變數</code>，該如何設定這些環境變數並且自動切換呢 ?</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -267,6 +269,8 @@
 <p><strong>.env.development.local.sample</strong></p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="setting">NODE_ENV=<span class="value">development</span></span></span><br><span class="line"><span class="setting">VUE_APP_API=<span class="value"><span class="string">"http://localhost:3000"</span></span></span></span><br></pre></td></tr></table></figure>
 <p>由於 <code>env.local.sample</code> 沒有進 Git，其他人直接 <code>git clone</code> 下整個專案時，會因為不會設定 <code>.env.development.local</code>，導致無法執行 <code>假 API</code> 模式，可另外提供 <code>.env.development.local.sample</code>，此檔會進 Git，在自行由 <code>.env.development.local.sample</code> 命名為 <code>.env.development.local</code> 即可。</p>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-env-mode" target="_blank" rel="external">GitHub</a> 上找到</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>透過 Node.js，就可解決 JSON Server 無法建立 POST 回傳資料的問題，因為 JSON Server 是純 RESTful</li>
