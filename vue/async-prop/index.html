@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="Promise + Prop 後寫法稍有不同">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-10-23T13:08:34.600Z">
+<meta property="og:updated_time" content="2018-10-23T13:34:02.017Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何將非同步資料傳入 Prop ?">
 <meta name="twitter:description" content="Promise + Prop 後寫法稍有不同">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#錯誤寫法"><span class="toc-article-text">錯誤寫法</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#正確寫法"><span class="toc-article-text">正確寫法</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#錯誤寫法"><span class="toc-article-text">錯誤寫法</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#正確寫法"><span class="toc-article-text">正確寫法</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -138,12 +138,12 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> source = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.todos = value;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>將 Promise 最後執行改變 <code>source</code> prop 時，會執行 watch 的 <code>source()</code>，再由此 function 去改變 <code>todos</code> data。</p>
 <p>如此 component 就能收到 prop 傳進來的非同步資料了。</p>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-async-prop" target="_blank" rel="external">GitHub</a> 上找到</p>
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>寫 ECMAScript 只要碰到非同步 Promise，就要考慮到其是最後執行，因此不能使用同步的方式思考</li>
 </ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-async-prop" target="_blank" rel="external">GitHub</a> 上找到</p>
 	  
 	</div>
 
@@ -152,9 +152,9 @@
 	<div class="pagination">
 <ul class="pagination">
 	 
-		
-          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
-        
+				
+    	<li class="prev"><a href="/webstorm/vue/" class="alignleft prev"><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+  		
 
         <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
 
@@ -190,7 +190,7 @@
 	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
     <ul id="tags" class="tag_box list-unstyled collapse in">	  
 	    
-  <li><a href="/tags/Vue/">Vue<span>3</span></a></li>
+  <li><a href="/tags/Vue/">Vue<span>4</span></a></li>
     </ul>
 	</div>
 		
