@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何將非同步資料傳入 Prop ? | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="Promise + Prop 後寫法稍有不同">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="Promise + Prop 後寫法稍有不同">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何將非同步資料傳入 Prop ?">
+<meta property="og:url" content="https://oomusou.io/vue/async-prop/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="Promise + Prop 後寫法稍有不同">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-10-23T13:08:34.600Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何將非同步資料傳入 Prop ?">
+<meta name="twitter:description" content="Promise + Prop 後寫法稍有不同">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> 如何將非同步資料傳入 Prop ?</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> Promise + Prop 後寫法稍有不同			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#錯誤寫法"><span class="toc-article-text">錯誤寫法</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#正確寫法"><span class="toc-article-text">正確寫法</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>假如資料是從 <code>App.vue</code> 透過 API 抓取資料，然後透過 Prop 傳進 Component，最後再讀取 Prop 寫入 Component 的 Data，這看似平常的過程，若是同步資料則完全不是問題，但因為資料是從 API  來，為非同步 Promise，寫法則沒有想像中單純。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><p>Vue 2.5.17<br>Vue CLI 3.0.5</p>
+<h2 id="錯誤寫法">錯誤寫法</h2><hr>
+<p><strong>App.vue</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;template&#62;&#10;  &#60;div id=&#34;app&#34;&#62;&#10;    &#60;todo-list :source=&#34;todos&#34;&#62;&#10;    &#60;/todo-list&#62;&#10;  &#60;/div&#62;&#10;&#60;/template&#62;&#10;&#10;&#60;script&#62;&#10;import TodoList from &#39;./components/todo-list.vue&#39;;&#10;import &#123; fetchTodos &#125; from &#39;./api/todos.api&#39;;&#10;&#10;const mounted = function() &#123;&#10;  const response = res =&#62;&#10;    this.todos = res.data.slice(0, 5);&#10;&#10;  fetchTodos()&#10;    .then(response);&#10;&#125;;&#10;&#10;const components = &#123;&#10;  TodoList,&#10;&#125;;&#10;&#10;const data = function() &#123;&#10;  return &#123;&#10;    todos: [],&#10;  &#125;;&#10;&#125;;&#10;&#10;export default &#123;&#10;  name: &#39;app&#39;,&#10;  components,&#10;  data,&#10;  mounted,&#10;&#125;;&#10;&#60;/script&#62;&#10;&#10;&#60;style&#62;&#10;&#60;/style&#62;</span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mounted = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> response = res =&gt;</span><br><span class="line">    <span class="keyword">this</span>.todos = res.data.slice(<span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">  fetchTodos()</span><br><span class="line">    .then(response);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在 <code>mounted</code> hook 透過 API 抓取資料。</p>
+<p>第 3 行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">todo-list</span> <span class="attribute">:source</span>=<span class="value">"todos"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">todo-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>todos</code> 傳進 <code>todo-list</code> 的 <code>source</code> prop。</p>
+<p><strong>todo-list.vue</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;template&#62;&#10;  &#60;div id=&#34;todo-list&#34;&#62;&#10;    &#60;input type=&#34;text&#34; v-model=&#34;input&#34;&#62;&#10;    &#60;button @click=&#34;addItem&#34;&#62;Add&#60;/button&#62;&#10;    &#60;ul&#62;&#10;      &#60;li v-for=&#34;(todo, index) in todos&#34; @click=&#34;finishItem(index)&#34; :key=&#34;index&#34;&#62;&#10;          &#123;&#123; todo.title &#125;&#125;, &#123;&#123; todo.completed &#125;&#125;&#10;      &#60;/li&#62;&#10;    &#60;/ul&#62;&#10;  &#60;/div&#62;&#10;&#60;/template&#62;&#10;&#10;&#60;script&#62;&#10;const finishItem = function(index) &#123;&#10;  this.todos[index].completed = !this.todos[index].completed;&#10;&#125;;&#10;&#10;const addItem = function() &#123;&#10;  const elem = &#123;&#10;    title: this.input,&#10;    completed: false,&#10;  &#125;;&#10;  this.todos = [...this.todos, elem];&#10;&#125;;&#10;&#10;const props = [&#10;  &#39;source&#39;,&#10;];&#10;&#10;const data = function() &#123;&#10;  return &#123;&#10;    input: &#39;&#39;,&#10;    todos: this.source,&#10;  &#125;;&#10;&#125;;&#10;&#10;const methods = &#123;&#10;  finishItem,&#10;  addItem,&#10;&#125;;&#10;&#10;export default &#123;&#10;  name: &#39;todo-list&#39;,&#10;  props,&#10;  data,&#10;  methods,&#10;&#125;;&#10;&#60;/script&#62;&#10;&#10;&#60;style scoped&#62;&#10;&#10;&#60;/style&#62;</span><br></pre></td></tr></table></figure>
+<p>30 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> data = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    input: <span class="string">''</span>,</span><br><span class="line">    todos: <span class="keyword">this</span>.source,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>在 <code>data()</code> 將 <code>source</code> prop 指定給 <code>todos</code>。</p>
+<blockquote>
+<p>這種寫法在若 prop 資料為同步，則為標準寫法；但若是非同步資料，則 <code>todos</code> 永遠為 <code>[]</code>。</p>
+</blockquote>
+<p>因為 Promise 為非同步，會在同步執行完後才執行，也就是 <code>todo-list</code> component 的 <code>data()</code> 會先執行，最後才執行 Promise，因此 <code>todos</code> 永遠為 <code>[]</code>。</p>
+<h2 id="正確寫法">正確寫法</h2><hr>
+<p><strong>todo-list.vue</strong></p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#60;template&#62;&#10;  &#60;div id=&#34;todo-list&#34;&#62;&#10;    &#60;input type=&#34;text&#34; v-model=&#34;input&#34;&#62;&#10;    &#60;button @click=&#34;addItem&#34;&#62;Add&#60;/button&#62;&#10;    &#60;ul&#62;&#10;      &#60;li v-for=&#34;(todo, index) in todos&#34; @click=&#34;finishItem(index)&#34; :key=&#34;index&#34;&#62;&#10;          &#123;&#123; todo.title &#125;&#125;, &#123;&#123; todo.completed &#125;&#125;&#10;      &#60;/li&#62;&#10;    &#60;/ul&#62;&#10;  &#60;/div&#62;&#10;&#60;/template&#62;&#10;&#10;&#60;script&#62;&#10;const finishItem = function(index) &#123;&#10;  this.todos[index].completed = !this.todos[index].completed;&#10;&#125;;&#10;&#10;const addItem = function() &#123;&#10;  const elem = &#123;&#10;    title: this.input,&#10;    completed: false,&#10;  &#125;;&#10;  this.todos = [...this.todos, elem];&#10;&#125;;&#10;&#10;const source = function(value) &#123;&#10;  this.todos = value;&#10;&#125;;&#10;&#10;const props = [&#10;  &#39;source&#39;,&#10;];&#10;&#10;const data = function() &#123;&#10;  return &#123;&#10;    input: &#39;&#39;,&#10;    todos: this.source,&#10;  &#125;;&#10;&#125;;&#10;&#10;const watch = &#123;&#10;  source,&#10;&#125;;&#10;&#10;const methods = &#123;&#10;  finishItem,&#10;  addItem,&#10;&#125;;&#10;&#10;export default &#123;&#10;  name: &#39;todo-list&#39;,&#10;  props,&#10;  data,&#10;  watch,&#10;  methods,&#10;&#125;;&#10;&#60;/script&#62;&#10;&#10;&#60;style scoped&#62;&#10;&#10;&#60;/style&#62;</span><br></pre></td></tr></table></figure>
+<p>41 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> watch = &#123;</span><br><span class="line">  source,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>由於 Promise 會最後執行，因此必須對 <code>source</code> prop 開 watch。</p>
+<p>26 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> source = <span class="function"><span class="keyword">function</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.todos = value;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>將 Promise 最後執行改變 <code>source</code> prop 時，會執行 watch 的 <code>source()</code>，再由此 function 去改變 <code>todos</code> data。</p>
+<p>如此 component 就能收到 prop 傳進來的非同步資料了。</p>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>寫 ECMAScript 只要碰到非同步 Promise，就要考慮到其是最後執行，因此不能使用同步的方式思考</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-async-prop" target="_blank" rel="external">GitHub</a> 上找到</p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/vue/slot/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-10-23 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Vue/">Vue<span>3</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

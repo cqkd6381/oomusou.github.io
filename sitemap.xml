@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/vue/async-prop/</loc>
+    <lastmod>2018-10-23T13:08:34.600Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/vue/slot/</loc>
     <lastmod>2018-10-23T09:35:08.764Z</lastmod>
   </url>
