@@ -635,12 +635,24 @@ div#postTOC{
   div#postTOC{width:100%;}
 }
 
+/* =============================================================================
+   iPad mini
+   ========================================================================== */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px)
+and (-webkit-min-device-pixel-ratio: 1)  { 
+  div#postTOC{width:100%;}
+}
+
+
+
 .infoheader {
   font-size:14pt;
   font-weight:bold;
 }
 
 #st-search-input {width:80%;}
+
+
 
 
 
