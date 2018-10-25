@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Vue 之 Component | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="談談 Vue 最基礎的 Component">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="談談 Vue 最基礎的 Component">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 之 Component">
+<meta property="og:url" content="https://oomusou.io/vue/component/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="談談 Vue 最基礎的 Component">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-10-25T07:50:35.803Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Vue 之 Component">
+<meta name="twitter:description" content="談談 Vue 最基礎的 Component">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> Vue 之 Component</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 談談 Vue 最基礎的 Component			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Architecture"><span class="toc-article-text">Architecture</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Introduction"><span class="toc-article-text">Introduction</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Global_Component"><span class="toc-article-text">Global Component</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Local_Component"><span class="toc-article-text">Local Component</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#MVVM_vs-_Component"><span class="toc-article-text">MVVM vs. Component</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Component_vs-_DOM_Parser"><span class="toc-article-text">Component vs. DOM Parser</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Dynamic_Component"><span class="toc-article-text">Dynamic Component</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Keep-Alive"><span class="toc-article-text">Keep-Alive</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Sample_Code"><span class="toc-article-text">Sample Code</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>Component 概念為 React 所發明，讓我們可以重複使用 HTML，Vue、Angular 也 <code>致敬</code> React，採用 component ，至此 3 大 Framework 都統一採用 Component-based 架構。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>Vue 2.5.17</p>
+<h2 id="Architecture">Architecture</h2><hr>
+<p><img src="/images/vue/component/basic000.svg" alt="intro000"></p>
+<h2 id="Introduction">Introduction</h2><hr>
+<p>Vue Instance 有自己的 <code>data</code>、<code>methods</code>、<code>computed</code> 、<code>watch</code>，但 Vue Instance 只是 HTML 的代言人，讓我們在 JavaScript 控制 HTML，但若要 <code>重複使用</code>，就不是那麼方便，這時我們需要的是 Vue Component。</p>
+<p>除此之外，Vue Component 也讓我們在開發時實踐 <code>Divide and Conquer</code> 哲學，先將需求切成小小 component，然後一一擊破，最後再將 component 組合起來，如此 component 也更加 <code>單一職責</code>，更 <code>容易維護</code> 與 <code>重複使用</code>。</p>
+<h2 id="Global_Component">Global Component</h2><hr>
+<p>之前我們只會 MVVM 的 Hello World，若改用 Component-based 的寫法呢 ?</p>
+<p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Global Component<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">hello-world</span>&gt;</span><span class="tag">&lt;/<span class="title">hello-world</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"HelloWorld.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">hello-world</span>&gt;</span><span class="tag">&lt;/<span class="title">hello-world</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>由原本的 <code>&lt;span&gt;Hello World&lt;/span&gt;</code>，變成自訂的 <code>hello-world</code> tag。</p>
+<blockquote>
+<p>我們會為自己的的 Vue Component 定義自己的 HTML tag</p>
+</blockquote>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>建立 Vue Instance。</p>
+<p><strong>HelloWorld.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'HelloWorld'</span>, &#123;</span><br><span class="line">  template: <span class="string">'&lt;span&gt;Hello World&lt;/span&gt;'</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>定義 <code>HelloWorld</code> component。</p>
+<p>使用 Vue <code>Vue.component()</code> 定義 Vue Component。</p>
+<ul>
+<li>第  1 個參數：string，傳入自訂的 HTML tag 名稱</li>
+<li>第 2 個參數：object，類似傳入 Vue Instance 的 constructor 參數</li>
+</ul>
+<p>Vue Component 的使用，有幾點要注意：</p>
+<ul>
+<li>Vue 規定 Vue Component 一定要定義在 Vue Instance <code>之前</code>，否則 Life Cycle 在 <code>compile HTML</code> 階段，會不知道 Vue Component 所自訂的 HTML tag</li>
+<li>自訂的 HTML tag 名稱，無論使用 camelCase，CamelCase，最後 Vue 都會改用 Kebab-case (全小寫，單字間以 <code>-</code> 隔開)，這是 W3C 所建議，且必須是 2 個單字，避免用一個單字與 HTML 預設 tag 重複</li>
+<li>關於 Component (HTML tag) 與 JavaScript 檔案命名方式，Vue 官方的 <a href="https://vuejs.org/v2/style-guide/#Single-file-component-filename-casing-strongly-recommended" target="_blank" rel="external">Style Guide</a> :<ul>
+<li><strong>CamelCase</strong>：<code>HelloWorld</code>、<code>HelloWorld.js</code>、<code>HelloWorld.vue</code></li>
+<li><strong>kebab-case</strong>：<code>hello-world</code>、<code>hello-world.js</code>、<code>hello-world.vue</code></li>
+<li>Vue CLI 使用 <strong>CamelCase</strong></li>
+</ul>
+</li>
+</ul>
+<h2 id="Local_Component">Local Component</h2><hr>
+<p>使用 <code>Vue.component()</code> 所宣告的是 Global Component，也就是每個 Vue Instance 都可使用，若你想定義只有某個 Vue Instance 能使用的 component，則要使用 Local Component。</p>
+<p><strong>inex.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Local Component<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">hello-world</span>&gt;</span><span class="tag">&lt;/<span class="title">hello-world</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"local_component.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>HTML 部分一樣不變使用 <code>&lt;hello-world&gt;&lt;/hello-world&gt;</code>。</p>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  components: &#123;</span><br><span class="line">    <span class="string">'HelloWorld'</span>: &#123;</span><br><span class="line">      template: <span class="string">'&lt;span&gt;Hello World&lt;/span&gt;'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在傳入 Vue Instance 的 constructor 參數內，加上 <code>components</code> Property，為 object。</p>
+<p>以自訂的 HTML tag <code>hello-world</code> 為 key，將 <code>Vue.component()</code> 第二個參數的 object 為 value。</p>
+<h2 id="MVVM_vs-_Component">MVVM vs. Component</h2><hr>
+<p>目前 Vue Component 的 data 顯示都是寫死的，我們知道 MVVM 的精髓就是 Data Binding，要如何將 MVVM 與 Component-based 兩種架構合而為一呢 ?</p>
+<p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Counter Component<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">my-counter</span>&gt;</span><span class="tag">&lt;/<span class="title">my-counter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">my-counter</span>&gt;</span><span class="tag">&lt;/<span class="title">my-counter</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MyCounter.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">my-counter</span>&gt;</span><span class="tag">&lt;/<span class="title">my-counter</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用自訂的 <code>&lt;my-counter&gt;&lt;/my-counter&gt;</code>。</p>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>建立 Vue Instance。</p>
+<p><strong>MyComponent.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'MyCounter'</span>, &#123;</span><br><span class="line">  template: <span class="string">`</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;span&gt;&#123;&#123; counter &#125;&#125;&lt;/span&gt;</span><br><span class="line">      &lt;p&gt;&lt;/p&gt;</span><br><span class="line">      &lt;button @click="add"&gt;+1&lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  `</span>,</span><br><span class="line">  data() &#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      counter: <span class="number">0</span>,</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    add() &#123;</span><br><span class="line">      <span class="keyword">this</span>.counter++;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第 2 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">template: <span class="string">`</span><br><span class="line">  &lt;div&gt;</span><br><span class="line">    &lt;span&gt;&#123;&#123; counter &#125;&#125;&lt;/span&gt;</span><br><span class="line">    &lt;p&gt;&lt;/p&gt;</span><br><span class="line">    &lt;button @click="add"&gt;+1&lt;/button&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">`</span>,</span><br></pre></td></tr></table></figure>
+<p>將 HTML Template 宣告在 <code>template</code> property 下。</p>
+<blockquote>
+<p>由於 HTML Template 在實務上會很多行，用普通字串不方便，建議改用 ECMAScript 2015 的 string template，就不必再 <code>字串相加</code> 了</p>
+</blockquote>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data() &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    counter: <span class="number">0</span>,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><code>data</code> 部分，由原本 Vue Instance 的 <code>data</code> property 改成 <code>data()</code> function。</p>
+<p>改回傳 <code>data</code> object。</p>
+<p>14 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">  add() &#123;</span><br><span class="line">    <span class="keyword">this</span>.counter++;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>對 <code>data</code> 內的 <code>counter</code> 累加。</p>
+<blockquote>
+<p>Q : 為什麼寫成 Vue Component 後，要從 <code>data</code> property 改成 <code>data()</code> function ?</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  counter: <span class="number">0</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>若改成 <code>data</code> property 寫法，Vue 會無法執行，且出現 warning。</p>
+<p><img src="/images/vue/component/basic001.png" alt="basic001"></p>
+<p><img src="/images/vue/component/basic002.svg" alt="basic002"></p>
+<p>在正統 OOP，兩個 component 應該是兩個 instance，而 <code>data</code> 包在 instance 內，因此 Component 間的 <code>data</code> 不會互相影響，也就是 OOP 的 <code>封裝</code>。</p>
+<p><img src="/images/vue/component/basic003.svg" alt="basic003"></p>
+<p>但 Vue 底層並不是採用 OOP 方式，而是共用同一份 component instance，只有 <code>data</code> 是不同份。</p>
+<p>這也是為什麼為什麼 Vue 要你改用 <code>data()</code> function，而且是回傳全新對 <code>data</code> object。</p>
+<blockquote>
+<p>只要寫 Vue Component，就一定要改用 <code>data()</code> function，不能使用 <code>data</code> property</p>
+</blockquote>
+<p>使用 Vue Component 時，還有一點值得注意：</p>
+<ul>
+<li>不可使用 HTML self closing 語法</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">my-counter</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">my-counter</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>這種寫法，Vue 不會出錯，但只有一個 component 能動。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">my-counter</span>&gt;</span><span class="tag">&lt;/<span class="title">my-counter</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">my-counter</span>&gt;</span><span class="tag">&lt;/<span class="title">my-counter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>要這樣寫，Vue 才能正常執行。</p>
+<h2 id="Component_vs-_DOM_Parser">Component vs. DOM Parser</h2><hr>
+<p>有時候在使用 Vue Component 時，會發現無法如預期顯示在 Browser 裏。</p>
+<p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>DOM Parse Error<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">select</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="title">my-option</span>&gt;</span><span class="tag">&lt;/<span class="title">my-option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="title">select</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MyOption.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>第 9 行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">select</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">my-option</span>&gt;</span><span class="tag">&lt;/<span class="title">my-option</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>&lt;select&gt;&lt;/select&gt;</code> 內使用自訂的 <code>&lt;my-option&gt;&lt;/my-option&gt;</code> Vue Component。</p>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>建立 Vue Instance。</p>
+<p><strong>MyOption.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'MyOption'</span>, &#123;</span><br><span class="line">  template: <span class="string">'&lt;option&gt;Vue&lt;/option&gt;'</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>自訂的 <code>MyOption</code> 只包含 <code>&lt;option&gt;Vue&lt;/option&gt;</code> 部分。</p>
+<p><img src="/images/vue/component/basic004.png" alt="basic004"></p>
+<ol>
+<li>Chrome 無法正常顯示</li>
+<li><code>&lt;select&gt;&lt;/select&gt;</code> 以下沒有任何 <code>&lt;option&gt;&lt;/option&gt;</code></li>
+</ol>
+<p>這牽涉到各 Browser 的 DOM Parser 如何解析 HTML。</p>
+<p>以 Chrome 而言，它認為 <code>&lt;select&gt;&lt;/select&gt;</code> 下 <code>只應該</code> 是 <code>&lt;option&gt;&lt;/option&gt;</code>，其他的 HTML tag 都為非法，因此忽略不使用。</p>
+<blockquote>
+<p>DOM Parser 會因 Browser 而異</p>
+</blockquote>
+<p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>DOM Parse OK<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">my-select</span>&gt;</span><span class="tag">&lt;/<span class="title">my-select</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MySelect.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>由本來的 <code>&lt;my-option&gt;&lt;/my-option&gt;</code> 改成 <code>&lt;my-select&gt;&lt;/my-select&gt;</code>。</p>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>建立 Vue Instance。</p>
+<p><strong>MySelect.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'MySelect'</span>, &#123;</span><br><span class="line">  template: <span class="string">`</span><br><span class="line">    &lt;select&gt;</span><br><span class="line">      &lt;option&gt;Vue&lt;/option&gt;    </span><br><span class="line">    &lt;/select&gt;</span><br><span class="line">`</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>連 <code>&lt;select&gt;</code> 一起包進 Vue Component，如此 Chrome 就無法干涉 <code>&lt;option&gt;</code>。</p>
+<h2 id="Dynamic_Component">Dynamic Component</h2><hr>
+<p>先定義好 Vue Component，然後動態切換 component。</p>
+<p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Dynamic Component<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">button</span> @<span class="attribute">click</span>=<span class="value">"selectLesson"</span>&gt;</span>Lessons<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">button</span> @<span class="attribute">click</span>=<span class="value">"selectApply"</span>&gt;</span>Apply<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">component</span> <span class="attribute">:is</span>=<span class="value">"content"</span>&gt;</span><span class="tag">&lt;/<span class="title">component</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MyLessons.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MyApply.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">component</span> <span class="attribute">:is</span>=<span class="value">"content"</span>&gt;</span><span class="tag">&lt;/<span class="title">component</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>使用 Vue 擴充的 <code>&lt;component&gt;&lt;/component&gt;</code>，綁定其 <code>is</code>，當 <code>content</code> 指定什麼 Vue Component 時，<code>&lt;component&gt;&lt;/component&gt;</code> 就會動態切換該 Vue Component。</p>
+<blockquote>
+<p>並沒有在 HTML 內事先使用特定 Component tag，只使用 <code>&lt;component&gt;&lt;/component&gt;</code> 保留其動態彈性</p>
+</blockquote>
+<p><strong>index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    content: <span class="string">'my-lessons'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  methods: &#123;</span><br><span class="line">    selectLesson() &#123;</span><br><span class="line">      <span class="keyword">this</span>.content = <span class="string">'my-lessons'</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">    selectApply() &#123;</span><br><span class="line">      <span class="keyword">this</span>.content = <span class="string">'my-apply'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>第 3 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  content: <span class="string">'my-lessons'</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>在 <code>data</code> 內定義 <code>content</code> model，其中預設值 <code>my-lessons</code> 為 component 名稱。</p>
+<p>第 6 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">  selectLesson() &#123;</span><br><span class="line">    <span class="keyword">this</span>.content = <span class="string">'my-lessons'</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  selectApply() &#123;</span><br><span class="line">    <span class="keyword">this</span>.content = <span class="string">'my-apply'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由 method 動態改變 <code>content</code>，MVVM 會再動態改變 <code>&lt;component&gt;&lt;/component&gt;</code> 的 <code>:is</code>，達到動態組件的需求。</p>
+<p><strong>MyLessions.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'MyLessons'</span>, &#123;</span><br><span class="line">  template: <span class="string">`</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &lt;li&gt;React&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;Angular&lt;/li&gt;</span><br><span class="line">      &lt;li&gt;Vue&lt;/li&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">  `</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>定義了 <code>MyLessions</code> component。</p>
+<p><strong>MyApply.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'MyApply'</span>, &#123;</span><br><span class="line">  template: <span class="string">`</span><br><span class="line">    &lt;form&gt;</span><br><span class="line">      &lt;textarea&gt;&lt;/textarea&gt;</span><br><span class="line">      &lt;p&gt;&lt;/p&gt;</span><br><span class="line">      &lt;button&gt;Submit&lt;/button&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">  `</span>,</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>定義了 <code>MyApply</code> component。</p>
+<blockquote>
+<p>但這兩個 Vue Component 都沒在 HTML 內被使用，將由 JavaScript 動態指定</p>
+</blockquote>
+<h2 id="Keep-Alive">Keep-Alive</h2><hr>
+<p>由於 <code>&lt;component&gt;&lt;/component&gt;</code> 類似 <code>v-if</code>，其 Dynamic Component 是藉由 <code>刪除 DOM element，並建立新的 DOM element</code> 的方式，所以原本的 user 輸入的資料，也會一併被刪除。</p>
+<p>若要保留原本 user 輸入的資料，就必須搭配 <code>&lt;keep-alive&gt;&lt;keep-alive&gt;</code>。</p>
+<p><strong>index.html</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="doctype">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">html</span> <span class="attribute">lang</span>=<span class="value">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">meta</span> <span class="attribute">charset</span>=<span class="value">"UTF-8"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">title</span>&gt;</span>Keep Alive<span class="tag">&lt;/<span class="title">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"app"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> @<span class="attribute">click</span>=<span class="value">"selectLesson"</span>&gt;</span>Lessons<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> @<span class="attribute">click</span>=<span class="value">"selectApply"</span>&gt;</span>Apply<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">p</span>&gt;</span><span class="tag">&lt;/<span class="title">p</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">keep-alive</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="title">component</span> <span class="attribute">:is</span>=<span class="value">"content"</span>&gt;</span><span class="tag">&lt;/<span class="title">component</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="title">keep-alive</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://unpkg.com/vue/dist/vue.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MyLessons.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"MyApply.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>12 行</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">keep-alive</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">component</span> <span class="attribute">:is</span>=<span class="value">"content"</span>&gt;</span><span class="tag">&lt;/<span class="title">component</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">keep-alive</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 <code>&lt;component&gt;&lt;/component&gt;</code> 外部加上 <code>&lt;keep-alive&gt;&lt;/keep-alive&gt;</code>，則 Dynamic Component 內的資料將獲得保留。</p>
+<p>JavaScript 的寫法不用改變。</p>
+<blockquote>
+<p>Vue 底層會將 user 的輸入保留，然後切換 component 時，除了建立新的 component 外，還會將 user 原本所輸入的資料也 <code>重新</code> 填回新建立的 component，讓動態切換 component 更方便</p>
+</blockquote>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>Vue 提供了 Vue Component，讓我們將 HTML 會重複的部分可以使用 component 包起來，方便閱讀，也更方便維護</li>
+<li>MVVM 可以 Component-based 完美結合，但 <code>data</code> property 必須改用 <code>data</code> function</li>
+<li>Component 有時候會違背 Browser 的 DOM Parser，此時必須改變寫法繞過 Browser</li>
+<li>Dynamic Component 讓我們可以根據商業邏輯自行切換 component</li>
+<li>透過神奇的 <code>&lt;keep-alive&gt;&lt;/keep-alive&gt;</code>，user 原本的輸入將保留在 component 內</li>
+</ul>
+<h2 id="Sample_Code">Sample Code</h2><hr>
+<p>完整的範例可以在我的 <a href="https://github.com/oomusou/vue-component" target="_blank" rel="external">GitHub</a> 上找到</p>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://vuejs.org/" target="_blank" rel="external">Vue</a>, <a href="https://vuejs.org/v2/guide/components.html" target="_blank" rel="external">Component Basics</a><br><a href="https://vuejs.org/" target="_blank" rel="external">Vue</a>, <a href="https://vuejs.org/v2/style-guide/#Base-component-names-strongly-recommended" target="_blank" rel="external">Style Guide</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/webstorm/clone-project/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-10-25 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/Vue/">Vue<span>5</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
