@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/vue/env-mode/</loc>
+    <lastmod>2018-10-25T06:20:50.806Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/webstorm/clone-project/</loc>
     <lastmod>2018-10-23T14:21:12.770Z</lastmod>
   </url>
@@ -19,11 +24,6 @@
   <url>
     <loc>https://oomusou.io/vue/slot/</loc>
     <lastmod>2018-10-23T09:35:08.764Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/vue/env-mode/</loc>
-    <lastmod>2018-10-23T09:29:16.559Z</lastmod>
   </url>
   
   <url>
