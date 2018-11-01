@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oomusou.io/ecmascript/object-creation/</loc>
+    <lastmod>2018-11-01T15:13:51.067Z</lastmod>
+  </url>
+  
+  <url>
     <loc>https://oomusou.io/vue/component/</loc>
     <lastmod>2018-10-25T07:50:35.803Z</lastmod>
   </url>
