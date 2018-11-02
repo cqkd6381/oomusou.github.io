@@ -1,0 +1,241 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ECMAScript 之 Object Property 存取 | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="以變數的方式純取 Property">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="以變數的方式純取 Property">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript 之 Object Property 存取">
+<meta property="og:url" content="https://oomusou.io/ecmascript/property-access/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="以變數的方式純取 Property">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-11-02T10:10:58.657Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript 之 Object Property 存取">
+<meta name="twitter:description" content="以變數的方式純取 Property">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> ECMAScript 之 Object Property 存取</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 以變數的方式純取 Property			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Array_方式存取_Property"><span class="toc-article-text">Array 方式存取 Property</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#以_Variable_存取_Property"><span class="toc-article-text">以 Variable 存取 Property</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#以_Variable_執行_Method"><span class="toc-article-text">以 Variable 執行 Method</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>與傳統 OOP 相比， ECMAScript 的 Object 有一個很特別的語言特性，就是 Property 可以透過 Array  與 <code>變數</code> 方式存取，這造成了使用 Object 有很大的靈活度。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 5</p>
+<h2 id="Array_方式存取_Property">Array 方式存取 Property</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person.firstName); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(person.fullName()); <span class="comment">// Sam Xiao</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'firstName'</span>]); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'fullName'</span>]()); <span class="comment">// Sam Xiao</span></span><br></pre></td></tr></table></figure>
+<p><code>person</code> 為 object，有 property 也有 method。</p>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person.firstName);</span><br><span class="line"><span class="built_in">console</span>.log(person.fullName());</span><br></pre></td></tr></table></figure>
+<p>為傳統 OOP 使用 <code>.</code> 方式純取 property 與 method。</p>
+<p>第 12 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'firstName'</span>]); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'fullName'</span>]()); <span class="comment">// Sam Xiao</span></span><br></pre></td></tr></table></figure>
+<p>ECMAScript 允許我們以 array 方式存取 property 與執行 method，將 property 與 method 名稱以 <code>string</code> 傳入 <code>[]</code> 即可。</p>
+<p>這樣有什麼用呢 ? </p>
+<p>既然 <code>[]</code> 可為 string，就表示可以是 variable，這就開了一個很大的門。</p>
+<h2 id="以_Variable_存取_Property">以 Variable 存取 Property</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getProperty = (object, propertyName) =&gt;</span><br><span class="line">  object[propertyName];</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(getProperty(person, <span class="string">'firstName'</span>)); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(getProperty(person, <span class="string">'lastName'</span>)); <span class="comment">// Xiao</span></span><br></pre></td></tr></table></figure>
+<p>Property 名稱可改用 function 的 argument 傳入，如此就能以 variable 的方式存取 property。</p>
+<p><img src="/images/ecmascript/property-access/property001.png" alt="property001"></p>
+<ol>
+<li>object 與 property 名稱都以 argument 方式傳入</li>
+</ol>
+<h2 id="以_Variable_執行_Method">以 Variable 執行 Method</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> runMethod = (object, methodName) =&gt;</span><br><span class="line">  object[methodName]();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(runMethod(person, <span class="string">'fullName'</span>)); <span class="comment">// Sam Xiao</span></span><br></pre></td></tr></table></figure>
+<p>Method 名稱可改用 function 的 argument 傳入，如此就能以 variable 的方式執行 function。</p>
+<p><img src="/images/ecmascript/property-access/property002.png" alt="property002"></p>
+<ol>
+<li>object 與 method 名稱都以 argument 方式傳入</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>當 property 與 method 名稱能使用變數後，就能以程式碼的方式做很多變化，動態的存取 property 與執行 method</li>
+</ul>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/ecmascript/object-creation/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-11-02 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>17</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>

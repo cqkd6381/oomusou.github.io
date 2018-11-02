@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-11-01T15:13:51.067Z</updated>
+  <updated>2018-11-02T10:10:58.657Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,60 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[ECMAScript 之 Object Property 存取]]></title>
+    <link href="https://oomusou.io/ecmascript/property-access/"/>
+    <id>https://oomusou.io/ecmascript/property-access/</id>
+    <published>2018-11-02T12:23:43.000Z</published>
+    <updated>2018-11-02T10:10:58.657Z</updated>
+    <content type="html"><![CDATA[<p>與傳統 OOP 相比， ECMAScript 的 Object 有一個很特別的語言特性，就是 Property 可以透過 Array  與 <code>變數</code> 方式存取，這造成了使用 Object 有很大的靈活度。</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 5</p>
+<h2 id="Array_方式存取_Property">Array 方式存取 Property</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person.firstName); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(person.fullName()); <span class="comment">// Sam Xiao</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'firstName'</span>]); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'fullName'</span>]()); <span class="comment">// Sam Xiao</span></span><br></pre></td></tr></table></figure>
+<p><code>person</code> 為 object，有 property 也有 method。</p>
+<p>第 9 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person.firstName);</span><br><span class="line"><span class="built_in">console</span>.log(person.fullName());</span><br></pre></td></tr></table></figure>
+<p>為傳統 OOP 使用 <code>.</code> 方式純取 property 與 method。</p>
+<p>第 12 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'firstName'</span>]); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(person[<span class="string">'fullName'</span>]()); <span class="comment">// Sam Xiao</span></span><br></pre></td></tr></table></figure>
+<p>ECMAScript 允許我們以 array 方式存取 property 與執行 method，將 property 與 method 名稱以 <code>string</code> 傳入 <code>[]</code> 即可。</p>
+<p>這樣有什麼用呢 ? </p>
+<p>既然 <code>[]</code> 可為 string，就表示可以是 variable，這就開了一個很大的門。</p>
+<h2 id="以_Variable_存取_Property">以 Variable 存取 Property</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> getProperty = (object, propertyName) =&gt;</span><br><span class="line">  object[propertyName];</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(getProperty(person, <span class="string">'firstName'</span>)); <span class="comment">// Sam</span></span><br><span class="line"><span class="built_in">console</span>.log(getProperty(person, <span class="string">'lastName'</span>)); <span class="comment">// Xiao</span></span><br></pre></td></tr></table></figure>
+<p>Property 名稱可改用 function 的 argument 傳入，如此就能以 variable 的方式存取 property。</p>
+<p><img src="/images/ecmascript/property-access/property001.png" alt="property001"></p>
+<ol>
+<li>object 與 property 名稱都以 argument 方式傳入</li>
+</ol>
+<h2 id="以_Variable_執行_Method">以 Variable 執行 Method</h2><hr>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> runMethod = (object, methodName) =&gt;</span><br><span class="line">  object[methodName]();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(runMethod(person, <span class="string">'fullName'</span>)); <span class="comment">// Sam Xiao</span></span><br></pre></td></tr></table></figure>
+<p>Method 名稱可改用 function 的 argument 傳入，如此就能以 variable 的方式執行 function。</p>
+<p><img src="/images/ecmascript/property-access/property002.png" alt="property002"></p>
+<ol>
+<li>object 與 method 名稱都以 argument 方式傳入</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>當 property 與 method 名稱能使用變數後，就能以程式碼的方式做很多變化，動態的存取 property 與執行 method</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[以變數的方式純取 Property]]>
+    
+    </summary>
+    
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[ECMAScript 之建立 Object]]></title>
     <link href="https://oomusou.io/ecmascript/object-creation/"/>
     <id>https://oomusou.io/ecmascript/object-creation/</id>
     <published>2018-11-01T12:23:43.000Z</published>
-    <updated>2018-11-01T15:13:51.067Z</updated>
+    <updated>2018-11-02T10:11:18.860Z</updated>
     <content type="html"><![CDATA[<p>ECMAScript 也有 Object 概念，但其 Object 與傳統 OOP 的 Object 又不太一樣。傳統 OOP 的 Object 都必須由 class 而來，但 ECMAScript 的 Object 卻有多種建立方式。</p>
 <a id="more"></a>
 <h2 id="建立_Object">建立 Object</h2><hr>
@@ -124,7 +173,7 @@
 <h2 id="Conclusion">Conclusion</h2><hr>
 <ul>
 <li>Object Literal、Empty Object 或 New Object 方式，雖然可以建立 method，但只能建立在 object 上，較浪費記憶體</li>
-<li>Constructor Function、Class 或 Object.create()，則能夠將 method 建立在 object 的 prototype 上，較節省記憶體</li>
+<li>Constructor Function、Class 或 <code>Object.create()</code>，則能夠將 method 建立在 object 的 prototype 上，較節省記憶體</li>
 <li>Class 本質上仍然是 Constructor Function，可由 TypeScript 與 Babel 得證</li>
 </ul>
 ]]></content>
@@ -133,7 +182,7 @@
     
     </summary>
     
-      <category term="Laravel" scheme="https://oomusou.io/tags/Laravel/"/>
+      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
     
   </entry>
   
@@ -2061,74 +2110,6 @@
     </summary>
     
       <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[Refactor to LINQ => ForEach]]></title>
-    <link href="https://oomusou.io/linq/foreach/"/>
-    <id>https://oomusou.io/linq/foreach/</id>
-    <published>2018-09-25T13:23:43.000Z</published>
-    <updated>2018-09-26T16:11:05.824Z</updated>
-    <content type="html"><![CDATA[<p>LINQ 是 C# 3.0 實現 FP 重要里程碑，提供大量的 Operator，讓我們以 Pure Function 將 data 以 Dataflow 與 Pipeline 方式實現。本系列將先以 Imperative 實作，然後再重構成 FP，最後再重構成 LINQ Operator。</p>
-<p>首先從最基本的 <code>ForEach</code> Operator 談起。</p>
-<a id="more"></a>
-<h2 id="Version">Version</h2><hr>
-<p>macOS High Sierra 10.13.6<br>.NET Core 2.1<br>C# 7.2<br>Rider 2018.2.3</p>
-<h2 id="Imperative">Imperative</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                Console.WriteLine(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>Enumerable.Range()</code> 產生 <code>1, 2, 3</code>，最後使用 <code>foreach()</code> 印出每個值。</p>
-<p><code>foreach</code> statement 是 Imperative 慣用手法。</p>
-<h2 id="Refactor_to_HOF">Refactor to HOF</h2><hr>
-<p>實務上這種 <code>foreach</code> 天天都要用到，但用 <code>foreach</code> 這種 statement 寫法，重複使用能力為 0，就每天都要不斷的寫 <code>foreach</code>。</p>
-<p>若我們能將 <code>foreach</code> 抽成 <code>ForEach()</code> Higher Order Function，我們就能不斷 reuse <code>ForEach()</code>，只要將不同的商業邏輯以 function 傳進 <code>ForEach()</code> 即可。</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">            </span><br><span class="line">            MyForEach(data, Console.WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">MyForEach</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; data, Action&lt;<span class="keyword">int</span>&gt; action</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                action(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>17 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">MyForEach</span>(<span class="params">IEnumerable&lt;<span class="keyword">int</span>&gt; data, Action&lt;<span class="keyword">int</span>&gt; action</span>)</span><br><span class="line"></span>&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        action(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>自己以 <code>MyForEach()</code> 實作出 <code>foreach</code> statement 的 Higher Order Function 版本。</p>
-<p>第一個參數為 data，第二個參數為 function。</p>
-<p>將 <code>foreach</code> statement 包進 <code>MyForEach()</code> function，如此 <code>foreach</code> statement 就能被重複使用。</p>
-<p>13 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyForEach(data, Console.WriteLine);</span><br></pre></td></tr></table></figure>
-<p>原來的 <code>foreach</code> statement 重構成 <code>MyForEach()</code> Higher Order Function，只要將 data 與 <code>Console.WriteLine</code> 傳入即可。</p>
-<h2 id="Refactor_to_Generics">Refactor to Generics</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            <span class="keyword">var</span> data = Enumerable.Range(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">            </span><br><span class="line">            MyForEach(data, Console.WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(IEnumerable&lt;T&gt; data, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                action(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>16 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(IEnumerable&lt;T&gt; data, Action&lt;T&gt; action)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        action(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>事實上 <code>MyForEach()</code> 不只適用於 <code>int</code>，而且可適用於任何型別，因此重構成 <code>&lt;T&gt;</code>。</p>
-<h2 id="Refactor_to_Extension_Method">Refactor to Extension Method</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .MyForEach(Console.WriteLine);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; data, Action&lt;T&gt; action)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                action(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>17 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> MyForEach&lt;T&gt;(<span class="keyword">this</span> IEnumerable&lt;T&gt; data, Action&lt;T&gt; action)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> data)</span><br><span class="line">    &#123;</span><br><span class="line">        action(item);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>MyForEach()</code> 需要兩個參數，使用上不是那麼方便，而且也無法 Pipeline 般使用，因此將第一個參數加上 <code>this</code>，成為 Extension Method，</p>
-<p>11 行</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Enumerable</span><br><span class="line">    .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">    .MyForEach(Console.WriteLine);</span><br></pre></td></tr></table></figure>
-<p>如此 <code>MyForEach()</code> 就與 <code>Range()</code> 串起來了，而且也減少了一個參數。</p>
-<h2 id="Refactor_to_LINQ">Refactor to LINQ</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Enumerable</span><br><span class="line">                .Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(Console.WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>事實上 LINQ 早已提供 <code>ForEach()</code>，不必我們自己實作。</p>
-<blockquote>
-<p>因為 <code>ForEach()</code> 為 <code>List</code> 所提供的 operator，因此必須先將 <code>IEnumerable</code> 由 <code>ToList()</code> 轉成 <code>List</code>。</p>
-</blockquote>
-<h2 id="Refactor_to_Using_Static">Refactor to Using Static</h2><hr>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Linq.Enumerable;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">static</span> System.Console;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">ConsoleApp</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span><br><span class="line">        </span>&#123;</span><br><span class="line">            Range(<span class="number">1</span>, <span class="number">3</span>)</span><br><span class="line">                .ToList()</span><br><span class="line">                .ForEach(WriteLine);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>使用 <code>using static</code> 之後，則 <code>Range()</code> 與 <code>WriteLine()</code> 可進一步縮短，更符合 FP 風格。</p>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>就算自己重構，也會重構出 <code>ForEach()</code> Higher Order Function，只是因為太常使用，LINQ 已經內建 <code>ForEach()</code></li>
-<li>善用 <code>using static</code>，可讓 class 的 static method 更像 function</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/LINQForEach" target="_blank" rel="external">GitHub</a> 上找到</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[以重構角度探討 LINQ]]>
-    
-    </summary>
-    
-      <category term="C#" scheme="https://oomusou.io/tags/C/"/>
-    
-      <category term="LINQ" scheme="https://oomusou.io/tags/LINQ/"/>
     
   </entry>
   
