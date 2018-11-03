@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-11-02T10:10:58.657Z</updated>
+  <updated>2018-11-03T03:13:19.507Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -15,11 +15,55 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[Firefox 之 Scratchpad]]></title>
+    <link href="https://oomusou.io/firefox/scratchpad/"/>
+    <id>https://oomusou.io/firefox/scratchpad/</id>
+    <published>2018-11-03T12:23:43.000Z</published>
+    <updated>2018-11-03T03:13:19.507Z</updated>
+    <content type="html"><![CDATA[<p>Firefox 內建的 Scratchpad 是很方便的工具，除了讓我們以 REPL 方式學習 ECMAScript 外，還能即時觀察 object 的所有 property，尤其 ECMAScript 很多秘密都是藏在 prototype 中，這對學習有很大的幫助。</p>
+<a id="more"></a>
+<h2 id="Introduction">Introduction</h2><hr>
+<p><img src="/images/firefox/scratchpad/scratchpad000.png" alt="scratchpad000"></p>
+<ol>
+<li><strong><em>Tools -&gt; Web Developer -&gt; Toggle Tools</em></strong></li>
+</ol>
+<blockquote>
+<p>要安裝 Firefox Developer Edition</p>
+</blockquote>
+<p><img src="/images/firefox/scratchpad/scratchpad001.png" alt="scratchpad001"></p>
+<ol>
+<li>選擇 <code>Scratchpad</code> tab</li>
+<li>顯示了整個 object 的 property，也包含其 prototype 部分，這對理解 ECMAScript 有很大的幫助</li>
+<li>也能顯示執行結果</li>
+</ol>
+<p><img src="/images/firefox/scratchpad/scratchpad002.png" alt="scratchpad002"></p>
+<ol>
+<li>不過會發現預設並沒有 <code>Scratchpad</code> 顯示，需要自行在 <code>Settings</code> 打開</li>
+</ol>
+<p><img src="/images/firefox/scratchpad/scratchpad003.png" alt="scratchpad003"></p>
+<ol>
+<li>將 Scratchpad 打勾，這樣就會有 <code>Scratchpad</code> tab 了</li>
+</ol>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>雖然大部分人都是使用 Chrome 內建的工具，但以學習 ECMAScript 的角度，Firefox Developer Edition 的 Scratchpad 更加適合</li>
+</ul>
+]]></content>
+    <summary type="html">
+    <![CDATA[方便的學習 ECMAScript 工具]]>
+    
+    </summary>
+    
+      <category term="Firefox" scheme="https://oomusou.io/tags/Firefox/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[ECMAScript 之 Object Property 存取]]></title>
     <link href="https://oomusou.io/ecmascript/property-access/"/>
     <id>https://oomusou.io/ecmascript/property-access/</id>
     <published>2018-11-02T12:23:43.000Z</published>
-    <updated>2018-11-02T10:10:58.657Z</updated>
+    <updated>2018-11-03T03:18:18.186Z</updated>
     <content type="html"><![CDATA[<p>與傳統 OOP 相比， ECMAScript 的 Object 有一個很特別的語言特性，就是 Property 可以透過 Array  與 <code>變數</code> 方式存取，這造成了使用 Object 有很大的靈活度。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -68,7 +112,7 @@
     <link href="https://oomusou.io/ecmascript/object-creation/"/>
     <id>https://oomusou.io/ecmascript/object-creation/</id>
     <published>2018-11-01T12:23:43.000Z</published>
-    <updated>2018-11-02T10:11:18.860Z</updated>
+    <updated>2018-11-03T03:17:55.384Z</updated>
     <content type="html"><![CDATA[<p>ECMAScript 也有 Object 概念，但其 Object 與傳統 OOP 的 Object 又不太一樣。傳統 OOP 的 Object 都必須由 class 而來，但 ECMAScript 的 Object 卻有多種建立方式。</p>
 <a id="more"></a>
 <h2 id="建立_Object">建立 Object</h2><hr>
@@ -90,7 +134,7 @@
 <li>直接將 function 指定給 property</li>
 <li>因為 <code>person</code> 為 object，可如同 OOP 般使用 method 方式使用 <code>fullName()</code></li>
 </ol>
-<h2 id="Empty">Empty</h2><hr>
+<h2 id="Empty_Object">Empty Object</h2><hr>
 <p>ECMAScript 有一個傳統 OOP 沒有的特色，就是可以動態新增 property，既然如此，我們就可以一開始只宣告一個 <code>空物件</code>：<code>{}</code>，事後再動態新增 property 即可。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;&#125;;</span><br><span class="line">person.firstName = <span class="string">'Sam'</span>;</span><br><span class="line">person.lastName = <span class="string">'Xiao'</span>;</span><br><span class="line">person.fullName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person);</span><br><span class="line"><span class="built_in">console</span>.log(person.fullName());</span><br></pre></td></tr></table></figure>
 <p>一開始只要指定 <code>{}</code> 即可，表示其為 <code>Object</code> type，事後再動態新增 property。</p>
@@ -1166,7 +1210,7 @@
     <link href="https://oomusou.io/ecmascript/asynchronous/"/>
     <id>https://oomusou.io/ecmascript/asynchronous/</id>
     <published>2018-10-07T13:23:43.000Z</published>
-    <updated>2018-10-07T14:46:06.077Z</updated>
+    <updated>2018-11-03T03:16:35.574Z</updated>
     <content type="html"><![CDATA[<p>ECMAScript 對 Asynchronous 總共有 Promise、Generator 與 Async Await 三種支援，其中 Generator 屬於較進階的應用，主要是在寫 library，但 Promise 與 Async Await 則非常重要，寫 application 也很常用到。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1251,7 +1295,7 @@
     <link href="https://oomusou.io/ecmascript/event-loop-model/"/>
     <id>https://oomusou.io/ecmascript/event-loop-model/</id>
     <published>2018-10-07T12:23:43.000Z</published>
-    <updated>2018-10-07T14:42:12.966Z</updated>
+    <updated>2018-11-03T03:17:08.926Z</updated>
     <content type="html"><![CDATA[<p>由於 JavaScript 是 Single Thread 語言，由於其 Single Thread 特色，對於繁重的運算動作，就無法如 C# 使用 Multi Thread 解決，因此 Asynchronous 在 JavaScript 格外重要。</p>
 <p>Browser 使用獨特的 Event Loop Model 實現 Asynchronous，要能徹底了解其背後運作原理，才能掌握 JavaScript 的 Asynchronous。</p>
 <a id="more"></a>
@@ -1343,7 +1387,7 @@
     <link href="https://oomusou.io/ecmascript/module/"/>
     <id>https://oomusou.io/ecmascript/module/</id>
     <published>2018-10-04T12:23:43.000Z</published>
-    <updated>2018-10-12T07:43:24.226Z</updated>
+    <updated>2018-11-03T03:17:45.589Z</updated>
     <content type="html"><![CDATA[<p>ES5 很難寫大程式，主要是因為 JavaScript 沒有 Module 概念，常常一個檔案寫兩三千行程式，且大量使用 Global Variable 造成 Side Effect 很難維護。</p>
 <p>早期 JavaScript 是使用 Module Pattern 解決，稍後更有 CommonJS 與 AMD 試圖制定 Module 標準，一直到 TC39 出手，在 ECMAScript 2015 定義 Module 後，JavaScript 的模組化總算塵埃落定，是 JavaScript 發展的重要里程碑。</p>
 <a id="more"></a>
@@ -1668,7 +1712,7 @@
     <link href="https://oomusou.io/ecmascript/const/"/>
     <id>https://oomusou.io/ecmascript/const/</id>
     <published>2018-09-30T13:23:43.000Z</published>
-    <updated>2018-09-30T12:00:38.024Z</updated>
+    <updated>2018-11-03T03:16:47.261Z</updated>
     <content type="html"><![CDATA[<p><code>const</code> 也是 ECMAScript 2015+ 的代表 keyword，應盡量使用 <code>const</code> 避免 Side Effect，除非真的要修改變數。</p>
 <a id="more"></a>
 <h2 id="Version">Version</h2><hr>
@@ -1822,7 +1866,7 @@
     <link href="https://oomusou.io/ecmascript/let/"/>
     <id>https://oomusou.io/ecmascript/let/</id>
     <published>2018-09-27T13:23:43.000Z</published>
-    <updated>2018-09-28T02:08:18.626Z</updated>
+    <updated>2018-11-03T03:17:19.276Z</updated>
     <content type="html"><![CDATA[<p>ECMAScript 2015 是 JavaScript 歷史上最重要的一次升級，也讓 JavaScript 終於趕上主流程式語言的高度，若要明顯的分辨 ES5 與 ES6，最明顯的方式的方式就是看有沒有使用 <code>let</code>。</p>
 <a id="more"></a>
 <h2 id="Verson">Verson</h2><hr>
@@ -1918,7 +1962,7 @@
     <link href="https://oomusou.io/ecmascript/essence/"/>
     <id>https://oomusou.io/ecmascript/essence/</id>
     <published>2018-09-27T12:23:43.000Z</published>
-    <updated>2018-09-27T22:54:10.073Z</updated>
+    <updated>2018-11-03T03:16:58.708Z</updated>
     <content type="html"><![CDATA[<p>大家在學習 JavaScript 時，是否覺得 JavaScript 跟主流 OOP 程式語言，如 C++ / Java / C# 不太一樣？為什麼 JavaScript 沒有 interface？為什麼 JavaScript 很難使用 OOP Design Pattern ？為什麼我會從很討厭 JavaScript 到很喜歡 JavaScript？</p>
 <p>這要從 JavaScript 的本質談起，因為我看到了JavaScript 可愛的一面。</p>
 <a id="more"></a>
@@ -1995,117 +2039,6 @@
 ]]></content>
     <summary type="html">
     <![CDATA[JavaScript 可愛的一面]]>
-    
-    </summary>
-    
-      <category term="ECMAScript" scheme="https://oomusou.io/tags/ECMAScript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[ECMAScript 之 Var]]></title>
-    <link href="https://oomusou.io/ecmascript/var/"/>
-    <id>https://oomusou.io/ecmascript/var/</id>
-    <published>2018-09-26T12:23:43.000Z</published>
-    <updated>2018-09-27T09:03:21.685Z</updated>
-    <content type="html"><![CDATA[<p><code>var</code> 從 ES5 就存在，也是 ES5 的代表 keyword，看到 <code>var</code> 就可以判斷為 JavaScript。</p>
-<p>但 <code>var</code> 在 ES6 有了一些改變，重要性也不若以往，TC39 甚至建議完全不要使用 <code>var</code>，改用 <code>let</code> 與 <code>const</code>。</p>
-<a id="more"></a>
-<h2 id="Verson">Verson</h2><hr>
-<p>ECMAScript 2015</p>
-<h2 id="Var">Var</h2><hr>
-<p>宣告變數於 function 內或 function 外 (global)。</p>
-<ul>
-<li><strong>Scope</strong>：為 execution context，分 function (function 內) 與 global (function 外)，而非 <code>{}</code></li>
-<li><strong>Auto Global</strong>：若沒 <code>var</code> 一個變數，會自動 <code>升級</code> 成 global 變數 (ES5 ok、但 ES6 廢除)</li>
-<li><strong>Undefined</strong>：有 <code>var</code> 但未指定值，就是 <code>undefined</code></li>
-<li><strong>Hoisting</strong>：無論你寫在 function 內第幾行，都會在 code 執行 <code>前</code> 先宣告變數</li>
-<li><strong>Re-declare</strong>：若重新 <code>var</code> 一個變數，原來的值仍會存在</li>
-</ul>
-<h2 id="Scope">Scope</h2><hr>
-<p><strong>scope01.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> z = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">x();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(z);</span><br><span class="line"><span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
-<p>ES5 與 ES6 都無法執行。</p>
-<p><code>z</code> 的 execution context 為 function 內，所以 function 外部抓不到 <code>z</code>，會在 run-time 跳出 <code>ReferenceError</code>。</p>
-<p><strong>scope02.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">z = <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(z);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">x();</span><br><span class="line"><span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
-<p>ES5 可執行，ES6 會噴 <code>ReferenceError</code>。</p>
-<p>在 ES5 允許 global variable 不使用 <code>var</code> 宣告變數，但 ES6 會啟動 <code>strict mode</code>，儘管是 global variable，也一定要使用 <code>var</code>。</p>
-<h2 id="Auto_Global">Auto Global</h2><hr>
-<p><strong>auto-global.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">x</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  y = <span class="number">1</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">x();</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(y);</span><br><span class="line"><span class="comment">// ReferenceError</span></span><br></pre></td></tr></table></figure>
-<p>ES5 可執行，ES6 會噴 <code>ReferenceError</code>。</p>
-<p><code>y</code> 在 ES5 會自動升級為 global 變數，還是會印出 <code>1</code>，但 ES6 會啟動 <code>strict mode</code>，<code>y</code> 無法升級成 global 變數，會在 run-time 跳出 <code>ReferenceError</code>。</p>
-<h2 id="Undefined">Undefined</h2><hr>
-<p><strong>undefined01.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'still going...'</span>);</span><br><span class="line"><span class="comment">// RefferenceError</span></span><br></pre></td></tr></table></figure>
-<p>ES5 與 ES6 都無法執行。</p>
-<p>Run-time <code>ReferenceError</code>，因為 <code>a</code> 沒有 <code>var</code> 宣告。</p>
-<p><strong>undefined02.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'still going...'</span>);</span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="comment">// still going...</span></span><br></pre></td></tr></table></figure>
-<p>ES5 與 ES6 都可執行。</p>
-<p><code>a</code> 只宣告但沒有給值，因此為 <code>undefined</code>。</p>
-<blockquote>
-<p>ECMAScript 對於變數，沒有 <code>預設值</code>，也不是 <code>null</code>，而是特有 <code>undefined</code></p>
-<p>有些瀏覽器為 <code>&quot;&quot;</code></p>
-</blockquote>
-<h2 id="Hoisting">Hoisting</h2><hr>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bla = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">var</span> bla;</span><br></pre></td></tr></table></figure>
-<p>但實際執行時為</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> bla;</span><br><span class="line">bla = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-<p>也就是無論是 ES5 或 ES6，都會自動將 <code>var</code> 移到程式碼的最前面先執行。</p>
-<p><strong>hoisting01.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(bar);</span><br><span class="line">  <span class="keyword">var</span> bar = <span class="number">111</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(bar);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo();</span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="comment">// 111</span></span><br></pre></td></tr></table></figure>
-<p>實際執行時</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> bar;</span><br><span class="line">  <span class="built_in">console</span>.log(bar);</span><br><span class="line">  bar = <span class="number">111</span>;</span><br><span class="line">  <span class="built_in">console</span>.log(bar);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo();</span><br><span class="line"><span class="comment">// undefined</span></span><br><span class="line"><span class="comment">// 111</span></span><br></pre></td></tr></table></figure>
-<p>無論 ES5 或 ES6，因為 <code>var bar</code> 會被 Hoisting 到 function 的最前面，因此為 <code>undefined</code>。</p>
-<blockquote>
-<p>因為 var 會 Hoisting，導致 JavaScript 的程式碼風格與 C# 迥異：</p>
-<ul>
-<li>JavaScript 會變數宣告在 function 內一開始</li>
-<li>C# 會在使用才宣告變數</li>
-</ul>
-</blockquote>
-<p><strong>hoisting02.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = y, y = <span class="string">'A'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x + y); </span><br><span class="line"><span class="comment">// undefinedA</span></span><br></pre></td></tr></table></figure>
-<p>實際執行為</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"><span class="keyword">var</span> y;</span><br><span class="line">x = y;</span><br><span class="line">y = <span class="string">'A'</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x + y); </span><br><span class="line"><span class="comment">// undefinedA</span></span><br></pre></td></tr></table></figure>
-<p>因為 <code>var y</code> 會先被 Hoisting，所以 <code>x = y</code> 時，<code>y</code> 還是 <code>undefined</code>，因此 <code>x</code> 也是 <code>undefined</code>。</p>
-<blockquote>
-<p>實務上建議一行只 <code>var</code> 一個變數</p>
-</blockquote>
-<h2 id="Redeclaration">Redeclaration</h2><hr>
-<p><strong>redeclaration01.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-<p>ES5 與 ES6 都可執行。</p>
-<p>實際執行為</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x;</span><br><span class="line"></span><br><span class="line">x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
-<p>因此 <code>var x</code> 被 Hoisting，所以結果都是 <code>2</code>。</p>
-<p><strong>redeclaration02.js</strong></p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p>ES5 與 ES6 都可執行。</p>
-<p>實際執行為</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x;</span><br><span class="line">x = <span class="number">2</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"></span><br><span class="line">x = <span class="number">3</span>;</span><br><span class="line"><span class="built_in">console</span>.log(x);</span><br><span class="line"><span class="comment">// 2</span></span><br><span class="line"><span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
-<p>由於 Hoisting 機制，JavaScript 允許 re-declare。</p>
-<blockquote>
-<p>C# 無法這樣寫，compile 就會報錯</p>
-<p>Babel 可編譯也可執行，SonarQube 會抓出來</p>
-<p>但實務上不建議使用 re-declare 機制</p>
-</blockquote>
-<h2 id="Conclusion">Conclusion</h2><hr>
-<ul>
-<li>在 ES6，無論 function 內的 variable 或 global variable，一律要使用 <code>var</code>，否則會噴 <code>ReferenceError</code></li>
-<li>JavaScript 有獨特的 <code>undefined</code>，只要變數沒有給定值都是 <code>undefined</code></li>
-<li>由於 JavaScript 獨特的 Hoisting 機制，導致變數宣告都集中在 function 的最前面，與 C# 不同</li>
-<li>由於 Hoisting 機制，JavaScript 允許 re-declare，與 C# 不同，但 SonarQube 會抓到錯誤，且實務上不建議這樣寫</li>
-</ul>
-<h2 id="Sample_Code">Sample Code</h2><hr>
-<p>完整的範例可以在我的 <a href="https://github.com/oomusou/ecmascript_var" target="_blank" rel="external">GitHub</a> 上找到</p>
-<h2 id="Reference">Reference</h2><hr>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="external">JavaScript MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/var" target="_blank" rel="external">var</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[使用 var 宣告變數]]>
     
     </summary>
     

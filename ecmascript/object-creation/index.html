@@ -17,7 +17,7 @@
 <meta property="og:site_name" content="點燈坊">
 <meta property="og:description" content="6 種建立 Object 方式">
 <meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
-<meta property="og:updated_time" content="2018-11-02T10:11:18.860Z">
+<meta property="og:updated_time" content="2018-11-03T03:17:55.384Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ECMAScript 之建立 Object">
 <meta name="twitter:description" content="6 種建立 Object 方式">
@@ -102,7 +102,7 @@
 	<!-- toc -->
 	<div id="postTOC">
 		<span class="tocHeading">Contents</span>
-		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Object"><span class="toc-article-text">建立 Object</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object_Literal"><span class="toc-article-text">Object Literal</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Empty"><span class="toc-article-text">Empty</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#New_Object"><span class="toc-article-text">New Object</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Constructor_Function"><span class="toc-article-text">Constructor Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Class"><span class="toc-article-text">Class</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object-create()"><span class="toc-article-text">Object.create()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#建立_Object"><span class="toc-article-text">建立 Object</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object_Literal"><span class="toc-article-text">Object Literal</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Empty_Object"><span class="toc-article-text">Empty Object</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#New_Object"><span class="toc-article-text">New Object</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Constructor_Function"><span class="toc-article-text">Constructor Function</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Class"><span class="toc-article-text">Class</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object-create()"><span class="toc-article-text">Object.create()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li></ol>
     </div>
 
 	<!-- content -->
@@ -128,7 +128,7 @@
 <li>直接將 function 指定給 property</li>
 <li>因為 <code>person</code> 為 object，可如同 OOP 般使用 method 方式使用 <code>fullName()</code></li>
 </ol>
-<h2 id="Empty">Empty</h2><hr>
+<h2 id="Empty_Object">Empty Object</h2><hr>
 <p>ECMAScript 有一個傳統 OOP 沒有的特色，就是可以動態新增 property，既然如此，我們就可以一開始只宣告一個 <code>空物件</code>：<code>{}</code>，事後再動態新增 property 即可。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;&#125;;</span><br><span class="line">person.firstName = <span class="string">'Sam'</span>;</span><br><span class="line">person.lastName = <span class="string">'Xiao'</span>;</span><br><span class="line">person.fullName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(person);</span><br><span class="line"><span class="built_in">console</span>.log(person.fullName());</span><br></pre></td></tr></table></figure>
 <p>一開始只要指定 <code>{}</code> 即可，表示其為 <code>Object</code> type，事後再動態新增 property。</p>

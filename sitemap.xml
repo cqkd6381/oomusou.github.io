@@ -2,13 +2,73 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://oomusou.io/ecmascript/object-creation/</loc>
-    <lastmod>2018-11-02T10:11:18.860Z</lastmod>
+    <loc>https://oomusou.io/ecmascript/variable-property/</loc>
+    <lastmod>2018-11-03T03:19:37.820Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/variable-object/</loc>
+    <lastmod>2018-11-03T03:19:23.307Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/var/</loc>
+    <lastmod>2018-11-03T03:18:37.877Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/remove-object-array/</loc>
+    <lastmod>2018-11-03T03:18:28.465Z</lastmod>
   </url>
   
   <url>
     <loc>https://oomusou.io/ecmascript/property-access/</loc>
-    <lastmod>2018-11-02T10:10:58.657Z</lastmod>
+    <lastmod>2018-11-03T03:18:18.186Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/object-creation/</loc>
+    <lastmod>2018-11-03T03:17:55.384Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/module/</loc>
+    <lastmod>2018-11-03T03:17:45.589Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/mixin/</loc>
+    <lastmod>2018-11-03T03:17:35.175Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/let/</loc>
+    <lastmod>2018-11-03T03:17:19.276Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/event-loop-model/</loc>
+    <lastmod>2018-11-03T03:17:08.926Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/essence/</loc>
+    <lastmod>2018-11-03T03:16:58.708Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/const/</loc>
+    <lastmod>2018-11-03T03:16:47.261Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/ecmascript/asynchronous/</loc>
+    <lastmod>2018-11-03T03:16:35.574Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://oomusou.io/firefox/scratchpad/</loc>
+    <lastmod>2018-11-03T03:13:19.507Z</lastmod>
   </url>
   
   <url>
@@ -57,21 +117,6 @@
   </url>
   
   <url>
-    <loc>https://oomusou.io/ecmascript/module/</loc>
-    <lastmod>2018-10-12T07:43:24.226Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/asynchronous/</loc>
-    <lastmod>2018-10-07T14:46:06.077Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/event-loop-model/</loc>
-    <lastmod>2018-10-07T14:42:12.966Z</lastmod>
-  </url>
-  
-  <url>
     <loc>https://oomusou.io/fp/pure-function/</loc>
     <lastmod>2018-10-07T14:03:07.036Z</lastmod>
   </url>
@@ -102,53 +147,13 @@
   </url>
   
   <url>
-    <loc>https://oomusou.io/ecmascript/const/</loc>
-    <lastmod>2018-09-30T12:00:38.024Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/let/</loc>
-    <lastmod>2018-09-28T02:08:18.626Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/essence/</loc>
-    <lastmod>2018-09-27T22:54:10.073Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/var/</loc>
-    <lastmod>2018-09-27T09:03:21.685Z</lastmod>
-  </url>
-  
-  <url>
     <loc>https://oomusou.io/linq/foreach/</loc>
     <lastmod>2018-09-26T16:11:05.824Z</lastmod>
   </url>
   
   <url>
-    <loc>https://oomusou.io/ecmascript/variable-property/</loc>
-    <lastmod>2018-09-19T04:43:06.967Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/variable-object/</loc>
-    <lastmod>2018-09-19T04:42:55.414Z</lastmod>
-  </url>
-  
-  <url>
     <loc>https://oomusou.io/ecmascript/variable-method/</loc>
     <lastmod>2018-09-19T04:42:31.162Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/remove-object-array/</loc>
-    <lastmod>2018-09-19T04:42:18.828Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://oomusou.io/ecmascript/mixin/</loc>
-    <lastmod>2018-09-19T04:42:00.553Z</lastmod>
   </url>
   
   <url>
