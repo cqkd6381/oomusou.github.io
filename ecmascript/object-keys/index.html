@@ -1,0 +1,331 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>ECMAScript 之取得 Object 所有 Property 的 Key | 點燈坊</title>
+  <meta name="author" content="真 OO無双">
+  
+  <meta name="description" content="3 種取得 Property Key 的方法">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+ <meta name="description" content="3 種取得 Property Key 的方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ECMAScript 之取得 Object 所有 Property 的 Key">
+<meta property="og:url" content="https://oomusou.io/ecmascript/object-keys/index.html">
+<meta property="og:site_name" content="點燈坊">
+<meta property="og:description" content="3 種取得 Property Key 的方法">
+<meta property="og:image" content="https://oomusou.io/images/feature/logo.png">
+<meta property="og:updated_time" content="2018-11-03T13:42:19.912Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ECMAScript 之取得 Object 所有 Property 的 Key">
+<meta name="twitter:description" content="3 種取得 Property Key 的方法">
+ 
+
+  
+  
+    <link href="/favicon.png" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/font-awesome.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/responsive.min.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  <script src="/js/jquery-2.0.3.min.js"></script>
+
+  <!-- analytics -->
+  
+
+
+
+</head>
+
+ <body>  
+  <nav id="main-nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+     <button type="button" class="navbar-header navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse nav-menu">
+		<ul class="nav navbar-nav">
+		<li><a  href="/">點燈坊</a></li>
+		  
+		  <li>
+			<a href="/tags" title="All the tags.">
+			  <i class="fa fa-tags"></i>Tags
+			</a>
+		  </li>
+		  
+		  <li>
+			<a href="/atom.xml" title="Subscribe me.">
+			  <i class="fa fa-rss"></i>RSS
+			</a>
+		  </li>
+		  
+		</ul>
+      </div>
+    </div> <!-- container -->
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container">
+  	<div class="content">
+    	 
+	
+		<div class="page-header">		
+			<h1> ECMAScript 之取得 Object 所有 Property 的 Key</h1>
+		</div>		
+	
+
+
+
+<div class="row post">
+	<!-- cols -->
+	
+	<div class="col-md-9">
+	
+
+	
+		 <div class="alert alert-success description">
+			<i class="fa fa-info-circle"></i> 3 種取得 Property Key 的方法			
+		</div> <!-- alert -->
+		
+
+	<!-- toc -->
+	<div id="postTOC">
+		<span class="tocHeading">Contents</span>
+		<ol class="toc-article"><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Version"><span class="toc-article-text">Version</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object-keys()"><span class="toc-article-text">Object.keys()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Object-getOwnPropertyNames()"><span class="toc-article-text">Object.getOwnPropertyNames()</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#for…in"><span class="toc-article-text">for…in</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Summary"><span class="toc-article-text">Summary</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Conclusion"><span class="toc-article-text">Conclusion</span></a></li><li class="toc-article-item toc-article-level-2"><a class="toc-article-link" href="#Reference"><span class="toc-article-text">Reference</span></a></li></ol>
+    </div>
+
+	<!-- content -->
+	<div class="mypage">		
+	    <p>ECMAScript Object 的 Property 基本上是由 Key / Value 構成，連 Method 也是指向 Function 的 property，我們該如何取得 Object 所有 Property 的 Key 做進一步的運用呢 ?</p>
+<a id="more"></a>
+<h2 id="Version">Version</h2><hr>
+<p>ECMAScript 3<br>ECMAScript 5.1<br>ECMAScript 2015</p>
+<h2 id="Object-keys()">Object.keys()</h2><hr>
+<blockquote>
+<p>將 Object 所有 Enumerable Property 的 Key 以 array 傳回，但不包含 Prototype 的 Property</p>
+<p>ECMAScript 5.1</p>
+</blockquote>
+<p>至於什麼是 <code>Enumerable Property</code> 呢 ? 稍後會介紹。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">  firstName: <span class="string">'Sam'</span>,</span><br><span class="line">  lastName: <span class="string">'Xiao'</span>,</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.keys(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br><span class="line"><span class="comment">// fullName</span></span><br></pre></td></tr></table></figure>
+<p>以 Object Literal 定義 <code>person</code>，在 Object Literal 的 property 都是 enumerable，所以 <code>Object.keys()</code> 都能顯示。</p>
+<p><img src="/images/ecmascript/object-keys/key000.png" alt="key000"></p>
+<ol>
+<li>因為 <code>Object.keys()</code> 回傳為 array，因此能直接使用 <code>forEach()</code></li>
+<li>Object Literal 皆為 Enumerable Property，因此所有 key 都能顯示</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">firstName, lastName</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">  <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.fullName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person(<span class="string">'Sam'</span>, <span class="string">'Xiao'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.keys(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br></pre></td></tr></table></figure>
+<p>ECMAScript 的 OOP 正統寫法，是將 method 定義在 Prototype，但 <code>Object.keys()</code> 無法抓到 Prototype 的 property。</p>
+<p><img src="/images/ecmascript/object-keys/key001.png" alt="key001"></p>
+<ol>
+<li>將 method 定義在 Prototype</li>
+<li>ㄧ樣使用 <code>Object.keys()</code> </li>
+<li>但只能顯示 Object 本身的 Enumerable Property，不包含 Prototype 的 Enumerable Property</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  constructor(firstName, lastName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fullName() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person(<span class="string">'Sam'</span>, <span class="string">'Xiao'</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.keys(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br></pre></td></tr></table></figure>
+<p>若使用 ECMAScript 2015 的 class 寫法，<code>Object.keys()</code> 也只能抓到 <code>firstName</code> 與 <code>lastName</code>，別忘了 <code>class</code> 本質仍是 Constructor Function，其 method 也是定義在 Prototype，因此 <code>Object.keys()</code> 抓不到很合理。</p>
+<blockquote>
+<p>Q : 若要也顯示 Prototype 的 Enumerable Property 呢 ?</p>
+</blockquote>
+<p>要使用 <code>for...in</code> ，稍後會介紹。</p>
+<h2 id="Object-getOwnPropertyNames()">Object.getOwnPropertyNames()</h2><hr>
+<blockquote>
+<p>將 Object 所有 Property 的 Key 以 array 傳回，包含 Enumerable 與 Non Enumerable Property，但不包含 Prototype 的 Property</p>
+<p>ECMAScript 5.1</p>
+</blockquote>
+<p>Object Literal 的 property 都是 Enumerable，所以 <code>Object.keys()</code> 都能使用，但要如何產生 Non Enumerable 的 property 呢 ?</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> property = &#123;</span><br><span class="line">  firstName: &#123;</span><br><span class="line">    value: <span class="string">'Sam'</span>,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  lastName: &#123;</span><br><span class="line">    value: <span class="string">'Xiao'</span>,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">false</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  fullName: &#123;</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">    &#125;,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="built_in">Object</span>.create(&#123;&#125;, property);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.keys(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// fullName</span></span><br></pre></td></tr></table></figure>
+<p>若要特別建立 Non Enumerable Property，就必須使用 <code>Object.create()</code>，並特別在 Property Object 設定是否為 Enumerable。</p>
+<p>第 8 行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lastName: &#123;</span><br><span class="line">  value: <span class="string">'Xiao'</span>,</span><br><span class="line">  writable: <span class="literal">true</span>,</span><br><span class="line">  configurable: <span class="literal">true</span>,</span><br><span class="line">  enumerable: <span class="literal">false</span>,</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>特別設定 <code>lastName</code> property 的 <code>enumerable</code> 為 <code>false</code>，則 <code>Object.keys()</code> 將無法顯示 <code>lastName</code>。</p>
+<p><img src="/images/ecmascript/object-keys/key002.png" alt="key002"></p>
+<ol>
+<li>將 <code>lastName</code> 的 <code>Enumerable</code> 設定為 <code>false</code></li>
+<li>使用 <code>Object.keys()</code></li>
+<li>只顯示 <code>Enumerable</code> 為 <code>true</code> 的 <code>firstName</code> 與 <code>fullName</code></li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> property = &#123;</span><br><span class="line">  firstName: &#123;</span><br><span class="line">    value: <span class="string">'Sam'</span>,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  lastName: &#123;</span><br><span class="line">    value: <span class="string">'Xiao'</span>,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">false</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  fullName: &#123;</span><br><span class="line">    value: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">    &#125;,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="built_in">Object</span>.create(&#123;&#125;, property);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyNames(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br><span class="line"><span class="comment">// fullName</span></span><br></pre></td></tr></table></figure>
+<p>若改用 <code>Object.getOwnPropertyNames()</code>，則僅管 <code>lastName</code> 的 <code>Enumerable</code> 為 <code>false</code>，但 <code>Object.getOwnPropertyNames()</code> 仍然會顯示。</p>
+<p><img src="/images/ecmascript/object-keys/key003.png" alt="key003"></p>
+<ol>
+<li>將 <code>lastName</code> 的 <code>Enumerable</code> 設定為 <code>false</code></li>
+<li>使用 <code>Object.getOwnPropertyNames()</code></li>
+<li>無論 <code>Enumerable</code> 為 <code>true</code> 或 <code>false</code> 都會顯示</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> prototype = &#123;</span><br><span class="line">  fullName: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> property = &#123;</span><br><span class="line">  firstName: &#123;</span><br><span class="line">    value: <span class="string">'Sam'</span>,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">true</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  lastName: &#123;</span><br><span class="line">    value: <span class="string">'Xiao'</span>,</span><br><span class="line">    writable: <span class="literal">true</span>,</span><br><span class="line">    configurable: <span class="literal">true</span>,</span><br><span class="line">    enumerable: <span class="literal">false</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="built_in">Object</span>.create(prototype, property);</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyNames(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>fullName()</code> 移到 Prototype，而 Object Literal 都是 Enumerable Property。</p>
+<p>但因為 <code>Object.getOwnPropertyNames()</code> 不會顯示 Prototype 的 property，因此只能顯示 <code>firstName</code> 與 <code>lastName</code>。</p>
+<p><img src="/images/ecmascript/object-keys/key004.png" alt="key004"></p>
+<ol>
+<li>將 <code>fullName()</code> 定義在 Prototype</li>
+<li><code>Object.getOwnPropertyNames()</code> 無法顯示 Prototype 的 property</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  constructor(firstName, lastName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fullName() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person();</span><br><span class="line"></span><br><span class="line"><span class="built_in">Object</span>.getOwnPropertyNames(person)</span><br><span class="line">  .forEach(key =&gt; <span class="built_in">console</span>.log(key));</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br></pre></td></tr></table></figure>
+<p>若使用 ECMAScript 2015 的 class 寫法，<code>Object.getOwnPropertyNames()</code> 也只能抓到 <code>firstName</code> 與 <code>lastName</code>，別忘了 <code>class</code> 本質仍是 Constructor Function，其 method 也是定義在 Prototype，因此 <code>Object.getOwnPropertyNames()</code> 抓不到很合理。</p>
+<h2 id="for…in">for…in</h2><hr>
+<blockquote>
+<p>如同 <code>Object.keys()</code> 將 Object 所有 Enumerable Property 的 Key 以 array 傳回，但包含 Prototype 的 Property</p>
+<p>ECMAScript 3</p>
+</blockquote>
+<p>我們發現無論 <code>Object.keys()</code> 或 <code>Object.getOwnPropertyNames()</code>，都無法顯示 Prototype 的 property，若要連 Prototype 的 property 也一起顯示，則要使用 <code>for...in</code>。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">firstName, lastName</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">  <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.fullName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person(<span class="string">'Sam'</span>, <span class="string">'Xiao'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> person)</span><br><span class="line">  <span class="built_in">console</span>.log(key);</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br><span class="line"><span class="comment">// fullName</span></span><br></pre></td></tr></table></figure>
+<p>將 <code>fullName()</code> 定義在 Prototype，之前使用 <code>Object.keys()</code> 或 <code>Object.getOwnPropertyNames()</code> 都無法顯示，但使用 <code>for...in</code> 就可完全顯示了。</p>
+<p><img src="/images/ecmascript/object-keys/key005.png" alt="key005"></p>
+<ol>
+<li>將 <code>fullName()</code> 定義在 Prototype</li>
+<li>使用 <code>for...in</code> 顯示所有 property 的 key</li>
+<li>連 Prototype 的 property 的 key 也一併顯示</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  constructor(firstName, lastName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fullName() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> Person(<span class="string">'Sam'</span>, <span class="string">'Xiao'</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> person)</span><br><span class="line">  <span class="built_in">console</span>.log(key);</span><br><span class="line"></span><br><span class="line"><span class="comment">// firstName</span></span><br><span class="line"><span class="comment">// lastName</span></span><br></pre></td></tr></table></figure>
+<p>但 <code>for...in</code> 搭配 ECMAScript 2015 的 <code>class</code> 時，卻不會顯示 <code>fullName</code>。</p>
+<p>理論上 <code>class</code> 的 <code>fullName()</code> 是在 Prototype 上，<code>for...in</code> 應該會顯示卻沒顯示，也就是若搭配 <code>class</code>，<code>for...in</code> 相當於 <code>Object.keys()</code>，結果比較令人訝異。</p>
+<blockquote>
+<p>簡單來說，能被 <code>Object.keys()</code> 或 <code>for in</code> 顯示的 property 就稱為 Enumerable Property，一般 Object Literal、Constructor Function 或 class 寫法的 property，都是 Enumerable Property，若要特別設定為 Non Enumerable Property，則要使用 <code>Object.create()</code> 建立 object</p>
+</blockquote>
+<h2 id="Summary">Summary</h2><hr>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Object.keys()</th>
+<th>Object.getOwnPropertyNames()</th>
+<th>for in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non Enumerable</td>
+<td>No</td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Prototype</td>
+<td>No</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><code>Object.keys()</code> 最中規中矩，不能顯示 Non Enumerable，也不能顯示 Prototype</li>
+<li><code>Object.getOwnPropertyNames()</code> 有特異功能可顯示 Non Enumerable，但無法顯示 Prototype</li>
+<li><code>for in</code> 有特異功能能顯示 Prototype，但無法顯示 Non Enumerable</li>
+</ul>
+<h2 id="Conclusion">Conclusion</h2><hr>
+<ul>
+<li>三種方式都各有其限制，要視需求選擇合適的方式</li>
+<li><code>Object.keys()</code> 與 <code>for..in</code> 搭配 <code>class</code> 時，竟然結果一樣，比較出乎意外，因為篇幅限制，將令開專文討論之</li>
+</ul>
+<h2 id="Reference">Reference</h2><hr>
+<p><a href="https://developer.mozilla.org/en-US/" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/keys" target="_blank" rel="external">Object.keys()</a><br><a href="https://developer.mozilla.org/en-US/" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyNames" target="_blank" rel="external">Object.getOwnPropertyNames()</a><br><a href="https://developer.mozilla.org/en-US/" target="_blank" rel="external">MDN</a>, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...in" target="_blank" rel="external">for in</a></p>
+	  
+	</div>
+
+	<div>
+  	<center>
+	<div class="pagination">
+<ul class="pagination">
+	 
+		
+          <li class="prev disabled"><a><i class="fa fa-arrow-circle-o-left"></i>Prev</a></li>
+        
+
+        <li><a href="/tags"><i class="fa fa-archive"></i>Archive</a></li>
+
+		
+		   <li class="next"><a href="/firefox/scratchpad/" class="alignright next">Next<i class="fa fa-arrow-circle-o-right"></i></a></li>         
+        
+	
+</ul>
+</div>
+
+    </center>
+	</div>
+	
+	<!-- comment -->
+	
+	
+	</div> <!-- col-md-9/col-md-12 -->
+	
+	
+		<div class="col-md-3"> 
+
+	<!-- date -->
+	
+	<div class="meta-widget">
+	<i class="fa fa-clock-o"></i>
+	2018-11-03 
+	</div>
+	
+
+	<!-- tags -->
+	
+	<div class="meta-widget">
+	<a data-toggle="collapse" data-target="#tags"><i class="fa fa-tags"></i></a>		  
+    <ul id="tags" class="tag_box list-unstyled collapse in">	  
+	    
+  <li><a href="/tags/ECMAScript/">ECMAScript<span>18</span></a></li>
+    </ul>
+	</div>
+		
+
+    <hr>
+	
+</div><!-- col-md-3 -->
+
+	
+
+</div><!-- row -->
+
+	</div>
+  </div>
+  <div class="container-narrow">
+  <footer>  </footer>
+</div> <!-- container-narrow -->
+  
+  <script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'hAXbiVYFC92XF16_EhCh','2.0.0');
+  </script>
+
+
+
+  
+<a id="gotop" href="#">   
+  <span>▲</span> 
+</a>
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+   </html>
