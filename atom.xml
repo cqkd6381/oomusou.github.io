@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="https://oomusou.io/"/>
-  <updated>2018-11-04T02:39:38.310Z</updated>
+  <updated>2018-11-04T07:21:24.626Z</updated>
   <id>https://oomusou.io/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="https://oomusou.io/ecmascript/for-in-class/"/>
     <id>https://oomusou.io/ecmascript/for-in-class/</id>
     <published>2018-11-04T12:23:43.000Z</published>
-    <updated>2018-11-04T02:39:38.310Z</updated>
+    <updated>2018-11-04T07:21:24.626Z</updated>
     <content type="html"><![CDATA[<p><code>Object.keys()</code> 與 <code>for...in</code> 的差異在於 <code>Object.keys()</code> 只能顯示目前 Object 的 Property Key，而 <code>for...in</code> 會連同 Prototype 的 Property Key 一併顯示。</p>
 <p>若 <code>for...in</code> 搭配 Constructor Function 或 <code>Object.create()</code> 時一切正常，但搭配 <code>class</code> 時，就無法顯示 Prototype 的 Property Key 了，為什麼會這樣呢 ?</p>
 <a id="more"></a>
@@ -58,7 +58,7 @@
 <li>沒有列出 Prototype 的 <code>fullName</code></li>
 </ol>
 <h2 id="Why_?">Why ?</h2><hr>
-<p><code>for...in</code> 與 <code>Object.keys()</code> 都僅能列出 Enumerable Property，所以很有可能 <code>class</code> 的寫法，造成 Prototype 的 property 為 Non Enumerable Property，造成 <code>for...in</code> 無法顯示。</p>
+<p><code>for...in</code> 與 <code>Object.keys()</code> 都僅能列出 Enumerable Property，所以很有可能 <code>class</code> 的寫法，造成 Prototype 的 property 為 Non Enumerable，使得 <code>for...in</code> 無法顯示。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">  constructor(firstName, lastName) &#123;</span><br><span class="line">    <span class="keyword">this</span>.firstName = firstName;</span><br><span class="line">    <span class="keyword">this</span>.lastName = lastName;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  fullName() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.firstName + <span class="string">' '</span> + <span class="keyword">this</span>.lastName;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> person = <span class="keyword">new</span> Person(<span class="string">'Sam'</span>, <span class="string">'Xiao'</span>);</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getOwnPropertyDescriptor(person, <span class="string">'firstName'</span>));</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getOwnPropertyDescriptor(person, <span class="string">'lastName'</span>));</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Object</span>.getOwnPropertyDescriptor(person.__proto__, <span class="string">'fullName'</span>));</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">let</span> key <span class="keyword">in</span> person)</span><br><span class="line">  <span class="built_in">console</span>.log(key);</span><br></pre></td></tr></table></figure>
 <p><code>Object.getOwnPropertyDescriptor()</code> 會傳回每個 property 的屬性，藉此觀察是否為 Non Enumerable。</p>
 <p><img src="/images/ecmascript/for-in-class/forin003.png" alt="forin003"></p>
